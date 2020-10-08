@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <PackageId>SpriteFontPlus</PackageId>
+    <Authors>SpriteFontPlusTeam</Authors>
+    <Product>SpriteFontPlus</Product>
+    <Description>Library extending functionality of the SpriteFont.</Description>
+    <PackageLicense>https://github.com/rds1983/SpriteFontPlus/blob/master/LICENSE</PackageLicense>
+    <PackageProjectUrl>https://github.com/rds1983/SpriteFontPlus</PackageProjectUrl>
+    <AssemblyName>SpriteFontPlus</AssemblyName>
+    <RootNamespace>SpriteFontPlus</RootNamespace>
+    <Version>1.0.0.0</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <DefineConstants>TRACE;STBSHARP_INTERNAL;MONOGAME;PREMULTIPLIEDALPHA</DefineConstants>
+    <OutputPath>bin\MonoGame\$(Configuration)</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.Portable" PrivateAssets="All" Version="3.6.0.1625" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\deps\StbTrueTypeSharp\src\**\*.cs" LinkBase="StbTrueTypeSharp" />
+    <Compile Include="..\deps\BMFontToSpriteFont\**\*.cs" LinkBase="BMFontToSpriteFont" />
+  </ItemGroup>
+</Project>
