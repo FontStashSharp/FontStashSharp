@@ -83,7 +83,7 @@ namespace FontStashSharp
 
 			int advanceTemp, lsbTemp;
 			stbtt_GetGlyphHMetrics(_font, glyphId, &advanceTemp, &lsbTemp);
-			advance = (int)(advanceTemp * Scale);
+			advance = (int)(advanceTemp * Scale + 0.5f);
 
 			int x0Temp, y0Temp, x1Temp, y1Temp;
 			stbtt_GetGlyphBitmapBox(_font, glyphId, Scale, Scale, &x0Temp, &y0Temp, &x1Temp, &y1Temp);
@@ -97,7 +97,7 @@ namespace FontStashSharp
 		{
 			UpdateSize(fontSize);
 
-			fixed (byte* output = buffer)
+			fixed (byte* output = &buffer[startIndex])
 			{
 				stbtt_MakeGlyphBitmap(_font, output, outWidth, outHeight, outStride, Scale, Scale, glyphId);
 			}
@@ -109,12 +109,12 @@ namespace FontStashSharp
 
 			var key = ((glyph1 << 16) | (glyph1 >> 16)) ^ glyph2;
 			int result;
-			if (_kernings.TryGetValue(key, out result))
+			if (!_kernings.TryGetValue(key, out result))
 			{
-				return (int)(result * Scale);
+				result = stbtt_GetGlyphKernAdvance(_font, glyph1, glyph2);
+				_kernings[key] = result;
 			}
-			result = stbtt_GetGlyphKernAdvance(_font, glyph1, glyph2);
-			_kernings[key] = result;
+			
 			return (int)(result * Scale);
 		}
 
