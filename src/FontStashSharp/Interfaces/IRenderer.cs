@@ -1,8 +1,8 @@
 ﻿using System.Drawing;
 
-namespace FontStashSharp
+namespace FontStashSharp.Interfaces
 {
-	public interface IRenderingService
+	public interface IRenderer
 	{
 		void Draw(ITexture texture, Rectangle dest, Rectangle source, FssColor color, float depth);
 	}

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FontStashSharp.Interfaces;
+using System;
 
 namespace FontStashSharp
 {
@@ -156,7 +157,7 @@ namespace FontStashSharp
 			return true;
 		}
 
-		public void RenderGlyph(ITextureCreationService textureService, IFontRasterizationService fontService, FontGlyph glyph, int blurAmount, int strokeAmount)
+		public void RenderGlyph(ITextureCreator textureCreator, FontGlyph glyph, int blurAmount, int strokeAmount)
 		{
 			var pad = Math.Max(FontGlyph.PadFromBlur(blurAmount), FontGlyph.PadFromBlur(strokeAmount));
 
@@ -171,7 +172,6 @@ namespace FontStashSharp
 			}
 			Array.Clear(buffer, 0, bufferSize);
 
-			var g = glyph.Index;
 			var colorSize = glyph.Bounds.Width * glyph.Bounds.Height;
 			var colorBuffer = _colorBuffer;
 			if ((colorBuffer == null) || (colorBuffer.Length < colorSize))
@@ -180,12 +180,13 @@ namespace FontStashSharp
 				_colorBuffer = colorBuffer;
 			}
 
-			fontService.RenderGlyphBitmap(buffer,
+			glyph.Font.RasterizeGlyphBitmap(glyph.Id,
+				glyph.Size,
+				buffer,
 				pad + pad * glyph.Bounds.Width,
 				glyph.Bounds.Width - pad * 2,
 				glyph.Bounds.Height - pad * 2,
-				glyph.Bounds.Width,
-				g);
+				glyph.Bounds.Width);
 
 			if (strokeAmount > 0)
 			{
@@ -283,7 +284,7 @@ namespace FontStashSharp
 			// Write to texture
 			if (Texture == null)
 			{
-				Texture = textureService.Create(Width, Height);
+				Texture = textureCreator.Create(Width, Height);
 			}
 #if TEXTURESETDATAEXT
             fixed (Color* p = colorBuffer)

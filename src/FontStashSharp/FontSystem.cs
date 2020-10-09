@@ -1,3 +1,4 @@
+using FontStashSharp.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -5,17 +6,19 @@ using System.Text;
 
 namespace FontStashSharp
 {
-	unsafe class FontSystem : IDisposable
+	public class FontSystem : IDisposable
 	{
 		class GlyphCollection
 		{
 			internal readonly Int32Map<FontGlyph> Glyphs = new Int32Map<FontGlyph>();
 		}
 
+		readonly List<IFont> _fonts = new List<IFont>();
+
 		readonly Int32Map<GlyphCollection> _glyphs = new Int32Map<GlyphCollection>();
 
-		readonly IFontRasterizationService _fontRasterizationService;
-		readonly ITextureCreationService _textureCreationService;
+		readonly IFontLoader _fontLoader;
+		readonly ITextureCreator _textureCreator;
 
 		float _ith;
 		float _itw;
@@ -28,7 +31,7 @@ namespace FontStashSharp
 		public readonly int StrokeAmount;
 		public float Spacing;
 		public float LineSpacing = 0f;
-		public PointF Scale;
+		public PointF Scale = new PointF(1.0f, 1.0f);
 		public bool UseKernings = true;
 
 		public int? DefaultCharacter = ' ';
@@ -51,21 +54,20 @@ namespace FontStashSharp
 
 		public event EventHandler CurrentAtlasFull;
 
-		public FontSystem(IFontRasterizationService fontRasterizationService, ITextureCreationService textureCreationService, 
-			int width, int height, int blurAmount = 0, int strokeAmount = 0)
+		public FontSystem(IFontLoader fontLoader, ITextureCreator textureCreator, int width, int height, int blurAmount = 0, int strokeAmount = 0)
 		{
-			if (fontRasterizationService == null)
+			if (fontLoader == null)
 			{
-				throw new ArgumentNullException(nameof(fontRasterizationService));
+				throw new ArgumentNullException(nameof(fontLoader));
 			}
 
-			if (textureCreationService == null)
+			if (textureCreator == null)
 			{
-				throw new ArgumentNullException(nameof(textureCreationService));
+				throw new ArgumentNullException(nameof(textureCreator));
 			}
 
-			_fontRasterizationService = fontRasterizationService;
-			_textureCreationService = textureCreationService;
+			_fontLoader = fontLoader;
+			_textureCreator = textureCreator;
 
 			if (width <= 0)
 			{
@@ -104,6 +106,13 @@ namespace FontStashSharp
 
 		public void Dispose()
 		{
+			if (_fonts != null)
+			{
+				foreach (var font in _fonts)
+					font.Dispose();
+				_fonts.Clear();
+			}
+
 			Atlases?.Clear();
 			_currentAtlas = null;
 			_glyphs?.Clear();
@@ -113,6 +122,12 @@ namespace FontStashSharp
 		{
 			FontSize = 12;
 			Spacing = 0;
+		}
+
+		public void AddFontMem(byte[] data)
+		{
+			var font = _fontLoader.Load(data);
+			_fonts.Add(font);
 		}
 
 		GlyphCollection GetGlyphsCollection(int   size)
@@ -145,13 +160,14 @@ namespace FontStashSharp
 					continue;
 				}
 
-				ascent = glyph.Ascent;
-				lineHeight = glyph.LineHeight + LineSpacing;
+				float descent;
+				glyph.Font.GetMetricsForSize(FontSize, out ascent, out descent, out lineHeight);
+				lineHeight += LineSpacing;
 				break;
 			}
 		}
 
-		public float DrawText(IRenderingService batch, float x, float y, string str, FssColor color, float depth)
+		public float DrawText(IRenderer batch, float x, float y, string str, FssColor color, float depth)
 		{
 			if (string.IsNullOrEmpty(str)) return 0.0f;
 
@@ -169,7 +185,6 @@ namespace FontStashSharp
 			for (int i = 0; i < str.Length; i += char.IsSurrogatePair(str, i) ? 2 : 1)
 			{
 				var codepoint = char.ConvertToUtf32(str, i);
-
 				if (codepoint == '\n')
 				{
 					originX = 0.0f;
@@ -215,7 +230,7 @@ namespace FontStashSharp
 			return x;
 		}
 
-		public float DrawText(IRenderingService batch, float x, float y, string str, FssColor[] glyphColors, float depth)
+		public float DrawText(IRenderer batch, float x, float y, string str, FssColor[] glyphColors, float depth)
 		{
 			if (string.IsNullOrEmpty(str)) return 0.0f;
 
@@ -300,13 +315,14 @@ namespace FontStashSharp
 					continue;
 				}
 
-				ascent = glyph.Ascent;
-				lineHeight = glyph.LineHeight + LineSpacing;
+				float descent;
+				glyph.Font.GetMetricsForSize(FontSize, out ascent, out descent, out lineHeight);
+				lineHeight += LineSpacing;
 				break;
 			}
 		}
 
-		public float DrawText(IRenderingService batch, float x, float y, StringBuilder str, FssColor color, float depth)
+		public float DrawText(IRenderer batch, float x, float y, StringBuilder str, FssColor color, float depth)
 		{
 			if (str == null || str.Length == 0) return 0.0f;
 
@@ -370,7 +386,7 @@ namespace FontStashSharp
 			return x;
 		}
 
-		public float DrawText(IRenderingService batch, float x, float y, StringBuilder str, FssColor[] glyphColors, float depth)
+		public float DrawText(IRenderer batch, float x, float y, StringBuilder str, FssColor[] glyphColors, float depth)
 		{
 			if (str == null || str.Length == 0) return 0.0f;
 
@@ -680,6 +696,24 @@ namespace FontStashSharp
 			Reset(_size.X, _size.Y);
 		}
 
+		int? GetCodepointIndex(int codepoint, out IFont font)
+		{
+			font = null;
+
+			var g = default(int?);
+			foreach (var f in _fonts)
+			{
+				g = f.GetGlyphId(codepoint);
+				if (g != null)
+				{
+					font = f;
+					break;
+				}
+			}
+
+			return g;
+		}
+
 		FontGlyph GetGlyphWithoutBitmap(GlyphCollection collection, int codepoint)
 		{
 			FontGlyph glyph = null;
@@ -688,15 +722,15 @@ namespace FontStashSharp
 				return glyph;
 			}
 
-			Font font;
+			IFont font;
 			var g = GetCodepointIndex(codepoint, out font);
-			if (g == 0)
+			if (g == null)
 			{
 				return null;
 			}
 
-			int advance = 0, lsb = 0, x0 = 0, y0 = 0, x1 = 0, y1 = 0;
-			font.BuildGlyphBitmap(g, font.Scale, ref advance, ref lsb, ref x0, ref y0, ref x1, ref y1);
+			int advance = 0, x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+			font.GetGlyphMetrics(g.Value, FontSize, out advance, out x0, out y0, out x1, out y1);
 
 			var pad = Math.Max(FontGlyph.PadFromBlur(BlurAmount), FontGlyph.PadFromBlur(StrokeAmount));
 			var gw = x1 - x0 + pad * 2;
@@ -705,12 +739,12 @@ namespace FontStashSharp
 
 			glyph = new FontGlyph
 			{
-				Font = font,
 				Codepoint = codepoint,
+				Id = g.Value,
 				Size = FontSize,
-				Index = g,
+				Font = font,
 				Bounds = new Rectangle(0, 0, gw, gh),
-				XAdvance = (int)(font.Scale * advance * 10.0f),
+				XAdvance = advance,
 				XOffset = x0 - offset,
 				YOffset = y0 - offset
 			};
@@ -753,7 +787,7 @@ namespace FontStashSharp
 			glyph.Bounds.X = gx;
 			glyph.Bounds.Y = gy;
 
-			currentAtlas.RenderGlyph(_textureCreationService, _fontRasterizationService, glyph, BlurAmount, StrokeAmount);
+			currentAtlas.RenderGlyph(_textureCreator, glyph, BlurAmount, StrokeAmount);
 
 			glyph.Atlas = currentAtlas;
 
@@ -778,7 +812,7 @@ namespace FontStashSharp
 				float adv = 0;
 				if (UseKernings && glyph.Font == prevGlyph.Font)
 				{
-					adv = prevGlyph.Font.GetGlyphKernAdvance(prevGlyph.Index, glyph.Index) * glyph.Font.Scale;
+					adv = prevGlyph.Font.GetGlyphKernAdvance(prevGlyph.Id, glyph.Id, FontSize);
 				}
 
 				x += (int)(adv + spacing + 0.5f);
@@ -795,7 +829,7 @@ namespace FontStashSharp
 			q.S1 = glyph.Bounds.Right * _itw;
 			q.T1 = glyph.Bounds.Bottom * _ith;
 
-			x += (int)(glyph.XAdvance / 10.0f + 0.5f);
+			x += glyph.XAdvance;
 		}
 	}
 }

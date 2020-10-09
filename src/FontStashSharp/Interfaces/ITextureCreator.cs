@@ -1,11 +1,12 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
-namespace FontStashSharp
+namespace FontStashSharp.Interfaces
 {
 	/// <summary>
 	/// 2D Texture
 	/// </summary>
-	public interface ITexture
+	public interface ITexture: IDisposable
 	{
 		void SetData(Rectangle bounds, FssColor[] data);
 	}
@@ -13,7 +14,7 @@ namespace FontStashSharp
 	/// <summary>
 	/// Texture Creation Service
 	/// </summary>
-	public interface ITextureCreationService
+	public interface ITextureCreator
 	{
 		ITexture Create(int width, int height);
 	}

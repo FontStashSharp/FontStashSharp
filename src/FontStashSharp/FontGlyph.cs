@@ -1,19 +1,19 @@
-﻿using System.Drawing;
+﻿using FontStashSharp.Interfaces;
+using System.Drawing;
 
 namespace FontStashSharp
 {
 	public class FontGlyph
 	{
-		public FontAtlas Atlas;
 		public int Codepoint;
-		public int Index;
+		public int Id;
 		public int Size;
+		public IFont Font;
+		public FontAtlas Atlas;
 		public Rectangle Bounds;
 		public int XAdvance;
 		public int XOffset;
 		public int YOffset;
-		public float Ascent;
-		public float LineHeight;
 
 		public static int PadFromBlur(int blur)
 		{

@@ -26,7 +26,6 @@ namespace FontStashSharp
 		/// The value is a 32-bit unsigned integer, with R in the least significant octet.
 		/// </summary>
 		/// <param name="packedValue">The packed value.</param>
-		[CLSCompliant(false)]
 		public FssColor(uint packedValue)
 		{
 			_packedValue = packedValue;
@@ -294,7 +293,6 @@ namespace FontStashSharp
 		/// <summary>
 		/// Gets or sets packed value of this <see cref="FssColor"/>.
 		/// </summary>
-		[CLSCompliant(false)]
 		public UInt32 PackedValue
 		{
 			get { return _packedValue; }
