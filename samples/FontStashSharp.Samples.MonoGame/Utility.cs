@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace FontStashSharp.Samples.MonoGame
+namespace FontStashSharp
 {
 	static class Utility
 	{

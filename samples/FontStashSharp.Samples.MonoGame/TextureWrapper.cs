@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace FontStashSharp.Samples.MonoGame
+namespace FontStashSharp
 {
 	class TextureWrapper: ITexture
 	{

@@ -2,14 +2,8 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
     <PackageId>FontStashSharp</PackageId>
-    <Authors>FontStashSharpTeam</Authors>
-    <Product>FontStashSharp</Product>
-    <Description>Library extending functionality of the SpriteFont.</Description>
-    <PackageLicense>https://github.com/rds1983/FontStashSharp/blob/main/LICENSE</PackageLicense>
-    <PackageProjectUrl>https://github.com/rds1983/FontStashSharp</PackageProjectUrl>
+    <Description>C# port of https://github.com/memononen/fontstash</Description>
     <AssemblyName>FontStashSharp</AssemblyName>
-    <RootNamespace>FontStashSharp</RootNamespace>
-    <Version>1.0.0.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <DefineConstants>TRACE;PREMULTIPLIEDALPHA</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FontStashSharp.Samples.MonoGame
+namespace FontStashSharp
 {
     /// <summary>
     /// The main class.

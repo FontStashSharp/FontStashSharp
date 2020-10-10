@@ -2,14 +2,8 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
     <PackageId>FontStashSharp.StbTrueTypeSharp</PackageId>
-    <Authors>FontStashSharpTeam</Authors>
-    <Product>FontStashSharp</Product>
-    <Description>Library extending functionality of the SpriteFont.</Description>
-    <PackageLicense>https://github.com/rds1983/FontStashSharp/blob/master/LICENSE</PackageLicense>
-    <PackageProjectUrl>https://github.com/rds1983/FontStashSharp</PackageProjectUrl>
+    <Description>StbTrueTypeSharp font rasterizer backend for FontStashSharp</Description>
     <AssemblyName>FontStashSharp.StbTrueTypeSharp</AssemblyName>
-    <RootNamespace>FontStashSharp</RootNamespace>
-    <Version>1.0.0.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <DefineConstants>TRACE;STBSHARP_INTERNAL</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

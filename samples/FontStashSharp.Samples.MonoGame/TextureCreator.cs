@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace FontStashSharp.Samples.MonoGame
+namespace FontStashSharp
 {
 	class TextureCreator : ITextureCreator
 	{

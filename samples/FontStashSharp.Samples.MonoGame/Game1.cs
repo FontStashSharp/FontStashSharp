@@ -6,14 +6,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FontStashSharp.Samples.MonoGame
+namespace FontStashSharp
 {
 	/// <summary>
 	/// This is the main type for your game.
 	/// </summary>
 	public class Game1 : Game
 	{
-		private const int EffectAmount = 2;
+		private const int EffectAmount = 1;
 
 		GraphicsDeviceManager _graphics;
 		SpriteBatch _spriteBatch;

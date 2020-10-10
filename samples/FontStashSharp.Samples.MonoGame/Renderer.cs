@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Drawing;
 
-namespace FontStashSharp.Samples.MonoGame
+namespace FontStashSharp
 {
 	class Renderer : IRenderer
 	{

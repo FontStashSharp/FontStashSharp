@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace FontStashSharp.Samples.MonoGame
+namespace FontStashSharp
 {
 	public static class KeyboardUtils
 	{
