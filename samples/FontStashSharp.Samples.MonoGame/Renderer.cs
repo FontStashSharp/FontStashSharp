@@ -19,7 +19,7 @@ namespace FontStashSharp
 			_batch = batch;
 		}
 
-		public void Draw(ITexture texture, Rectangle dest, Rectangle source, FssColor color, float depth)
+		public void Draw(ITexture texture, Rectangle dest, Rectangle source, System.Drawing.Color color, float depth)
 		{
 			var textureWrapper = (TextureWrapper)texture;
 

@@ -8,7 +8,12 @@ namespace FontStashSharp.Interfaces
 	/// </summary>
 	public interface ITexture: IDisposable
 	{
-		void SetData(Rectangle bounds, FssColor[] data);
+		/// <summary>
+		/// Sets RGBA data at the specified bounds
+		/// </summary>
+		/// <param name="bounds"></param>
+		/// <param name="data"></param>
+		void SetData(Rectangle bounds, byte[] data);
 	}
 
 	/// <summary>

@@ -1,12 +1,13 @@
 ﻿using FontStashSharp.Interfaces;
 using System;
+using System.Drawing;
 
 namespace FontStashSharp
 {
 	public unsafe class FontAtlas
 	{
 		byte[] _byteBuffer;
-		FssColor[] _colorBuffer;
+		byte[] _colorBuffer;
 
 		public int Width { get; private set; }
 
@@ -172,11 +173,10 @@ namespace FontStashSharp
 			}
 			Array.Clear(buffer, 0, bufferSize);
 
-			var colorSize = glyph.Bounds.Width * glyph.Bounds.Height;
 			var colorBuffer = _colorBuffer;
-			if ((colorBuffer == null) || (colorBuffer.Length < colorSize))
+			if ((colorBuffer == null) || (colorBuffer.Length < bufferSize * 4))
 			{
-				colorBuffer = new FssColor[colorSize];
+				colorBuffer = new byte[bufferSize * 4];
 				_colorBuffer = colorBuffer;
 			}
 
@@ -197,13 +197,14 @@ namespace FontStashSharp
 				var left = strokeAmount;
 
 				byte d;
-				for (var i = 0; i < colorSize; ++i)
+				for (var i = 0; i < bufferSize; ++i)
 				{
+					var ci = i * 4;
 					var col = buffer[i];
 					var black = 0;
 					if (col == 255)
 					{
-						colorBuffer[i].R = colorBuffer[i].G = colorBuffer[i].B = colorBuffer[i].A = 255;
+						colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = colorBuffer[ci + 3] = 255;
 						continue;
 					}
 
@@ -229,32 +230,32 @@ namespace FontStashSharp
 					{
 						if (col == 0)
 						{
-							colorBuffer[i].R = colorBuffer[i].G = colorBuffer[i].B = colorBuffer[i].A = 0; //black transparency to suit stroke
+							colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = colorBuffer[ci + 3] = 0; //black transparency to suit stroke
 							continue;
 						}
 #if PREMULTIPLIEDALPHA
-                        colorBuffer[i].R = colorBuffer[i].G = colorBuffer[i].B = colorBuffer[i].A = col;
+                        colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = colorBuffer[ci + 3] = col;
 #else
-						colorBuffer[i].R = colorBuffer[i].G = colorBuffer[i].B = 255;
-						colorBuffer[i].A = col;
+						colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = 255;
+						colorBuffer[ci + 3] = col;
 #endif
 					}
 					else
 					{
 						if (col == 0)
 						{
-							colorBuffer[i].R = colorBuffer[i].G = colorBuffer[i].B = 0;
-							colorBuffer[i].A = (byte)black;
+							colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = 0;
+							colorBuffer[ci + 3] = (byte)black;
 							continue;
 						}
 
 #if PREMULTIPLIEDALPHA
                         var alpha = ((255 - col) * black + 255 * col) / 255;
-                        colorBuffer[i].R = colorBuffer[i].G = colorBuffer[i].B = (byte)((alpha * col) / 255);
-                        colorBuffer[i].A = (byte)alpha;
+                        colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = (byte)((alpha * col) / 255);
+                        colorBuffer[ci + 3] = (byte)alpha;
 #else
-						colorBuffer[i].R = colorBuffer[i].G = colorBuffer[i].B = col;
-						colorBuffer[i].A = (byte)(((255 - col) * black + 255 * col) / 255);
+						colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = col;
+						colorBuffer[ci + 3] = (byte)(((255 - col) * black + 255 * col) / 255);
 #endif
 					}
 				}
@@ -269,14 +270,15 @@ namespace FontStashSharp
 					}
 				}
 
-				for (var i = 0; i < colorSize; ++i)
+				for (var i = 0; i < bufferSize; ++i)
 				{
+					var ci = i * 4;
 					var c = buffer[i];
 #if PREMULTIPLIEDALPHA
-                    colorBuffer[i].R = colorBuffer[i].G = colorBuffer[i].B = colorBuffer[i].A = c;
+                    colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = colorBuffer[ci + 3] = c;
 #else
-					colorBuffer[i].R = colorBuffer[i].G = colorBuffer[i].B = 255;
-					colorBuffer[i].A = c;
+					colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = 255;
+					colorBuffer[ci + 3] = c;
 #endif
 				}
 			}

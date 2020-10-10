@@ -9,14 +9,14 @@ namespace FontStashSharp
 			return new Rectangle(r.Left, r.Top, r.Width, r.Height);
 		}
 
-		public static Color ToColor(this FssColor c)
+		public static Color ToColor(this System.Drawing.Color c)
 		{
-			return new Color(c.PackedValue);
+			return new Color(c.R, c.G, c.B, c.A);
 		}
 
-		public static FssColor ToFssColor(this Color c)
+		public static System.Drawing.Color ToColor(this Color c)
 		{
-			return new FssColor(c.PackedValue);
+			return System.Drawing.Color.FromArgb(c.A, c.R, c.G, c.B);
 		}
 	}
 }

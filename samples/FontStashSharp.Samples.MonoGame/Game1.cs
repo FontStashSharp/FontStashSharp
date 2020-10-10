@@ -24,21 +24,21 @@ namespace FontStashSharp
 		private Texture2D _white;
 		private bool _drawBackground = false;
 
-		private static readonly FssColor[] _colors = new FssColor[]
+		private static readonly System.Drawing.Color[] _colors = new System.Drawing.Color[]
 		{
-			Color.Red.ToFssColor(),
-			Color.Blue.ToFssColor(),
-			Color.Green.ToFssColor(),
-			Color.Aquamarine.ToFssColor(),
-			Color.Azure.ToFssColor(),
-			Color.Chartreuse.ToFssColor(),
-			Color.Lavender.ToFssColor(),
-			Color.OldLace.ToFssColor(),
-			Color.PaleGreen.ToFssColor(),
-			Color.SaddleBrown.ToFssColor(),
-			Color.IndianRed.ToFssColor(),
-			Color.ForestGreen.ToFssColor(),
-			Color.Khaki.ToFssColor()
+			Color.Red.ToColor(),
+			Color.Blue.ToColor(),
+			Color.Green.ToColor(),
+			Color.Aquamarine.ToColor(),
+			Color.Azure.ToColor(),
+			Color.Chartreuse.ToColor(),
+			Color.Lavender.ToColor(),
+			Color.OldLace.ToColor(),
+			Color.PaleGreen.ToColor(),
+			Color.SaddleBrown.ToColor(),
+			Color.IndianRed.ToColor(),
+			Color.ForestGreen.ToColor(),
+			Color.Khaki.ToColor()
 		};
 
 		public Game1()
@@ -146,7 +146,7 @@ namespace FontStashSharp
 			return new Vector2(bounds.X2, bounds.Y2);
 		}
 
-		public void DrawString(string text, Vector2 position, FssColor[] glyphColors)
+		public void DrawString(string text, Vector2 position, System.Drawing.Color[] glyphColors)
 		{
 			if (_drawBackground)
 			{
@@ -165,7 +165,7 @@ namespace FontStashSharp
 				_spriteBatch.Draw(_white, new Rectangle(0, y, (int)size.X, (int)size.Y), Color.Green);
 			}
 
-			_font.DrawText(_renderer, 0, y, text, color.ToFssColor(), 0.0f);
+			_font.DrawText(_renderer, 0, y, text, color.ToColor(), 0.0f);
 		}
 
 		private void DrawString(string text, int y)

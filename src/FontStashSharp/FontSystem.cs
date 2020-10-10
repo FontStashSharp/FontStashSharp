@@ -167,7 +167,7 @@ namespace FontStashSharp
 			}
 		}
 
-		public float DrawText(IRenderer batch, float x, float y, string str, FssColor color, float depth)
+		public float DrawText(IRenderer batch, float x, float y, string str, Color color, float depth)
 		{
 			if (string.IsNullOrEmpty(str)) return 0.0f;
 
@@ -230,7 +230,7 @@ namespace FontStashSharp
 			return x;
 		}
 
-		public float DrawText(IRenderer batch, float x, float y, string str, FssColor[] glyphColors, float depth)
+		public float DrawText(IRenderer batch, float x, float y, string str, Color[] glyphColors, float depth)
 		{
 			if (string.IsNullOrEmpty(str)) return 0.0f;
 
@@ -322,7 +322,7 @@ namespace FontStashSharp
 			}
 		}
 
-		public float DrawText(IRenderer batch, float x, float y, StringBuilder str, FssColor color, float depth)
+		public float DrawText(IRenderer batch, float x, float y, StringBuilder str, Color color, float depth)
 		{
 			if (str == null || str.Length == 0) return 0.0f;
 
@@ -386,7 +386,7 @@ namespace FontStashSharp
 			return x;
 		}
 
-		public float DrawText(IRenderer batch, float x, float y, StringBuilder str, FssColor[] glyphColors, float depth)
+		public float DrawText(IRenderer batch, float x, float y, StringBuilder str, Color[] glyphColors, float depth)
 		{
 			if (str == null || str.Length == 0) return 0.0f;
 
