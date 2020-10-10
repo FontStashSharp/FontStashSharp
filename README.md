@@ -32,8 +32,8 @@ Stroked Text:
 ![](/screenshots/stroked.png)
 
 ## Credits
-* [stb](https://github.com/nothings/stb)
 * [fontstash](https://github.com/memononen/fontstash)
+* [stb](https://github.com/nothings/stb)
 * [bartwe's fork of SpriteFontPlus](https://github.com/bartwe/SpriteFontPlus)
 * [MonoGame](http://www.monogame.net/)
 
