@@ -23,13 +23,18 @@ Package FontStashSharp.StbTrueTypeSharp contains implementation of IFontRasteriz
 [FontStashSharp.Samples.MonoGame](samples/FontStashSharp.Samples.MonoGame) is full example of the FontStashSharp usage in the [MonoGame](https://www.monogame.net/).
 
 # Screenshots
+Ordinary Text:
 ![](/screenshots/simple.png)
+
+Blurry Text:
 ![](/screenshots/blurry.png)
+
+Stroked Text:
 ![](/screenshots/stroked.png)
 
 ## Credits
-* [MonoGame](http://www.monogame.net/)
 * [stb](https://github.com/nothings/stb)
 * [fontstash](https://github.com/memononen/fontstash)
 * [bartwe's fork of SpriteFontPlus](https://github.com/bartwe/SpriteFontPlus)
+* [MonoGame](http://www.monogame.net/)
 
