@@ -1,7 +1,7 @@
 # FontStashSharp
 FontStashSharp is C# port of https://github.com/memononen/fontstash
 
-Or - in other words - it is the text rendering library with following features:
+Or - in other words - it is the engine-agnostic text rendering library with following features:
 * Glyphs are rendered on demand on the texture atlas
 * It's possible to have multiple ttf fonts per one FontSystem
 * Colored text
