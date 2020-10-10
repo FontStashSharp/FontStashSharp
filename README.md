@@ -20,6 +20,16 @@ In order to use FontStashSharp you need to provide implementations of 3 interfac
 Package FontStashSharp.StbTrueTypeSharp contains implementation of IFontRasterizer based on the [StbTrueTypeSharp](https://github.com/StbSharp/StbTrueTypeSharp)
 
 # Sample
-[FontStashSharp.Samples.MonoGame](samples/FontStashSharp.Samples.MonoGame) is full example of the FontStashSharp usage.
+[FontStashSharp.Samples.MonoGame](samples/FontStashSharp.Samples.MonoGame) is full example of the FontStashSharp usage in the [MonoGame](https://www.monogame.net/).
 
+# Screenshots
+[simple](screenshots/simple.png)
+[blurry](screenshots/blurry.png)
+[stroked](screenshots/stroked.png)
+
+## Credits
+* [MonoGame](http://www.monogame.net/)
+* [stb](https://github.com/nothings/stb)
+* [fontstash](https://github.com/memononen/fontstash)
+* [bartwe's fork of SpriteFontPlus](https://github.com/bartwe/SpriteFontPlus)
 
