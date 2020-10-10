@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Authors>FontStashSharpTeam</Authors>
     <Product>FontStashSharp</Product>
-    <PackageLicense>https://github.com/rds1983/FontStashSharp/blob/main/LICENSE</PackageLicense>
+    <PackageLicenseExpression>Zlib</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/rds1983/FontStashSharp</PackageProjectUrl>
     <RootNamespace>FontStashSharp</RootNamespace>
     <Version>0.8.2.0</Version>

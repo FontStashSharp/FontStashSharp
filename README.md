@@ -1,2 +1,8 @@
 # FontStashSharp
-C# port of https://github.com/memononen/fontstash
+
+[![NuGet](https://img.shields.io/nuget/v/FontStashSharp.svg)](https://www.nuget.org/packages/FontStashSharp/)
+FontStashSharp is C# port of https://github.com/memononen/fontstash
+Or - in other words - it is the text rendering library.
+
+# NuGet
+
