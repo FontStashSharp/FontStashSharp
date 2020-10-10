@@ -5,7 +5,8 @@ Or - in other words - it is the text rendering library.
 Features:
 * Glyphs are rendered on demand on the texture atlas.
 * It's possible to have multiple ttf fonts per one FontSystem. A glyph will be search through any of them.
-* Blurry and stroked text.
+* Colored text
+* Blurry and stroked text
 
 # Installation
 Package|NuGet
