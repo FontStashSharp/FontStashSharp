@@ -1,6 +1,5 @@
 ﻿using FontStashSharp.Interfaces;
 using System;
-using System.Drawing;
 
 namespace FontStashSharp
 {
@@ -17,7 +16,7 @@ namespace FontStashSharp
 
 		public FontAtlasNode[] Nodes { get; private set; }
 
-		public ITexture Texture { get; set; }
+		public ITexture2D Texture { get; set; }
 
 		public FontAtlas(int w, int h, int count)
 		{
@@ -158,7 +157,7 @@ namespace FontStashSharp
 			return true;
 		}
 
-		public void RenderGlyph(ITextureCreator textureCreator, FontGlyph glyph, int blurAmount, int strokeAmount)
+		public void RenderGlyph(ITexture2DCreator textureCreator, FontGlyph glyph, int blurAmount, int strokeAmount)
 		{
 			var pad = Math.Max(FontGlyph.PadFromBlur(blurAmount), FontGlyph.PadFromBlur(strokeAmount));
 

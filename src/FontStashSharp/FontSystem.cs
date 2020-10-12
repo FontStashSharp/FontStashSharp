@@ -1,8 +1,14 @@
 using FontStashSharp.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Text;
+
+#if MONOGAME || FNA
+using Microsoft.Xna.Framework;
+using PointF = Microsoft.Xna.Framework.Vector2;
+#else
+using System.Drawing;
+#endif
 
 namespace FontStashSharp
 {
@@ -18,7 +24,7 @@ namespace FontStashSharp
 		readonly Int32Map<GlyphCollection> _glyphs = new Int32Map<GlyphCollection>();
 
 		readonly IFontLoader _fontLoader;
-		readonly ITextureCreator _textureCreator;
+		readonly ITexture2DCreator _textureCreator;
 
 		float _ith;
 		float _itw;
@@ -54,7 +60,7 @@ namespace FontStashSharp
 
 		public event EventHandler CurrentAtlasFull;
 
-		public FontSystem(IFontLoader fontLoader, ITextureCreator textureCreator, int width, int height, int blurAmount = 0, int strokeAmount = 0)
+		public FontSystem(IFontLoader fontLoader, ITexture2DCreator textureCreator, int width, int height, int blurAmount = 0, int strokeAmount = 0)
 		{
 			if (fontLoader == null)
 			{
@@ -167,7 +173,7 @@ namespace FontStashSharp
 			}
 		}
 
-		public float DrawText(IRenderer batch, float x, float y, string str, Color color, float depth)
+		public float DrawText(IFontStashRenderer batch, float x, float y, string str, Color color, float depth)
 		{
 			if (string.IsNullOrEmpty(str)) return 0.0f;
 
@@ -230,7 +236,7 @@ namespace FontStashSharp
 			return x;
 		}
 
-		public float DrawText(IRenderer batch, float x, float y, string str, Color[] glyphColors, float depth)
+		public float DrawText(IFontStashRenderer batch, float x, float y, string str, Color[] glyphColors, float depth)
 		{
 			if (string.IsNullOrEmpty(str)) return 0.0f;
 
@@ -322,7 +328,7 @@ namespace FontStashSharp
 			}
 		}
 
-		public float DrawText(IRenderer batch, float x, float y, StringBuilder str, Color color, float depth)
+		public float DrawText(IFontStashRenderer batch, float x, float y, StringBuilder str, Color color, float depth)
 		{
 			if (str == null || str.Length == 0) return 0.0f;
 
@@ -386,7 +392,7 @@ namespace FontStashSharp
 			return x;
 		}
 
-		public float DrawText(IRenderer batch, float x, float y, StringBuilder str, Color[] glyphColors, float depth)
+		public float DrawText(IFontStashRenderer batch, float x, float y, StringBuilder str, Color[] glyphColors, float depth)
 		{
 			if (str == null || str.Length == 0) return 0.0f;
 
