@@ -35,7 +35,7 @@ namespace FontStashSharp
 
 		public readonly int BlurAmount;
 		public readonly int StrokeAmount;
-		public float Spacing;
+		public float CharacterSpacing = 0f;
 		public float LineSpacing = 0f;
 		public PointF Scale = new PointF(1.0f, 1.0f);
 		public bool UseKernings = true;
@@ -127,7 +127,7 @@ namespace FontStashSharp
 		public void ClearState()
 		{
 			FontSize = 12;
-			Spacing = 0;
+			CharacterSpacing = 0;
 		}
 
 		public void AddFontMem(byte[] data)
@@ -205,7 +205,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				GetQuad(glyph, prevGlyph, Spacing, ref originX, ref originY, ref q);
+				GetQuad(glyph, prevGlyph, CharacterSpacing, ref originX, ref originY, ref q);
 				if (!glyph.IsEmpty)
 				{
 					q.X0 = (int)(q.X0 * Scale.X);
@@ -272,7 +272,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				GetQuad(glyph, prevGlyph, Spacing, ref originX, ref originY, ref q);
+				GetQuad(glyph, prevGlyph, CharacterSpacing, ref originX, ref originY, ref q);
 				if (!glyph.IsEmpty)
 				{
 					q.X0 = (int)(q.X0 * Scale.X);
@@ -361,7 +361,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				GetQuad(glyph, prevGlyph, Spacing, ref originX, ref originY, ref q);
+				GetQuad(glyph, prevGlyph, CharacterSpacing, ref originX, ref originY, ref q);
 				if (!glyph.IsEmpty)
 				{
 					q.X0 = (int)(q.X0 * Scale.X);
@@ -428,7 +428,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				GetQuad(glyph, prevGlyph, Spacing, ref originX, ref originY, ref q);
+				GetQuad(glyph, prevGlyph, CharacterSpacing, ref originX, ref originY, ref q);
 				if (!glyph.IsEmpty)
 				{
 					q.X0 = (int)(q.X0 * Scale.X);
@@ -496,7 +496,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				GetQuad(glyph, prevGlyph, Spacing, ref x, ref y, ref q);
+				GetQuad(glyph, prevGlyph, CharacterSpacing, ref x, ref y, ref q);
 				if (q.X0 < minx)
 					minx = q.X0;
 				if (x > maxx)
@@ -556,7 +556,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				GetQuad(glyph, prevGlyph, Spacing, ref x, ref y, ref q);
+				GetQuad(glyph, prevGlyph, CharacterSpacing, ref x, ref y, ref q);
 				if (q.X0 < minx)
 					minx = q.X0;
 				if (x > maxx)
@@ -613,7 +613,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				GetQuad(glyph, prevGlyph, Spacing, ref x, ref y, ref q);
+				GetQuad(glyph, prevGlyph, CharacterSpacing, ref x, ref y, ref q);
 
 				Rects.Add(new Rectangle((int)q.X0, (int)q.Y0, (int)(q.X1 - q.X0), (int)(q.Y1 - q.Y0)));
 				prevGlyph = glyph;
@@ -659,7 +659,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				GetQuad(glyph, prevGlyph, Spacing, ref x, ref y, ref q);
+				GetQuad(glyph, prevGlyph, CharacterSpacing, ref x, ref y, ref q);
 
 				Rects.Add(new Rectangle((int)q.X0, (int)q.Y0, (int)(q.X1 - q.X0), (int)(q.Y1 - q.Y0)));
 				prevGlyph = glyph;
