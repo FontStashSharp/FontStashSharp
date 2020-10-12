@@ -56,8 +56,8 @@ namespace FontStashSharp
 
 		private FontSystem LoadFont(int blur, int stroke)
 		{
-			var fontLoader = new StbTrueTypeSharpFontLoader();
-			var textureCreator = new TextureCreator(GraphicsDevice);
+			var fontLoader = StbTrueTypeSharpFontLoader.Instance;
+			var textureCreator = new Texture2DCreator(GraphicsDevice);
 
 			var result = new FontSystem(fontLoader, textureCreator, 1024, 1024, blur, stroke)
 			{
@@ -197,7 +197,7 @@ namespace FontStashSharp
 			DrawString("Texture:", 380);
 
 			var atlas = _font.Atlases.First();
-			var wrapper = (TextureWrapper)atlas.Texture;
+			var wrapper = (Texture2DWrapper)atlas.Texture;
 			_spriteBatch.Draw(wrapper.Texture, new Vector2(0, 410), Color.White);
 
 			_spriteBatch.End();

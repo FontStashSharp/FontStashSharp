@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace FontStashSharp
 {
-	class Renderer : IRenderer
+	class Renderer : IFontStashRenderer
 	{
 		SpriteBatch _batch;
 
@@ -19,9 +19,9 @@ namespace FontStashSharp
 			_batch = batch;
 		}
 
-		public void Draw(ITexture texture, Rectangle dest, Rectangle source, System.Drawing.Color color, float depth)
+		public void Draw(ITexture2D texture, Rectangle dest, Rectangle source, System.Drawing.Color color, float depth)
 		{
-			var textureWrapper = (TextureWrapper)texture;
+			var textureWrapper = (Texture2DWrapper)texture;
 
 			var rdest = dest.ToRectangle();
 			_batch.Draw(textureWrapper.Texture,

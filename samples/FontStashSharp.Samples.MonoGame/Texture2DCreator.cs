@@ -4,11 +4,11 @@ using System;
 
 namespace FontStashSharp
 {
-	class TextureCreator : ITextureCreator
+	class Texture2DCreator : ITexture2DCreator
 	{
 		readonly GraphicsDevice _device;
 
-		public TextureCreator(GraphicsDevice device)
+		public Texture2DCreator(GraphicsDevice device)
 		{
 			if (device == null)
 			{
@@ -18,10 +18,10 @@ namespace FontStashSharp
 			_device = device;
 		}
 
-		public ITexture Create(int width, int height)
+		public ITexture2D Create(int width, int height)
 		{
 			var texture2d = new Texture2D(_device, width, height);
-			return new TextureWrapper(texture2d);
+			return new Texture2DWrapper(texture2d);
 		}
 	}
 }
