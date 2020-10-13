@@ -22,8 +22,6 @@ namespace FontStashSharp
 		FontAtlas _currentAtlas;
 		Point _size;
 
-		public int FontSize { get; set; }
-
 		public readonly int BlurAmount;
 		public readonly int StrokeAmount;
 		public float CharacterSpacing = 0f;
@@ -115,11 +113,10 @@ namespace FontStashSharp
 
 		public void ClearState()
 		{
-			FontSize = 12;
 			CharacterSpacing = 0;
 		}
 
-		public void AddFontMem(byte[] data)
+		public void AddFont(byte[] data)
 		{
 			var font = _fontLoader.Load(data);
 			_fonts.Add(font);
@@ -208,7 +205,7 @@ namespace FontStashSharp
 				float adv = 0;
 				if (UseKernings && glyph.Font == prevGlyph.Font)
 				{
-					adv = prevGlyph.Font.GetGlyphKernAdvance(prevGlyph.Id, glyph.Id, FontSize);
+					adv = prevGlyph.Font.GetGlyphKernAdvance(prevGlyph.Id, glyph.Id, glyph.Size);
 				}
 
 				x += (int)(adv + CharacterSpacing + 0.5f);

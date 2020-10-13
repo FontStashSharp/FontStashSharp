@@ -60,14 +60,10 @@ namespace FontStashSharp
 			var fontLoader = StbTrueTypeSharpFontLoader.Instance;
 			var textureCreator = new Texture2DCreator(GraphicsDevice);
 
-			var result = new FontSystem(fontLoader, textureCreator, 1024, 1024, blur, stroke)
-			{
-				FontSize = 20
-			};
-
-			result.AddFontMem(File.ReadAllBytes(@"Fonts/DroidSans.ttf"));
-			result.AddFontMem(File.ReadAllBytes(@"Fonts/DroidSansJapanese.ttf"));
-			result.AddFontMem(File.ReadAllBytes(@"Fonts/Symbola-Emoji.ttf"));
+			var result = new FontSystem(fontLoader, textureCreator, 1024, 1024, blur, stroke);
+			result.AddFont(File.ReadAllBytes(@"Fonts/DroidSans.ttf"));
+			result.AddFont(File.ReadAllBytes(@"Fonts/DroidSansJapanese.ttf"));
+			result.AddFont(File.ReadAllBytes(@"Fonts/Symbola-Emoji.ttf"));
 
 			return result;
 		}
