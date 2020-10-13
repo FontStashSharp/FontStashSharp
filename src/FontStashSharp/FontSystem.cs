@@ -1,7 +1,13 @@
 using FontStashSharp.Interfaces;
 using System;
 using System.Collections.Generic;
+
+#if MONOGAME || FNA
+using Microsoft.Xna.Framework;
+using PointF = Microsoft.Xna.Framework.Vector2;
+#else
 using System.Drawing;
+#endif
 
 namespace FontStashSharp
 {

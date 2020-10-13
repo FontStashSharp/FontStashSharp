@@ -2,7 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+
+#if MONOGAME || FNA
+using Microsoft.Xna.Framework;
+#else
 using System.Drawing;
+#endif
 
 namespace FontStashSharp
 {
