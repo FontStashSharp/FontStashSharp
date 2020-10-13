@@ -17,8 +17,9 @@ namespace FontStashSharp
 
 		GraphicsDeviceManager _graphics;
 		SpriteBatch _spriteBatch;
-		private FontSystem _font;
-		private FontSystem[] _fonts;
+		private DynamicSpriteFont _font;
+		private FontSystem[] _fontSystems;
+		private FontSystem _currentFontSystem;
 		private Renderer _renderer;
 
 		private Texture2D _white;
@@ -87,9 +88,8 @@ namespace FontStashSharp
 			fonts.Add(LoadFont(EffectAmount, 0));
 			fonts.Add(LoadFont(0, EffectAmount));
 
-			_fonts = fonts.ToArray();
-			_font = _fonts[0];
-
+			_fontSystems = fonts.ToArray();
+			_currentFontSystem = _fontSystems[0];
 
 			_white = new Texture2D(GraphicsDevice, 1, 1);
 			_white.SetData(new[] { Color.White });
@@ -112,27 +112,26 @@ namespace FontStashSharp
 			{
 				var i = 0;
 
-				for (; i < _fonts.Length; ++i)
+				for (; i < _fontSystems.Length; ++i)
 				{
-					if (_font == _fonts[i])
+					if (_currentFontSystem == _fontSystems[i])
 					{
 						break;
 					}
 				}
 
 				++i;
-				if (i >= _fonts.Length)
+				if (i >= _fontSystems.Length)
 				{
 					i = 0;
 				}
 
-				_font = _fonts[i];
+				_currentFontSystem = _fontSystems[i];
 			}
 
 			if (KeyboardUtils.IsPressed(Keys.Enter))
 			{
-				_font.UseKernings = !_font.UseKernings;
-
+				_currentFontSystem.UseKernings = !_currentFontSystem.UseKernings;
 			}
 
 			KeyboardUtils.End();
@@ -185,18 +184,18 @@ namespace FontStashSharp
 			_spriteBatch.Begin();
 
 			// Render some text
-			_font.FontSize = 18;
+			_font = _currentFontSystem.GetFontBySize(18);
 			DrawString("The quick いろは brown\nfox にほへ jumps over\nt🙌h📦e l👏a👏zy dog adfasoqiw yraldh ald halwdha ldjahw dlawe havbx get872rq", 0);
 
-			_font.FontSize = 30;
+			_font = _currentFontSystem.GetFontBySize(30);
 			DrawString("The quick いろは brown\nfox にほへ jumps over\nt🙌h📦e l👏a👏zy dog", 80, Color.Bisque);
 
 			DrawString("Colored Text", new Vector2(0, 200), _colors);
 
-			_font.FontSize = 26;
+			_font = _currentFontSystem.GetFontBySize(26);
 			DrawString("Texture:", 380);
 
-			var atlas = _font.Atlases.First();
+			var atlas = _currentFontSystem.Atlases.First();
 			var wrapper = (Texture2DWrapper)atlas.Texture;
 			_spriteBatch.Draw(wrapper.Texture, new Vector2(0, 410), Color.White);
 
