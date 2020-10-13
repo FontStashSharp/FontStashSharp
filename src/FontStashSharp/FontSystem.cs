@@ -116,7 +116,7 @@ namespace FontStashSharp
 			_fonts.Add(font);
 		}
 
-		public FontRenderer GetFontBySize(int fontSize)
+		public FontRenderer GetFont(int fontSize)
 		{
 			FontRenderer result;
 			if (_renderers.TryGetValue(fontSize, out result))

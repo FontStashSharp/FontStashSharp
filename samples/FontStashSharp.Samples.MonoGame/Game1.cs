@@ -180,15 +180,15 @@ namespace FontStashSharp
 			_spriteBatch.Begin();
 
 			// Render some text
-			_fontRenderer = _currentFontSystem.GetFontBySize(18);
+			_fontRenderer = _currentFontSystem.GetFont(18);
 			DrawString("The quick いろは brown\nfox にほへ jumps over\nt🙌h📦e l👏a👏zy dog adfasoqiw yraldh ald halwdha ldjahw dlawe havbx get872rq", 0);
 
-			_fontRenderer = _currentFontSystem.GetFontBySize(30);
+			_fontRenderer = _currentFontSystem.GetFont(30);
 			DrawString("The quick いろは brown\nfox にほへ jumps over\nt🙌h📦e l👏a👏zy dog", 80, Color.Bisque);
 
 			DrawString("Colored Text", new Vector2(0, 200), _colors);
 
-			_fontRenderer = _currentFontSystem.GetFontBySize(26);
+			_fontRenderer = _currentFontSystem.GetFont(26);
 			DrawString("Texture:", 380);
 
 			var atlas = _currentFontSystem.Atlases.First();
