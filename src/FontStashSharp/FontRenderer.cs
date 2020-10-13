@@ -2,24 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
-#if MONOGAME || FNA
-using Microsoft.Xna.Framework;
-#else
 using System.Drawing;
-using System.Text;
-#endif
 
 namespace FontStashSharp
 {
-	public class DynamicSpriteFont
+	public class FontRenderer
 	{
 		private readonly FontSystem _fontSystem;
 		private readonly Int32Map<FontGlyph> Glyphs = new Int32Map<FontGlyph>();
 
 		public int FontSize { get; private set; }
 
-		internal DynamicSpriteFont(FontSystem system, int size)
+		internal FontRenderer(FontSystem system, int size)
 		{
 			if (system == null)
 			{

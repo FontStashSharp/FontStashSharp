@@ -1,8 +1,4 @@
-﻿#if MONOGAME || FNA
-using Microsoft.Xna.Framework;
-#else
-using System.Drawing;
-#endif
+﻿using System.Drawing;
 
 namespace FontStashSharp.Interfaces
 {

@@ -1,20 +1,14 @@
 using FontStashSharp.Interfaces;
 using System;
 using System.Collections.Generic;
-
-#if MONOGAME || FNA
-using Microsoft.Xna.Framework;
-using PointF = Microsoft.Xna.Framework.Vector2;
-#else
 using System.Drawing;
-#endif
 
 namespace FontStashSharp
 {
 	public class FontSystem : IDisposable
 	{
 		readonly List<IFont> _fonts = new List<IFont>();
-		readonly Int32Map<DynamicSpriteFont> _dynamicFonts = new Int32Map<DynamicSpriteFont>();
+		readonly Int32Map<FontRenderer> _renderers = new Int32Map<FontRenderer>();
 
 		readonly IFontLoader _fontLoader;
 		readonly ITexture2DCreator _textureCreator;
@@ -108,7 +102,7 @@ namespace FontStashSharp
 
 			Atlases?.Clear();
 			_currentAtlas = null;
-			_dynamicFonts.Clear();
+			_renderers.Clear();
 		}
 
 		public void ClearState()
@@ -122,23 +116,23 @@ namespace FontStashSharp
 			_fonts.Add(font);
 		}
 
-		public DynamicSpriteFont GetFontBySize(int fontSize)
+		public FontRenderer GetFontBySize(int fontSize)
 		{
-			DynamicSpriteFont result;
-			if (_dynamicFonts.TryGetValue(fontSize, out result))
+			FontRenderer result;
+			if (_renderers.TryGetValue(fontSize, out result))
 			{
 				return result;
 			}
 
-			result = new DynamicSpriteFont(this, fontSize);
-			_dynamicFonts[fontSize] = result;
+			result = new FontRenderer(this, fontSize);
+			_renderers[fontSize] = result;
 			return result;
 		}
 
 		public void Reset(int width, int height)
 		{
 			Atlases.Clear();
-			_dynamicFonts.Clear();
+			_renderers.Clear();
 
 			if (width == _size.X && height == _size.Y)
 				return;

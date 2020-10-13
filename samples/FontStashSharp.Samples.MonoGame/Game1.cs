@@ -17,7 +17,7 @@ namespace FontStashSharp
 
 		GraphicsDeviceManager _graphics;
 		SpriteBatch _spriteBatch;
-		private DynamicSpriteFont _font;
+		private FontRenderer _fontRenderer;
 		private FontSystem[] _fontSystems;
 		private FontSystem _currentFontSystem;
 		private Renderer _renderer;
@@ -136,7 +136,7 @@ namespace FontStashSharp
 		public Vector2 MeasureString(string text)
 		{
 			Bounds bounds = new Bounds();
-			_font.TextBounds(0, 0, text, ref bounds);
+			_fontRenderer.TextBounds(0, 0, text, ref bounds);
 
 			return new Vector2(bounds.X2, bounds.Y2);
 		}
@@ -149,7 +149,7 @@ namespace FontStashSharp
 				_spriteBatch.Draw(_white, new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y), Color.Green);
 			}
 
-			_font.DrawText(_renderer, position.X, position.Y, text, glyphColors, 0.0f);
+			_fontRenderer.DrawText(_renderer, position.X, position.Y, text, glyphColors, 0.0f);
 		}
 
 		private void DrawString(string text, int y, Color color)
@@ -160,7 +160,7 @@ namespace FontStashSharp
 				_spriteBatch.Draw(_white, new Rectangle(0, y, (int)size.X, (int)size.Y), Color.Green);
 			}
 
-			_font.DrawText(_renderer, 0, y, text, color.ToColor(), 0.0f);
+			_fontRenderer.DrawText(_renderer, 0, y, text, color.ToColor(), 0.0f);
 		}
 
 		private void DrawString(string text, int y)
@@ -180,15 +180,15 @@ namespace FontStashSharp
 			_spriteBatch.Begin();
 
 			// Render some text
-			_font = _currentFontSystem.GetFontBySize(18);
+			_fontRenderer = _currentFontSystem.GetFontBySize(18);
 			DrawString("The quick いろは brown\nfox にほへ jumps over\nt🙌h📦e l👏a👏zy dog adfasoqiw yraldh ald halwdha ldjahw dlawe havbx get872rq", 0);
 
-			_font = _currentFontSystem.GetFontBySize(30);
+			_fontRenderer = _currentFontSystem.GetFontBySize(30);
 			DrawString("The quick いろは brown\nfox にほへ jumps over\nt🙌h📦e l👏a👏zy dog", 80, Color.Bisque);
 
 			DrawString("Colored Text", new Vector2(0, 200), _colors);
 
-			_font = _currentFontSystem.GetFontBySize(26);
+			_fontRenderer = _currentFontSystem.GetFontBySize(26);
 			DrawString("Texture:", 380);
 
 			var atlas = _currentFontSystem.Atlases.First();
