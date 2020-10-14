@@ -13,7 +13,7 @@ namespace FontStashSharp
 		public int Codepoint;
 		public int Id;
 		public int Size;
-		public IFont Font;
+		public IFontSource Font;
 		public FontAtlas Atlas;
 		public Rectangle Bounds;
 		public int XAdvance;

@@ -2,7 +2,7 @@
 
 namespace FontStashSharp.Interfaces
 {
-	public interface IFont: IDisposable
+	public interface IFontSource: IDisposable
 	{
 		/// <summary>
 		/// Returns font metrics for the specified font size
@@ -59,6 +59,6 @@ namespace FontStashSharp.Interfaces
 	/// </summary>
 	public interface IFontLoader
 	{
-		IFont Load(byte[] data);
+		IFontSource Load(byte[] data);
 	}
 }

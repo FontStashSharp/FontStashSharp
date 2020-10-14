@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
-using PointF = Microsoft.Xna.Framework.Vector2;
 #else
 using System.Drawing;
 #endif
@@ -13,8 +12,8 @@ namespace FontStashSharp
 {
 	public class FontSystem : IDisposable
 	{
-		readonly List<IFont> _fonts = new List<IFont>();
-		readonly Int32Map<FontRenderer> _renderers = new Int32Map<FontRenderer>();
+		readonly List<IFontSource> _fontSources = new List<IFontSource>();
+		readonly Int32Map<DynamicSpriteFont> _fonts = new Int32Map<DynamicSpriteFont>();
 
 		readonly IFontLoader _fontLoader;
 		readonly ITexture2DCreator _textureCreator;
@@ -24,11 +23,8 @@ namespace FontStashSharp
 
 		public readonly int BlurAmount;
 		public readonly int StrokeAmount;
-		public float CharacterSpacing = 0f;
-		public float LineSpacing = 0f;
-		public PointF Scale = new PointF(1.0f, 1.0f);
-		public bool UseKernings = true;
 
+		public bool UseKernings = true;
 		public int? DefaultCharacter = ' ';
 
 		public FontAtlas CurrentAtlas
@@ -93,52 +89,45 @@ namespace FontStashSharp
 			StrokeAmount = strokeAmount;
 
 			_size = new Point(width, height);
-
-			ClearState();
 		}
 
 		public void Dispose()
 		{
-			if (_fonts != null)
+			if (_fontSources != null)
 			{
-				foreach (var font in _fonts)
+				foreach (var font in _fontSources)
 					font.Dispose();
-				_fonts.Clear();
+				_fontSources.Clear();
 			}
 
 			Atlases?.Clear();
 			_currentAtlas = null;
-			_renderers.Clear();
-		}
-
-		public void ClearState()
-		{
-			CharacterSpacing = 0;
+			_fonts.Clear();
 		}
 
 		public void AddFont(byte[] data)
 		{
-			var font = _fontLoader.Load(data);
-			_fonts.Add(font);
+			var fontSource = _fontLoader.Load(data);
+			_fontSources.Add(fontSource);
 		}
 
-		public FontRenderer GetFont(int fontSize)
+		public DynamicSpriteFont GetFont(int fontSize)
 		{
-			FontRenderer result;
-			if (_renderers.TryGetValue(fontSize, out result))
+			DynamicSpriteFont result;
+			if (_fonts.TryGetValue(fontSize, out result))
 			{
 				return result;
 			}
 
-			result = new FontRenderer(this, fontSize);
-			_renderers[fontSize] = result;
+			result = new DynamicSpriteFont(this, fontSize);
+			_fonts[fontSize] = result;
 			return result;
 		}
 
 		public void Reset(int width, int height)
 		{
 			Atlases.Clear();
-			_renderers.Clear();
+			_fonts.Clear();
 
 			if (width == _size.X && height == _size.Y)
 				return;
@@ -151,12 +140,12 @@ namespace FontStashSharp
 			Reset(_size.X, _size.Y);
 		}
 
-		internal int? GetCodepointIndex(int codepoint, out IFont font)
+		internal int? GetCodepointIndex(int codepoint, out IFontSource font)
 		{
 			font = null;
 
 			var g = default(int?);
-			foreach (var f in _fonts)
+			foreach (var f in _fontSources)
 			{
 				g = f.GetGlyphId(codepoint);
 				if (g != null)
@@ -196,33 +185,6 @@ namespace FontStashSharp
 			currentAtlas.RenderGlyph(_textureCreator, glyph, BlurAmount, StrokeAmount);
 
 			glyph.Atlas = currentAtlas;
-		}
-
-		internal void GetQuad(FontGlyph glyph, FontGlyph prevGlyph, ref float x, ref float y, ref FontGlyphSquad q)
-		{
-			if (prevGlyph != null)
-			{
-				float adv = 0;
-				if (UseKernings && glyph.Font == prevGlyph.Font)
-				{
-					adv = prevGlyph.Font.GetGlyphKernAdvance(prevGlyph.Id, glyph.Id, glyph.Size);
-				}
-
-				x += (int)(adv + CharacterSpacing + 0.5f);
-			}
-
-			float rx = x + glyph.XOffset;
-			float ry = y + glyph.YOffset;
-			q.X0 = rx * Scale.X;
-			q.Y0 = ry * Scale.Y;
-			q.X1 = (rx + glyph.Bounds.Width) * Scale.X;
-			q.Y1 = (ry + glyph.Bounds.Height) * Scale.Y;
-			q.S0 = glyph.Bounds.X;
-			q.T0 = glyph.Bounds.Y;
-			q.S1 = glyph.Bounds.Right;
-			q.T1 = glyph.Bounds.Bottom;
-
-			x += glyph.XAdvance;
 		}
 	}
 }

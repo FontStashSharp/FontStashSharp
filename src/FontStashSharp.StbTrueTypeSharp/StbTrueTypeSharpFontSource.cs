@@ -5,7 +5,7 @@ using static StbTrueTypeSharp.StbTrueType;
 
 namespace FontStashSharp
 {
-	internal unsafe class Font: IFont
+	internal unsafe class StbTrueTypeSharpFontSource: IFontSource
 	{
 		private int? _lastSize;
 		private GCHandle? dataPtr = null;
@@ -19,7 +19,7 @@ namespace FontStashSharp
 
 		public stbtt_fontinfo _font = new stbtt_fontinfo();
 
-		public Font(byte[] data)
+		public StbTrueTypeSharpFontSource(byte[] data)
 		{
 			if (data == null)
 			{
@@ -29,7 +29,7 @@ namespace FontStashSharp
 			dataPtr = GCHandle.Alloc(data, GCHandleType.Pinned);
 		}
 
-		~Font()
+		~StbTrueTypeSharpFontSource()
 		{
 			Dispose();
 		}
@@ -118,9 +118,9 @@ namespace FontStashSharp
 			return (int)(result * Scale);
 		}
 
-		public static Font FromMemory(byte[] data)
+		public static StbTrueTypeSharpFontSource FromMemory(byte[] data)
 		{
-			var font = new Font(data);
+			var font = new StbTrueTypeSharpFontSource(data);
 
 			byte* dataPtr = (byte *)font.dataPtr.Value.AddrOfPinnedObject();
 			if (stbtt_InitFont(font._font, dataPtr, 0) == 0)
