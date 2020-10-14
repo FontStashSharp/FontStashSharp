@@ -603,7 +603,7 @@ namespace FontStashSharp
 				float adv = 0;
 				if (_fontSystem.UseKernings && glyph.Font == prevGlyph.Font)
 				{
-					adv = prevGlyph.Font.GetGlyphKernAdvance(prevGlyph.Id, glyph.Id, glyph.Size);
+					adv = prevGlyph.Font.GetGlyphKernAdvance(prevGlyph.Id, glyph.Id, glyph.Size) * scaleX;
 				}
 
 				x += (int)(adv + characterSpacing + 0.5f);
