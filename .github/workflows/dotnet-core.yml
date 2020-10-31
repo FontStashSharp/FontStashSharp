@@ -21,3 +21,13 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test --no-restore --verbosity normal
+
+  Publish:
+      needs: [Build]
+
+      runs-on: windows-latest
+
+      steps:
+        - name: Publish to MyGet
+          shell: pwsh
+          run: nuget.exe push .\**\*.nupkg
