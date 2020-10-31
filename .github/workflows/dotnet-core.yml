@@ -30,4 +30,4 @@ jobs:
       steps:
         - name: Publish to MyGet
           shell: pwsh
-          run: nuget.exe push .\**\*.nupkg
+          run: dotnet nuget.exe push .\**\*.nupkg  -s https://api.nuget.org/v3/index.json -k ${NUGET_APIKEY}
