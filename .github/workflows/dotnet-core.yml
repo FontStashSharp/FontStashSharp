@@ -32,7 +32,7 @@ jobs:
       uses: NuGet/setup-nuget@v1
     - name: Publish FontStashSharp to NuGet
       shell: pwsh
-      run: nuget.exe push .\src\FontStashSharp\bin\Release\FontStashSharp.*.nupkg ${{NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
+      run: nuget.exe push .\src\FontStashSharp\bin\Release\FontStashSharp.*.nupkg ${NUGET_APIKEY} -Source https://api.nuget.org/v3/index.json
     - name: Publish FontStashSharp.StbTrueTypeSharp to NuGet
       shell: pwsh
-      run: nuget.exe push .\src\FontStashSharp.StbTrueTypeSharp\bin\Release\FontStashSharp.StbTrueTypeSharp.*.nupkg ${{NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
+      run: nuget.exe push .\src\FontStashSharp.StbTrueTypeSharp\bin\Release\FontStashSharp.StbTrueTypeSharp.*.nupkg ${NUGET_APIKEY} -Source https://api.nuget.org/v3/index.json
