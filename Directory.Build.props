@@ -5,6 +5,6 @@
     <PackageLicenseExpression>Zlib</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/rds1983/FontStashSharp</PackageProjectUrl>
     <RootNamespace>FontStashSharp</RootNamespace>
-    <Version>0.8.2.0</Version>
+    <Version>0.8.3.0</Version>
   </PropertyGroup>
 </Project>
