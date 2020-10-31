@@ -28,6 +28,6 @@ jobs:
       runs-on: windows-latest
 
       steps:
-        - name: Publish to MyGet
+        - name: Publish to NuGet
           shell: pwsh
           run: dotnet nuget.exe push .\**\*.nupkg  -s https://api.nuget.org/v3/index.json -k ${NUGET_APIKEY}
