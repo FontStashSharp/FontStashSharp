@@ -1,10 +1,10 @@
-name: BuildAndPublish
+name: Build & Publish
 
 on:
   workflow_dispatch:
 
 jobs:
-  Build & Publish:
+  BuildAndPublish:
     runs-on: windows-latest
 
     steps:
