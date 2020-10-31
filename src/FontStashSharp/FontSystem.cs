@@ -14,14 +14,16 @@ namespace FontStashSharp
 {
 	public class FontSystem : IDisposable
 	{
-		readonly List<IFontSource> _fontSources = new List<IFontSource>();
-		readonly Int32Map<DynamicSpriteFont> _fonts = new Int32Map<DynamicSpriteFont>();
+		private readonly List<IFontSource> _fontSources = new List<IFontSource>();
+		private readonly Int32Map<DynamicSpriteFont> _fonts = new Int32Map<DynamicSpriteFont>();
 
-		readonly IFontLoader _fontLoader;
-		readonly ITexture2DCreator _textureCreator;
+		private readonly IFontLoader _fontLoader;
+		private readonly ITexture2DCreator _textureCreator;
 
-		FontAtlas _currentAtlas;
-		Point _size;
+		private FontAtlas _currentAtlas;
+		private Point _size;
+
+		public readonly bool PremultiplyAlpha;
 
 		public readonly int BlurAmount;
 		public readonly int StrokeAmount;
@@ -50,7 +52,7 @@ namespace FontStashSharp
 
 		public event EventHandler CurrentAtlasFull;
 
-		public FontSystem(IFontLoader fontLoader, ITexture2DCreator textureCreator, int width, int height, int blurAmount = 0, int strokeAmount = 0)
+		public FontSystem(IFontLoader fontLoader, ITexture2DCreator textureCreator, int width, int height, int blurAmount = 0, int strokeAmount = 0, bool premultiplyAlpha = true)
 		{
 			if (fontLoader == null)
 			{
@@ -92,6 +94,7 @@ namespace FontStashSharp
 
 			BlurAmount = blurAmount;
 			StrokeAmount = strokeAmount;
+			PremultiplyAlpha = premultiplyAlpha;
 
 			_size = new Point(width, height);
 		}
@@ -187,7 +190,7 @@ namespace FontStashSharp
 			glyph.Bounds.X = gx;
 			glyph.Bounds.Y = gy;
 
-			currentAtlas.RenderGlyph(_textureCreator, glyph, BlurAmount, StrokeAmount);
+			currentAtlas.RenderGlyph(_textureCreator, glyph, BlurAmount, StrokeAmount, PremultiplyAlpha);
 
 			glyph.Atlas = currentAtlas;
 		}

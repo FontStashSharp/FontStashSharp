@@ -157,7 +157,7 @@ namespace FontStashSharp
 			return true;
 		}
 
-		public void RenderGlyph(ITexture2DCreator textureCreator, FontGlyph glyph, int blurAmount, int strokeAmount)
+		public void RenderGlyph(ITexture2DCreator textureCreator, FontGlyph glyph, int blurAmount, int strokeAmount, bool premultiplyAlpha)
 		{
 			var pad = Math.Max(FontGlyph.PadFromBlur(blurAmount), FontGlyph.PadFromBlur(strokeAmount));
 
@@ -232,12 +232,16 @@ namespace FontStashSharp
 							colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = colorBuffer[ci + 3] = 0; //black transparency to suit stroke
 							continue;
 						}
-#if PREMULTIPLIEDALPHA
-                        colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = colorBuffer[ci + 3] = col;
-#else
-						colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = 255;
-						colorBuffer[ci + 3] = col;
-#endif
+
+						if (premultiplyAlpha)
+						{
+							colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = colorBuffer[ci + 3] = col;
+						}
+						else
+						{
+							colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = 255;
+							colorBuffer[ci + 3] = col;
+						}
 					}
 					else
 					{
@@ -248,14 +252,17 @@ namespace FontStashSharp
 							continue;
 						}
 
-#if PREMULTIPLIEDALPHA
-                        var alpha = ((255 - col) * black + 255 * col) / 255;
-                        colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = (byte)((alpha * col) / 255);
-                        colorBuffer[ci + 3] = (byte)alpha;
-#else
-						colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = col;
-						colorBuffer[ci + 3] = (byte)(((255 - col) * black + 255 * col) / 255);
-#endif
+						if (premultiplyAlpha)
+						{
+							var alpha = ((255 - col) * black + 255 * col) / 255;
+							colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = (byte)((alpha * col) / 255);
+							colorBuffer[ci + 3] = (byte)alpha;
+						}
+						else
+						{
+							colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = col;
+							colorBuffer[ci + 3] = (byte)(((255 - col) * black + 255 * col) / 255);
+						}
 					}
 				}
 			}
@@ -273,12 +280,16 @@ namespace FontStashSharp
 				{
 					var ci = i * 4;
 					var c = buffer[i];
-#if PREMULTIPLIEDALPHA
-                    colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = colorBuffer[ci + 3] = c;
-#else
-					colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = 255;
-					colorBuffer[ci + 3] = c;
-#endif
+
+					if (premultiplyAlpha)
+					{
+						colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = colorBuffer[ci + 3] = c;
+					}
+					else
+					{
+						colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = 255;
+						colorBuffer[ci + 3] = c;
+					}
 				}
 			}
 
