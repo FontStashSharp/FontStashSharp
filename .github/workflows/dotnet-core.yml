@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Build:
+  Build & Publish:
     runs-on: windows-latest
 
     steps:
@@ -21,13 +21,6 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test --no-restore --verbosity normal
-
-  Publish:
-    needs: [Build]
-
-    runs-on: windows-latest
-
-    steps:
     - name: Install NuGet
       uses: NuGet/setup-nuget@v1
     - name: Publish FontStashSharp to NuGet
