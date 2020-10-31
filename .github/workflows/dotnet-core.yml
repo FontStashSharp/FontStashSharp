@@ -28,9 +28,11 @@ jobs:
     runs-on: windows-latest
 
     steps:
+    - name: Install NuGet
+      uses: NuGet/setup-nuget@v1
     - name: Publish FontStashSharp to NuGet
       shell: pwsh
-      run: dotnet nuget.exe push .\src\FontStashSharp\bin\Release\FontStashSharp.*.nupkg  -s https://api.nuget.org/v3/index.json -k ${NUGET_APIKEY}
+      run: dotnet nuget.exe push .\src\FontStashSharp\bin\Release\FontStashSharp.*.nupkg -s https://api.nuget.org/v3/index.json -k ${NUGET_APIKEY}
     - name: Publish FontStashSharp.StbTrueTypeSharp to NuGet
       shell: pwsh
-      run: dotnet nuget.exe push .\src\FontStashSharp.StbTrueTypeSharp\bin\Release\FontStashSharp.StbTrueTypeSharp.*.nupkg  -s https://api.nuget.org/v3/index.json -k ${NUGET_APIKEY}
+      run: dotnet nuget.exe push .\src\FontStashSharp.StbTrueTypeSharp\bin\Release\FontStashSharp.StbTrueTypeSharp.*.nupkg -s https://api.nuget.org/v3/index.json -k ${NUGET_APIKEY}
