@@ -8,12 +8,7 @@ on:
 
 jobs:
   Build:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        dotnet: [ '3.1.x' ]
-        framework: [ '4.7.2' ]
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -22,7 +17,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.301
+        dotnet-version: '3.1.x'
     - name: Install dependencies
       run: dotnet restore
     - name: Build
