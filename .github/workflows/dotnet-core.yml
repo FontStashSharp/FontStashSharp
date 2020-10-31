@@ -1,4 +1,4 @@
-name: Build & Publish
+name: BuildAndPublish
 
 on:
   workflow_dispatch:
