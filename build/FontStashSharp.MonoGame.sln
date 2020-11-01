@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30517.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{99076AAC-3723-4B2E-A74B-4772FAE8DD6A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.DynamicSpriteFont.MonoGame", "..\samples\FontStashSharp.Samples.DynamicSpriteFont\FontStashSharp.Samples.DynamicSpriteFont.MonoGame.csproj", "{F7C897B4-5C80-4846-A5CB-8997E7A93C1B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.TextureAtlasFull.MonoGame", "..\samples\FontStashSharp.Samples.TextureAtlasFull\FontStashSharp.Samples.TextureAtlasFull.MonoGame.csproj", "{5131B837-13F8-4EA7-938B-FFF663B0E332}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.MonoGame", "..\src\FontStashSharp.MonoGame.csproj", "{3F408D1A-4A24-4DAC-90A5-972FC4F20E87}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F7C897B4-5C80-4846-A5CB-8997E7A93C1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7C897B4-5C80-4846-A5CB-8997E7A93C1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7C897B4-5C80-4846-A5CB-8997E7A93C1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7C897B4-5C80-4846-A5CB-8997E7A93C1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5131B837-13F8-4EA7-938B-FFF663B0E332}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5131B837-13F8-4EA7-938B-FFF663B0E332}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5131B837-13F8-4EA7-938B-FFF663B0E332}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5131B837-13F8-4EA7-938B-FFF663B0E332}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F408D1A-4A24-4DAC-90A5-972FC4F20E87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F408D1A-4A24-4DAC-90A5-972FC4F20E87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F408D1A-4A24-4DAC-90A5-972FC4F20E87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F408D1A-4A24-4DAC-90A5-972FC4F20E87}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F7C897B4-5C80-4846-A5CB-8997E7A93C1B} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
+		{5131B837-13F8-4EA7-938B-FFF663B0E332} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {35ACDF4E-2CE2-46B1-A19F-35DC131069A1}
+	EndGlobalSection
+EndGlobal

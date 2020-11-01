@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>FontStashSharp.Stride</PackageId>
+    <AssemblyName>FontStashSharp.Stride</AssemblyName>
+    <Description>FontStashSharp for Stride</Description>
+    <DefineConstants>STBSHARP_INTERNAL;STRIDE</DefineConstants>
+    <OutputPath>bin\Stride\$(Configuration)</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+  
+  <ItemGroup>
+	<PackageReference Include="Stride.Engine" Version="4.0.0.1-beta04-1265" />
+	<PackageReference Include="Stride.Core" Version="4.0.0.1-beta04-1265" />
+  </ItemGroup>  
+
+  <ItemGroup>
+    <Compile Include="..\deps\StbTrueTypeSharp\src\**\*.cs" LinkBase="StbTrueTypeSharp" />
+  </ItemGroup>
+</Project>

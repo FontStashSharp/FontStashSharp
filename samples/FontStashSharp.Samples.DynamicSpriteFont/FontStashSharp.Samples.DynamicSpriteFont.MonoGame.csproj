@@ -3,15 +3,18 @@
     <OutputType>WinExe</OutputType>
     <ApplicationIcon />
     <StartupObject />
-    <TargetFramework>net452</TargetFramework>
+    <TargetFramework>net45</TargetFramework>
+    <OutputPath>bin\MonoGame\$(Configuration)</OutputPath>
+    <DefineConstants>$(DefineConstants);MONOGAME</DefineConstants>
   </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.7.1.189" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\..\src\FontStashSharp.StbTrueTypeSharp\FontStashSharp.StbTrueTypeSharp.csproj" />
-    <ProjectReference Include="..\..\src\FontStashSharp\FontStashSharp.csproj" />
-  </ItemGroup>
+    <ProjectReference Include="..\..\src\FontStashSharp.MonoGame.csproj" />
+  </ItemGroup>  
 
   <ItemGroup>
     <None Update="Fonts\DroidSans.ttf">

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <PackageId>FontStashSharp.FNA</PackageId>
+    <AssemblyName>FontStashSharp.FNA</AssemblyName>
+    <Description>FontStashSharp for FNA</Description>
+    <DefineConstants>STBSHARP_INTERNAL;FNA</DefineConstants>
+    <OutputPath>bin\FNA\$(Configuration)</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\FNA\FNA.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\deps\StbTrueTypeSharp\src\**\*.cs" LinkBase="StbTrueTypeSharp" />
+  </ItemGroup>
+</Project>
