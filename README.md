@@ -1,4 +1,7 @@
 # FontStashSharp
+[![NuGet](https://img.shields.io/nuget/v/FontStashSharp.svg)](https://www.nuget.org/packages/FontStashSharp/) 
+[![Chat](https://img.shields.io/discord/628186029488340992.svg)](https://discord.gg/ZeHxhCY)
+
 FontStashSharp is C# port of https://github.com/memononen/fontstash
 
 Or - in other words - it is the engine-agnostic text rendering library with following features:
@@ -7,19 +10,9 @@ Or - in other words - it is the engine-agnostic text rendering library with foll
 * Colored text
 * Blurry and stroked text
 
-# Installation
-Package|NuGet
--------|-----
-FontStashSharp|[![NuGet](https://img.shields.io/nuget/v/FontStashSharp.svg)](https://www.nuget.org/packages/FontStashSharp/)
-FontStashSharp.StbTrueTypeSharp|[![NuGet](https://img.shields.io/nuget/v/FontStashSharp.StbTrueTypeSharp.svg)](https://www.nuget.org/packages/FontStashSharp.StbTrueTypeSharp/)
-
 # Usage
-In order to use FontStashSharp you need to provide implementations of 3 interfaces: [IFontRasterizer](src/FontStashSharp/Interfaces/IFontLoader.cs), [ITexture2DCreator](src/FontStashSharp/Interfaces/ITexture2DCreator.cs) and [IFontStashRenderer](src/FontStashSharp/Interfaces/IFontStashRenderer.cs). First two(IFontRasterizer and ITexture2DCreator) are provided during creation of [FontSystem](src/FontStashSharp/FontSystem.cs) and last one(IFontStashRenderer) is provided for every DrawText call.
-
-Package FontStashSharp.StbTrueTypeSharp contains implementation of IFontRasterizer based on the [StbTrueTypeSharp](https://github.com/StbSharp/StbTrueTypeSharp)
-
-# Sample
-[FontStashSharp.Samples.MonoGame](samples/FontStashSharp.Samples.MonoGame) is full example of the FontStashSharp usage in the [MonoGame](https://www.monogame.net/).
+[Using FontStashSharp in MonoGame, FNA or Stride](https://github.com/rds1983/FontStashSharp/wiki/Using-FontStashSharp-in-MonoGame,-FNA-or-Stride)
+[Using-FontStashSharp-in-generic-game-engine](https://github.com/rds1983/FontStashSharp/wiki/Using-FontStashSharp-in-generic-game-engine)
 
 # Screenshots
 Ordinary Text:
@@ -36,4 +29,3 @@ Stroked Text:
 * [stb](https://github.com/nothings/stb)
 * [bartwe's fork of SpriteFontPlus](https://github.com/bartwe/SpriteFontPlus)
 * [MonoGame](http://www.monogame.net/)
-
