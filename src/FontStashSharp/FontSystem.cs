@@ -1,6 +1,7 @@
 using FontStashSharp.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
@@ -99,6 +100,11 @@ namespace FontStashSharp
 			_size = new Point(width, height);
 		}
 
+		public FontSystem(ITexture2DCreator textureCreator, int width, int height, int blurAmount = 0, int strokeAmount = 0, bool premultiplyAlpha = true):
+			this(StbTrueTypeSharpFontLoader.Instance, textureCreator, width, height, blurAmount, strokeAmount, premultiplyAlpha)
+		{
+		}
+
 		public void Dispose()
 		{
 			if (_fontSources != null)
@@ -117,6 +123,11 @@ namespace FontStashSharp
 		{
 			var fontSource = _fontLoader.Load(data);
 			_fontSources.Add(fontSource);
+		}
+
+		public void AddFont(Stream stream)
+		{
+			AddFont(stream.ToByteArray());
 		}
 
 		public DynamicSpriteFont GetFont(int fontSize)
