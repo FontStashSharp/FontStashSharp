@@ -15,17 +15,17 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.x'
-    - name: Install dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal
+    - name: Build FontStashSharp
+      run: dotnet build src\FontStashSharp\FontStashSharp.csproj --configuration Release
+    - name: Build FontStashSharp.MonoGame
+      run: dotnet build src\XNA\FontStashSharp.MonoGame.csproj --configuration Release
+    - name: Build FontStashSharp.Stride
+      run: dotnet build src\XNA\FontStashSharp.Stride.csproj --configuration Release
     - name: Install NuGet
       uses: NuGet/setup-nuget@v1
     - name: Publish FontStashSharp to NuGet
-      shell: pwsh
-      run: nuget.exe push .\src\FontStashSharp\bin\Release\FontStashSharp.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
-    - name: Publish FontStashSharp.StbTrueTypeSharp to NuGet
-      shell: pwsh
-      run: nuget.exe push .\src\FontStashSharp.StbTrueTypeSharp\bin\Release\FontStashSharp.StbTrueTypeSharp.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
+      run: nuget.exe push src\FontStashSharp\bin\MonoGame\Release\FontStashSharp.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
+    - name: Publish FontStashSharp.MonoGame to NuGet
+      run: nuget.exe push src\XNA\bin\MonoGame\Release\FontStashSharp.MonoGame.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
+    - name: Publish FontStashSharp.Stride to NuGet
+      run: nuget.exe push src\XNA\bin\Stride\Release\FontStashSharp.Stride.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
