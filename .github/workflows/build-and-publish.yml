@@ -24,7 +24,7 @@ jobs:
     - name: Install NuGet
       uses: NuGet/setup-nuget@v1
     - name: Publish FontStashSharp to NuGet
-      run: nuget.exe push src\FontStashSharp\bin\MonoGame\Release\FontStashSharp.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
+      run: nuget.exe push src\FontStashSharp\bin\Release\FontStashSharp.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
     - name: Publish FontStashSharp.MonoGame to NuGet
       run: nuget.exe push src\XNA\bin\MonoGame\Release\FontStashSharp.MonoGame.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
     - name: Publish FontStashSharp.Stride to NuGet
