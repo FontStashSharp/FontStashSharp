@@ -8,7 +8,7 @@
     <DefineConstants>$(DefineConstants);FNA</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\FontStashSharp.FNA.Core.csproj" />
+    <ProjectReference Include="..\..\src\XNA\FontStashSharp.FNA.Core.csproj" />
   </ItemGroup>  
 
   <ItemGroup>

@@ -12,7 +12,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\src\FontStashSharp.MonoGame.csproj" />
+    <ProjectReference Include="..\..\src\XNA\FontStashSharp.MonoGame.csproj" />
   </ItemGroup>  
 
   <ItemGroup>

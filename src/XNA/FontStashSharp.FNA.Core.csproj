@@ -10,10 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\FNA\FNA.Core.csproj" />
+    <ProjectReference Include="..\..\..\FNA\FNA.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\deps\StbTrueTypeSharp\src\**\*.cs" LinkBase="StbTrueTypeSharp" />
+    <Compile Include="..\..\deps\StbTrueTypeSharp\src\**\*.cs" LinkBase="StbTrueTypeSharp" />
+    <Compile Include="..\FontStashSharp\**\*.cs" LinkBase="FontStashSharp" />
+    <Compile Remove="..\FontStashSharp\obj\**\*.cs" LinkBase="FontStashSharp" />
   </ItemGroup>
 </Project>

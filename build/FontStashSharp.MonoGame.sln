@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.Dyna
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.TextureAtlasFull.MonoGame", "..\samples\FontStashSharp.Samples.TextureAtlasFull\FontStashSharp.Samples.TextureAtlasFull.MonoGame.csproj", "{5131B837-13F8-4EA7-938B-FFF663B0E332}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.MonoGame", "..\src\FontStashSharp.MonoGame.csproj", "{3F408D1A-4A24-4DAC-90A5-972FC4F20E87}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.MonoGame", "..\src\XNA\FontStashSharp.MonoGame.csproj", "{3F408D1A-4A24-4DAC-90A5-972FC4F20E87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

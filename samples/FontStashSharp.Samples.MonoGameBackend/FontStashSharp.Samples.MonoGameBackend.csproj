@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\FontStashSharp.csproj" />
+    <ProjectReference Include="..\..\src\FontStashSharp\FontStashSharp.csproj" />
   </ItemGroup>  
 
   <ItemGroup>

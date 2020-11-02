@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FNA.Core", "..\..\FNA\FNA.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.DynamicSpriteFont.FNA.Core", "..\samples\FontStashSharp.Samples.DynamicSpriteFont\FontStashSharp.Samples.DynamicSpriteFont.FNA.Core.csproj", "{2A96085A-5F58-4E6B-ACBD-B8F9392C246F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.FNA.Core", "..\src\FontStashSharp.FNA.Core.csproj", "{FB73E808-A6B1-41A6-9324-91352CBE5577}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.FNA.Core", "..\src\XNA\FontStashSharp.FNA.Core.csproj", "{FB73E808-A6B1-41A6-9324-91352CBE5577}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
