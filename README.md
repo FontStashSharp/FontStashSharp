@@ -13,7 +13,7 @@ Or - in other words - it is the text rendering library with following features:
 # Usage
 [Using FontStashSharp in MonoGame, FNA or Stride](https://github.com/rds1983/FontStashSharp/wiki/Using-FontStashSharp-in-MonoGame,-FNA-or-Stride)
 
-[Using-FontStashSharp in generic game engine](https://github.com/rds1983/FontStashSharp/wiki/Using-FontStashSharp-in-generic-game-engine) 
+[Using FontStashSharp in generic game engine](https://github.com/rds1983/FontStashSharp/wiki/Using-FontStashSharp-in-generic-game-engine) 
 
 # Screenshots
 Ordinary Text:
