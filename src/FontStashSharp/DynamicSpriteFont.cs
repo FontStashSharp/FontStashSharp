@@ -14,7 +14,7 @@ using Vector2 = System.Drawing.PointF;
 
 namespace FontStashSharp
 {
-	public class DynamicSpriteFont
+	public partial class DynamicSpriteFont
 	{
 		internal static readonly Vector2 DefaultScale = new Vector2(1.0f, 1.0f);
 		private readonly Int32Map<FontGlyph> _glyphs = new Int32Map<FontGlyph>();
@@ -413,8 +413,10 @@ namespace FontStashSharp
 				GetQuad(glyph, prevGlyph, scale, ref x, ref y, ref q);
 				if (q.X0 < minx)
 					minx = q.X0;
-				if (x > maxx)
-					maxx = x;
+				var scaledX = x * scale.X;
+				if (scaledX > maxx)
+					maxx = scaledX;
+
 				if (q.Y0 < miny)
 					miny = q.Y0;
 				if (q.Y1 > maxy)
@@ -477,8 +479,10 @@ namespace FontStashSharp
 				GetQuad(glyph, prevGlyph, scale, ref x, ref y, ref q);
 				if (q.X0 < minx)
 					minx = q.X0;
-				if (x > maxx)
-					maxx = x;
+				var scaledX = x * scale.X;
+				if (scaledX > maxx)
+					maxx = scaledX;
+
 				if (q.Y0 < miny)
 					miny = q.Y0;
 				if (q.Y1 > maxy)

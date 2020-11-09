@@ -14,53 +14,42 @@ namespace FontStashSharp
 	{
 		public static float DrawString(this SpriteBatch batch, DynamicSpriteFont font, string text, Vector2 pos, Color color, Vector2 scale, float depth = 0.0f)
 		{
-			var renderer = SpriteBatchRenderer.Instance;
-			renderer.Batch = batch;
-			return font.DrawText(renderer, pos.X, pos.Y, text, color, scale, depth);
+			return font.DrawText(batch, text, pos, color, scale, depth);
 		}
 
 		public static float DrawString(this SpriteBatch batch, DynamicSpriteFont font, string text, Vector2 pos, Color color, float depth = 0.0f)
 		{
-			return DrawString(batch, font, text, pos, color, DynamicSpriteFont.DefaultScale, depth);
+			return font.DrawText(batch, text, pos, color, depth);
 		}
 
 		public static float DrawString(this SpriteBatch batch, DynamicSpriteFont font, string text, Vector2 pos, Color[] colors, Vector2 scale, float depth = 0.0f)
 		{
-			var renderer = SpriteBatchRenderer.Instance;
-			renderer.Batch = batch;
-
-			return font.DrawText(renderer, pos.X, pos.Y, text, colors, scale, depth);
+			return font.DrawText(batch, text, pos, colors, scale, depth);
 		}
 
 		public static float DrawString(this SpriteBatch batch, DynamicSpriteFont font, string text, Vector2 pos, Color[] colors, float depth = 0.0f)
 		{
-			return DrawString(batch, font, text, pos, colors, DynamicSpriteFont.DefaultScale, depth);
+			return font.DrawText(batch, text, pos, colors, depth);
 		}
 
 		public static float DrawString(this SpriteBatch batch, DynamicSpriteFont font, StringBuilder text, Vector2 pos, Color color, Vector2 scale, float depth = 0.0f)
 		{
-			var renderer = SpriteBatchRenderer.Instance;
-			renderer.Batch = batch;
-
-			return font.DrawText(renderer, pos.X, pos.Y, text, color, scale, depth);
+			return font.DrawText(batch, text, pos, color, scale, depth);
 		}
 
 		public static float DrawString(this SpriteBatch batch, DynamicSpriteFont font, StringBuilder text, Vector2 pos, Color color, float depth = 0.0f)
 		{
-			return DrawString(batch, font, text, pos, color, DynamicSpriteFont.DefaultScale, depth);
+			return font.DrawText(batch, text, pos, color, depth);
 		}
 
 		public static float DrawString(this SpriteBatch batch, DynamicSpriteFont font, StringBuilder text, Vector2 pos, Color[] colors, Vector2 scale, float depth = 0.0f)
 		{
-			var renderer = SpriteBatchRenderer.Instance;
-			renderer.Batch = batch;
-
-			return font.DrawText(renderer, pos.X, pos.Y, text, colors, scale, depth);
+			return font.DrawText(batch, text, pos, colors, scale, depth);
 		}
 
 		public static float DrawString(this SpriteBatch batch, DynamicSpriteFont font, StringBuilder text, Vector2 pos, Color[] colors, float depth = 0.0f)
 		{
-			return DrawString(batch, font, text, pos, colors, DynamicSpriteFont.DefaultScale, depth);
+			return font.DrawText(batch, text, pos, colors, depth);
 		}
 	}
 }
