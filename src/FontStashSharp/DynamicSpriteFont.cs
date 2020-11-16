@@ -5,6 +5,7 @@ using System.Text;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
 using Stride.Core.Mathematics;
 #else
@@ -157,13 +158,16 @@ namespace FontStashSharp
 				GetQuad(glyph, prevGlyph, scale, ref originX, ref originY, ref q);
 				if (!glyph.IsEmpty)
 				{
-					var destRect = new Rectangle((int)(x + q.X0), (int)(y + q.Y0), (int)(q.X1 - q.X0), (int)(q.Y1 - q.Y0));
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
 
 					batch.Draw(glyph.Atlas.Texture,
-						destRect,
+						new Vector2(x + q.X0, y + q.Y0),
 						sourceRect,
 						color,
+						0,
+						Vector2.Zero,
+						scale,
+						SpriteEffects.None,
 						depth);
 				}
 
@@ -216,13 +220,16 @@ namespace FontStashSharp
 				GetQuad(glyph, prevGlyph, scale, ref originX, ref originY, ref q);
 				if (!glyph.IsEmpty)
 				{
-					var destRect = new Rectangle((int)(x + q.X0), (int)(y + q.Y0), (int)(q.X1 - q.X0), (int)(q.Y1 - q.Y0));
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
 
 					batch.Draw(glyph.Atlas.Texture,
-						destRect,
+						new Vector2(x + q.X0, y + q.Y0),
 						sourceRect,
 						colors[pos],
+						0,
+						Vector2.Zero,
+						scale,
+						SpriteEffects.None,
 						depth);
 				}
 
@@ -295,13 +302,16 @@ namespace FontStashSharp
 				GetQuad(glyph, prevGlyph, scale, ref originX, ref originY, ref q);
 				if (!glyph.IsEmpty)
 				{
-					var destRect = new Rectangle((int)(x + q.X0), (int)(y + q.Y0), (int)(q.X1 - q.X0), (int)(q.Y1 - q.Y0));
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
 
 					batch.Draw(glyph.Atlas.Texture,
-						destRect,
+						new Vector2(x + q.X0, y + q.Y0),
 						sourceRect,
 						color,
+						0,
+						Vector2.Zero,
+						scale,
+						SpriteEffects.None,
 						depth);
 				}
 
@@ -354,13 +364,16 @@ namespace FontStashSharp
 				GetQuad(glyph, prevGlyph, scale, ref originX, ref originY, ref q);
 				if (!glyph.IsEmpty)
 				{
-					var destRect = new Rectangle((int)(x + q.X0), (int)(y + q.Y0), (int)(q.X1 - q.X0), (int)(q.Y1 - q.Y0));
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
 
 					batch.Draw(glyph.Atlas.Texture,
-						destRect,
+						new Vector2(x + q.X0, y + q.Y0),
 						sourceRect,
 						glyphColors[pos],
+						0,
+						Vector2.Zero,
+						scale,
+						SpriteEffects.None,
 						depth);
 				}
 

@@ -45,6 +45,7 @@ namespace SpriteFontPlus.Samples.TtfBaking
 
 		private Texture2D _white;
 		private bool _drawBackground = false;
+		private bool _animatedScaling = false;
 
 		private static readonly Color[] ColoredTextColors = new Color[]
 		{
@@ -182,13 +183,17 @@ namespace SpriteFontPlus.Samples.TtfBaking
 			if (KeyboardUtils.IsPressed(Keys.Enter))
 			{
 				_currentFontSystem.UseKernings = !_currentFontSystem.UseKernings;
+			}
 
+			if (KeyboardUtils.IsPressed(Keys.LeftShift))
+			{
+				_animatedScaling = !_animatedScaling;
 			}
 
 			KeyboardUtils.End();
 		}
 
-		private void DrawString(string text, int y, Color[] glyphColors)
+		private void DrawString(string text, int y, Color[] glyphColors, Vector2 scale)
 		{
 			if (_drawBackground)
 			{
@@ -196,10 +201,10 @@ namespace SpriteFontPlus.Samples.TtfBaking
 				_spriteBatch.Draw(_white, new Rectangle(0, y, (int)size.X, (int)size.Y), Color.Green);
 			}
 
-			_spriteBatch.DrawString(_font, text, new Vector2(0, y), glyphColors);
+			_spriteBatch.DrawString(_font, text, new Vector2(0, y), glyphColors, scale);
 		}
 
-		private void DrawString(string text, int y, Color color)
+		private void DrawString(string text, int y, Color color, Vector2 scale)
 		{
 			if (_drawBackground)
 			{
@@ -207,12 +212,12 @@ namespace SpriteFontPlus.Samples.TtfBaking
 				_spriteBatch.Draw(_white, new Rectangle(0, y, (int)size.X, (int)size.Y), Color.Green);
 			}
 
-			_spriteBatch.DrawString(_font, text, new Vector2(0, y), color);
+			_spriteBatch.DrawString(_font, text, new Vector2(0, y), color, scale);
 		}
 
-		private void DrawString(string text, int y)
+		private void DrawString(string text, int y, Vector2 scale)
 		{
-			DrawString(text, y, Color.White);
+			DrawString(text, y, Color.White, scale);
 		}
 
 		/// <summary>
@@ -232,6 +237,17 @@ namespace SpriteFontPlus.Samples.TtfBaking
 			GraphicsContext.CommandList.SetRenderTargetAndViewport(GraphicsDevice.Presenter.DepthStencilBuffer, GraphicsDevice.Presenter.BackBuffer);
 #endif
 
+			
+			Vector2 scale;
+			if (_animatedScaling)
+			{
+				scale = new Vector2(1 + .25f * (float) Math.Sin(gameTime.TotalGameTime.TotalSeconds * .5f));
+			}
+			else
+			{
+				scale = Vector2.One;
+			}
+
 			// TODO: Add your drawing code here
 #if MONOGAME || FNA
 			_spriteBatch.Begin();
@@ -241,15 +257,15 @@ namespace SpriteFontPlus.Samples.TtfBaking
 
 			// Render some text
 			_font = _currentFontSystem.GetFont(18);
-			DrawString("The quick いろは brown\nfox にほへ jumps over\nt🙌h📦e l👏a👏zy dog adfasoqiw yraldh ald halwdha ldjahw dlawe havbx get872rq", 0);
+			DrawString("The quick いろは brown\nfox にほへ jumps over\nt🙌h📦e l👏a👏zy dog adfasoqiw yraldh ald halwdha ldjahw dlawe havbx get872rq", 0, scale);
 
 			_font = _currentFontSystem.GetFont(30);
-			DrawString("The quick いろは brown\nfox にほへ jumps over\nt🙌h📦e l👏a👏zy dog", 80, Color.Bisque);
+			DrawString("The quick いろは brown\nfox にほへ jumps over\nt🙌h📦e l👏a👏zy dog", 80, Color.Bisque, scale);
 
-			DrawString("Colored Text", 200, ColoredTextColors);
+			DrawString("Colored Text", 200, ColoredTextColors, scale);
 
 			_font = _currentFontSystem.GetFont(26);
-			DrawString("Texture:", 380);
+			DrawString("Texture:", 380, Vector2.One);
 			
 			var texture = _currentFontSystem.EnumerateTextures().First();
 			_spriteBatch.Draw(texture, new Vector2(0, 410), Color.White);
