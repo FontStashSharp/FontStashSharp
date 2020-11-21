@@ -90,7 +90,7 @@ namespace FontStashSharp
 				origin,
 				scale,
 				SpriteEffects.None,
-        ImageOrientation.AsIs,
+				ImageOrientation.AsIs,
 				depth);
 #endif
 		}
