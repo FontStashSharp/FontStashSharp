@@ -18,6 +18,7 @@ namespace FontStashSharp
 	public partial class DynamicSpriteFont
 	{
 		internal static readonly Vector2 DefaultScale = new Vector2(1.0f, 1.0f);
+		internal static readonly Vector2 DefaultOrigin = Vector2.Zero;
 		private readonly Int32Map<FontGlyph> _glyphs = new Int32Map<FontGlyph>();
 
 		public FontSystem FontSystem { get; private set; }
@@ -124,7 +125,8 @@ namespace FontStashSharp
 			}
 		}
 
-		public float DrawText(IFontStashRenderer batch, float x, float y, string str, Color color, Vector2 scale, float depth = 0.0f)
+		public float DrawText(IFontStashRenderer batch, float x, float y, string str, Color color, Vector2 scale,
+			Vector2 origin, float depth = 0.0f)
 		{
 			if (string.IsNullOrEmpty(str)) return 0.0f;
 
@@ -165,7 +167,7 @@ namespace FontStashSharp
 						sourceRect,
 						color,
 						0,
-						Vector2.Zero,
+						origin,
 						scale,
 						SpriteEffects.None,
 						depth);
@@ -177,12 +179,17 @@ namespace FontStashSharp
 			return x;
 		}
 
+		public float DrawText(IFontStashRenderer batch, float x, float y, string str, Color color, Vector2 scale, float depth = 0.0f)
+		{
+			return DrawText(batch, x, y, str, color, scale, DefaultOrigin, depth);
+		}
+
 		public float DrawText(IFontStashRenderer batch, float x, float y, string str, Color color, float depth = 0.0f)
 		{
 			return DrawText(batch, x, y, str, color, DefaultScale, depth);
 		}
 
-		public float DrawText(IFontStashRenderer batch, float x, float y, string str, Color[] colors, Vector2 scale, float depth = 0.0f)
+		public float DrawText(IFontStashRenderer batch, float x, float y, string str, Color[] colors, Vector2 scale, Vector2 origin, float depth = 0.0f)
 		{
 			if (string.IsNullOrEmpty(str)) return 0.0f;
 
@@ -227,7 +234,7 @@ namespace FontStashSharp
 						sourceRect,
 						colors[pos],
 						0,
-						Vector2.Zero,
+						origin,
 						scale,
 						SpriteEffects.None,
 						depth);
@@ -240,6 +247,12 @@ namespace FontStashSharp
 			return x;
 		}
 
+		public float DrawText(IFontStashRenderer batch, float x, float y, string str, Color[] colors, Vector2 scale,
+			float depth = 0.0f)
+		{
+			return DrawText(batch, x, y, str, colors, scale, DefaultOrigin, depth);
+		}
+		
 		public float DrawText(IFontStashRenderer batch, float x, float y, string str, Color[] colors, float depth = 0.0f)
 		{
 			return DrawText(batch, x, y, str, colors, DefaultScale, depth);
@@ -267,7 +280,8 @@ namespace FontStashSharp
 			}
 		}
 
-		public float DrawText(IFontStashRenderer batch, float x, float y, StringBuilder str, Color color, Vector2 scale, float depth = 0.0f)
+		public float DrawText(IFontStashRenderer batch, float x, float y, StringBuilder str, Color color, Vector2 scale,
+			Vector2 origin, float depth = 0.0f)
 		{
 			if (str == null || str.Length == 0) return 0.0f;
 
@@ -309,7 +323,7 @@ namespace FontStashSharp
 						sourceRect,
 						color,
 						0,
-						Vector2.Zero,
+						origin,
 						scale,
 						SpriteEffects.None,
 						depth);
@@ -321,12 +335,18 @@ namespace FontStashSharp
 			return x;
 		}
 
-		public float DrawText(IFontStashRenderer batch, float x, float y, StringBuilder str, Color color, float depth = 0.0f)
+		public float DrawText(IFontStashRenderer batch, float x, float y, StringBuilder str, Color color, Vector2 scale, float depth = 0.0f)
 		{
-			return DrawText(batch, x, y, str, color, DefaultScale, depth);
+			return DrawText(batch, x, y, str, color, scale, DefaultOrigin, depth);
 		}
 
-		public float DrawText(IFontStashRenderer batch, float x, float y, StringBuilder str, Color[] glyphColors, Vector2 scale, float depth = 0.0f)
+		public float DrawText(IFontStashRenderer batch, float x, float y, StringBuilder str, Color color, float depth = 0.0f)
+		{
+			return DrawText(batch, x, y, str, color, DefaultScale, DefaultOrigin, depth);
+		}
+
+		public float DrawText(IFontStashRenderer batch, float x, float y, StringBuilder str, Color[] glyphColors,
+			Vector2 scale, Vector2 origin, float depth = 0.0f)
 		{
 			if (str == null || str.Length == 0) return 0.0f;
 
@@ -371,7 +391,7 @@ namespace FontStashSharp
 						sourceRect,
 						glyphColors[pos],
 						0,
-						Vector2.Zero,
+						origin,
 						scale,
 						SpriteEffects.None,
 						depth);
@@ -384,9 +404,15 @@ namespace FontStashSharp
 			return x;
 		}
 
+		public float DrawText(IFontStashRenderer batch, float x, float y, StringBuilder str, Color[] colors, Vector2 scale,
+			float depth = 0.0f)
+		{
+			return DrawText(batch, x, y, str, colors, scale, DefaultOrigin, depth);
+		}		
+		
 		public float DrawText(IFontStashRenderer batch, float x, float y, StringBuilder str, Color[] colors, float depth = 0.0f)
 		{
-			return DrawText(batch, x, y, str, colors, DefaultScale, depth);
+			return DrawText(batch, x, y, str, colors, DefaultScale, DefaultOrigin, depth);
 		}
 
 		public float TextBounds(float x, float y, string str, ref Bounds bounds, Vector2 scale)
