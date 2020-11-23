@@ -19,17 +19,17 @@ namespace FontStashSharp
 			_batch = batch;
 		}
 
-		public void Draw(ITexture2D texture, Rectangle dest, Rectangle source, System.Drawing.Color color, float depth)
+		public void Draw(ITexture2D texture, PointF position, Rectangle? sourceRectangle, Color color, float rotation, PointF origin, PointF scale, float depth)
 		{
 			var textureWrapper = (Texture2DWrapper)texture;
 
-			var rdest = dest.ToRectangle();
 			_batch.Draw(textureWrapper.Texture,
-				rdest,
-				source.ToRectangle(),
+				position.ToVector2(),
+				sourceRectangle == null?default(Microsoft.Xna.Framework.Rectangle?):sourceRectangle.Value.ToRectangle(),
 				color.ToColor(),
-				0f,
-				Microsoft.Xna.Framework.Vector2.Zero,
+				rotation,
+				origin.ToVector2(),
+				scale.ToVector2(),
 				SpriteEffects.None,
 				depth);
 		}

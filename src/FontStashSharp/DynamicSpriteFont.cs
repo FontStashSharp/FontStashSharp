@@ -18,7 +18,7 @@ namespace FontStashSharp
 	public partial class DynamicSpriteFont
 	{
 		internal static readonly Vector2 DefaultScale = new Vector2(1.0f, 1.0f);
-		internal static readonly Vector2 DefaultOrigin = Vector2.Zero;
+		internal static readonly Vector2 DefaultOrigin = new Vector2(0.0f, 0.0f);
 		private readonly Int32Map<FontGlyph> _glyphs = new Int32Map<FontGlyph>();
 
 		public FontSystem FontSystem { get; private set; }

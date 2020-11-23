@@ -1,9 +1,11 @@
 ﻿#if MONOGAME || FNA
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
 using Stride.Core.Mathematics;
 #else
 using System.Drawing;
+using Vector2 = System.Drawing.PointF;
 #endif
 
 namespace FontStashSharp.Interfaces
