@@ -26,11 +26,22 @@ using SharpDX.Direct3D11;
 namespace SpriteFontPlus.Samples.TtfBaking
 {
 	/// <summary>
+	/// Indicates how text is aligned.
+	/// </summary>
+	public enum Alignment
+	{
+		Left,
+		Center,
+		Right
+	}
+
+	/// <summary>
 	/// This is the main type for your game.
 	/// </summary>
 	public class Game1 : Game
 	{
 		private const int EffectAmount = 1;
+		private const int LineSpacing = 10;
 
 #if !STRIDE
 		private readonly GraphicsDeviceManager _graphics;
@@ -45,6 +56,7 @@ namespace SpriteFontPlus.Samples.TtfBaking
 
 		private Texture2D _white;
 		private bool _drawBackground = false;
+		private bool _animatedScaling = false;
 
 		private static readonly Color[] ColoredTextColors = new Color[]
 		{
@@ -182,37 +194,69 @@ namespace SpriteFontPlus.Samples.TtfBaking
 			if (KeyboardUtils.IsPressed(Keys.Enter))
 			{
 				_currentFontSystem.UseKernings = !_currentFontSystem.UseKernings;
+			}
 
+			if (KeyboardUtils.IsPressed(Keys.LeftShift))
+			{
+				_animatedScaling = !_animatedScaling;
 			}
 
 			KeyboardUtils.End();
 		}
 
-		private void DrawString(string text, int y, Color[] glyphColors)
+		private void DrawString(string text, ref Vector2 cursor, Alignment alignment, Color[] glyphColors, Vector2 scale)
 		{
+			Vector2 dimensions = _font.MeasureString(text);
+			Vector2 origin = AlignmentOrigin(alignment, dimensions);
+
 			if (_drawBackground)
 			{
-				var size = _font.MeasureString(text);
-				_spriteBatch.Draw(_white, new Rectangle(0, y, (int)size.X, (int)size.Y), Color.Green);
+				DrawRectangle(cursor, origin, dimensions, scale);
 			}
 
-			_spriteBatch.DrawString(_font, text, new Vector2(0, y), glyphColors);
+			_spriteBatch.DrawString(_font, text, cursor, glyphColors, scale, origin);
+			cursor.Y += dimensions.Y + LineSpacing;
 		}
 
-		private void DrawString(string text, int y, Color color)
+		private void DrawString(string text, ref Vector2 cursor, Alignment alignment, Color color, Vector2 scale)
 		{
+			Vector2 dimensions = _font.MeasureString(text);
+			Vector2 origin = AlignmentOrigin(alignment, dimensions);
+
 			if (_drawBackground)
 			{
-				var size = _font.MeasureString(text);
-				_spriteBatch.Draw(_white, new Rectangle(0, y, (int)size.X, (int)size.Y), Color.Green);
+				DrawRectangle(cursor, origin, dimensions, scale);
 			}
 
-			_spriteBatch.DrawString(_font, text, new Vector2(0, y), color);
+			_spriteBatch.DrawString(_font, text, cursor, color, scale, origin);
+			cursor.Y += dimensions.Y + LineSpacing;
 		}
 
-		private void DrawString(string text, int y)
+		private void DrawString(string text, ref Vector2 cursor, Alignment alignment, Vector2 scale)
 		{
-			DrawString(text, y, Color.White);
+			DrawString(text, ref cursor, alignment, Color.White, scale);
+		}
+
+		private void DrawRectangle(Vector2 position, Vector2 origin, Vector2 dimensions, Vector2 scale)
+		{
+			Vector2 textureScaler = dimensions / new Vector2(_white.Width, _white.Height) * scale;
+			_spriteBatch.Draw(_white, position - origin * scale, _white.Bounds, Color.Green, 0, Vector2.Zero, textureScaler,
+				SpriteEffects.None, 0);
+		}
+
+		private static Vector2 AlignmentOrigin(Alignment alignment, Vector2 dimensions)
+		{
+			switch (alignment)
+			{
+				case Alignment.Left:
+					return Vector2.Zero;
+				case Alignment.Center:
+					return new Vector2(dimensions.X / 2, 0);
+				case Alignment.Right:
+					return new Vector2(dimensions.X, 0);
+				default:
+					return Vector2.Zero;
+			}
 		}
 
 		/// <summary>
@@ -232,6 +276,10 @@ namespace SpriteFontPlus.Samples.TtfBaking
 			GraphicsContext.CommandList.SetRenderTargetAndViewport(GraphicsDevice.Presenter.DepthStencilBuffer, GraphicsDevice.Presenter.BackBuffer);
 #endif
 
+			Vector2 scale = _animatedScaling
+				? new Vector2(1 + .25f * (float) Math.Sin(gameTime.TotalGameTime.TotalSeconds * .5f))
+				: Vector2.One;
+			
 			// TODO: Add your drawing code here
 #if MONOGAME || FNA
 			_spriteBatch.Begin();
@@ -239,20 +287,37 @@ namespace SpriteFontPlus.Samples.TtfBaking
 			_spriteBatch.Begin(GraphicsContext);
 #endif
 
+			Vector2 cursor = Vector2.Zero;
+
 			// Render some text
+
 			_font = _currentFontSystem.GetFont(18);
-			DrawString("The quick いろは brown\nfox にほへ jumps over\nt🙌h📦e l👏a👏zy dog adfasoqiw yraldh ald halwdha ldjahw dlawe havbx get872rq", 0);
+			DrawString("The quick いろは brown\nfox にほへ jumps over\nt🙌h📦e l👏a👏zy dog adfasoqiw yraldh ald halwdha ldjahw dlawe havbx get872rq", ref cursor, Alignment.Left, scale);
 
 			_font = _currentFontSystem.GetFont(30);
-			DrawString("The quick いろは brown\nfox にほへ jumps over\nt🙌h📦e l👏a👏zy dog", 80, Color.Bisque);
+			DrawString("The quick いろは brown\nfox にほへ jumps over\nt🙌h📦e l👏a👏zy dog", ref cursor, Alignment.Left, Color.Bisque, scale);
 
-			DrawString("Colored Text", 200, ColoredTextColors);
+			DrawString("Colored Text", ref cursor, Alignment.Left, ColoredTextColors, scale);
 
+			// Render some scaled text with alignment using origin.
+			
+			Vector2 columnCursor = cursor;
+			DrawString("Left-Justified", ref columnCursor, Alignment.Left, new Vector2(.75f) * scale);
+
+			columnCursor = new Vector2(GraphicsDevice.Viewport.Width/2f, cursor.Y);
+			DrawString("Centered", ref columnCursor, Alignment.Center, new Vector2(1) * scale);
+			
+			columnCursor = new Vector2(GraphicsDevice.Viewport.Width, cursor.Y);
+			DrawString("Right-Justified", ref columnCursor, Alignment.Right, new Vector2(1.5f) * scale);
+
+			cursor = new Vector2(0, columnCursor.Y);
+
+			// Render the atlas texture
 			_font = _currentFontSystem.GetFont(26);
-			DrawString("Texture:", 380);
+			DrawString("Texture:", ref cursor, Alignment.Left, Vector2.One);
 			
 			var texture = _currentFontSystem.EnumerateTextures().First();
-			_spriteBatch.Draw(texture, new Vector2(0, 410), Color.White);
+			_spriteBatch.Draw(texture, cursor, Color.White);
 
 			_spriteBatch.End();
 
