@@ -169,7 +169,6 @@ namespace FontStashSharp
 						0,
 						origin,
 						scale,
-						SpriteEffects.None,
 						depth);
 				}
 
@@ -236,7 +235,6 @@ namespace FontStashSharp
 						0,
 						origin,
 						scale,
-						SpriteEffects.None,
 						depth);
 				}
 
@@ -325,7 +323,6 @@ namespace FontStashSharp
 						0,
 						origin,
 						scale,
-						SpriteEffects.None,
 						depth);
 				}
 
@@ -393,7 +390,6 @@ namespace FontStashSharp
 						0,
 						origin,
 						scale,
-						SpriteEffects.None,
 						depth);
 				}
 

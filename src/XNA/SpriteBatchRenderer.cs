@@ -40,34 +40,8 @@ namespace FontStashSharp
 		{
 		}
 
-		public void Draw(ITexture2D texture, Rectangle dest, Rectangle source, Color color, float depth)
-		{
-			var textureWrapper = (Texture2DWrapper)texture;
-
-#if MONOGAME || FNA
-			_batch.Draw(textureWrapper.Texture,
-				dest,
-				source,
-				color,
-				0f,
-				Vector2.Zero,
-				SpriteEffects.None,
-				depth);
-#elif STRIDE
-			_batch.Draw(textureWrapper.Texture,
-				dest,
-				source,
-				color,
-				0f,
-				Vector2.Zero,
-				SpriteEffects.None,
-				ImageOrientation.AsIs,
-				depth);
-#endif
-		}
-
 		public void Draw(ITexture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation,
-			Vector2 origin, Vector2 scale, SpriteEffects effects, float depth)
+			Vector2 origin, Vector2 scale, float depth)
 		{
 			var textureWrapper = (Texture2DWrapper)texture;
 

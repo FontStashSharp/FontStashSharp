@@ -240,7 +240,7 @@ namespace SpriteFontPlus.Samples.TtfBaking
 		private void DrawRectangle(Vector2 position, Vector2 origin, Vector2 dimensions, Vector2 scale)
 		{
 			Vector2 textureScaler = dimensions / new Vector2(_white.Width, _white.Height) * scale;
-			_spriteBatch.Draw(_white, position - origin * scale, _white.Bounds, Color.Green, 0, Vector2.Zero, textureScaler,
+			_spriteBatch.Draw(_white, position - origin * scale, new Rectangle(0, 0, _white.Width, _white.Height), Color.Green, 0, Vector2.Zero, textureScaler,
 				SpriteEffects.None, 0);
 		}
 
@@ -267,6 +267,7 @@ namespace SpriteFontPlus.Samples.TtfBaking
 		{
 #if MONOGAME || FNA
 			GraphicsDevice.Clear(Color.CornflowerBlue);
+			TimeSpan total = gameTime.TotalGameTime;
 #elif STRIDE
 			// Clear screen
 			GraphicsContext.CommandList.Clear(GraphicsDevice.Presenter.BackBuffer, Color.CornflowerBlue);
@@ -274,10 +275,12 @@ namespace SpriteFontPlus.Samples.TtfBaking
 
 			// Set render target
 			GraphicsContext.CommandList.SetRenderTargetAndViewport(GraphicsDevice.Presenter.DepthStencilBuffer, GraphicsDevice.Presenter.BackBuffer);
+			TimeSpan total = gameTime.Total;
 #endif
 
+
 			Vector2 scale = _animatedScaling
-				? new Vector2(1 + .25f * (float) Math.Sin(gameTime.TotalGameTime.TotalSeconds * .5f))
+				? new Vector2(1 + .25f * (float) Math.Sin(total.TotalSeconds * .5f))
 				: Vector2.One;
 			
 			// TODO: Add your drawing code here
@@ -304,10 +307,17 @@ namespace SpriteFontPlus.Samples.TtfBaking
 			Vector2 columnCursor = cursor;
 			DrawString("Left-Justified", ref columnCursor, Alignment.Left, new Vector2(.75f) * scale);
 
-			columnCursor = new Vector2(GraphicsDevice.Viewport.Width/2f, cursor.Y);
+
+#if !STRIDE
+			var width = GraphicsDevice.Viewport.Width;
+#else
+			var width = GraphicsDevice.Presenter.BackBuffer.Width;
+#endif
+
+			columnCursor = new Vector2(width/2f, cursor.Y);
 			DrawString("Centered", ref columnCursor, Alignment.Center, new Vector2(1) * scale);
 			
-			columnCursor = new Vector2(GraphicsDevice.Viewport.Width, cursor.Y);
+			columnCursor = new Vector2(width, cursor.Y);
 			DrawString("Right-Justified", ref columnCursor, Alignment.Right, new Vector2(1.5f) * scale);
 
 			cursor = new Vector2(0, columnCursor.Y);
