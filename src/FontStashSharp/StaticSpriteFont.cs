@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework;
 using Stride.Core.Mathematics;
 #else
 using System.Drawing;
+using Vector2 = System.Drawing.PointF;
 #endif
 
 namespace FontStashSharp
