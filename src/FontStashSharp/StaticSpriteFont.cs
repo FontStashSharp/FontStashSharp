@@ -40,11 +40,18 @@ namespace FontStashSharp
 
 	public partial class StaticSpriteFont : SpriteFontBase
 	{
+		private readonly Int32Map<int> _kernings = new Int32Map<int>();
+
 		public Int32Map<FontGlyph> Glyphs { get; } = new Int32Map<FontGlyph>();
 
 		public int? DefaultCharacter { get; set; }
 
 		public int LineHeight { get; private set; }
+
+		public int CharacterSpacing { get; set; }
+		public int LineSpacing { get; set; }
+
+		public bool UseKernings { get; set; } = true;
 
 		public StaticSpriteFont(int lineHeight)
 		{
@@ -72,13 +79,48 @@ namespace FontStashSharp
 		protected override void PreDraw(string str, out float ascent, out float lineHeight)
 		{
 			ascent = 0;
-			lineHeight = LineHeight;
+			lineHeight = LineHeight + LineSpacing;
 		}
 
 		protected override void PreDraw(StringBuilder str, out float ascent, out float lineHeight)
 		{
 			ascent = 0;
-			lineHeight = LineHeight;
+			lineHeight = LineHeight + LineSpacing;
+		}
+
+		private static int KerningKey(int codepoint1, int codepoint2)
+		{
+			return ((codepoint1 << 16) | (codepoint1 >> 16)) ^ codepoint2;
+		}
+
+		public int GetGlyphKernAdvance(int codepoint1, int codepoint2)
+		{
+			var key = KerningKey(codepoint1, codepoint2);
+			int result = 0;
+			_kernings.TryGetValue(key, out result);
+
+			return result;
+		}
+
+		public void SetGlyphKernAdvance(int codepoint1, int codepoint2, int value)
+		{
+			var key = KerningKey(codepoint1, codepoint2);
+			_kernings[key] = value;
+		}
+
+		internal override void GetQuad(FontGlyph glyph, FontGlyph prevGlyph, Vector2 scale, ref float x, ref float y, ref FontGlyphSquad q)
+		{
+			if (prevGlyph != null)
+			{
+				if (UseKernings)
+				{
+					x += GetGlyphKernAdvance(prevGlyph.Codepoint, glyph.Codepoint);
+				}
+
+				x += CharacterSpacing;
+			}
+
+			base.GetQuad(glyph, prevGlyph, scale, ref x, ref y, ref q);
 		}
 
 		private static BitmapFont LoadBMFont(string data)
@@ -121,6 +163,11 @@ namespace FontStashSharp
 				};
 
 				result.Glyphs[glyph.Codepoint] = glyph;
+			}
+
+			foreach (var kern in bmFont.Kernings)
+			{
+				result.SetGlyphKernAdvance(kern.Key.FirstCharacter, kern.Key.SecondCharacter, kern.Value);
 			}
 
 			return result;

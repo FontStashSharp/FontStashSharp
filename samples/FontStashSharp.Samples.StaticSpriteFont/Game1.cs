@@ -140,6 +140,11 @@ namespace FontStashSharp.Samples
 				_drawBackground = !_drawBackground;
 			}
 
+			if (KeyboardUtils.IsPressed(Keys.Enter))
+			{
+				_font.UseKernings = !_font.UseKernings;
+			}
+
 			if (KeyboardUtils.IsPressed(Keys.LeftShift))
 			{
 				_animatedScaling = !_animatedScaling;
