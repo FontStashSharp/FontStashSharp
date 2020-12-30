@@ -11,21 +11,14 @@ using System.Drawing;
 namespace FontStashSharp
 {
 	public class FontGlyph
-	{
+  {
 		public int Codepoint;
 		public int Id;
-		public int Size;
-		public IFontSource Font;
-		public FontAtlas Atlas;
 		public Rectangle Bounds;
 		public int XAdvance;
 		public int XOffset;
 		public int YOffset;
-
-		public static int PadFromBlur(int blur)
-		{
-			return blur + 2;
-		}
+		public ITexture2D Texture;
 
 		public bool IsEmpty
 		{
@@ -33,6 +26,17 @@ namespace FontStashSharp
 			{
 				return Bounds.Width == 0 || Bounds.Height == 0;
 			}
+		}
+	}
+
+	public class DynamicFontGlyph: FontGlyph
+	{
+		public int Size;
+		public IFontSource Font;
+
+		public static int PadFromBlur(int blur)
+		{
+			return blur + 2;
 		}
 	}
 }

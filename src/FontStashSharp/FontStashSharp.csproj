@@ -7,8 +7,9 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-
   <ItemGroup>
-    <Compile Include="..\..\deps\StbTrueTypeSharp\src\**\*.cs" LinkBase="StbTrueTypeSharp" />
+    <PackageReference Include="Cyotek.Drawing.BitmapFont" Version="2.0.0" />
+    <PackageReference Include="StbImageSharp" Version="2.22.4" />
+    <PackageReference Include="StbTrueTypeSharp" Version="1.24.6" />
   </ItemGroup>
 </Project>

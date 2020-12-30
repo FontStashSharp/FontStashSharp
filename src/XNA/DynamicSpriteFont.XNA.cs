@@ -10,7 +10,7 @@ using Stride.Graphics;
 
 namespace FontStashSharp
 {
-	partial class DynamicSpriteFont
+	partial class SpriteFontBase
 	{
 		public float DrawText(SpriteBatch batch, string text, Vector2 pos, Color color, Vector2 scale, Vector2 origin, float depth = 0.0f)
 		{

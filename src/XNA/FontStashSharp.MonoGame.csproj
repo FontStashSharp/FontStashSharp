@@ -12,10 +12,12 @@
 
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.Portable" PrivateAssets="All" Version="3.6.0.1625" />
+    <PackageReference Include="Cyotek.Drawing.BitmapFont" Version="2.0.0" />
+    <PackageReference Include="StbImageSharp" Version="2.22.4" />
+    <PackageReference Include="StbTrueTypeSharp" Version="1.24.6" />
   </ItemGroup>
-
+  
   <ItemGroup>
-    <Compile Include="..\..\deps\StbTrueTypeSharp\src\**\*.cs" LinkBase="StbTrueTypeSharp" />
     <Compile Include="..\FontStashSharp\**\*.cs" LinkBase="FontStashSharp" />
     <Compile Remove="..\FontStashSharp\obj\**\*.cs" LinkBase="FontStashSharp" />
   </ItemGroup>

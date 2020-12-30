@@ -157,9 +157,9 @@ namespace FontStashSharp
 			return true;
 		}
 
-		public void RenderGlyph(ITexture2DCreator textureCreator, FontGlyph glyph, int blurAmount, int strokeAmount, bool premultiplyAlpha)
+		public void RenderGlyph(ITexture2DCreator textureCreator, DynamicFontGlyph glyph, int blurAmount, int strokeAmount, bool premultiplyAlpha)
 		{
-			var pad = Math.Max(FontGlyph.PadFromBlur(blurAmount), FontGlyph.PadFromBlur(strokeAmount));
+			var pad = Math.Max(DynamicFontGlyph.PadFromBlur(blurAmount), DynamicFontGlyph.PadFromBlur(strokeAmount));
 
 			// Render glyph to byte buffer
 			var bufferSize = glyph.Bounds.Width * glyph.Bounds.Height;

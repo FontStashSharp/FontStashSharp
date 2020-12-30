@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SpriteFontPlus.Samples.TextureAtlasFull
+namespace FontStashSharp.Samples
 {
     /// <summary>
     /// The main class.

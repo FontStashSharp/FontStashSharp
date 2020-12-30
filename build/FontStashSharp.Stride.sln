@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.Dyna
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Stride", "..\src\XNA\FontStashSharp.Stride.csproj", "{107CFEA9-2B46-4AF0-BBD4-4333FF303180}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.StaticSpriteFont.Stride", "..\samples\FontStashSharp.Samples.StaticSpriteFont\FontStashSharp.Samples.StaticSpriteFont.Stride.csproj", "{AAFF95FE-BB0F-4333-B663-6C7588A21B49}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +25,17 @@ Global
 		{107CFEA9-2B46-4AF0-BBD4-4333FF303180}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{107CFEA9-2B46-4AF0-BBD4-4333FF303180}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{107CFEA9-2B46-4AF0-BBD4-4333FF303180}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAFF95FE-BB0F-4333-B663-6C7588A21B49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAFF95FE-BB0F-4333-B663-6C7588A21B49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAFF95FE-BB0F-4333-B663-6C7588A21B49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAFF95FE-BB0F-4333-B663-6C7588A21B49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{05B74DE6-8853-4FB6-BCE5-5198D2323D32} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
+		{AAFF95FE-BB0F-4333-B663-6C7588A21B49} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {35ACDF4E-2CE2-46B1-A19F-35DC131069A1}

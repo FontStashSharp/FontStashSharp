@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
@@ -19,7 +16,6 @@ using Stride.Graphics;
 using Stride.Core.Mathematics;
 using Stride.Input;
 using Texture2D = Stride.Graphics.Texture;
-using SharpDX.Direct3D11;
 #endif
 
 namespace FontStashSharp.Samples
@@ -39,7 +35,6 @@ namespace FontStashSharp.Samples
 	/// </summary>
 	public class Game1 : Game
 	{
-		private const int EffectAmount = 1;
 		private const int LineSpacing = 10;
 
 #if !STRIDE
@@ -49,9 +44,7 @@ namespace FontStashSharp.Samples
 		public static Game1 Instance { get; private set; }
 		
 		private SpriteBatch _spriteBatch;
-		private FontSystem _currentFontSystem;
-		private FontSystem[] _fontSystems;
-		private DynamicSpriteFont _font;
+		private StaticSpriteFont _font;
 
 		private Texture2D _white;
 		private bool _drawBackground = false;
@@ -102,13 +95,6 @@ namespace FontStashSharp.Samples
 		}
 #endif
 
-		private void LoadFontSystem(FontSystem result)
-		{
-			result.AddFont(File.ReadAllBytes(@"Fonts/DroidSans.ttf"));
-			result.AddFont(File.ReadAllBytes(@"Fonts/DroidSansJapanese.ttf"));
-			result.AddFont(File.ReadAllBytes(@"Fonts/Symbola-Emoji.ttf"));
-		}
-
 		/// <summary>
 		/// LoadContent will be called once per game and is the place to load
 		/// all of your content.
@@ -123,25 +109,10 @@ namespace FontStashSharp.Samples
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
 			// TODO: use this.Content to load your game content here
-			var fontSystems = new List<FontSystem>();
-
-			// Simple
-			var fontSystem = FontSystemFactory.Create(GraphicsDevice, 1024, 1024);
-			LoadFontSystem(fontSystem);
-			fontSystems.Add(fontSystem);
-
-			// Blurry
-			var blurryFontSystem = FontSystemFactory.CreateBlurry(GraphicsDevice, 1024, 1024, EffectAmount);
-			LoadFontSystem(blurryFontSystem);
-			fontSystems.Add(blurryFontSystem);
-
-			// Stroked
-			var strokedFontSystem = FontSystemFactory.CreateStroked(GraphicsDevice, 1024, 1024, EffectAmount);
-			LoadFontSystem(strokedFontSystem);
-			fontSystems.Add(strokedFontSystem);
-
-			_fontSystems = fontSystems.ToArray();
-			_currentFontSystem = _fontSystems[0];
+			var assembly = GetType().Assembly;
+			_font = StaticSpriteFont.FromBMFont(assembly.ReadResourceAsString("FontStashSharp.Samples.StaticSpriteFont.Fonts.Arial.fnt"),
+					fileName => assembly.OpenResourceStream("FontStashSharp.Samples.StaticSpriteFont.Fonts." + fileName),
+					GraphicsDevice);
 
 #if MONOGAME || FNA
 			_white = new Texture2D(GraphicsDevice, 1, 1);
@@ -167,32 +138,6 @@ namespace FontStashSharp.Samples
 			if (KeyboardUtils.IsPressed(Keys.Space))
 			{
 				_drawBackground = !_drawBackground;
-			}
-
-			if (KeyboardUtils.IsPressed(Keys.Tab))
-			{
-				var i = 0;
-
-				for(; i < _fontSystems.Length; ++i)
-				{
-					if (_currentFontSystem == _fontSystems[i])
-					{
-						break;
-					}
-				}
-
-				++i;
-				if (i >= _fontSystems.Length)
-				{
-					i = 0;
-				}
-
-				_currentFontSystem = _fontSystems[i];
-			}
-
-			if (KeyboardUtils.IsPressed(Keys.Enter))
-			{
-				_currentFontSystem.UseKernings = !_currentFontSystem.UseKernings;
 			}
 
 			if (KeyboardUtils.IsPressed(Keys.LeftShift))
@@ -293,11 +238,7 @@ namespace FontStashSharp.Samples
 
 			// Render some text
 
-			_font = _currentFontSystem.GetFont(18);
-			DrawString("The quick いろは brown\nfox にほへ jumps over\nt🙌h📦e l👏a👏zy dog adfasoqiw yraldh ald halwdha ldjahw dlawe havbx get872rq", ref cursor, Alignment.Left, scale);
-
-			_font = _currentFontSystem.GetFont(30);
-			DrawString("The quick いろは brown\nfox にほへ jumps over\nt🙌h📦e l👏a👏zy dog", ref cursor, Alignment.Left, Color.Bisque, scale);
+			DrawString("The quick brown\nfox jumps over\nthe lazy dog", ref cursor, Alignment.Left, scale);
 
 			DrawString("Colored Text", ref cursor, Alignment.Left, ColoredTextColors, scale);
 
@@ -320,13 +261,6 @@ namespace FontStashSharp.Samples
 			DrawString("Right-Justified", ref columnCursor, Alignment.Right, new Vector2(1.5f) * scale);
 
 			cursor = new Vector2(0, columnCursor.Y);
-
-			// Render the atlas texture
-			_font = _currentFontSystem.GetFont(26);
-			DrawString("Texture:", ref cursor, Alignment.Left, Vector2.One);
-			
-			var texture = _currentFontSystem.EnumerateTextures().First();
-			_spriteBatch.Draw(texture, cursor, Color.White);
 
 			_spriteBatch.End();
 

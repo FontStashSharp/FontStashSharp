@@ -177,7 +177,7 @@ namespace FontStashSharp
 			return g;
 		}
 
-		internal void RenderGlyphOnAtlas(FontGlyph glyph)
+		internal void RenderGlyphOnAtlas(DynamicFontGlyph glyph)
 		{
 			var currentAtlas = CurrentAtlas;
 			int gx = 0, gy = 0;
@@ -203,7 +203,7 @@ namespace FontStashSharp
 
 			currentAtlas.RenderGlyph(_textureCreator, glyph, BlurAmount, StrokeAmount, PremultiplyAlpha);
 
-			glyph.Atlas = currentAtlas;
+			glyph.Texture = currentAtlas.Texture;
 		}
 	}
 }

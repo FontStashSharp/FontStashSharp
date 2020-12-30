@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.Dyna
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.FNA", "..\src\XNA\FontStashSharp.FNA.csproj", "{612F1482-C422-48BD-A478-4B9BF6A5EE9E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.StaticSpriteFont.FNA", "..\samples\FontStashSharp.Samples.StaticSpriteFont\FontStashSharp.Samples.StaticSpriteFont.FNA.csproj", "{3D512DCD-BB4F-43E3-B553-707C506E6FB5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,12 +31,17 @@ Global
 		{612F1482-C422-48BD-A478-4B9BF6A5EE9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{612F1482-C422-48BD-A478-4B9BF6A5EE9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{612F1482-C422-48BD-A478-4B9BF6A5EE9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D512DCD-BB4F-43E3-B553-707C506E6FB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D512DCD-BB4F-43E3-B553-707C506E6FB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D512DCD-BB4F-43E3-B553-707C506E6FB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D512DCD-BB4F-43E3-B553-707C506E6FB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{0679D789-9B68-4489-BECA-1F4341341267} = {8ED83526-FD30-4BA1-90C4-8CE29F53E5FB}
+		{3D512DCD-BB4F-43E3-B553-707C506E6FB5} = {8ED83526-FD30-4BA1-90C4-8CE29F53E5FB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A9C9D369-EE58-4E9D-B9FE-63023B644741}

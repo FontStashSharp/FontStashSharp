@@ -1,10 +1,9 @@
 ﻿using System;
 using System.IO;
-using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace SpriteFontPlus.Samples.TextureAtlasFull
+namespace FontStashSharp.Samples
 {
 	/// <summary>
 	/// This is the main type for your game.

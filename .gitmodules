@@ -1,3 +1,0 @@
-[submodule "deps/StbTrueTypeSharp"]
-	path = deps/StbTrueTypeSharp
-	url = https://github.com/StbSharp/StbTrueTypeSharp.git
