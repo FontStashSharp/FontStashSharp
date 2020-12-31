@@ -20,9 +20,7 @@ namespace FontStashSharp
 
 		public FontSystem FontSystem { get; private set; }
 
-		public int FontSize { get; private set; }
-
-		internal DynamicSpriteFont(FontSystem system, int size)
+		internal DynamicSpriteFont(FontSystem system, int size): base(size)
 		{
 			if (system == null)
 			{
@@ -30,7 +28,6 @@ namespace FontStashSharp
 			}
 
 			FontSystem = system;
-			FontSize = size;
 		}
 
 		private DynamicFontGlyph GetGlyphWithoutBitmap(int codepoint)

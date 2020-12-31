@@ -19,8 +19,14 @@ namespace FontStashSharp
 		internal static readonly Vector2 DefaultScale = new Vector2(1.0f, 1.0f);
 		internal static readonly Vector2 DefaultOrigin = new Vector2(0.0f, 0.0f);
 
-		protected SpriteFontBase()
+		/// <summary>
+		/// Line height in pixels
+		/// </summary>
+		public int FontSize { get; private set; }
+
+		protected SpriteFontBase(int fontSize)
 		{
+			FontSize = fontSize;
 		}
 
 		protected abstract FontGlyph GetGlyph(int codepoint, bool withoutBitmap);

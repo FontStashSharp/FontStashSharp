@@ -12,7 +12,7 @@ using Texture2D = Stride.Graphics.Texture;
 
 namespace FontStashSharp
 {
-	internal class Texture2DWrapper: ITexture2D
+	public class Texture2DWrapper: ITexture2D
 	{
 		public Texture2D Texture { get; private set; }
 		public Texture2DWrapper(Texture2D texture)

@@ -47,16 +47,13 @@ namespace FontStashSharp
 
 		public int? DefaultCharacter { get; set; }
 
-		public int LineHeight { get; private set; }
-
 		public int CharacterSpacing { get; set; }
 		public int LineSpacing { get; set; }
 
 		public bool UseKernings { get; set; } = true;
 
-		public StaticSpriteFont(int lineHeight)
+		public StaticSpriteFont(int fontSize): base(fontSize)
 		{
-			LineHeight = lineHeight;
 		}
 
 		private FontGlyph InternalGetGlyph(int codepoint)
@@ -80,13 +77,13 @@ namespace FontStashSharp
 		protected override void PreDraw(string str, out float ascent, out float lineHeight)
 		{
 			ascent = 0;
-			lineHeight = LineHeight + LineSpacing;
+			lineHeight = FontSize + LineSpacing;
 		}
 
 		protected override void PreDraw(StringBuilder str, out float ascent, out float lineHeight)
 		{
 			ascent = 0;
-			lineHeight = LineHeight + LineSpacing;
+			lineHeight = FontSize + LineSpacing;
 		}
 
 		private static int KerningKey(int codepoint1, int codepoint2)
