@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{B239
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.MonoGameBackend", "..\samples\FontStashSharp.Samples.MonoGameBackend\FontStashSharp.Samples.MonoGameBackend.csproj", "{CC6EF4B2-EE55-4EE5-AB0A-8E38DD3DC7F4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.MonoGameBackendRotating", "..\samples\FontStashSharp.Samples.MonoGameBackendRotating\FontStashSharp.Samples.MonoGameBackendRotating.csproj", "{4047DB36-7104-4314-9027-507374CD1532}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +25,17 @@ Global
 		{CC6EF4B2-EE55-4EE5-AB0A-8E38DD3DC7F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC6EF4B2-EE55-4EE5-AB0A-8E38DD3DC7F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC6EF4B2-EE55-4EE5-AB0A-8E38DD3DC7F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4047DB36-7104-4314-9027-507374CD1532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4047DB36-7104-4314-9027-507374CD1532}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4047DB36-7104-4314-9027-507374CD1532}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4047DB36-7104-4314-9027-507374CD1532}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CC6EF4B2-EE55-4EE5-AB0A-8E38DD3DC7F4} = {B239F30F-0011-45CD-8862-62A0BC2ED694}
+		{4047DB36-7104-4314-9027-507374CD1532} = {B239F30F-0011-45CD-8862-62A0BC2ED694}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {35ACDF4E-2CE2-46B1-A19F-35DC131069A1}

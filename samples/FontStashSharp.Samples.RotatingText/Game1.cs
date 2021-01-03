@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
@@ -16,6 +18,7 @@ using Stride.Graphics;
 using Stride.Core.Mathematics;
 using Stride.Input;
 using Texture2D = Stride.Graphics.Texture;
+using SharpDX.Direct3D11;
 #endif
 
 namespace FontStashSharp.Samples
@@ -35,7 +38,8 @@ namespace FontStashSharp.Samples
 	/// </summary>
 	public class Game1 : Game
 	{
-		private const int LineSpacing = 10;
+		private const int EffectAmount = 1;
+		private const string Text = "The quick いろは brown\nfox にほへ jumps over\nt🙌h📦e l👏a👏zy dog adfasoqiw yraldh ald\nhalwdha ldjahw dlawe havbx\nget872rq";
 
 #if !STRIDE
 		private readonly GraphicsDeviceManager _graphics;
@@ -44,28 +48,12 @@ namespace FontStashSharp.Samples
 		public static Game1 Instance { get; private set; }
 		
 		private SpriteBatch _spriteBatch;
-		private StaticSpriteFont _font;
+		private FontSystem _currentFontSystem;
+		private FontSystem[] _fontSystems;
 
 		private Texture2D _white;
-		private bool _drawBackground = false;
 		private bool _animatedScaling = false;
-
-		private static readonly Color[] ColoredTextColors = new Color[]
-		{
-			Color.Red,
-			Color.Blue,
-			Color.Green,
-			Color.Aquamarine,
-			Color.Azure,
-			Color.Chartreuse,
-			Color.Lavender,
-			Color.OldLace,
-			Color.PaleGreen,
-			Color.SaddleBrown,
-			Color.IndianRed,
-			Color.ForestGreen,
-			Color.Khaki
-		};
+		private float _angle;
 
 		public Game1()
 		{
@@ -95,6 +83,13 @@ namespace FontStashSharp.Samples
 		}
 #endif
 
+		private void LoadFontSystem(FontSystem result)
+		{
+			result.AddFont(File.ReadAllBytes(@"Fonts/DroidSans.ttf"));
+			result.AddFont(File.ReadAllBytes(@"Fonts/DroidSansJapanese.ttf"));
+			result.AddFont(File.ReadAllBytes(@"Fonts/Symbola-Emoji.ttf"));
+		}
+
 		/// <summary>
 		/// LoadContent will be called once per game and is the place to load
 		/// all of your content.
@@ -109,10 +104,25 @@ namespace FontStashSharp.Samples
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
 			// TODO: use this.Content to load your game content here
-			var assembly = GetType().Assembly;
-			_font = StaticSpriteFont.FromBMFont(assembly.ReadResourceAsString("FontStashSharp.Samples.StaticSpriteFont.Fonts.Arial.fnt"),
-					fileName => assembly.OpenResourceStream("FontStashSharp.Samples.StaticSpriteFont.Fonts." + fileName),
-					GraphicsDevice);
+			var fontSystems = new List<FontSystem>();
+
+			// Simple
+			var fontSystem = FontSystemFactory.Create(GraphicsDevice);
+			LoadFontSystem(fontSystem);
+			fontSystems.Add(fontSystem);
+
+			// Blurry
+			var blurryFontSystem = FontSystemFactory.CreateBlurry(GraphicsDevice, EffectAmount);
+			LoadFontSystem(blurryFontSystem);
+			fontSystems.Add(blurryFontSystem);
+
+			// Stroked
+			var strokedFontSystem = FontSystemFactory.CreateStroked(GraphicsDevice, EffectAmount);
+			LoadFontSystem(strokedFontSystem);
+			fontSystems.Add(strokedFontSystem);
+
+			_fontSystems = fontSystems.ToArray();
+			_currentFontSystem = _fontSystems[0];
 
 #if MONOGAME || FNA
 			_white = new Texture2D(GraphicsDevice, 1, 1);
@@ -135,14 +145,30 @@ namespace FontStashSharp.Samples
 
 			KeyboardUtils.Begin();
 
-			if (KeyboardUtils.IsPressed(Keys.Space))
+			if (KeyboardUtils.IsPressed(Keys.Tab))
 			{
-				_drawBackground = !_drawBackground;
+				var i = 0;
+
+				for(; i < _fontSystems.Length; ++i)
+				{
+					if (_currentFontSystem == _fontSystems[i])
+					{
+						break;
+					}
+				}
+
+				++i;
+				if (i >= _fontSystems.Length)
+				{
+					i = 0;
+				}
+
+				_currentFontSystem = _fontSystems[i];
 			}
 
 			if (KeyboardUtils.IsPressed(Keys.Enter))
 			{
-				_font.UseKernings = !_font.UseKernings;
+				_currentFontSystem.UseKernings = !_currentFontSystem.UseKernings;
 			}
 
 			if (KeyboardUtils.IsPressed(Keys.LeftShift))
@@ -151,61 +177,6 @@ namespace FontStashSharp.Samples
 			}
 
 			KeyboardUtils.End();
-		}
-
-		private void DrawString(string text, ref Vector2 cursor, Alignment alignment, Color[] glyphColors, Vector2 scale)
-		{
-			Vector2 dimensions = _font.MeasureString(text);
-			Vector2 origin = AlignmentOrigin(alignment, dimensions);
-
-			if (_drawBackground)
-			{
-				DrawRectangle(cursor, origin, dimensions, scale);
-			}
-
-			_spriteBatch.DrawString(_font, text, cursor, glyphColors, scale, 0, origin);
-			cursor.Y += dimensions.Y + LineSpacing;
-		}
-
-		private void DrawString(string text, ref Vector2 cursor, Alignment alignment, Color color, Vector2 scale)
-		{
-			Vector2 dimensions = _font.MeasureString(text);
-			Vector2 origin = AlignmentOrigin(alignment, dimensions);
-
-			if (_drawBackground)
-			{
-				DrawRectangle(cursor, origin, dimensions, scale);
-			}
-
-			_spriteBatch.DrawString(_font, text, cursor, color, scale, 0, origin);
-			cursor.Y += dimensions.Y + LineSpacing;
-		}
-
-		private void DrawString(string text, ref Vector2 cursor, Alignment alignment, Vector2 scale)
-		{
-			DrawString(text, ref cursor, alignment, Color.White, scale);
-		}
-
-		private void DrawRectangle(Vector2 position, Vector2 origin, Vector2 dimensions, Vector2 scale)
-		{
-			Vector2 textureScaler = dimensions / new Vector2(_white.Width, _white.Height) * scale;
-			_spriteBatch.Draw(_white, position - origin * scale, new Rectangle(0, 0, _white.Width, _white.Height), Color.Green, 0, Vector2.Zero, textureScaler,
-				SpriteEffects.None, 0);
-		}
-
-		private static Vector2 AlignmentOrigin(Alignment alignment, Vector2 dimensions)
-		{
-			switch (alignment)
-			{
-				case Alignment.Left:
-					return Vector2.Zero;
-				case Alignment.Center:
-					return new Vector2(dimensions.X / 2, 0);
-				case Alignment.Right:
-					return new Vector2(dimensions.X, 0);
-				default:
-					return Vector2.Zero;
-			}
 		}
 
 		/// <summary>
@@ -227,11 +198,6 @@ namespace FontStashSharp.Samples
 			TimeSpan total = gameTime.Total;
 #endif
 
-
-			Vector2 scale = _animatedScaling
-				? new Vector2(1 + .25f * (float) Math.Sin(total.TotalSeconds * .5f))
-				: Vector2.One;
-			
 			// TODO: Add your drawing code here
 #if MONOGAME || FNA
 			_spriteBatch.Begin();
@@ -239,35 +205,32 @@ namespace FontStashSharp.Samples
 			_spriteBatch.Begin(GraphicsContext);
 #endif
 
-			Vector2 cursor = Vector2.Zero;
-
-			// Render some text
-
-			DrawString("The quick brown\nfox jumps over\nthe lazy dog", ref cursor, Alignment.Left, scale);
-
-			DrawString("Colored Text", ref cursor, Alignment.Left, ColoredTextColors, scale);
-
-			// Render some scaled text with alignment using origin.
-			
-			Vector2 columnCursor = cursor;
-			DrawString("Left-Justified", ref columnCursor, Alignment.Left, new Vector2(.75f) * scale);
-
+			Vector2 scale = _animatedScaling
+				? new Vector2(1 + .25f * (float)Math.Sin(total.TotalSeconds * .5f))
+				: Vector2.One;
 
 #if !STRIDE
-			var width = GraphicsDevice.Viewport.Width;
+			var position = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
 #else
-			var width = GraphicsDevice.Presenter.BackBuffer.Width;
+			var position = new Vector2(GraphicsDevice.Presenter.BackBuffer.Width / 2, GraphicsDevice.Presenter.BackBuffer.Height / 2);
 #endif
 
-			columnCursor = new Vector2(width/2f, cursor.Y);
-			DrawString("Centered", ref columnCursor, Alignment.Center, new Vector2(1) * scale);
-			
-			columnCursor = new Vector2(width, cursor.Y);
-			DrawString("Right-Justified", ref columnCursor, Alignment.Right, new Vector2(1.5f) * scale);
+			var font = _currentFontSystem.GetFont(32);
 
-			cursor = new Vector2(0, columnCursor.Y);
+			var size = font.MeasureString(Text, scale);
+
+			var rads = (float)(_angle * Math.PI / 180);
+			_spriteBatch.DrawString(font, Text, position, Color.White, 
+						scale, rads, new Vector2(size.X / 2, size.Y / 2));
 
 			_spriteBatch.End();
+
+			_angle += 0.4f;
+
+			if (_angle >= 360.0f)
+	  {
+				_angle -= 360.0f;
+	  }
 
 			base.Draw(gameTime);
 		}

@@ -2,10 +2,13 @@
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
 using Stride.Core.Mathematics;
+using Texture2D = Stride.Graphics.Texture;
 #else
 using System.Drawing;
+using Texture2D = System.Object;
 #endif
 
 namespace FontStashSharp
@@ -18,7 +21,7 @@ namespace FontStashSharp
 		public int XAdvance;
 		public int XOffset;
 		public int YOffset;
-		public object Texture;
+		public Texture2D Texture;
 
 		public bool IsEmpty
 		{

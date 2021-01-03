@@ -1,5 +1,14 @@
 ﻿using System.Runtime.InteropServices;
 
+#if MONOGAME || FNA
+using Microsoft.Xna.Framework;
+#elif STRIDE
+using Stride.Core.Mathematics;
+#else
+using System.Drawing;
+using Vector2 = System.Drawing.PointF;
+#endif
+
 namespace FontStashSharp
 {
 	[StructLayout(LayoutKind.Sequential)]
@@ -13,5 +22,6 @@ namespace FontStashSharp
 		public float Y1;
 		public float S1;
 		public float T1;
+		public Vector2 Offset;
 	}
 }

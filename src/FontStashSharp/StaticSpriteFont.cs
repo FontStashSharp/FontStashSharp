@@ -13,19 +13,21 @@ using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
 using Stride.Core.Mathematics;
 using Stride.Graphics;
+using Texture2D = Stride.Graphics.Texture;
 #else
 using System.Drawing;
 using Vector2 = System.Drawing.PointF;
+using Texture2D = System.Object;
 #endif
 
 namespace FontStashSharp
 {
 	public class TextureWithOffset
 	{
-		public object Texture { get; set; }
+		public Texture2D Texture { get; set; }
 		public Point Offset { get; set; }
 
-		public TextureWithOffset(object texture)
+		public TextureWithOffset(Texture2D texture)
 		{
 			if (texture == null)
 			{
@@ -35,7 +37,7 @@ namespace FontStashSharp
 			Texture = texture;
 		}
 
-		public TextureWithOffset(object texture, Point offset) : this(texture)
+		public TextureWithOffset(Texture2D texture, Point offset) : this(texture)
 		{
 			Offset = offset;
 		}
@@ -187,7 +189,7 @@ namespace FontStashSharp
 		{
 			var bmFont = LoadBMFont(data);
 
-			var textures = new Dictionary<string, object>();
+			var textures = new Dictionary<string, Texture2D>();
 			for (var i = 0; i < bmFont.Pages.Length; ++i)
 			{
 				var fileName = bmFont.Pages[i].FileName;

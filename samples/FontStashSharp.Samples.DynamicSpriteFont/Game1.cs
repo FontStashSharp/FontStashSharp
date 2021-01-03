@@ -213,7 +213,7 @@ namespace FontStashSharp.Samples
 				DrawRectangle(cursor, origin, dimensions, scale);
 			}
 
-			_spriteBatch.DrawString(_font, text, cursor, glyphColors, scale, origin);
+			_spriteBatch.DrawString(_font, text, cursor, glyphColors, scale, 0, origin);
 			cursor.Y += dimensions.Y + LineSpacing;
 		}
 
@@ -227,7 +227,7 @@ namespace FontStashSharp.Samples
 				DrawRectangle(cursor, origin, dimensions, scale);
 			}
 
-			_spriteBatch.DrawString(_font, text, cursor, color, scale, origin);
+			_spriteBatch.DrawString(_font, text, cursor, color, scale, 0, origin);
 			cursor.Y += dimensions.Y + LineSpacing;
 		}
 

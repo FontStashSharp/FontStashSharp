@@ -31,13 +31,24 @@ namespace FontStashSharp
 		protected abstract FontGlyph GetGlyph(int codepoint, bool withoutBitmap);
 		protected abstract void PreDraw(string str, out float ascent, out float lineHeight);
 
-		public float DrawText(IFontStashRenderer renderer, string str, Vector2 position, Color color,
-													Vector2 scale, Vector2 origin, float depth = 0.0f)
+		/// <summary>
+		/// Draws a text
+		/// </summary>
+		/// <param name="renderer">A renderer.</param>
+		/// <param name="text">The text which will be drawn.</param>
+		/// <param name="position">The drawing location on screen.</param>
+		/// <param name="color">A color mask.</param>
+		/// <param name="rotation">A rotation of this text in radians.</param>
+		/// <param name="origin">Center of the rotation.</param>
+		/// <param name="scale">A scaling of this text.</param>
+		/// <param name="layerDepth">A depth of the layer of this string.</param>
+		public float DrawText(IFontStashRenderer renderer, string text, Vector2 position, Color color,
+													Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0.0f)
 		{
-			if (string.IsNullOrEmpty(str)) return 0.0f;
+			if (string.IsNullOrEmpty(text)) return 0.0f;
 
 			float ascent, lineHeight;
-			PreDraw(str, out ascent, out lineHeight);
+			PreDraw(text, out ascent, out lineHeight);
 
 			float originX = 0.0f;
 			float originY = 0.0f;
@@ -46,9 +57,9 @@ namespace FontStashSharp
 
 			FontGlyph prevGlyph = null;
 			var q = new FontGlyphSquad();
-			for (int i = 0; i < str.Length; i += char.IsSurrogatePair(str, i) ? 2 : 1)
+			for (int i = 0; i < text.Length; i += char.IsSurrogatePair(text, i) ? 2 : 1)
 			{
-				var codepoint = char.ConvertToUtf32(str, i);
+				var codepoint = char.ConvertToUtf32(text, i);
 				if (codepoint == '\n')
 				{
 					originX = 0.0f;
@@ -69,13 +80,13 @@ namespace FontStashSharp
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
 
 					renderer.Draw(glyph.Texture,
-						new Vector2(position.X + q.X0, position.Y + q.Y0),
+						position,
 						sourceRect,
 						color,
-						0,
-						origin,
+						rotation,
+						new Vector2(origin.X - q.Offset.X, origin.Y - q.Offset.Y),
 						scale,
-						depth);
+						layerDepth);
 				}
 
 				prevGlyph = glyph;
@@ -84,23 +95,51 @@ namespace FontStashSharp
 			return position.X;
 		}
 
-		public float DrawText(IFontStashRenderer renderer, string str, Vector2 position, Color color, Vector2 scale, float depth = 0.0f)
+		/// <summary>
+		/// Draws a text
+		/// </summary>
+		/// <param name="renderer">A renderer.</param>
+		/// <param name="text">The text which will be drawn.</param>
+		/// <param name="position">The drawing location on screen.</param>
+		/// <param name="color">A color mask.</param>
+		/// <param name="scale">A scaling of this text.</param>
+		/// <param name="layerDepth">A depth of the layer of this string.</param>
+		public float DrawText(IFontStashRenderer renderer, string text, Vector2 position, Color color, Vector2 scale, float layerDepth = 0.0f)
 		{
-			return DrawText(renderer, str, position, color, scale, DefaultOrigin, depth);
+			return DrawText(renderer, text, position, color, scale, 0, DefaultOrigin, layerDepth);
 		}
 
-		public float DrawText(IFontStashRenderer renderer, string str, Vector2 position, Color color, float depth = 0.0f)
+		/// <summary>
+		/// Draws a text
+		/// </summary>
+		/// <param name="renderer">A renderer.</param>
+		/// <param name="text">The text which will be drawn.</param>
+		/// <param name="position">The drawing location on screen.</param>
+		/// <param name="color">A color mask.</param>
+		/// <param name="layerDepth">A depth of the layer of this string.</param>
+		public float DrawText(IFontStashRenderer renderer, string text, Vector2 position, Color color, float layerDepth = 0.0f)
 		{
-			return DrawText(renderer, str, position, color, DefaultScale, DefaultOrigin, depth);
+			return DrawText(renderer, text, position, color, DefaultScale, 0, DefaultOrigin, layerDepth);
 		}
 
-		public float DrawText(IFontStashRenderer renderer, string str, Vector2 position, Color[] colors,
-													Vector2 scale, Vector2 origin, float depth = 0.0f)
+		/// <summary>
+		/// Draws a text
+		/// </summary>
+		/// <param name="renderer">A renderer.</param>
+		/// <param name="text">The text which will be drawn.</param>
+		/// <param name="position">The drawing location on screen.</param>
+		/// <param name="colors">Colors of glyphs.</param>
+		/// <param name="rotation">A rotation of this text in radians.</param>
+		/// <param name="origin">Center of the rotation.</param>
+		/// <param name="scale">A scaling of this text.</param>
+		/// <param name="layerDepth">A depth of the layer of this string.</param>
+		public float DrawText(IFontStashRenderer renderer, string text, Vector2 position, Color[] colors,
+													Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0.0f)
 		{
-			if (string.IsNullOrEmpty(str)) return 0.0f;
+			if (string.IsNullOrEmpty(text)) return 0.0f;
 
 			float ascent, lineHeight;
-			PreDraw(str, out ascent, out lineHeight);
+			PreDraw(text, out ascent, out lineHeight);
 
 			float originX = 0.0f;
 			float originY = 0.0f;
@@ -110,9 +149,9 @@ namespace FontStashSharp
 			FontGlyph prevGlyph = null;
 			var pos = 0;
 			var q = new FontGlyphSquad();
-			for (int i = 0; i < str.Length; i += char.IsSurrogatePair(str, i) ? 2 : 1)
+			for (int i = 0; i < text.Length; i += char.IsSurrogatePair(text, i) ? 2 : 1)
 			{
-				var codepoint = char.ConvertToUtf32(str, i);
+				var codepoint = char.ConvertToUtf32(text, i);
 
 				if (codepoint == '\n')
 				{
@@ -136,13 +175,13 @@ namespace FontStashSharp
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
 
 					renderer.Draw(glyph.Texture,
-						new Vector2(position.X + q.X0, position.Y + q.Y0),
+						position,
 						sourceRect,
 						colors[pos],
-						0,
-						origin,
+						rotation,
+						new Vector2(origin.X - q.Offset.X, origin.Y - q.Offset.Y),
 						scale,
-						depth);
+						layerDepth);
 				}
 
 				prevGlyph = glyph;
@@ -152,25 +191,53 @@ namespace FontStashSharp
 			return position.X;
 		}
 
-		public float DrawText(IFontStashRenderer renderer, string str, Vector2 position, Color[] colors, Vector2 scale, float depth = 0.0f)
+		/// <summary>
+		/// Draws a text
+		/// </summary>
+		/// <param name="renderer">A renderer.</param>
+		/// <param name="text">The text which will be drawn.</param>
+		/// <param name="position">The drawing location on screen.</param>
+		/// <param name="colors">Colors of glyphs.</param>
+		/// <param name="scale">A scaling of this text.</param>
+		/// <param name="layerDepth">A depth of the layer of this string.</param>
+		public float DrawText(IFontStashRenderer renderer, string text, Vector2 position, Color[] colors, Vector2 scale, float layerDepth = 0.0f)
 		{
-			return DrawText(renderer, str, position, colors, scale, DefaultOrigin, depth);
+			return DrawText(renderer, text, position, colors, scale, 0, DefaultOrigin, layerDepth);
 		}
 
-		public float DrawText(IFontStashRenderer renderer, string str, Vector2 position, Color[] colors, float depth = 0.0f)
+		/// <summary>
+		/// Draws a text
+		/// </summary>
+		/// <param name="renderer">A renderer.</param>
+		/// <param name="text">The text which will be drawn.</param>
+		/// <param name="position">The drawing location on screen.</param>
+		/// <param name="colors">Colors of glyphs.</param>
+		/// <param name="layerDepth">A depth of the layer of this string.</param>
+		public float DrawText(IFontStashRenderer renderer, string text, Vector2 position, Color[] colors, float layerDepth = 0.0f)
 		{
-			return DrawText(renderer, str, position, colors, DefaultScale, DefaultOrigin, depth);
+			return DrawText(renderer, text, position, colors, DefaultScale, 0, DefaultOrigin, layerDepth);
 		}
 
 		protected abstract void PreDraw(StringBuilder str, out float ascent, out float lineHeight);
 
-		public float DrawText(IFontStashRenderer renderer, StringBuilder str, Vector2 position, Color color,
-													Vector2 scale, Vector2 origin, float depth = 0.0f)
+		/// <summary>
+		/// Draws a text
+		/// </summary>
+		/// <param name="renderer">A renderer.</param>
+		/// <param name="text">The text which will be drawn.</param>
+		/// <param name="position">The drawing location on screen.</param>
+		/// <param name="color">A color mask.</param>
+		/// <param name="rotation">A rotation of this text in radians.</param>
+		/// <param name="origin">Center of the rotation.</param>
+		/// <param name="scale">A scaling of this text.</param>
+		/// <param name="layerDepth">A depth of the layer of this string.</param>
+		public float DrawText(IFontStashRenderer renderer, StringBuilder text, Vector2 position, Color color,
+													Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0.0f)
 		{
-			if (str == null || str.Length == 0) return 0.0f;
+			if (text == null || text.Length == 0) return 0.0f;
 
 			float ascent, lineHeight;
-			PreDraw(str, out ascent, out lineHeight);
+			PreDraw(text, out ascent, out lineHeight);
 
 			float originX = 0.0f;
 			float originY = 0.0f;
@@ -179,9 +246,9 @@ namespace FontStashSharp
 
 			FontGlyph prevGlyph = null;
 			var q = new FontGlyphSquad();
-			for (int i = 0; i < str.Length; i += StringBuilderIsSurrogatePair(str, i) ? 2 : 1)
+			for (int i = 0; i < text.Length; i += StringBuilderIsSurrogatePair(text, i) ? 2 : 1)
 			{
-				var codepoint = StringBuilderConvertToUtf32(str, i);
+				var codepoint = StringBuilderConvertToUtf32(text, i);
 
 				if (codepoint == '\n')
 				{
@@ -203,13 +270,13 @@ namespace FontStashSharp
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
 
 					renderer.Draw(glyph.Texture,
-						new Vector2(position.X + q.X0, position.Y + q.Y0),
+						position,
 						sourceRect,
 						color,
-						0,
-						origin,
+						rotation,
+						new Vector2(origin.X - q.Offset.X, origin.Y - q.Offset.Y),
 						scale,
-						depth);
+						layerDepth);
 				}
 
 				prevGlyph = glyph;
@@ -218,23 +285,51 @@ namespace FontStashSharp
 			return position.X;
 		}
 
-		public float DrawText(IFontStashRenderer renderer, StringBuilder str, Vector2 position, Color color, Vector2 scale, float depth = 0.0f)
+		/// <summary>
+		/// Draws a text
+		/// </summary>
+		/// <param name="renderer">A renderer.</param>
+		/// <param name="text">The text which will be drawn.</param>
+		/// <param name="position">The drawing location on screen.</param>
+		/// <param name="color">A color mask.</param>
+		/// <param name="scale">A scaling of this text.</param>
+		/// <param name="layerDepth">A depth of the layer of this string.</param>
+		public float DrawText(IFontStashRenderer renderer, StringBuilder text, Vector2 position, Color color, Vector2 scale, float layerDepth = 0.0f)
 		{
-			return DrawText(renderer, str, position, color, scale, DefaultOrigin, depth);
+			return DrawText(renderer, text, position, color, scale, 0, DefaultOrigin, layerDepth);
 		}
 
-		public float DrawText(IFontStashRenderer renderer, StringBuilder str, Vector2 position, Color color, float depth = 0.0f)
+		/// <summary>
+		/// Draws a text
+		/// </summary>
+		/// <param name="renderer">A renderer.</param>
+		/// <param name="text">The text which will be drawn.</param>
+		/// <param name="position">The drawing location on screen.</param>
+		/// <param name="color">A color mask.</param>
+		/// <param name="layerDepth">A depth of the layer of this string.</param>
+		public float DrawText(IFontStashRenderer renderer, StringBuilder text, Vector2 position, Color color, float layerDepth = 0.0f)
 		{
-			return DrawText(renderer, str, position, color, DefaultScale, DefaultOrigin, depth);
+			return DrawText(renderer, text, position, color, DefaultScale, 0, DefaultOrigin, layerDepth);
 		}
 
-		public float DrawText(IFontStashRenderer renderer, StringBuilder str, Vector2 position, Color[] glyphColors,
-													Vector2 scale, Vector2 origin, float depth = 0.0f)
+		/// <summary>
+		/// Draws a text
+		/// </summary>
+		/// <param name="renderer">A renderer.</param>
+		/// <param name="text">The text which will be drawn.</param>
+		/// <param name="position">The drawing location on screen.</param>
+		/// <param name="colors">Colors of glyphs.</param>
+		/// <param name="rotation">A rotation of this text in radians.</param>
+		/// <param name="origin">Center of the rotation.</param>
+		/// <param name="scale">A scaling of this text.</param>
+		/// <param name="layerDepth">A depth of the layer of this string.</param>
+		public float DrawText(IFontStashRenderer renderer, StringBuilder text, Vector2 position, Color[] colors,
+													Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0.0f)
 		{
-			if (str == null || str.Length == 0) return 0.0f;
+			if (text == null || text.Length == 0) return 0.0f;
 
 			float ascent, lineHeight;
-			PreDraw(str, out ascent, out lineHeight);
+			PreDraw(text, out ascent, out lineHeight);
 
 			float originX = 0.0f;
 			float originY = 0.0f;
@@ -244,9 +339,9 @@ namespace FontStashSharp
 			FontGlyph prevGlyph = null;
 			var pos = 0;
 			var q = new FontGlyphSquad();
-			for (int i = 0; i < str.Length; i += StringBuilderIsSurrogatePair(str, i) ? 2 : 1)
+			for (int i = 0; i < text.Length; i += StringBuilderIsSurrogatePair(text, i) ? 2 : 1)
 			{
-				var codepoint = StringBuilderConvertToUtf32(str, i);
+				var codepoint = StringBuilderConvertToUtf32(text, i);
 
 				if (codepoint == '\n')
 				{
@@ -270,13 +365,13 @@ namespace FontStashSharp
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
 
 					renderer.Draw(glyph.Texture,
-						new Vector2(position.X + q.X0, position.Y + q.Y0),
+						position,
 						sourceRect,
-						glyphColors[pos],
-						0,
-						origin,
+						colors[pos],
+						rotation,
+						new Vector2(origin.X - q.Offset.X, origin.Y - q.Offset.Y),
 						scale,
-						depth);
+						layerDepth);
 				}
 
 				prevGlyph = glyph;
@@ -286,14 +381,31 @@ namespace FontStashSharp
 			return position.X;
 		}
 
-		public float DrawText(IFontStashRenderer renderer, StringBuilder str, Vector2 position, Color[] colors, Vector2 scale, float depth = 0.0f)
+		/// <summary>
+		/// Draws a text
+		/// </summary>
+		/// <param name="renderer">A renderer.</param>
+		/// <param name="text">The text which will be drawn.</param>
+		/// <param name="position">The drawing location on screen.</param>
+		/// <param name="colors">Colors of glyphs.</param>
+		/// <param name="scale">A scaling of this text.</param>
+		/// <param name="layerDepth">A depth of the layer of this string.</param>
+		public float DrawText(IFontStashRenderer renderer, StringBuilder text, Vector2 position, Color[] colors, Vector2 scale, float layerDepth = 0.0f)
 		{
-			return DrawText(renderer, str, position, colors, scale, DefaultOrigin, depth);
+			return DrawText(renderer, text, position, colors, scale, 0, DefaultOrigin, layerDepth);
 		}
 
-		public float DrawText(IFontStashRenderer renderer, StringBuilder str, Vector2 position, Color[] colors, float depth = 0.0f)
+		/// <summary>
+		/// Draws a text
+		/// </summary>
+		/// <param name="renderer">A renderer.</param>
+		/// <param name="text">The text which will be drawn.</param>
+		/// <param name="position">The drawing location on screen.</param>
+		/// <param name="colors">Colors of glyphs.</param>
+		/// <param name="layerDepth">A depth of the layer of this string.</param>
+		public float DrawText(IFontStashRenderer renderer, StringBuilder text, Vector2 position, Color[] colors, float layerDepth = 0.0f)
 		{
-			return DrawText(renderer, str, position, colors, DefaultScale, DefaultOrigin, depth);
+			return DrawText(renderer, text, position, colors, DefaultScale, 0, DefaultOrigin, layerDepth);
 		}
 
 		public virtual float TextBounds(string str, Vector2 position, ref Bounds bounds, Vector2 scale)
@@ -584,6 +696,7 @@ namespace FontStashSharp
 			q.T0 = glyph.Bounds.Y;
 			q.S1 = glyph.Bounds.Right;
 			q.T1 = glyph.Bounds.Bottom;
+			q.Offset = new Vector2(rx, ry);
 
 			x += glyph.XAdvance;
 		}
