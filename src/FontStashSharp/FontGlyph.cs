@@ -18,7 +18,7 @@ namespace FontStashSharp
 		public int XAdvance;
 		public int XOffset;
 		public int YOffset;
-		public ITexture2D Texture;
+		public object Texture;
 
 		public bool IsEmpty
 		{

@@ -4,7 +4,6 @@ using System.Text;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
 using Stride.Core.Mathematics;
 #else
@@ -32,8 +31,8 @@ namespace FontStashSharp
 		protected abstract FontGlyph GetGlyph(int codepoint, bool withoutBitmap);
 		protected abstract void PreDraw(string str, out float ascent, out float lineHeight);
 
-		public float DrawText(IFontStashRenderer batch, float x, float y, string str, Color color, Vector2 scale,
-			Vector2 origin, float depth = 0.0f)
+		public float DrawText(IFontStashRenderer renderer, string str, Vector2 position, Color color,
+													Vector2 scale, Vector2 origin, float depth = 0.0f)
 		{
 			if (string.IsNullOrEmpty(str)) return 0.0f;
 
@@ -69,8 +68,8 @@ namespace FontStashSharp
 				{
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
 
-					batch.Draw(glyph.Texture,
-						new Vector2(x + q.X0, y + q.Y0),
+					renderer.Draw(glyph.Texture,
+						new Vector2(position.X + q.X0, position.Y + q.Y0),
 						sourceRect,
 						color,
 						0,
@@ -82,20 +81,21 @@ namespace FontStashSharp
 				prevGlyph = glyph;
 			}
 
-			return x;
+			return position.X;
 		}
 
-		public float DrawText(IFontStashRenderer batch, float x, float y, string str, Color color, Vector2 scale, float depth = 0.0f)
+		public float DrawText(IFontStashRenderer renderer, string str, Vector2 position, Color color, Vector2 scale, float depth = 0.0f)
 		{
-			return DrawText(batch, x, y, str, color, scale, DefaultOrigin, depth);
+			return DrawText(renderer, str, position, color, scale, DefaultOrigin, depth);
 		}
 
-		public float DrawText(IFontStashRenderer batch, float x, float y, string str, Color color, float depth = 0.0f)
+		public float DrawText(IFontStashRenderer renderer, string str, Vector2 position, Color color, float depth = 0.0f)
 		{
-			return DrawText(batch, x, y, str, color, DefaultScale, depth);
+			return DrawText(renderer, str, position, color, DefaultScale, DefaultOrigin, depth);
 		}
 
-		public float DrawText(IFontStashRenderer batch, float x, float y, string str, Color[] colors, Vector2 scale, Vector2 origin, float depth = 0.0f)
+		public float DrawText(IFontStashRenderer renderer, string str, Vector2 position, Color[] colors,
+													Vector2 scale, Vector2 origin, float depth = 0.0f)
 		{
 			if (string.IsNullOrEmpty(str)) return 0.0f;
 
@@ -135,8 +135,8 @@ namespace FontStashSharp
 				{
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
 
-					batch.Draw(glyph.Texture,
-						new Vector2(x + q.X0, y + q.Y0),
+					renderer.Draw(glyph.Texture,
+						new Vector2(position.X + q.X0, position.Y + q.Y0),
 						sourceRect,
 						colors[pos],
 						0,
@@ -149,24 +149,23 @@ namespace FontStashSharp
 				++pos;
 			}
 
-			return x;
+			return position.X;
 		}
 
-		public float DrawText(IFontStashRenderer batch, float x, float y, string str, Color[] colors, Vector2 scale,
-			float depth = 0.0f)
+		public float DrawText(IFontStashRenderer renderer, string str, Vector2 position, Color[] colors, Vector2 scale, float depth = 0.0f)
 		{
-			return DrawText(batch, x, y, str, colors, scale, DefaultOrigin, depth);
+			return DrawText(renderer, str, position, colors, scale, DefaultOrigin, depth);
 		}
 
-		public float DrawText(IFontStashRenderer batch, float x, float y, string str, Color[] colors, float depth = 0.0f)
+		public float DrawText(IFontStashRenderer renderer, string str, Vector2 position, Color[] colors, float depth = 0.0f)
 		{
-			return DrawText(batch, x, y, str, colors, DefaultScale, depth);
+			return DrawText(renderer, str, position, colors, DefaultScale, DefaultOrigin, depth);
 		}
 
 		protected abstract void PreDraw(StringBuilder str, out float ascent, out float lineHeight);
 
-		public float DrawText(IFontStashRenderer batch, float x, float y, StringBuilder str, Color color, Vector2 scale,
-			Vector2 origin, float depth = 0.0f)
+		public float DrawText(IFontStashRenderer renderer, StringBuilder str, Vector2 position, Color color,
+													Vector2 scale, Vector2 origin, float depth = 0.0f)
 		{
 			if (str == null || str.Length == 0) return 0.0f;
 
@@ -203,8 +202,8 @@ namespace FontStashSharp
 				{
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
 
-					batch.Draw(glyph.Texture,
-						new Vector2(x + q.X0, y + q.Y0),
+					renderer.Draw(glyph.Texture,
+						new Vector2(position.X + q.X0, position.Y + q.Y0),
 						sourceRect,
 						color,
 						0,
@@ -216,21 +215,21 @@ namespace FontStashSharp
 				prevGlyph = glyph;
 			}
 
-			return x;
+			return position.X;
 		}
 
-		public float DrawText(IFontStashRenderer batch, float x, float y, StringBuilder str, Color color, Vector2 scale, float depth = 0.0f)
+		public float DrawText(IFontStashRenderer renderer, StringBuilder str, Vector2 position, Color color, Vector2 scale, float depth = 0.0f)
 		{
-			return DrawText(batch, x, y, str, color, scale, DefaultOrigin, depth);
+			return DrawText(renderer, str, position, color, scale, DefaultOrigin, depth);
 		}
 
-		public float DrawText(IFontStashRenderer batch, float x, float y, StringBuilder str, Color color, float depth = 0.0f)
+		public float DrawText(IFontStashRenderer renderer, StringBuilder str, Vector2 position, Color color, float depth = 0.0f)
 		{
-			return DrawText(batch, x, y, str, color, DefaultScale, DefaultOrigin, depth);
+			return DrawText(renderer, str, position, color, DefaultScale, DefaultOrigin, depth);
 		}
 
-		public float DrawText(IFontStashRenderer batch, float x, float y, StringBuilder str, Color[] glyphColors,
-			Vector2 scale, Vector2 origin, float depth = 0.0f)
+		public float DrawText(IFontStashRenderer renderer, StringBuilder str, Vector2 position, Color[] glyphColors,
+													Vector2 scale, Vector2 origin, float depth = 0.0f)
 		{
 			if (str == null || str.Length == 0) return 0.0f;
 
@@ -270,8 +269,8 @@ namespace FontStashSharp
 				{
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
 
-					batch.Draw(glyph.Texture,
-						new Vector2(x + q.X0, y + q.Y0),
+					renderer.Draw(glyph.Texture,
+						new Vector2(position.X + q.X0, position.Y + q.Y0),
 						sourceRect,
 						glyphColors[pos],
 						0,
@@ -284,27 +283,28 @@ namespace FontStashSharp
 				++pos;
 			}
 
-			return x;
+			return position.X;
 		}
 
-		public float DrawText(IFontStashRenderer batch, float x, float y, StringBuilder str, Color[] colors, Vector2 scale,
-			float depth = 0.0f)
+		public float DrawText(IFontStashRenderer renderer, StringBuilder str, Vector2 position, Color[] colors, Vector2 scale, float depth = 0.0f)
 		{
-			return DrawText(batch, x, y, str, colors, scale, DefaultOrigin, depth);
+			return DrawText(renderer, str, position, colors, scale, DefaultOrigin, depth);
 		}
 
-		public float DrawText(IFontStashRenderer batch, float x, float y, StringBuilder str, Color[] colors, float depth = 0.0f)
+		public float DrawText(IFontStashRenderer renderer, StringBuilder str, Vector2 position, Color[] colors, float depth = 0.0f)
 		{
-			return DrawText(batch, x, y, str, colors, DefaultScale, DefaultOrigin, depth);
+			return DrawText(renderer, str, position, colors, DefaultScale, DefaultOrigin, depth);
 		}
 
-		public virtual float TextBounds(float x, float y, string str, ref Bounds bounds, Vector2 scale)
+		public virtual float TextBounds(string str, Vector2 position, ref Bounds bounds, Vector2 scale)
 		{
 			if (string.IsNullOrEmpty(str)) return 0.0f;
 
 			float ascent, lineHeight;
 			PreDraw(str, out ascent, out lineHeight);
 
+			var x = position.X;
+			var y = position.Y;
 			var q = new FontGlyphSquad();
 			y += ascent;
 
@@ -356,12 +356,12 @@ namespace FontStashSharp
 			return advance;
 		}
 
-		public float TextBounds(float x, float y, string str, ref Bounds bounds)
+		public float TextBounds(string str, Vector2 position, ref Bounds bounds)
 		{
-			return TextBounds(x, y, str, ref bounds, DefaultScale);
+			return TextBounds(str, position, ref bounds, DefaultScale);
 		}
 
-		public virtual float TextBounds(float x, float y, StringBuilder str, ref Bounds bounds, Vector2 scale)
+		public virtual float TextBounds(StringBuilder str, Vector2 position, ref Bounds bounds, Vector2 scale)
 		{
 			if (str == null || str.Length == 0) return 0.0f;
 
@@ -369,6 +369,9 @@ namespace FontStashSharp
 			PreDraw(str, out ascent, out lineHeight);
 
 			var q = new FontGlyphSquad();
+
+			var x = position.X;
+			var y = position.Y;
 			y += ascent;
 
 			float minx, maxx, miny, maxy;
@@ -420,12 +423,12 @@ namespace FontStashSharp
 			return advance;
 		}
 
-		public float TextBounds(float x, float y, StringBuilder str, ref Bounds bounds)
+		public float TextBounds(StringBuilder str, Vector2 position, ref Bounds bounds)
 		{
-			return TextBounds(x, y, str, ref bounds, DefaultScale);
+			return TextBounds(str, position, ref bounds, DefaultScale);
 		}
 
-		public List<Rectangle> GetGlyphRects(float x, float y, string str, Vector2 scale)
+		public List<Rectangle> GetGlyphRects(string str, Vector2 position, Vector2 scale)
 		{
 			List<Rectangle> Rects = new List<Rectangle>();
 			if (string.IsNullOrEmpty(str)) return Rects;
@@ -434,6 +437,9 @@ namespace FontStashSharp
 			PreDraw(str, out ascent, out lineHeight);
 
 			var q = new FontGlyphSquad();
+
+			var x = position.X;
+			var y = position.Y;
 			y += ascent;
 
 			float startx = x;
@@ -466,12 +472,12 @@ namespace FontStashSharp
 			return Rects;
 		}
 
-		public List<Rectangle> GetGlyphRects(float x, float y, string str)
+		public List<Rectangle> GetGlyphRects(string str, Vector2 position)
 		{
-			return GetGlyphRects(x, y, str, DefaultScale);
+			return GetGlyphRects(str, position, DefaultScale);
 		}
 
-		public List<Rectangle> GetGlyphRects(float x, float y, StringBuilder str, Vector2 scale)
+		public List<Rectangle> GetGlyphRects(StringBuilder str, Vector2 position, Vector2 scale)
 		{
 			List<Rectangle> Rects = new List<Rectangle>();
 			if (str == null || str.Length == 0) return Rects;
@@ -480,6 +486,9 @@ namespace FontStashSharp
 			PreDraw(str, out ascent, out lineHeight);
 
 			var q = new FontGlyphSquad();
+
+			var x = position.X;
+			var y = position.Y;
 			y += ascent;
 
 			float minx, maxx, miny, maxy;
@@ -516,15 +525,15 @@ namespace FontStashSharp
 			return Rects;
 		}
 
-		public List<Rectangle> GetGlyphRects(float x, float y, StringBuilder str)
+		public List<Rectangle> GetGlyphRects(StringBuilder str, Vector2 position)
 		{
-			return GetGlyphRects(x, y, str, DefaultScale);
+			return GetGlyphRects(str, position, DefaultScale);
 		}
 
 		public Vector2 MeasureString(string text, Vector2 scale)
 		{
 			Bounds bounds = new Bounds();
-			TextBounds(0, 0, text, ref bounds, scale);
+			TextBounds(text, Utility.Vector2Zero, ref bounds, scale);
 
 			return new Vector2(bounds.X2, bounds.Y2);
 		}
@@ -537,7 +546,7 @@ namespace FontStashSharp
 		public Vector2 MeasureString(StringBuilder text, Vector2 scale)
 		{
 			Bounds bounds = new Bounds();
-			TextBounds(0, 0, text, ref bounds, scale);
+			TextBounds(text, Utility.Vector2Zero, ref bounds, scale);
 
 			return new Vector2(bounds.X2, bounds.Y2);
 		}

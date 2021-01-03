@@ -4,7 +4,7 @@
     <PackageId>FontStashSharp.MonoGame</PackageId>
     <AssemblyName>FontStashSharp.MonoGame</AssemblyName>
     <Description>FontStashSharp for MonoGame</Description>
-    <DefineConstants>STBSHARP_INTERNAL;MONOGAME</DefineConstants>
+    <DefineConstants>$(DefineConstants);MONOGAME</DefineConstants>
     <OutputPath>bin\MonoGame\$(Configuration)</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

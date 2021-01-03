@@ -146,22 +146,22 @@ namespace FontStashSharp
 			}
 		}
 
-		public override float TextBounds(float x, float y, string str, ref Bounds bounds, Vector2 scale)
+		public override float TextBounds(string str, Vector2 position, ref Bounds bounds, Vector2 scale)
 		{
 			if (string.IsNullOrEmpty(str)) return 0.0f;
 
-			var result = base.TextBounds(x, y, str, ref bounds, scale);
+			var result = base.TextBounds(str, position, ref bounds, scale);
 
 			bounds.X2 += FontSystem.StrokeAmount * 2;
 
 			return result;
 		}
 
-		public override float TextBounds(float x, float y, StringBuilder str, ref Bounds bounds, Vector2 scale)
+		public override float TextBounds(StringBuilder str, Vector2 position, ref Bounds bounds, Vector2 scale)
 		{
 			if (str == null || str.Length == 0) return 0.0f;
 
-			var result = base.TextBounds(x, y, str, ref bounds, scale);
+			var result = base.TextBounds(str, position, ref bounds, scale);
 
 			bounds.X2 += FontSystem.StrokeAmount * 2;
 

@@ -24,8 +24,8 @@ namespace FontStashSharp
 			{
 				foreach (var atlas in _font.Atlases)
 				{
-					var Texture2DWrapper = (Texture2DWrapper)atlas.Texture;
-					yield return Texture2DWrapper.Texture;
+					var xnaTexture = atlas.Texture;
+					yield return xnaTexture;
 				}
 			}
 

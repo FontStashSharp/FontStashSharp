@@ -40,13 +40,13 @@ namespace FontStashSharp
 		{
 		}
 
-		public void Draw(ITexture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation,
+		public void Draw(object texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation,
 			Vector2 origin, Vector2 scale, float depth)
 		{
-			var textureWrapper = (Texture2DWrapper)texture;
+			var xnaTexture = (Texture2D)texture;
 
 #if MONOGAME || FNA
-			_batch.Draw(textureWrapper.Texture,
+			_batch.Draw(xnaTexture,
 				position,
 				sourceRectangle,
 				color,
@@ -56,7 +56,7 @@ namespace FontStashSharp
 				SpriteEffects.None,
 				depth);
 #elif STRIDE
-			_batch.Draw(textureWrapper.Texture,
+			_batch.Draw(xnaTexture,
 				position,
 				sourceRectangle,
 				color,

@@ -1,6 +1,16 @@
 ﻿using FontStashSharp.Interfaces;
 using System;
 
+#if MONOGAME || FNA
+using Microsoft.Xna.Framework.Graphics;
+#elif STRIDE
+using Stride.Graphics;
+using Texture2D = Stride.Graphics.Texture;
+#else
+using Texture2D = System.Object;
+#endif
+
+
 namespace FontStashSharp
 {
 	public unsafe class FontAtlas
@@ -16,7 +26,7 @@ namespace FontStashSharp
 
 		public FontAtlasNode[] Nodes { get; private set; }
 
-		public ITexture2D Texture { get; set; }
+		public Texture2D Texture { get; set; }
 
 		public FontAtlas(int w, int h, int count)
 		{
@@ -157,7 +167,11 @@ namespace FontStashSharp
 			return true;
 		}
 
-		public void RenderGlyph(ITexture2DCreator textureCreator, DynamicFontGlyph glyph, int blurAmount, int strokeAmount, bool premultiplyAlpha)
+#if MONOGAME || FNA || STRIDE
+		public void RenderGlyph(GraphicsDevice graphicsDevice, DynamicFontGlyph glyph, int blurAmount, int strokeAmount, bool premultiplyAlpha)
+#else
+		public void RenderGlyph(ITexture2DManager textureManager, DynamicFontGlyph glyph, int blurAmount, int strokeAmount, bool premultiplyAlpha)
+#endif
 		{
 			var pad = Math.Max(DynamicFontGlyph.PadFromBlur(blurAmount), DynamicFontGlyph.PadFromBlur(strokeAmount));
 
@@ -293,13 +307,23 @@ namespace FontStashSharp
 				}
 			}
 
+#if MONOGAME || FNA || STRIDE
 			// Write to texture
 			if (Texture == null)
 			{
-				Texture = textureCreator.Create(Width, Height);
+				Texture = Texture2DManager.CreateTexture(graphicsDevice, Width, Height);
 			}
 
-			Texture.SetData(glyph.Bounds, colorBuffer);
+			Texture2DManager.SetTextureData(Texture, glyph.Bounds, colorBuffer);
+#else
+			// Write to texture
+			if (Texture == null)
+			{
+				Texture = textureManager.CreateTexture(Width, Height);
+			}
+
+			textureManager.SetTextureData(Texture, glyph.Bounds, colorBuffer);
+#endif
 		}
 
 		void Blur(byte* dst, int w, int h, int dstStride, int blur)

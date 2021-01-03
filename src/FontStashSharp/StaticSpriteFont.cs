@@ -9,8 +9,10 @@ using System.Text;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
 using Stride.Core.Mathematics;
+using Stride.Graphics;
 #else
 using System.Drawing;
 using Vector2 = System.Drawing.PointF;
@@ -20,10 +22,10 @@ namespace FontStashSharp
 {
 	public class TextureWithOffset
 	{
-		public ITexture2D Texture { get; set; }
+		public object Texture { get; set; }
 		public Point Offset { get; set; }
 
-		public TextureWithOffset(ITexture2D texture)
+		public TextureWithOffset(object texture)
 		{
 			if (texture == null)
 			{
@@ -33,7 +35,7 @@ namespace FontStashSharp
 			Texture = texture;
 		}
 
-		public TextureWithOffset(ITexture2D texture, Point offset) : this(texture)
+		public TextureWithOffset(object texture, Point offset) : this(texture)
 		{
 			Offset = offset;
 		}
@@ -171,26 +173,21 @@ namespace FontStashSharp
 			return result;
 		}
 
-		private static int PowerOfTwo(int x)
-		{
-			int power = 1;
-			while (power < x)
-				power *= 2;
-
-			return power;
-		}
-
 		public static StaticSpriteFont FromBMFont(string data, Func<string, TextureWithOffset> textureGetter)
 		{
 			var bmFont = LoadBMFont(data);
 			return FromBMFont(bmFont, textureGetter);
 		}
 
-		public unsafe static StaticSpriteFont FromBMFont(string data, Func<string, Stream> imageStreamOpener, ITexture2DCreator texture2DCreator)
+#if MONOGAME || FNA || STRIDE
+		public unsafe static StaticSpriteFont FromBMFont(string data, Func<string, Stream> imageStreamOpener, GraphicsDevice device)
+#else
+		public unsafe static StaticSpriteFont FromBMFont(string data, Func<string, Stream> imageStreamOpener, ITexture2DManager textureManager)
+#endif
 		{
 			var bmFont = LoadBMFont(data);
 
-			var textures = new Dictionary<string, ITexture2D>();
+			var textures = new Dictionary<string, object>();
 			for (var i = 0; i < bmFont.Pages.Length; ++i)
 			{
 				var fileName = bmFont.Pages[i].FileName;
@@ -220,12 +217,13 @@ namespace FontStashSharp
 						}
 					}
 
-					var width = PowerOfTwo(image.Width);
-					var height = PowerOfTwo(image.Height);
-
-					var texture = texture2DCreator.Create(width, height);
-
-					texture.SetData(new Rectangle(0, 0, image.Width, image.Height), image.Data);
+#if MONOGAME || FNA || STRIDE
+					var texture = Texture2DManager.CreateTexture(device, image.Width, image.Height);
+					Texture2DManager.SetTextureData(texture, new Rectangle(0, 0, image.Width, image.Height), image.Data);
+#else
+					var texture = textureManager.CreateTexture(image.Width, image.Height);
+					textureManager.SetTextureData(texture, new Rectangle(0, 0, image.Width, image.Height), image.Data);
+#endif
 
 					textures[fileName] = texture;
 				}

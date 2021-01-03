@@ -1,9 +1,21 @@
 ﻿using System.IO;
 
+#if MONOGAME || FNA
+using Microsoft.Xna.Framework;
+#elif STRIDE
+using Stride.Core.Mathematics;
+#else
+using System.Drawing;
+using Vector2 = System.Drawing.PointF;
+#endif
+
+
 namespace FontStashSharp
 {
 	internal static class Utility
 	{
+		public static readonly Vector2 Vector2Zero = new Vector2(0, 0);
+
 		public static byte[] ToByteArray(this Stream stream)
 		{
 			byte[] bytes;

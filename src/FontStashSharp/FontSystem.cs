@@ -5,8 +5,10 @@ using System.IO;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
 using Stride.Core.Mathematics;
+using Stride.Graphics;
 #else
 using System.Drawing;
 #endif
@@ -19,7 +21,12 @@ namespace FontStashSharp
 		private readonly Int32Map<DynamicSpriteFont> _fonts = new Int32Map<DynamicSpriteFont>();
 
 		private readonly IFontLoader _fontLoader;
-		private readonly ITexture2DCreator _textureCreator;
+
+#if MONOGAME || FNA || STRIDE
+		private readonly GraphicsDevice _graphicsDevice;
+#else
+		private readonly ITexture2DManager _textureCreator;
+#endif
 
 		private FontAtlas _currentAtlas;
 		private Point _size;
@@ -53,20 +60,34 @@ namespace FontStashSharp
 
 		public event EventHandler CurrentAtlasFull;
 
-		public FontSystem(IFontLoader fontLoader, ITexture2DCreator textureCreator, int width, int height, int blurAmount = 0, int strokeAmount = 0, bool premultiplyAlpha = true)
+#if MONOGAME || FNA || STRIDE
+		public FontSystem(IFontLoader fontLoader, GraphicsDevice graphicsDevice, int width = 1024, int height = 1024, int blurAmount = 0, int strokeAmount = 0, bool premultiplyAlpha = true)
+#else
+		public FontSystem(IFontLoader fontLoader, ITexture2DManager textureCreator, int width = 1024, int height = 1024, int blurAmount = 0, int strokeAmount = 0, bool premultiplyAlpha = true)
+#endif
 		{
 			if (fontLoader == null)
 			{
 				throw new ArgumentNullException(nameof(fontLoader));
 			}
 
+#if MONOGAME || FNA || STRIDE
+			if (graphicsDevice == null)
+			{
+				throw new ArgumentNullException(nameof(graphicsDevice));
+			}
+
+			_graphicsDevice = graphicsDevice;
+#else
 			if (textureCreator == null)
 			{
 				throw new ArgumentNullException(nameof(textureCreator));
 			}
 
-			_fontLoader = fontLoader;
 			_textureCreator = textureCreator;
+#endif
+
+			_fontLoader = fontLoader;
 
 			if (width <= 0)
 			{
@@ -100,10 +121,17 @@ namespace FontStashSharp
 			_size = new Point(width, height);
 		}
 
-		public FontSystem(ITexture2DCreator textureCreator, int width, int height, int blurAmount = 0, int strokeAmount = 0, bool premultiplyAlpha = true):
+#if MONOGAME || FNA || STRIDE
+		public FontSystem(GraphicsDevice graphicsDevice, int width, int height, int blurAmount = 0, int strokeAmount = 0, bool premultiplyAlpha = true) :
+			this(StbTrueTypeSharpFontLoader.Instance, graphicsDevice, width, height, blurAmount, strokeAmount, premultiplyAlpha)
+		{
+		}
+#else
+		public FontSystem(ITexture2DManager textureCreator, int width, int height, int blurAmount = 0, int strokeAmount = 0, bool premultiplyAlpha = true):
 			this(StbTrueTypeSharpFontLoader.Instance, textureCreator, width, height, blurAmount, strokeAmount, premultiplyAlpha)
 		{
 		}
+#endif
 
 		public void Dispose()
 		{
@@ -201,7 +229,11 @@ namespace FontStashSharp
 			glyph.Bounds.X = gx;
 			glyph.Bounds.Y = gy;
 
+#if MONOGAME || FNA || STRIDE
+			currentAtlas.RenderGlyph(_graphicsDevice, glyph, BlurAmount, StrokeAmount, PremultiplyAlpha);
+#else
 			currentAtlas.RenderGlyph(_textureCreator, glyph, BlurAmount, StrokeAmount, PremultiplyAlpha);
+#endif
 
 			glyph.Texture = currentAtlas.Texture;
 		}

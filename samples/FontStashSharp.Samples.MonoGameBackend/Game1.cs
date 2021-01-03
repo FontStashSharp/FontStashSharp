@@ -27,19 +27,19 @@ namespace FontStashSharp
 
 		private static readonly System.Drawing.Color[] _colors = new System.Drawing.Color[]
 		{
-			Color.Red.ToColor(),
-			Color.Blue.ToColor(),
-			Color.Green.ToColor(),
-			Color.Aquamarine.ToColor(),
-			Color.Azure.ToColor(),
-			Color.Chartreuse.ToColor(),
-			Color.Lavender.ToColor(),
-			Color.OldLace.ToColor(),
-			Color.PaleGreen.ToColor(),
-			Color.SaddleBrown.ToColor(),
-			Color.IndianRed.ToColor(),
-			Color.ForestGreen.ToColor(),
-			Color.Khaki.ToColor()
+			Color.Red.ToSystemDrawing(),
+			Color.Blue.ToSystemDrawing(),
+			Color.Green.ToSystemDrawing(),
+			Color.Aquamarine.ToSystemDrawing(),
+			Color.Azure.ToSystemDrawing(),
+			Color.Chartreuse.ToSystemDrawing(),
+			Color.Lavender.ToSystemDrawing(),
+			Color.OldLace.ToSystemDrawing(),
+			Color.PaleGreen.ToSystemDrawing(),
+			Color.SaddleBrown.ToSystemDrawing(),
+			Color.IndianRed.ToSystemDrawing(),
+			Color.ForestGreen.ToSystemDrawing(),
+			Color.Khaki.ToSystemDrawing()
 		};
 
 		public Game1()
@@ -58,7 +58,7 @@ namespace FontStashSharp
 		private FontSystem LoadFont(int blur, int stroke)
 		{
 			var fontLoader = StbTrueTypeSharpFontLoader.Instance;
-			var textureCreator = new Texture2DCreator(GraphicsDevice);
+			var textureCreator = new Texture2DManager(GraphicsDevice);
 
 			var result = new FontSystem(fontLoader, textureCreator, 1024, 1024, blur, stroke);
 			result.AddFont(File.ReadAllBytes(@"Fonts/DroidSans.ttf"));
@@ -136,7 +136,7 @@ namespace FontStashSharp
 		public Vector2 MeasureString(string text)
 		{
 			Bounds bounds = new Bounds();
-			_font.TextBounds(0, 0, text, ref bounds);
+			_font.TextBounds(text, new System.Drawing.PointF(0, 0), ref bounds);
 
 			return new Vector2(bounds.X2, bounds.Y2);
 		}
@@ -149,7 +149,7 @@ namespace FontStashSharp
 				_spriteBatch.Draw(_white, new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y), Color.Green);
 			}
 
-			_font.DrawText(_renderer, position.X, position.Y, text, glyphColors);
+			_font.DrawText(_renderer, text, position.ToSystemDrawing(), glyphColors);
 		}
 
 		private void DrawString(string text, int y, Color color)
@@ -160,7 +160,7 @@ namespace FontStashSharp
 				_spriteBatch.Draw(_white, new Rectangle(0, y, (int)size.X, (int)size.Y), Color.Green);
 			}
 
-			_font.DrawText(_renderer, 0, y, text, color.ToColor());
+			_font.DrawText(_renderer, text, new System.Drawing.PointF(0, y), color.ToSystemDrawing());
 		}
 
 		private void DrawString(string text, int y)
@@ -192,8 +192,8 @@ namespace FontStashSharp
 			DrawString("Texture:", 380);
 
 			var atlas = _currentFontSystem.Atlases.First();
-			var wrapper = (Texture2DWrapper)atlas.Texture;
-			_spriteBatch.Draw(wrapper.Texture, new Vector2(0, 410), Color.White);
+			var wrapper = (Texture2D)atlas.Texture;
+			_spriteBatch.Draw(wrapper, new Vector2(0, 410), Color.White);
 
 			_spriteBatch.End();
 
