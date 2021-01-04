@@ -158,11 +158,11 @@ namespace FontStashSharp.Samples
 
 			var font = _currentFontSystem.GetFont(32);
 
-			var size = font.MeasureString(Text, scale.ToSystemDrawing());
+			var size = font.MeasureString(Text, scale.ToSystemNumerics());
 
 			var rads = (float)(_angle * Math.PI / 180);
-			font.DrawText(_renderer, Text, position.ToSystemDrawing(), Color.White.ToSystemDrawing(), 
-						scale.ToSystemDrawing(), rads, new Vector2(size.X / 2, size.Y / 2).ToSystemDrawing());
+			font.DrawText(_renderer, Text, position.ToSystemNumerics(), Color.White.ToSystemDrawing(), 
+						scale.ToSystemNumerics(), rads, new Vector2(size.X / 2, size.Y / 2).ToSystemNumerics());
 
 			_spriteBatch.End();
 

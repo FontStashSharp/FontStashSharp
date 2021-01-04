@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 using Stride.Core.Mathematics;
 #else
 using System.Drawing;
-using Vector2 = System.Drawing.PointF;
+using System.Numerics;
 #endif
 
 namespace FontStashSharp
@@ -84,7 +84,7 @@ namespace FontStashSharp
 						sourceRect,
 						color,
 						rotation,
-						new Vector2(origin.X - q.Offset.X, origin.Y - q.Offset.Y),
+						origin - q.Offset,
 						scale,
 						layerDepth);
 				}
@@ -179,7 +179,7 @@ namespace FontStashSharp
 						sourceRect,
 						colors[pos],
 						rotation,
-						new Vector2(origin.X - q.Offset.X, origin.Y - q.Offset.Y),
+						origin - q.Offset,
 						scale,
 						layerDepth);
 				}
@@ -274,7 +274,7 @@ namespace FontStashSharp
 						sourceRect,
 						color,
 						rotation,
-						new Vector2(origin.X - q.Offset.X, origin.Y - q.Offset.Y),
+						origin - q.Offset,
 						scale,
 						layerDepth);
 				}
@@ -369,7 +369,7 @@ namespace FontStashSharp
 						sourceRect,
 						colors[pos],
 						rotation,
-						new Vector2(origin.X - q.Offset.X, origin.Y - q.Offset.Y),
+						origin - q.Offset,
 						scale,
 						layerDepth);
 				}

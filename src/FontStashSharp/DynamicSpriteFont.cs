@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Stride.Core.Mathematics;
 #else
 using System.Drawing;
-using Vector2 = System.Drawing.PointF;
+using System.Numerics;
 #endif
 
 namespace FontStashSharp

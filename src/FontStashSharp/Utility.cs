@@ -5,8 +5,7 @@ using Microsoft.Xna.Framework;
 #elif STRIDE
 using Stride.Core.Mathematics;
 #else
-using System.Drawing;
-using Vector2 = System.Drawing.PointF;
+using System.Numerics;
 #endif
 
 

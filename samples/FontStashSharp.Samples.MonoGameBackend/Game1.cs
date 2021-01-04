@@ -136,7 +136,7 @@ namespace FontStashSharp
 		public Vector2 MeasureString(string text)
 		{
 			Bounds bounds = new Bounds();
-			_font.TextBounds(text, new System.Drawing.PointF(0, 0), ref bounds);
+			_font.TextBounds(text, System.Numerics.Vector2.Zero, ref bounds);
 
 			return new Vector2(bounds.X2, bounds.Y2);
 		}
@@ -149,7 +149,7 @@ namespace FontStashSharp
 				_spriteBatch.Draw(_white, new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y), Color.Green);
 			}
 
-			_font.DrawText(_renderer, text, position.ToSystemDrawing(), glyphColors);
+			_font.DrawText(_renderer, text, position.ToSystemNumerics(), glyphColors);
 		}
 
 		private void DrawString(string text, int y, Color color)
@@ -160,7 +160,7 @@ namespace FontStashSharp
 				_spriteBatch.Draw(_white, new Rectangle(0, y, (int)size.X, (int)size.Y), Color.Green);
 			}
 
-			_font.DrawText(_renderer, text, new System.Drawing.PointF(0, y), color.ToSystemDrawing());
+			_font.DrawText(_renderer, text, System.Numerics.Vector2.Zero, color.ToSystemDrawing());
 		}
 
 		private void DrawString(string text, int y)

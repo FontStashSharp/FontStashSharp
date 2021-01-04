@@ -16,7 +16,7 @@ using Stride.Graphics;
 using Texture2D = Stride.Graphics.Texture;
 #else
 using System.Drawing;
-using Vector2 = System.Drawing.PointF;
+using System.Numerics;
 using Texture2D = System.Object;
 #endif
 

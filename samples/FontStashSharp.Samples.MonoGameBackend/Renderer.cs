@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Drawing;
+using System.Numerics;
 
 namespace FontStashSharp
 {
@@ -19,7 +20,7 @@ namespace FontStashSharp
 			_batch = batch;
 		}
 
-		public void Draw(object texture, PointF position, Rectangle? sourceRectangle, Color color, float rotation, PointF origin, PointF scale, float depth)
+		public void Draw(object texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, float depth)
 		{
 			var textureWrapper = (Texture2D)texture;
 
