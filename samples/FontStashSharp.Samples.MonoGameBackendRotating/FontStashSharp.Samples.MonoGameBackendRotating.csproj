@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\FontStashSharp.Samples.MonoGameBackend\KeyboardUtils.cs" Link="KeyboardUtils.cs" />

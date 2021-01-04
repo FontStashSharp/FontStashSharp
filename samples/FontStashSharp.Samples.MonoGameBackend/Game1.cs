@@ -160,7 +160,7 @@ namespace FontStashSharp
 				_spriteBatch.Draw(_white, new Rectangle(0, y, (int)size.X, (int)size.Y), Color.Green);
 			}
 
-			_font.DrawText(_renderer, text, System.Numerics.Vector2.Zero, color.ToSystemDrawing());
+			_font.DrawText(_renderer, text, new System.Numerics.Vector2(0, y), color.ToSystemDrawing());
 		}
 
 		private void DrawString(string text, int y)
