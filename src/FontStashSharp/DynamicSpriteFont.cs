@@ -16,7 +16,7 @@ namespace FontStashSharp
 {
 	public partial class DynamicSpriteFont: SpriteFontBase
 	{
-		private readonly Int32Map<DynamicFontGlyph> _glyphs = new Int32Map<DynamicFontGlyph>();
+		internal readonly Int32Map<DynamicFontGlyph> Glyphs = new Int32Map<DynamicFontGlyph>();
 
 		public FontSystem FontSystem { get; private set; }
 
@@ -33,7 +33,7 @@ namespace FontStashSharp
 		private DynamicFontGlyph GetGlyphWithoutBitmap(int codepoint)
 		{
 			DynamicFontGlyph glyph = null;
-			if (_glyphs.TryGetValue(codepoint, out glyph))
+			if (Glyphs.TryGetValue(codepoint, out glyph))
 			{
 				return glyph;
 			}
@@ -42,6 +42,7 @@ namespace FontStashSharp
 			var g = FontSystem.GetCodepointIndex(codepoint, out font);
 			if (g == null)
 			{
+				Glyphs[codepoint] = null;
 				return null;
 			}
 
@@ -65,7 +66,7 @@ namespace FontStashSharp
 				YOffset = y0 - offset
 			};
 
-			_glyphs[codepoint] = glyph;
+			Glyphs[codepoint] = glyph;
 
 			return glyph;
 		}
@@ -97,7 +98,7 @@ namespace FontStashSharp
 			return result;
 		}
 
-	protected override FontGlyph GetGlyph(int codepoint, bool withoutBitmap)
+	protected internal override FontGlyph GetGlyph(int codepoint, bool withoutBitmap)
 	{
 			return GetDynamicGlyph(codepoint, withoutBitmap);
 	}

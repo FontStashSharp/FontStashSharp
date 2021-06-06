@@ -68,7 +68,7 @@ namespace FontStashSharp
 			return result;
 		}
 
-		protected override FontGlyph GetGlyph(int codepoint, bool withoutBitmap)
+		protected internal override FontGlyph GetGlyph(int codepoint, bool withoutBitmap)
 		{
 			var result = InternalGetGlyph(codepoint);
 			if (result == null && DefaultCharacter != null)

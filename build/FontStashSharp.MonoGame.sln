@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.Stat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.RotatingText.MonoGame", "..\samples\FontStashSharp.Samples.RotatingText\FontStashSharp.Samples.RotatingText.MonoGame.csproj", "{128B548A-8D25-410A-AA0A-B59E586CED75}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Tests.MonoGame", "..\src\FontStashSharp.Tests\FontStashSharp.Tests.MonoGame.csproj", "{6438CE5C-AD2F-4C16-A158-5FA42AD6C8CC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{128B548A-8D25-410A-AA0A-B59E586CED75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{128B548A-8D25-410A-AA0A-B59E586CED75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{128B548A-8D25-410A-AA0A-B59E586CED75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6438CE5C-AD2F-4C16-A158-5FA42AD6C8CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6438CE5C-AD2F-4C16-A158-5FA42AD6C8CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6438CE5C-AD2F-4C16-A158-5FA42AD6C8CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6438CE5C-AD2F-4C16-A158-5FA42AD6C8CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

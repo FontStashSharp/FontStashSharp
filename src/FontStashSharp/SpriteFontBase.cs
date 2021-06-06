@@ -28,7 +28,7 @@ namespace FontStashSharp
 			FontSize = fontSize;
 		}
 
-		protected abstract FontGlyph GetGlyph(int codepoint, bool withoutBitmap);
+		protected internal abstract FontGlyph GetGlyph(int codepoint, bool withoutBitmap);
 		protected abstract void PreDraw(string str, out float ascent, out float lineHeight);
 
 		/// <summary>
