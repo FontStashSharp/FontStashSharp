@@ -9,7 +9,7 @@ namespace FontStashSharp.Tests
 		[Test]
 		public void Load()
 		{
-			var assembly = GetType().Assembly;
+			var assembly = TestsEnvironment.Assembly;
 			var data = assembly.ReadResourceAsString("Resources.arial64.fnt");
 
 			var font = StaticSpriteFont.FromBMFont(data, fileName => assembly.OpenResourceStream("Resources." + fileName), TestsEnvironment.GraphicsDevice);
