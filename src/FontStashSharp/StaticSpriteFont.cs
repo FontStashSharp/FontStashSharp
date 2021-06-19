@@ -68,7 +68,7 @@ namespace FontStashSharp
 			return result;
 		}
 
-		protected internal override FontGlyph GetGlyph(int codepoint, bool withoutBitmap)
+		protected internal override FontGlyph GetGlyph(int codepoint, bool withoutBitmap, bool isForRendering)
 		{
 			var result = InternalGetGlyph(codepoint);
 			if (result == null && DefaultCharacter != null)
@@ -122,7 +122,7 @@ namespace FontStashSharp
 				x += CharacterSpacing;
 			}
 
-			base.GetQuad(glyph, prevGlyph, scale, ref x, ref y, ref q);
+			base.GetQuad(glyph, prevGlyph, glyph, prevGlyph, scale, ref x, ref y, ref q);
 		}
 
 		private static BitmapFont LoadBMFont(string data)
