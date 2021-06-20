@@ -16,7 +16,7 @@ namespace FontStashSharp
 {
 	public partial class DynamicSpriteFont: SpriteFontBase
 	{
-		internal readonly Int32Map<DynamicFontGlyph> Glyphs = new Int32Map<DynamicFontGlyph>();
+		internal readonly Int32Map<DynamicFontGlyph>[] Glyphs = new Int32Map<DynamicFontGlyph>[] { new Int32Map<DynamicFontGlyph>(), new Int32Map<DynamicFontGlyph>() };
 
 		public FontSystem FontSystem { get; private set; }
 
@@ -30,10 +30,16 @@ namespace FontStashSharp
 			FontSystem = system;
 		}
 
-		private DynamicFontGlyph GetGlyphWithoutBitmap(int codepoint)
+		internal int GetGlyphMapIndexFor(bool isForMeasurement)
+		{
+			return isForMeasurement ? 0 : 1;
+		}
+
+		private DynamicFontGlyph GetGlyphWithoutBitmap(int codepoint, bool isForMeasurement)
 		{
 			DynamicFontGlyph glyph = null;
-			if (Glyphs.TryGetValue(codepoint, out glyph))
+			var index = GetGlyphMapIndexFor(isForMeasurement);
+			if (Glyphs[index].TryGetValue(codepoint, out glyph))
 			{
 				return glyph;
 			}
@@ -47,7 +53,7 @@ namespace FontStashSharp
 			}
 
 			int advance = 0, x0 = 0, y0 = 0, x1 = 0, y1 = 0;
-			var fontSize = FontSize * RenderFontSizeMultiplicator;
+			var fontSize = FontSize * (isForMeasurement ? 1 : RenderFontSizeMultiplicator);
 			font.GetGlyphMetrics(g.Value, fontSize, out advance, out x0, out y0, out x1, out y1);
 
 			var pad = Math.Max(DynamicFontGlyph.PadFromBlur(FontSystem.BlurAmount), DynamicFontGlyph.PadFromBlur(FontSystem.StrokeAmount));
@@ -67,14 +73,14 @@ namespace FontStashSharp
 				YOffset = y0 - offset
 			};
 
-			Glyphs[codepoint] = glyph;
+			Glyphs[index][codepoint] = glyph;
 
 			return glyph;
 		}
 
-		private DynamicFontGlyph GetGlyphInternal(int codepoint, bool withoutBitmap)
+		private DynamicFontGlyph GetGlyphInternal(int codepoint, bool withoutBitmap, bool isForMeasurement)
 		{
-			var glyph = GetGlyphWithoutBitmap(codepoint);
+			var glyph = GetGlyphWithoutBitmap(codepoint, isForMeasurement);
 			if (glyph == null)
 			{
 				return null;
@@ -88,20 +94,20 @@ namespace FontStashSharp
 			return glyph;
 		}
 
-		private DynamicFontGlyph GetDynamicGlyph(int codepoint, bool withoutBitmap)
+		private DynamicFontGlyph GetDynamicGlyph(int codepoint, bool withoutBitmap, bool isForMeasurement)
 		{
-			var result = GetGlyphInternal(codepoint, withoutBitmap);
+			var result = GetGlyphInternal(codepoint, withoutBitmap, isForMeasurement);
 			if (result == null && FontSystem.DefaultCharacter != null)
 			{
-				result = GetGlyphInternal(FontSystem.DefaultCharacter.Value, withoutBitmap);
+				result = GetGlyphInternal(FontSystem.DefaultCharacter.Value, withoutBitmap, isForMeasurement);
 			}
 
 			return result;
 		}
 
-	protected internal override FontGlyph GetGlyph(int codepoint, bool withoutBitmap)
+	protected internal override FontGlyph GetGlyph(int codepoint, bool withoutBitmap, bool isForMeasurement)
 	{
-			return GetDynamicGlyph(codepoint, withoutBitmap);
+			return GetDynamicGlyph(codepoint, withoutBitmap, isForMeasurement);
 	}
 
 	protected override void PreDraw(string str, out float ascent, out float lineHeight, bool isForMeasurement)
@@ -113,8 +119,7 @@ namespace FontStashSharp
 			for (int i = 0; i < str.Length; i += char.IsSurrogatePair(str, i) ? 2 : 1)
 			{
 				var codepoint = char.ConvertToUtf32(str, i);
-
-				var glyph = GetDynamicGlyph(codepoint, true);
+				var glyph = GetDynamicGlyph(codepoint, true, isForMeasurement);
 				if (glyph == null)
 				{
 					continue;
@@ -136,8 +141,7 @@ namespace FontStashSharp
 			for (int i = 0; i < str.Length; i += StringBuilderIsSurrogatePair(str, i) ? 2 : 1)
 			{
 				var codepoint = StringBuilderConvertToUtf32(str, i);
-
-				var glyph = GetDynamicGlyph(codepoint, true);
+				var glyph = GetDynamicGlyph(codepoint, true, isForMeasurement);
 				if (glyph == null)
 				{
 					continue;
