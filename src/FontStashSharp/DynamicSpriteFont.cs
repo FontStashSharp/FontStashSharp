@@ -124,7 +124,7 @@ namespace FontStashSharp
 				lineHeight += FontSystem.LineSpacing;
 				break;
 			}
-	}
+		}
 
 		protected override void PreDraw(StringBuilder str, out float ascent, out float lineHeight)
 		{
