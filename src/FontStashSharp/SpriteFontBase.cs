@@ -71,7 +71,6 @@ namespace FontStashSharp
 					continue;
 				}
 
-
 				var glyph = GetGlyph(codepoint, false);
 				if (glyph == null)
 				{
@@ -79,7 +78,6 @@ namespace FontStashSharp
 				}
 
 				GetQuad(glyph, prevGlyph, scale, ref originX, ref originY, ref q);
-
 				if (!glyph.IsEmpty)
 				{
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
@@ -175,7 +173,6 @@ namespace FontStashSharp
 				}
 
 				GetQuad(glyph, prevGlyph, scale, ref originX, ref originY, ref q);
-
 				if (!glyph.IsEmpty)
 				{
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
@@ -366,7 +363,6 @@ namespace FontStashSharp
 				}
 
 				GetQuad(glyph, prevGlyph, scale, ref originX, ref originY, ref q);
-
 				if (!glyph.IsEmpty)
 				{
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
@@ -421,7 +417,6 @@ namespace FontStashSharp
 
 			float ascent, lineHeight;
 			PreDraw(str, out ascent, out lineHeight);
-			// lineHeight *= ((float)FontSize / (float)RenderFontSize);
 			var x = position.X;
 			var y = position.Y;
 			var q = new FontGlyphSquad();
@@ -454,7 +449,7 @@ namespace FontStashSharp
 				GetQuad(glyph, prevGlyph, scale, ref x, ref y, ref q);
 				if (q.X0 < minx)
 					minx = q.X0;
-				var scaledX = x * scale.X ;
+				var scaledX = x * scale.X;
 				if (scaledX > maxx)
 					maxx = scaledX;
 
