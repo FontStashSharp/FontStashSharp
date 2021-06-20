@@ -31,7 +31,7 @@ namespace FontStashSharp
 			RenderFontSize = fontSize * 4;
 		}
 
-		protected internal abstract FontGlyph GetGlyph(int codepoint, bool withoutBitmap, bool isForRendering);
+		protected internal abstract FontGlyph GetGlyph(int codepoint, bool withoutBitmap);
 		protected abstract void PreDraw(string str, out float ascent, out float lineHeight);
 
 		/// <summary>
@@ -73,7 +73,7 @@ namespace FontStashSharp
 
 				// For rendering we switch to a glyph which has a higher resolution but needs to be rendered at the same position
 				// now we just need to do some correct scaling, such that he font isn't twice the size on the screen ;)
-				var glyph = GetGlyph(codepoint, false, true);
+				var glyph = GetGlyph(codepoint, false);
 				if (glyph == null)
 				{
 					continue;
@@ -168,9 +168,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				// For rendering we switch to a glyph which has a higher resolution but needs to be rendered at the same position
-				// now we just need to do some correct scaling, such that he font isn't twice the size on the screen ;)
-				var glyph = GetGlyph(codepoint, false, true);
+				var glyph = GetGlyph(codepoint, false);
 				if (glyph == null)
 				{
 					++pos;
@@ -267,7 +265,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, false, true);
+				var glyph = GetGlyph(codepoint, false);
 				if (glyph == null)
 				{
 					continue;
@@ -363,7 +361,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, false, true);
+				var glyph = GetGlyph(codepoint, false);
 				if (glyph == null)
 				{
 					++pos;
@@ -450,7 +448,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, true, true);
+				var glyph = GetGlyph(codepoint, true);
 				if (glyph == null)
 				{
 					continue;
@@ -517,7 +515,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, true, true);
+				var glyph = GetGlyph(codepoint, true);
 				if (glyph == null)
 				{
 					continue;
@@ -581,7 +579,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, true, true);
+				var glyph = GetGlyph(codepoint, true);
 				if (glyph == null)
 				{
 					continue;
@@ -634,13 +632,13 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, true, false);
+				var glyph = GetGlyph(codepoint, true);
 				if (glyph == null)
 				{
 					continue;
 				}
 
-				GetQuad(glyph, prevGlyph, glyph, prevGlyph, scale, ref x, ref y, ref q);
+				GetQuad(glyph, prevGlyph, scale, ref x, ref y, ref q);
 
 				Rects.Add(new Rectangle((int)q.X0, (int)q.Y0, (int)(q.X1 - q.X0), (int)(q.Y1 - q.Y0)));
 				prevGlyph = glyph;
