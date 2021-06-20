@@ -43,7 +43,6 @@ namespace FontStashSharp
 			if (g == null)
 			{
 				Glyphs[codepoint] = null;
-				
 				return null;
 			}
 
@@ -122,11 +121,9 @@ namespace FontStashSharp
 
 				float descent;
 				glyph.Font.GetMetricsForSize(RenderFontSize, out ascent, out descent, out lineHeight);
-				lineHeight += FontSystem.LineSpacing;// * ((float)FontSize / (float)RenderFontSize);
-				//ascent *= ((float)FontSize / (float)RenderFontSize);
+				lineHeight += FontSystem.LineSpacing;
 				break;
 			}
-	  //ascent *= ((float)FontSize / (float)RenderFontSize);
 	}
 
 		protected override void PreDraw(StringBuilder str, out float ascent, out float lineHeight)
