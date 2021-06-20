@@ -205,7 +205,28 @@ namespace FontStashSharp
 			return g;
 		}
 
-		internal void RenderGlyphOnAtlas(DynamicFontGlyph glyph)
+		internal int? GetCodepointIndex(int codepoint, out IDynamicFontSource font)
+		{
+			font = null;
+
+			var g = default(int?);
+			foreach (var f in _fontSources)
+			{
+				if(f is IDynamicFontSource df)
+				{
+					g = df.GetGlyphId(codepoint);
+					if (g != null)
+					{
+						font = df;
+						break;
+					}
+				}
+			}
+
+			return g;
+		}
+
+		internal void RenderGlyphOnAtlas(DynamicFontGlyph glyph, bool prefilter)
 		{
 			var currentAtlas = CurrentAtlas;
 			int gx = 0, gy = 0;

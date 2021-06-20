@@ -28,7 +28,7 @@ namespace FontStashSharp
 		protected SpriteFontBase(int fontSize)
 		{
 			FontSize = fontSize;
-			RenderFontSizeMultiplicator = 8;
+			RenderFontSizeMultiplicator = 2;
 		}
 
 		protected internal abstract FontGlyph GetGlyph(int codepoint, bool withoutBitmap, bool isForMeasurement);

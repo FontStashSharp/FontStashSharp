@@ -44,7 +44,7 @@ namespace FontStashSharp
 				return glyph;
 			}
 
-			IFontSource font;
+			IDynamicFontSource font;
 			var g = FontSystem.GetCodepointIndex(codepoint, out font);
 			if (g == null)
 			{
@@ -57,8 +57,9 @@ namespace FontStashSharp
 			font.GetGlyphMetrics(g.Value, fontSize, out advance, out x0, out y0, out x1, out y1);
 
 			var pad = Math.Max(DynamicFontGlyph.PadFromBlur(FontSystem.BlurAmount), DynamicFontGlyph.PadFromBlur(FontSystem.StrokeAmount));
-			var gw = x1 - x0 + pad * 2;
-			var gh = y1 - y0 + pad * 2;
+			var kernelWidth = 2;
+			var gw = x1 - x0 + pad * 2 + kernelWidth;
+			var gh = y1 - y0 + pad * 2 + kernelWidth;
 			var offset = DynamicFontGlyph.PadFromBlur(FontSystem.BlurAmount);
 
 			glyph = new DynamicFontGlyph
@@ -68,6 +69,7 @@ namespace FontStashSharp
 				Size = fontSize,
 				Font = font,
 				Bounds = new Rectangle(0, 0, gw, gh),
+				KernelWidth = (uint)kernelWidth,
 				XAdvance = advance,
 				XOffset = x0 - offset,
 				YOffset = y0 - offset
