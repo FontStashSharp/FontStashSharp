@@ -104,7 +104,7 @@ namespace FontStashSharp
 			return GetDynamicGlyph(codepoint, withoutBitmap);
 	}
 
-	protected override void PreDraw(string str, out float ascent, out float lineHeight)
+	protected override void PreDraw(string str, out float ascent, out float lineHeight, bool isForMeasurement)
 		{
 			// Determine ascent and lineHeight from first character
 			ascent = 0;
@@ -120,13 +120,13 @@ namespace FontStashSharp
 				}
 
 				float descent;
-				glyph.Font.GetMetricsForSize(RenderFontSize, out ascent, out descent, out lineHeight);
+				glyph.Font.GetMetricsForSize(isForMeasurement ? FontSize : RenderFontSize, out ascent, out descent, out lineHeight);
 				lineHeight += FontSystem.LineSpacing;
 				break;
 			}
 		}
 
-		protected override void PreDraw(StringBuilder str, out float ascent, out float lineHeight)
+		protected override void PreDraw(StringBuilder str, out float ascent, out float lineHeight, bool isForMeasurement)
 		{
 			// Determine ascent and lineHeight from first character
 			ascent = 0;
@@ -142,7 +142,7 @@ namespace FontStashSharp
 				}
 
 				float descent;
-				glyph.Font.GetMetricsForSize(RenderFontSize, out ascent, out descent, out lineHeight);
+				glyph.Font.GetMetricsForSize(isForMeasurement ? FontSize : RenderFontSize, out ascent, out descent, out lineHeight);
 				break;
 			}
 		}
