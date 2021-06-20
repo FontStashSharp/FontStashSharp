@@ -23,12 +23,12 @@ namespace FontStashSharp
 		/// </summary>
 		public int FontSize { get; private set; }
 		
-		public int RenderFontSize { get; private set; }
+		public int RenderFontSizeMultiplicator { get; protected set; }
 
 		protected SpriteFontBase(int fontSize)
 		{
 			FontSize = fontSize;
-			RenderFontSize = fontSize * 4;
+			RenderFontSizeMultiplicator = 2;
 		}
 
 		protected internal abstract FontGlyph GetGlyph(int codepoint, bool withoutBitmap);
@@ -87,8 +87,8 @@ namespace FontStashSharp
 						sourceRect,
 						color,
 						rotation,
-						origin * (((float)RenderFontSize) / (float)FontSize) - q.Offset,
-						scale * ((float)FontSize / ((float)RenderFontSize)),
+						origin * (float) RenderFontSizeMultiplicator - q.Offset,
+						scale / (float)RenderFontSizeMultiplicator,
 						layerDepth);
 				}
 
@@ -182,8 +182,8 @@ namespace FontStashSharp
 						sourceRect,
 						colors[pos],
 						rotation,
-						origin * (((float)RenderFontSize) / (float)FontSize) - q.Offset,
-						scale * ((float)FontSize / ((float)RenderFontSize)),
+						origin * (float)RenderFontSizeMultiplicator - q.Offset,
+						scale / (float)RenderFontSizeMultiplicator,
 						layerDepth);
 				}
 
@@ -277,8 +277,8 @@ namespace FontStashSharp
 						sourceRect,
 						color,
 						rotation,
-						origin * (((float)RenderFontSize) / (float)FontSize) - q.Offset,
-						scale * ((float)FontSize / ((float)RenderFontSize)),
+						origin * (float)RenderFontSizeMultiplicator - q.Offset,
+						scale / (float)RenderFontSizeMultiplicator,
 						layerDepth);
 				}
 
@@ -372,8 +372,8 @@ namespace FontStashSharp
 						sourceRect,
 						colors[pos],
 						rotation,
-						origin - q.Offset,
-						scale * ((float)FontSize / ((float)RenderFontSize)),
+						origin * (float)RenderFontSizeMultiplicator - q.Offset,
+						scale / (float)RenderFontSizeMultiplicator,
 						layerDepth);
 				}
 
@@ -446,10 +446,10 @@ namespace FontStashSharp
 					continue;
 				}
 
-				GetQuad(glyph, prevGlyph, scale / ((float)FontSize / ((float)RenderFontSize)), ref x, ref y, ref q);
+				GetQuad(glyph, prevGlyph, scale * (float)RenderFontSizeMultiplicator, ref x, ref y, ref q);
 				if (q.X0 < minx)
 					minx = q.X0;
-				var scaledX = x * scale.X * ((float)FontSize / ((float)RenderFontSize));
+				var scaledX = x * scale.X / (float) RenderFontSizeMultiplicator;
 				if (scaledX > maxx)
 					maxx = scaledX;
 
@@ -513,10 +513,10 @@ namespace FontStashSharp
 					continue;
 				}
 
-				GetQuad(glyph, prevGlyph, scale / ((float)FontSize / ((float)RenderFontSize)), ref x, ref y, ref q);
+				GetQuad(glyph, prevGlyph, scale * (float)RenderFontSizeMultiplicator, ref x, ref y, ref q);
 				if (q.X0 < minx)
 					minx = q.X0;
-				var scaledX = x * scale.X;
+				var scaledX = x * scale.X / (float)RenderFontSizeMultiplicator;
 				if (scaledX > maxx)
 					maxx = scaledX;
 
@@ -577,7 +577,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				GetQuad(glyph, prevGlyph, scale / ((float)FontSize / ((float)RenderFontSize)), ref x, ref y, ref q);
+				GetQuad(glyph, prevGlyph, scale * (float)RenderFontSizeMultiplicator, ref x, ref y, ref q);
 
 				Rects.Add(new Rectangle((int)q.X0, (int)q.Y0, (int)(q.X1 - q.X0), (int)(q.Y1 - q.Y0)));
 				prevGlyph = glyph;
@@ -630,7 +630,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				GetQuad(glyph, prevGlyph, scale / ((float)FontSize / ((float)RenderFontSize)), ref x, ref y, ref q);
+				GetQuad(glyph, prevGlyph, scale * (float)RenderFontSizeMultiplicator, ref x, ref y, ref q);
 
 				Rects.Add(new Rectangle((int)q.X0, (int)q.Y0, (int)(q.X1 - q.X0), (int)(q.Y1 - q.Y0)));
 				prevGlyph = glyph;
@@ -688,13 +688,13 @@ namespace FontStashSharp
 
 		internal virtual void GetQuad(FontGlyph glyph, FontGlyph prevGlyph, Vector2 scale, ref float x, ref float y, ref FontGlyphSquad q)
 		{
-			scale *= ((float)FontSize / ((float)RenderFontSize));
+			var currScale = scale / (float)RenderFontSizeMultiplicator;
 			float rx = x + glyph.XOffset;
 			float ry = y + glyph.YOffset;
-			q.X0 = rx * scale.X;
-			q.Y0 = ry * scale.Y;
-			q.X1 = (rx + glyph.Bounds.Width) * scale.X;
-			q.Y1 = (ry + glyph.Bounds.Height) * scale.Y;
+			q.X0 = rx * currScale.X;
+			q.Y0 = ry * currScale.Y;
+			q.X1 = (rx + glyph.Bounds.Width) * currScale.X;
+			q.Y1 = (ry + glyph.Bounds.Height) * currScale.Y;
 			q.S0 = glyph.Bounds.X;
 			q.T0 = glyph.Bounds.Y;
 			q.S1 = glyph.Bounds.Right;

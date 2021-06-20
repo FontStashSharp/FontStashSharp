@@ -47,7 +47,7 @@ namespace FontStashSharp
 			}
 
 			int advance = 0, x0 = 0, y0 = 0, x1 = 0, y1 = 0;
-			var fontSize = RenderFontSize;
+			var fontSize = FontSize * RenderFontSizeMultiplicator;
 			font.GetGlyphMetrics(g.Value, fontSize, out advance, out x0, out y0, out x1, out y1);
 
 			var pad = Math.Max(DynamicFontGlyph.PadFromBlur(FontSystem.BlurAmount), DynamicFontGlyph.PadFromBlur(FontSystem.StrokeAmount));
@@ -109,6 +109,7 @@ namespace FontStashSharp
 			// Determine ascent and lineHeight from first character
 			ascent = 0;
 			lineHeight = 0;
+			var fontSize = isForMeasurement ? FontSize : FontSize * RenderFontSizeMultiplicator;
 			for (int i = 0; i < str.Length; i += char.IsSurrogatePair(str, i) ? 2 : 1)
 			{
 				var codepoint = char.ConvertToUtf32(str, i);
@@ -120,7 +121,7 @@ namespace FontStashSharp
 				}
 
 				float descent;
-				glyph.Font.GetMetricsForSize(isForMeasurement ? FontSize : RenderFontSize, out ascent, out descent, out lineHeight);
+				glyph.Font.GetMetricsForSize(fontSize, out ascent, out descent, out lineHeight);
 				lineHeight += FontSystem.LineSpacing;
 				break;
 			}
@@ -131,6 +132,7 @@ namespace FontStashSharp
 			// Determine ascent and lineHeight from first character
 			ascent = 0;
 			lineHeight = 0;
+			var fontSize = isForMeasurement ? FontSize : FontSize * RenderFontSizeMultiplicator;
 			for (int i = 0; i < str.Length; i += StringBuilderIsSurrogatePair(str, i) ? 2 : 1)
 			{
 				var codepoint = StringBuilderConvertToUtf32(str, i);
@@ -142,7 +144,7 @@ namespace FontStashSharp
 				}
 
 				float descent;
-				glyph.Font.GetMetricsForSize(isForMeasurement ? FontSize : RenderFontSize, out ascent, out descent, out lineHeight);
+				glyph.Font.GetMetricsForSize(fontSize, out ascent, out descent, out lineHeight);
 				break;
 			}
 		}

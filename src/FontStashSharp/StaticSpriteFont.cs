@@ -58,6 +58,8 @@ namespace FontStashSharp
 
 		public StaticSpriteFont(int fontSize): base(fontSize)
 		{
+			//RenderFontSize = FontSize;
+			RenderFontSizeMultiplicator = 1;
 		}
 
 		private FontGlyph InternalGetGlyph(int codepoint)
@@ -81,13 +83,13 @@ namespace FontStashSharp
 		protected override void PreDraw(string str, out float ascent, out float lineHeight, bool isForMeasurement)
 		{
 			ascent = 0;
-			lineHeight = FontSize + LineSpacing;
+			lineHeight = (isForMeasurement ? FontSize : FontSize * RenderFontSizeMultiplicator) + LineSpacing;
 		}
 
 		protected override void PreDraw(StringBuilder str, out float ascent, out float lineHeight, bool isForMeasurement)
 		{
 			ascent = 0;
-			lineHeight = FontSize + LineSpacing;
+			lineHeight = (isForMeasurement ? FontSize : FontSize * RenderFontSizeMultiplicator) + LineSpacing;
 		}
 
 		private static int KerningKey(int codepoint1, int codepoint2)
