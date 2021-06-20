@@ -71,8 +71,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				// For rendering we switch to a glyph which has a higher resolution but needs to be rendered at the same position
-				// now we just need to do some correct scaling, such that he font isn't twice the size on the screen ;)
+
 				var glyph = GetGlyph(codepoint, false);
 				if (glyph == null)
 				{
@@ -272,8 +271,6 @@ namespace FontStashSharp
 				}
 
 				GetQuad(glyph, prevGlyph, scale, ref originX, ref originY, ref q);
-
-
 				if (!glyph.IsEmpty)
 				{
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
