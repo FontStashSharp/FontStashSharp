@@ -416,6 +416,7 @@ namespace FontStashSharp
 
 			float ascent, lineHeight;
 			PreDraw(str, out ascent, out lineHeight, true);
+
 			var x = position.X;
 			var y = position.Y;
 			var q = new FontGlyphSquad();

@@ -121,6 +121,7 @@ namespace FontStashSharp
 			for (int i = 0; i < str.Length; i += char.IsSurrogatePair(str, i) ? 2 : 1)
 			{
 				var codepoint = char.ConvertToUtf32(str, i);
+
 				var glyph = GetDynamicGlyph(codepoint, withoutBitmap);
 				if (glyph == null)
 				{
@@ -143,6 +144,7 @@ namespace FontStashSharp
 			for (int i = 0; i < str.Length; i += StringBuilderIsSurrogatePair(str, i) ? 2 : 1)
 			{
 				var codepoint = StringBuilderConvertToUtf32(str, i);
+
 				var glyph = GetDynamicGlyph(codepoint, withoutBitmap);
 				if (glyph == null)
 				{

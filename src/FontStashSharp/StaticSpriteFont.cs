@@ -56,7 +56,9 @@ namespace FontStashSharp
 
 		public bool UseKernings { get; set; } = true;
 
-		public StaticSpriteFont(int fontSize): base(fontSize) {}
+		public StaticSpriteFont(int fontSize): base(fontSize)
+		{
+		}
 
 		private FontGlyph InternalGetGlyph(int codepoint)
 		{
