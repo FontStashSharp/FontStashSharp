@@ -56,11 +56,7 @@ namespace FontStashSharp
 
 		public bool UseKernings { get; set; } = true;
 
-		public StaticSpriteFont(int fontSize): base(fontSize)
-		{
-			//RenderFontSize = FontSize;
-			RenderFontSizeMultiplicator = 1;
-		}
+		public StaticSpriteFont(int fontSize): base(fontSize) {}
 
 		private FontGlyph InternalGetGlyph(int codepoint)
 		{
@@ -70,7 +66,7 @@ namespace FontStashSharp
 			return result;
 		}
 
-		protected internal override FontGlyph GetGlyph(int codepoint, bool withoutBitmap, bool isForMeasurement)
+		protected internal override FontGlyph GetGlyph(int codepoint, bool withoutBitmap)
 		{
 			var result = InternalGetGlyph(codepoint);
 			if (result == null && DefaultCharacter != null)
@@ -80,16 +76,16 @@ namespace FontStashSharp
 			return result;
 		}
 
-		protected override void PreDraw(string str, out float ascent, out float lineHeight, bool isForMeasurement)
+		protected override void PreDraw(string str, out float ascent, out float lineHeight, bool withoutBitmap)
 		{
 			ascent = 0;
-			lineHeight = (isForMeasurement ? FontSize : FontSize * RenderFontSizeMultiplicator) + LineSpacing;
+			lineHeight = FontSize + LineSpacing;
 		}
 
-		protected override void PreDraw(StringBuilder str, out float ascent, out float lineHeight, bool isForMeasurement)
+		protected override void PreDraw(StringBuilder str, out float ascent, out float lineHeight, bool withoutBitmap)
 		{
 			ascent = 0;
-			lineHeight = (isForMeasurement ? FontSize : FontSize * RenderFontSizeMultiplicator) + LineSpacing;
+			lineHeight = FontSize + LineSpacing;
 		}
 
 		private static int KerningKey(int codepoint1, int codepoint2)

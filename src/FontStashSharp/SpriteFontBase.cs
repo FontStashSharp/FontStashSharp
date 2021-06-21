@@ -22,17 +22,16 @@ namespace FontStashSharp
 		/// Line height in pixels
 		/// </summary>
 		public int FontSize { get; private set; }
-		
-		public int RenderFontSizeMultiplicator { get; protected set; }
+
+		protected float RenderFontSizeMultiplicator { get; set; } = 1f;
 
 		protected SpriteFontBase(int fontSize)
 		{
 			FontSize = fontSize;
-			RenderFontSizeMultiplicator = 2;
 		}
 
-		protected internal abstract FontGlyph GetGlyph(int codepoint, bool withoutBitmap, bool isForMeasurement);
-		protected abstract void PreDraw(string str, out float ascent, out float lineHeight, bool isForMeasurement);
+		protected internal abstract FontGlyph GetGlyph(int codepoint, bool withoutBitmap);
+		protected abstract void PreDraw(string str, out float ascent, out float lineHeight, bool withoutBitmap);
 
 		/// <summary>
 		/// Draws a text
@@ -71,7 +70,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, false, false);
+				var glyph = GetGlyph(codepoint, false);
 				if (glyph == null)
 				{
 					continue;
@@ -165,7 +164,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, false, false);
+				var glyph = GetGlyph(codepoint, false);
 				if (glyph == null)
 				{
 					++pos;
@@ -261,7 +260,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, false, false);
+				var glyph = GetGlyph(codepoint, false);
 				if (glyph == null)
 				{
 					continue;
@@ -355,7 +354,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, false, false);
+				var glyph = GetGlyph(codepoint, false);
 				if (glyph == null)
 				{
 					++pos;
@@ -440,7 +439,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, true, true);
+				var glyph = GetGlyph(codepoint, true);
 				if (glyph == null)
 				{
 					continue;
@@ -507,7 +506,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, true, true);
+				var glyph = GetGlyph(codepoint, true);
 				if (glyph == null)
 				{
 					continue;
@@ -571,7 +570,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, true, true);
+				var glyph = GetGlyph(codepoint, true);
 				if (glyph == null)
 				{
 					continue;
@@ -624,7 +623,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, true, true);
+				var glyph = GetGlyph(codepoint, true);
 				if (glyph == null)
 				{
 					continue;

@@ -5,7 +5,7 @@ using static StbTrueTypeSharp.StbTrueType;
 
 namespace FontStashSharp
 {
-	internal unsafe class StbTrueTypeSharpFontSource: IDynamicFontSource
+	internal unsafe class StbTrueTypeSharpFontSource: IFontSource
 	{
 		private int? _lastSize;
 		private GCHandle? dataPtr = null;
@@ -93,25 +93,17 @@ namespace FontStashSharp
 			y1 = y1Temp;
 		}
 
-		public void RasterizeGlyphBitmap(int glyphId, int fontSize, byte[] buffer, int startIndex, int outWidth, int outHeight, int outStride)
+		public void RasterizeGlyphBitmap(int glyphId, int fontSize, byte[] buffer, int startIndex, int outWidth, int outHeight, int outStride, int kernelWidth, int kernelHeight)
 		{
 			UpdateSize(fontSize);
 
 			fixed (byte* output = &buffer[startIndex])
 			{
 				stbtt_MakeGlyphBitmap(_font, output, outWidth, outHeight, outStride, Scale, Scale, glyphId);
-			}
-		}
-
-		public void RasterizeGlyphBitmap(int glyphId, int fontSize, byte[] buffer, int startIndex, int outWidth, int outHeight, int outStride, uint kernelWidth)
-		{
-			UpdateSize(fontSize);
-
-			fixed (byte* output = &buffer[startIndex])
-			{
-				stbtt_MakeGlyphBitmap(_font, output, outWidth, outHeight, outStride, Scale, Scale, glyphId);
-				stbtt__h_prefilter(output, outWidth, outHeight, outStride, kernelWidth);
-				stbtt__v_prefilter(output, outWidth, outHeight, outStride, kernelWidth);
+				if(kernelWidth > 0)
+					stbtt__v_prefilter(output, outWidth, outHeight, outStride, (uint)kernelWidth);
+				if(kernelHeight > 0)
+					stbtt__h_prefilter(output, outWidth, outHeight, outStride, (uint)kernelHeight);
 			}
 		}
 

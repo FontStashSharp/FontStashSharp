@@ -42,7 +42,7 @@ namespace FontStashSharp.Interfaces
 		/// <param name="outWidth"></param>
 		/// <param name="outHeight"></param>
 		/// <param name="outStride"></param>
-		void RasterizeGlyphBitmap(int glyphId, int fontSize, byte[] buffer, int startIndex, int outWidth, int outHeight, int outStride);
+		void RasterizeGlyphBitmap(int glyphId, int fontSize, byte[] buffer, int startIndex, int outWidth, int outHeight, int outStride, int kernelWidth, int kernelHeight);
 
 		/// <summary>
 		/// Returns kerning
@@ -52,21 +52,6 @@ namespace FontStashSharp.Interfaces
 		/// <param name="fontSize"></param>
 		/// <returns></returns>
 		int GetGlyphKernAdvance(int previousGlyphId, int glyphId, int fontSize);
-	}
-
-	public interface IDynamicFontSource : IFontSource
-  {
-
-		/// <summary>
-		/// Renders a glyph 
-		/// </summary>
-		/// <param name="buffer"></param>
-		/// <param name="fontSize"></param>
-		/// <param name="startIndex"></param>
-		/// <param name="outWidth"></param>
-		/// <param name="outHeight"></param>
-		/// <param name="outStride"></param>
-		void RasterizeGlyphBitmap(int glyphId, int fontSize, byte[] buffer, int startIndex, int outWidth, int outHeight, int outStride, uint kernelWidth);
 	}
 
 	/// <summary>

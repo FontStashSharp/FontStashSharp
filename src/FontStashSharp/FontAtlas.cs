@@ -168,7 +168,7 @@ namespace FontStashSharp
 		}
 
 #if MONOGAME || FNA || STRIDE
-		public void RenderGlyph(GraphicsDevice graphicsDevice, DynamicFontGlyph glyph, int blurAmount, int strokeAmount, bool premultiplyAlpha)
+		public void RenderGlyph(GraphicsDevice graphicsDevice, DynamicFontGlyph glyph, int blurAmount, int strokeAmount, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
 #else
 		public void RenderGlyph(ITexture2DManager textureManager, DynamicFontGlyph glyph, int blurAmount, int strokeAmount, bool premultiplyAlpha)
 #endif
@@ -200,7 +200,8 @@ namespace FontStashSharp
 				glyph.Bounds.Width - pad * 2,
 				glyph.Bounds.Height - pad * 2,
 				glyph.Bounds.Width,
-				glyph.KernelWidth);
+				kernelWidth,
+				kernelHeight);
 
 			if (strokeAmount > 0)
 			{

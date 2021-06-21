@@ -35,8 +35,7 @@ namespace FontStashSharp
 	public class DynamicFontGlyph: FontGlyph
 	{
 		public int Size;
-		public IDynamicFontSource Font;
-		public uint KernelWidth;
+		public IFontSource Font;
 
 		public static int PadFromBlur(int blur)
 		{
