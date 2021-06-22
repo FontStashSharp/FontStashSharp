@@ -23,13 +23,15 @@ namespace FontStashSharp
 		/// </summary>
 		public int FontSize { get; private set; }
 
+		protected float RenderFontSizeMultiplicator { get; set; } = 1f;
+
 		protected SpriteFontBase(int fontSize)
 		{
 			FontSize = fontSize;
 		}
 
 		protected internal abstract FontGlyph GetGlyph(int codepoint, bool withoutBitmap);
-		protected abstract void PreDraw(string str, out float ascent, out float lineHeight);
+		protected abstract void PreDraw(string str, out float ascent, out float lineHeight, bool withoutBitmap);
 
 		/// <summary>
 		/// Draws a text
@@ -48,7 +50,7 @@ namespace FontStashSharp
 			if (string.IsNullOrEmpty(text)) return 0.0f;
 
 			float ascent, lineHeight;
-			PreDraw(text, out ascent, out lineHeight);
+			PreDraw(text, out ascent, out lineHeight, false);
 
 			float originX = 0.0f;
 			float originY = 0.0f;
@@ -74,7 +76,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				GetQuad(glyph, prevGlyph, scale, ref originX, ref originY, ref q);
+				GetQuad(glyph, prevGlyph, scale / (float)RenderFontSizeMultiplicator, ref originX, ref originY, ref q);
 				if (!glyph.IsEmpty)
 				{
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
@@ -84,8 +86,8 @@ namespace FontStashSharp
 						sourceRect,
 						color,
 						rotation,
-						origin - q.Offset,
-						scale,
+						origin * (float) RenderFontSizeMultiplicator - q.Offset,
+						scale / (float)RenderFontSizeMultiplicator,
 						layerDepth);
 				}
 
@@ -139,7 +141,7 @@ namespace FontStashSharp
 			if (string.IsNullOrEmpty(text)) return 0.0f;
 
 			float ascent, lineHeight;
-			PreDraw(text, out ascent, out lineHeight);
+			PreDraw(text, out ascent, out lineHeight, false);
 
 			float originX = 0.0f;
 			float originY = 0.0f;
@@ -169,7 +171,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				GetQuad(glyph, prevGlyph, scale, ref originX, ref originY, ref q);
+				GetQuad(glyph, prevGlyph, scale / (float)RenderFontSizeMultiplicator, ref originX, ref originY, ref q);
 				if (!glyph.IsEmpty)
 				{
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
@@ -179,8 +181,8 @@ namespace FontStashSharp
 						sourceRect,
 						colors[pos],
 						rotation,
-						origin - q.Offset,
-						scale,
+						origin * (float)RenderFontSizeMultiplicator - q.Offset,
+						scale / (float)RenderFontSizeMultiplicator,
 						layerDepth);
 				}
 
@@ -218,7 +220,7 @@ namespace FontStashSharp
 			return DrawText(renderer, text, position, colors, DefaultScale, 0, DefaultOrigin, layerDepth);
 		}
 
-		protected abstract void PreDraw(StringBuilder str, out float ascent, out float lineHeight);
+		protected abstract void PreDraw(StringBuilder str, out float ascent, out float lineHeight, bool isForMeasurement);
 
 		/// <summary>
 		/// Draws a text
@@ -237,7 +239,7 @@ namespace FontStashSharp
 			if (text == null || text.Length == 0) return 0.0f;
 
 			float ascent, lineHeight;
-			PreDraw(text, out ascent, out lineHeight);
+			PreDraw(text, out ascent, out lineHeight, false);
 
 			float originX = 0.0f;
 			float originY = 0.0f;
@@ -264,7 +266,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				GetQuad(glyph, prevGlyph, scale, ref originX, ref originY, ref q);
+				GetQuad(glyph, prevGlyph, scale / (float)RenderFontSizeMultiplicator, ref originX, ref originY, ref q);
 				if (!glyph.IsEmpty)
 				{
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
@@ -274,8 +276,8 @@ namespace FontStashSharp
 						sourceRect,
 						color,
 						rotation,
-						origin - q.Offset,
-						scale,
+						origin * (float)RenderFontSizeMultiplicator - q.Offset,
+						scale / (float)RenderFontSizeMultiplicator,
 						layerDepth);
 				}
 
@@ -329,7 +331,7 @@ namespace FontStashSharp
 			if (text == null || text.Length == 0) return 0.0f;
 
 			float ascent, lineHeight;
-			PreDraw(text, out ascent, out lineHeight);
+			PreDraw(text, out ascent, out lineHeight, false);
 
 			float originX = 0.0f;
 			float originY = 0.0f;
@@ -359,7 +361,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				GetQuad(glyph, prevGlyph, scale, ref originX, ref originY, ref q);
+				GetQuad(glyph, prevGlyph, scale / (float)RenderFontSizeMultiplicator, ref originX, ref originY, ref q);
 				if (!glyph.IsEmpty)
 				{
 					var sourceRect = new Rectangle((int)q.S0, (int)q.T0, (int)(q.S1 - q.S0), (int)(q.T1 - q.T0));
@@ -369,8 +371,8 @@ namespace FontStashSharp
 						sourceRect,
 						colors[pos],
 						rotation,
-						origin - q.Offset,
-						scale,
+						origin * (float)RenderFontSizeMultiplicator - q.Offset,
+						scale / (float)RenderFontSizeMultiplicator,
 						layerDepth);
 				}
 
@@ -413,7 +415,7 @@ namespace FontStashSharp
 			if (string.IsNullOrEmpty(str)) return 0.0f;
 
 			float ascent, lineHeight;
-			PreDraw(str, out ascent, out lineHeight);
+			PreDraw(str, out ascent, out lineHeight, true);
 
 			var x = position.X;
 			var y = position.Y;
@@ -478,7 +480,7 @@ namespace FontStashSharp
 			if (str == null || str.Length == 0) return 0.0f;
 
 			float ascent, lineHeight;
-			PreDraw(str, out ascent, out lineHeight);
+			PreDraw(str, out ascent, out lineHeight, true);
 
 			var q = new FontGlyphSquad();
 
@@ -546,7 +548,7 @@ namespace FontStashSharp
 			if (string.IsNullOrEmpty(str)) return Rects;
 
 			float ascent, lineHeight;
-			PreDraw(str, out ascent, out lineHeight);
+			PreDraw(str, out ascent, out lineHeight, true);
 
 			var q = new FontGlyphSquad();
 
@@ -595,7 +597,7 @@ namespace FontStashSharp
 			if (str == null || str.Length == 0) return Rects;
 
 			float ascent, lineHeight;
-			PreDraw(str, out ascent, out lineHeight);
+			PreDraw(str, out ascent, out lineHeight, true);
 
 			var q = new FontGlyphSquad();
 

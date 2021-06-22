@@ -42,6 +42,9 @@ namespace FontStashSharp
 		public int CharacterSpacing = 0;
 		public int LineSpacing = 0;
 
+		public int KernelWidth { get; protected set; }
+		public int KernelHeight { get; protected set; }
+
 		public FontAtlas CurrentAtlas
 		{
 			get
@@ -58,12 +61,14 @@ namespace FontStashSharp
 
 		public List<FontAtlas> Atlases { get; } = new List<FontAtlas>();
 
+		public float FontResolutionFactor { get; protected set; }
+
 		public event EventHandler CurrentAtlasFull;
 
 #if MONOGAME || FNA || STRIDE
-		public FontSystem(IFontLoader fontLoader, GraphicsDevice graphicsDevice, int width = 1024, int height = 1024, int blurAmount = 0, int strokeAmount = 0, bool premultiplyAlpha = true)
+		public FontSystem(IFontLoader fontLoader, GraphicsDevice graphicsDevice, int width = 1024, int height = 1024, int blurAmount = 0, int strokeAmount = 0, bool premultiplyAlpha = true, float fontResolutionFactor = 1f, int kernelWidth = 0, int kernelHeight = 0)
 #else
-		public FontSystem(IFontLoader fontLoader, ITexture2DManager textureCreator, int width = 1024, int height = 1024, int blurAmount = 0, int strokeAmount = 0, bool premultiplyAlpha = true)
+		public FontSystem(IFontLoader fontLoader, ITexture2DManager textureCreator, int width = 1024, int height = 1024, int blurAmount = 0, int strokeAmount = 0, bool premultiplyAlpha = true, float fontResolutionFactor = 1f, int kernelWidth = 0, int kernelHeight = 0)
 #endif
 		{
 			if (fontLoader == null)
@@ -114,9 +119,27 @@ namespace FontStashSharp
 				throw new ArgumentException("Cannot have both blur and stroke.");
 			}
 
+			if(fontResolutionFactor < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(fontResolutionFactor), fontResolutionFactor, "This cannot be smaller than 0");
+			}
+
+			if (kernelWidth < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(kernelWidth), kernelWidth, "This cannot be smaller than 0");
+			}
+
+			if (kernelHeight < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(kernelHeight), kernelHeight, "This cannot be smaller than 0");
+			}
+
 			BlurAmount = blurAmount;
 			StrokeAmount = strokeAmount;
 			PremultiplyAlpha = premultiplyAlpha;
+			FontResolutionFactor = fontResolutionFactor;
+			KernelWidth = kernelWidth;
+			KernelHeight = kernelHeight;
 
 			_size = new Point(width, height);
 		}
@@ -230,9 +253,9 @@ namespace FontStashSharp
 			glyph.Bounds.Y = gy;
 
 #if MONOGAME || FNA || STRIDE
-			currentAtlas.RenderGlyph(_graphicsDevice, glyph, BlurAmount, StrokeAmount, PremultiplyAlpha);
+			currentAtlas.RenderGlyph(_graphicsDevice, glyph, BlurAmount, StrokeAmount, PremultiplyAlpha, KernelWidth, KernelHeight);
 #else
-			currentAtlas.RenderGlyph(_textureCreator, glyph, BlurAmount, StrokeAmount, PremultiplyAlpha);
+			currentAtlas.RenderGlyph(_textureCreator, glyph, BlurAmount, StrokeAmount, PremultiplyAlpha, KernelWidth, KernelHeight);
 #endif
 
 			glyph.Texture = currentAtlas.Texture;

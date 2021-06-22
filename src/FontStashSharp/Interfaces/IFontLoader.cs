@@ -42,7 +42,7 @@ namespace FontStashSharp.Interfaces
 		/// <param name="outWidth"></param>
 		/// <param name="outHeight"></param>
 		/// <param name="outStride"></param>
-		void RasterizeGlyphBitmap(int glyphId, int fontSize, byte[] buffer, int startIndex, int outWidth, int outHeight, int outStride);
+		void RasterizeGlyphBitmap(int glyphId, int fontSize, byte[] buffer, int startIndex, int outWidth, int outHeight, int outStride, int kernelWidth, int kernelHeight);
 
 		/// <summary>
 		/// Returns kerning
