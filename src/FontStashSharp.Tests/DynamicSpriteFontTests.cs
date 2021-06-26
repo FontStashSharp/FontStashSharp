@@ -8,7 +8,7 @@ namespace FontStashSharp.Tests
 		[Test]
 		public void CacheNull()
 		{
-			var fontSystem = new FontSystem(TestsEnvironment.GraphicsDevice);
+			var fontSystem = new FontSystem();
 			fontSystem.AddFont(TestsEnvironment.Assembly.ReadResourceAsBytes("Resources.DroidSans.ttf"));
 
 			var font = fontSystem.GetFont(32);
@@ -20,7 +20,7 @@ namespace FontStashSharp.Tests
 			DynamicFontGlyph glyph;
 			Assert.IsFalse(font.Glyphs.TryGetValue(codePoint, out glyph));
 
-			glyph = (DynamicFontGlyph)font.GetGlyph(codePoint, false);
+			glyph = (DynamicFontGlyph)font.GetGlyph(TestsEnvironment.GraphicsDevice, codePoint);
 
 			// Now it should exist
 			Assert.IsTrue(font.Glyphs.TryGetValue(codePoint, out glyph));

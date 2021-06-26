@@ -11,6 +11,8 @@ namespace FontStashSharp
 
 	public class FontSystemSettings
 	{
+		internal static readonly FontSystemSettings Default = new FontSystemSettings();
+
 		private int _effectAmount = 0;
 		public FontSystemEffect Effect { get; set; } = FontSystemEffect.None;
 

@@ -68,7 +68,11 @@ namespace FontStashSharp
 			return result;
 		}
 
-		protected internal override FontGlyph GetGlyph(int codepoint, bool withoutBitmap)
+#if MONOGAME || FNA || STRIDE
+		protected internal override FontGlyph GetGlyph(GraphicsDevice device, int codepoint)
+#else
+		protected internal override FontGlyph GetGlyph(ITexture2DManager device, int codepoint)
+#endif
 		{
 			var result = InternalGetGlyph(codepoint);
 			if (result == null && DefaultCharacter != null)

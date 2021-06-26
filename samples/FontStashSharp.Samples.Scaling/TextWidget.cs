@@ -77,7 +77,7 @@ namespace FontStashSharp.Samples
 					KernelHeight = KernelHeight
 				};
 
-				var fontSystem = new FontSystem(_spriteBatch.GraphicsDevice, settings);
+				var fontSystem = new FontSystem(settings);
 				fontSystem.AddFont(File.ReadAllBytes(@"Fonts/DroidSans.ttf"));
 
 				_font = fontSystem.GetFont(32);

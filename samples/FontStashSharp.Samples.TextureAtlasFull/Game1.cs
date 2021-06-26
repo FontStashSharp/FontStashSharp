@@ -48,7 +48,7 @@ namespace FontStashSharp.Samples
 				TextureWidth = AtlasSize,
 				TextureHeight = AtlasSize
 			};
-			_fontSystem = new FontSystem(GraphicsDevice, settings);
+			_fontSystem = new FontSystem(settings);
 			_fontSystem.AddFont(File.ReadAllBytes(@"Fonts/DroidSans.ttf"));
 
 			_white = new Texture2D(GraphicsDevice, 1, 1);

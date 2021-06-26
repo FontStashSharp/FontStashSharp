@@ -71,11 +71,10 @@ namespace FontStashSharp.Samples
 
 			// TODO: use this.Content to load your game content here
 			var fontSystems = new List<FontSystem>();
-			var textureCreator = new Texture2DManager(GraphicsDevice);
 			_renderer = new Renderer(_spriteBatch);
 
 			// Simple
-			var fontSystem = new FontSystem(textureCreator);
+			var fontSystem = new FontSystem();
 			LoadFontSystem(fontSystem);
 			fontSystems.Add(fontSystem);
 
@@ -85,13 +84,13 @@ namespace FontStashSharp.Samples
 				Effect = FontSystemEffect.Blurry,
 				EffectAmount = EffectAmount
 			};
-			var blurryFontSystem = new FontSystem(textureCreator, settings);
+			var blurryFontSystem = new FontSystem(settings);
 			LoadFontSystem(blurryFontSystem);
 			fontSystems.Add(blurryFontSystem);
 
 			// Stroked
 			settings.Effect = FontSystemEffect.Stroked;
-			var strokedFontSystem = new FontSystem(textureCreator, settings);
+			var strokedFontSystem = new FontSystem(settings);
 			LoadFontSystem(strokedFontSystem);
 			fontSystems.Add(strokedFontSystem);
 

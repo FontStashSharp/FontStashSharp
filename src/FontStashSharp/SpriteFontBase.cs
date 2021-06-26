@@ -4,6 +4,7 @@ using System.Text;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
 using Stride.Core.Mathematics;
 #else
@@ -30,7 +31,12 @@ namespace FontStashSharp
 			FontSize = fontSize;
 		}
 
-		protected internal abstract FontGlyph GetGlyph(int codepoint, bool withoutBitmap);
+#if MONOGAME || FNA || STRIDE
+		protected internal abstract FontGlyph GetGlyph(GraphicsDevice device, int codepoint);
+#else
+		protected internal abstract FontGlyph GetGlyph(ITexture2DManager device, int codepoint);
+#endif
+
 		protected abstract void PreDraw(string str, out float ascent, out float lineHeight, bool withoutBitmap);
 
 		/// <summary>
@@ -70,7 +76,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, false);
+				var glyph = GetGlyph(renderer.GraphicsDevice, codepoint);
 				if (glyph == null)
 				{
 					continue;
@@ -164,7 +170,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, false);
+				var glyph = GetGlyph(renderer.GraphicsDevice, codepoint);
 				if (glyph == null)
 				{
 					++pos;
@@ -260,7 +266,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, false);
+				var glyph = GetGlyph(renderer.GraphicsDevice, codepoint);
 				if (glyph == null)
 				{
 					continue;
@@ -354,7 +360,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, false);
+				var glyph = GetGlyph(renderer.GraphicsDevice, codepoint);
 				if (glyph == null)
 				{
 					++pos;
@@ -440,7 +446,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, true);
+				var glyph = GetGlyph(null, codepoint);
 				if (glyph == null)
 				{
 					continue;
@@ -507,7 +513,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, true);
+				var glyph = GetGlyph(null, codepoint);
 				if (glyph == null)
 				{
 					continue;
@@ -571,7 +577,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, true);
+				var glyph = GetGlyph(null, codepoint);
 				if (glyph == null)
 				{
 					continue;
@@ -624,7 +630,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var glyph = GetGlyph(codepoint, true);
+				var glyph = GetGlyph(null, codepoint);
 				if (glyph == null)
 				{
 					continue;

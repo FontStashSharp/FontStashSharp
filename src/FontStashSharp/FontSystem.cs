@@ -22,12 +22,6 @@ namespace FontStashSharp
 
 		private readonly IFontLoader _fontLoader;
 
-#if MONOGAME || FNA || STRIDE
-		private readonly GraphicsDevice _graphicsDevice;
-#else
-		private readonly ITexture2DManager _textureCreator;
-#endif
-
 		private FontAtlas _currentAtlas;
 
 		public FontSystemEffect Effect => _settings.Effect;
@@ -70,32 +64,12 @@ namespace FontStashSharp
 
 		public event EventHandler CurrentAtlasFull;
 
-#if MONOGAME || FNA || STRIDE
-		public FontSystem(IFontLoader fontLoader, GraphicsDevice graphicsDevice, FontSystemSettings settings)
-#else
-		public FontSystem(IFontLoader fontLoader, ITexture2DManager textureCreator, FontSystemSettings settings)
-#endif
+		public FontSystem(IFontLoader fontLoader, FontSystemSettings settings)
 		{
 			if (fontLoader == null)
 			{
 				throw new ArgumentNullException(nameof(fontLoader));
 			}
-
-#if MONOGAME || FNA || STRIDE
-			if (graphicsDevice == null)
-			{
-				throw new ArgumentNullException(nameof(graphicsDevice));
-			}
-
-			_graphicsDevice = graphicsDevice;
-#else
-			if (textureCreator == null)
-			{
-				throw new ArgumentNullException(nameof(textureCreator));
-			}
-
-			_textureCreator = textureCreator;
-#endif
 
 			if (settings == null)
 			{
@@ -106,25 +80,13 @@ namespace FontStashSharp
 			_settings = settings.Clone();
 		}
 
-#if MONOGAME || FNA || STRIDE
-		public FontSystem(GraphicsDevice graphicsDevice, FontSystemSettings settings) : this(StbTrueTypeSharpFontLoader.Instance, graphicsDevice, settings)
+		public FontSystem(FontSystemSettings settings) : this(StbTrueTypeSharpFontLoader.Instance, settings)
 		{
 		}
-#else
-		public FontSystem(ITexture2DManager textureCreator, FontSystemSettings settings): this(StbTrueTypeSharpFontLoader.Instance, textureCreator, settings)
-		{
-		}
-#endif
 
-#if MONOGAME || FNA || STRIDE
-		public FontSystem(GraphicsDevice graphicsDevice) : this(graphicsDevice, new FontSystemSettings())
+		public FontSystem() : this(FontSystemSettings.Default)
 		{
 		}
-#else
-		public FontSystem(ITexture2DManager textureCreator): this(textureCreator, new FontSystemSettings())
-		{
-		}
-#endif
 
 		public void Dispose()
 		{
@@ -188,7 +150,11 @@ namespace FontStashSharp
 			return g;
 		}
 
-		internal void RenderGlyphOnAtlas(DynamicFontGlyph glyph)
+#if MONOGAME || FNA || STRIDE
+		internal void RenderGlyphOnAtlas(GraphicsDevice device, DynamicFontGlyph glyph)
+#else
+		internal void RenderGlyphOnAtlas(ITexture2DManager device, DynamicFontGlyph glyph)
+#endif
 		{
 			var currentAtlas = CurrentAtlas;
 			int gx = 0, gy = 0;
@@ -212,11 +178,7 @@ namespace FontStashSharp
 			glyph.Bounds.X = gx;
 			glyph.Bounds.Y = gy;
 
-#if MONOGAME || FNA || STRIDE
-			currentAtlas.RenderGlyph(_graphicsDevice, glyph, BlurAmount, StrokeAmount, PremultiplyAlpha, KernelWidth, KernelHeight);
-#else
-			currentAtlas.RenderGlyph(_textureCreator, glyph, BlurAmount, StrokeAmount, PremultiplyAlpha, KernelWidth, KernelHeight);
-#endif
+			currentAtlas.RenderGlyph(device, glyph, BlurAmount, StrokeAmount, PremultiplyAlpha, KernelWidth, KernelHeight);
 
 			glyph.Texture = currentAtlas.Texture;
 		}

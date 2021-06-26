@@ -80,36 +80,48 @@ namespace FontStashSharp
 			return glyph;
 		}
 
-		private DynamicFontGlyph GetGlyphInternal(int codepoint, bool withoutBitmap)
+#if MONOGAME || FNA || STRIDE
+		private DynamicFontGlyph GetGlyphInternal(GraphicsDevice device, int codepoint)
+#else
+		private DynamicFontGlyph GetGlyphInternal(ITexture2DManager device, int codepoint)
+#endif
 		{
-			var glyph = GetGlyphWithoutBitmap(codepoint, withoutBitmap);
+			var glyph = GetGlyphWithoutBitmap(codepoint, device == null);
 			if (glyph == null)
 			{
 				return null;
 			}
 
-			if (withoutBitmap || glyph.Texture != null)
+			if (device == null || glyph.Texture != null)
 				return glyph;
 
-			FontSystem.RenderGlyphOnAtlas(glyph);
+			FontSystem.RenderGlyphOnAtlas(device, glyph);
 
 			return glyph;
 		}
 
-		private DynamicFontGlyph GetDynamicGlyph(int codepoint, bool withoutBitmap)
+#if MONOGAME || FNA || STRIDE
+		private DynamicFontGlyph GetDynamicGlyph(GraphicsDevice device, int codepoint)
+#else
+		private DynamicFontGlyph GetDynamicGlyph(ITexture2DManager device, int codepoint)
+#endif
 		{
-			var result = GetGlyphInternal(codepoint, withoutBitmap);
+			var result = GetGlyphInternal(device, codepoint);
 			if (result == null && FontSystem.DefaultCharacter != null)
 			{
-				result = GetGlyphInternal(FontSystem.DefaultCharacter.Value, withoutBitmap);
+				result = GetGlyphInternal(device, FontSystem.DefaultCharacter.Value);
 			}
 
 			return result;
 		}
 
-	protected internal override FontGlyph GetGlyph(int codepoint, bool withoutBitmap)
+#if MONOGAME || FNA || STRIDE
+		protected internal override FontGlyph GetGlyph(GraphicsDevice device, int codepoint)
+#else
+		protected internal override FontGlyph GetGlyph(ITexture2DManager device, int codepoint)
+#endif
 	{
-			return GetDynamicGlyph(codepoint, withoutBitmap);
+			return GetDynamicGlyph(device, codepoint);
 	}
 
 	protected override void PreDraw(string str, out float ascent, out float lineHeight, bool withoutBitmap)
@@ -122,7 +134,7 @@ namespace FontStashSharp
 			{
 				var codepoint = char.ConvertToUtf32(str, i);
 
-				var glyph = GetDynamicGlyph(codepoint, withoutBitmap);
+				var glyph = GetDynamicGlyph(null, codepoint);
 				if (glyph == null)
 				{
 					continue;
@@ -145,7 +157,7 @@ namespace FontStashSharp
 			{
 				var codepoint = StringBuilderConvertToUtf32(str, i);
 
-				var glyph = GetDynamicGlyph(codepoint, withoutBitmap);
+				var glyph = GetDynamicGlyph(null, codepoint);
 				if (glyph == null)
 				{
 					continue;

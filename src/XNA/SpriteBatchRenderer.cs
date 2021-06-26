@@ -16,6 +16,8 @@ namespace FontStashSharp
 	{
 		public static readonly SpriteBatchRenderer Instance = new SpriteBatchRenderer();
 
+		public GraphicsDevice GraphicsDevice => _batch.GraphicsDevice;
+
 		private SpriteBatch _batch;
 
 		public SpriteBatch Batch

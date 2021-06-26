@@ -9,6 +9,9 @@ namespace FontStashSharp
 	class Renderer : IFontStashRenderer
 	{
 		SpriteBatch _batch;
+		Texture2DManager _textureManager;
+
+		public ITexture2DManager GraphicsDevice => _textureManager;
 
 		public Renderer(SpriteBatch batch)
 		{
@@ -18,6 +21,7 @@ namespace FontStashSharp
 			}
 
 			_batch = batch;
+			_textureManager = new Texture2DManager(batch.GraphicsDevice);
 		}
 
 		public void Draw(object texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, float depth)

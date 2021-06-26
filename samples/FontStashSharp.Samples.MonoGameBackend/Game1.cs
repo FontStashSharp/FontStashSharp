@@ -65,7 +65,7 @@ namespace FontStashSharp
 				EffectAmount = effectAmount
 			};
 
-			var result = new FontSystem(textureCreator, settings);
+			var result = new FontSystem(settings);
 			result.AddFont(File.ReadAllBytes(@"Fonts/DroidSans.ttf"));
 			result.AddFont(File.ReadAllBytes(@"Fonts/DroidSansJapanese.ttf"));
 			result.AddFont(File.ReadAllBytes(@"Fonts/Symbola-Emoji.ttf"));
