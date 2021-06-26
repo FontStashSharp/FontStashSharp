@@ -55,12 +55,17 @@ namespace FontStashSharp
 			Window.AllowUserResizing = true;
 		}
 
-		private FontSystem LoadFont(int blur, int stroke)
+		private FontSystem LoadFont(FontSystemEffect effect, int effectAmount)
 		{
-			var fontLoader = StbTrueTypeSharpFontLoader.Instance;
 			var textureCreator = new Texture2DManager(GraphicsDevice);
 
-			var result = new FontSystem(fontLoader, textureCreator, 1024, 1024, blur, stroke);
+			var settings = new FontSystemSettings
+			{
+				Effect = effect,
+				EffectAmount = effectAmount
+			};
+
+			var result = new FontSystem(textureCreator, settings);
 			result.AddFont(File.ReadAllBytes(@"Fonts/DroidSans.ttf"));
 			result.AddFont(File.ReadAllBytes(@"Fonts/DroidSansJapanese.ttf"));
 			result.AddFont(File.ReadAllBytes(@"Fonts/Symbola-Emoji.ttf"));
@@ -81,8 +86,8 @@ namespace FontStashSharp
 			var fonts = new List<FontSystem>();
 
 			fonts.Add(LoadFont(0, 0));
-			fonts.Add(LoadFont(EffectAmount, 0));
-			fonts.Add(LoadFont(0, EffectAmount));
+			fonts.Add(LoadFont(FontSystemEffect.Blurry, EffectAmount));
+			fonts.Add(LoadFont(FontSystemEffect.Stroked, EffectAmount));
 
 			_fontSystems = fonts.ToArray();
 			_currentFontSystem = _fontSystems[0];

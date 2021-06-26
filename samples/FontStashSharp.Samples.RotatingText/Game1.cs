@@ -107,17 +107,23 @@ namespace FontStashSharp.Samples
 			var fontSystems = new List<FontSystem>();
 
 			// Simple
-			var fontSystem = FontSystemFactory.Create(GraphicsDevice);
+			var fontSystem = new FontSystem(GraphicsDevice);
 			LoadFontSystem(fontSystem);
 			fontSystems.Add(fontSystem);
 
 			// Blurry
-			var blurryFontSystem = FontSystemFactory.CreateBlurry(GraphicsDevice, EffectAmount);
+			var settings = new FontSystemSettings
+			{
+				Effect = FontSystemEffect.Blurry,
+				EffectAmount = EffectAmount
+			};
+			var blurryFontSystem = new FontSystem(GraphicsDevice, settings);
 			LoadFontSystem(blurryFontSystem);
 			fontSystems.Add(blurryFontSystem);
 
 			// Stroked
-			var strokedFontSystem = FontSystemFactory.CreateStroked(GraphicsDevice, EffectAmount);
+			settings.Effect = FontSystemEffect.Stroked;
+			var strokedFontSystem = new FontSystem(GraphicsDevice, settings);
 			LoadFontSystem(strokedFontSystem);
 			fontSystems.Add(strokedFontSystem);
 

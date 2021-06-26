@@ -19,6 +19,7 @@ namespace FontStashSharp
 	{
 		private readonly List<IFontSource> _fontSources = new List<IFontSource>();
 		private readonly Int32Map<DynamicSpriteFont> _fonts = new Int32Map<DynamicSpriteFont>();
+		private readonly FontSystemSettings _settings;
 
 		private readonly IFontLoader _fontLoader;
 
@@ -29,12 +30,19 @@ namespace FontStashSharp
 #endif
 
 		private FontAtlas _currentAtlas;
-		private Point _size;
 
-		public readonly bool PremultiplyAlpha;
+		public FontSystemEffect Effect => _settings.Effect;
+		public int EffectAmount => _settings.EffectAmount;
 
-		public readonly int BlurAmount;
-		public readonly int StrokeAmount;
+		public int TextureWidth => _settings.TextureWidth;
+		public int TextureHeight => _settings.TextureHeight;
+
+		public bool PremultiplyAlpha => _settings.PremultiplyAlpha;
+
+		public float FontResolutionFactor => _settings.FontResolutionFactor;
+
+		public int KernelWidth => _settings.KernelWidth;
+		public int KernelHeight => _settings.KernelHeight;
 
 		public bool UseKernings = true;
 		public int? DefaultCharacter = ' ';
@@ -42,8 +50,8 @@ namespace FontStashSharp
 		public int CharacterSpacing = 0;
 		public int LineSpacing = 0;
 
-		public int KernelWidth { get; protected set; }
-		public int KernelHeight { get; protected set; }
+		internal int BlurAmount => Effect == FontSystemEffect.Blurry ? EffectAmount : 0;
+		internal int StrokeAmount => Effect == FontSystemEffect.Stroked ? EffectAmount : 0;
 
 		public FontAtlas CurrentAtlas
 		{
@@ -51,7 +59,7 @@ namespace FontStashSharp
 			{
 				if (_currentAtlas == null)
 				{
-					_currentAtlas = new FontAtlas(_size.X, _size.Y, 256);
+					_currentAtlas = new FontAtlas(TextureWidth, TextureHeight, 256);
 					Atlases.Add(_currentAtlas);
 				}
 
@@ -61,14 +69,12 @@ namespace FontStashSharp
 
 		public List<FontAtlas> Atlases { get; } = new List<FontAtlas>();
 
-		public float FontResolutionFactor { get; protected set; }
-
 		public event EventHandler CurrentAtlasFull;
 
 #if MONOGAME || FNA || STRIDE
-		public FontSystem(IFontLoader fontLoader, GraphicsDevice graphicsDevice, int width = 1024, int height = 1024, int blurAmount = 0, int strokeAmount = 0, bool premultiplyAlpha = true, float fontResolutionFactor = 1f, int kernelWidth = 0, int kernelHeight = 0)
+		public FontSystem(IFontLoader fontLoader, GraphicsDevice graphicsDevice, FontSystemSettings settings)
 #else
-		public FontSystem(IFontLoader fontLoader, ITexture2DManager textureCreator, int width = 1024, int height = 1024, int blurAmount = 0, int strokeAmount = 0, bool premultiplyAlpha = true, float fontResolutionFactor = 1f, int kernelWidth = 0, int kernelHeight = 0)
+		public FontSystem(IFontLoader fontLoader, ITexture2DManager textureCreator, FontSystemSettings settings)
 #endif
 		{
 			if (fontLoader == null)
@@ -92,66 +98,31 @@ namespace FontStashSharp
 			_textureCreator = textureCreator;
 #endif
 
+			if (settings == null)
+			{
+				throw new ArgumentNullException(nameof(settings));
+			}
+
 			_fontLoader = fontLoader;
-
-			if (width <= 0)
-			{
-				throw new ArgumentOutOfRangeException(nameof(width));
-			}
-
-			if (height <= 0)
-			{
-				throw new ArgumentOutOfRangeException(nameof(height));
-			}
-
-			if (blurAmount < 0 || blurAmount > 20)
-			{
-				throw new ArgumentOutOfRangeException(nameof(blurAmount));
-			}
-
-			if (strokeAmount < 0 || strokeAmount > 20)
-			{
-				throw new ArgumentOutOfRangeException(nameof(strokeAmount));
-			}
-
-			if (strokeAmount != 0 && blurAmount != 0)
-			{
-				throw new ArgumentException("Cannot have both blur and stroke.");
-			}
-
-			if(fontResolutionFactor < 0)
-			{
-				throw new ArgumentOutOfRangeException(nameof(fontResolutionFactor), fontResolutionFactor, "This cannot be smaller than 0");
-			}
-
-			if (kernelWidth < 0)
-			{
-				throw new ArgumentOutOfRangeException(nameof(kernelWidth), kernelWidth, "This cannot be smaller than 0");
-			}
-
-			if (kernelHeight < 0)
-			{
-				throw new ArgumentOutOfRangeException(nameof(kernelHeight), kernelHeight, "This cannot be smaller than 0");
-			}
-
-			BlurAmount = blurAmount;
-			StrokeAmount = strokeAmount;
-			PremultiplyAlpha = premultiplyAlpha;
-			FontResolutionFactor = fontResolutionFactor;
-			KernelWidth = kernelWidth;
-			KernelHeight = kernelHeight;
-
-			_size = new Point(width, height);
+			_settings = settings.Clone();
 		}
 
 #if MONOGAME || FNA || STRIDE
-		public FontSystem(GraphicsDevice graphicsDevice, int width, int height, int blurAmount = 0, int strokeAmount = 0, bool premultiplyAlpha = true) :
-			this(StbTrueTypeSharpFontLoader.Instance, graphicsDevice, width, height, blurAmount, strokeAmount, premultiplyAlpha)
+		public FontSystem(GraphicsDevice graphicsDevice, FontSystemSettings settings) : this(StbTrueTypeSharpFontLoader.Instance, graphicsDevice, settings)
 		{
 		}
 #else
-		public FontSystem(ITexture2DManager textureCreator, int width, int height, int blurAmount = 0, int strokeAmount = 0, bool premultiplyAlpha = true):
-			this(StbTrueTypeSharpFontLoader.Instance, textureCreator, width, height, blurAmount, strokeAmount, premultiplyAlpha)
+		public FontSystem(ITexture2DManager textureCreator, FontSystemSettings settings): this(StbTrueTypeSharpFontLoader.Instance, textureCreator, settings)
+		{
+		}
+#endif
+
+#if MONOGAME || FNA || STRIDE
+		public FontSystem(GraphicsDevice graphicsDevice) : this(graphicsDevice, new FontSystemSettings())
+		{
+		}
+#else
+		public FontSystem(ITexture2DManager textureCreator): this(textureCreator, new FontSystemSettings())
 		{
 		}
 #endif
@@ -194,20 +165,10 @@ namespace FontStashSharp
 			return result;
 		}
 
-		public void Reset(int width, int height)
+		public void Reset()
 		{
 			Atlases.Clear();
 			_fonts.Clear();
-
-			if (width == _size.X && height == _size.Y)
-				return;
-
-			_size = new Point(width, height);
-		}
-
-		public void Reset()
-		{
-			Reset(_size.X, _size.Y);
 		}
 
 		internal int? GetCodepointIndex(int codepoint, out IFontSource font)

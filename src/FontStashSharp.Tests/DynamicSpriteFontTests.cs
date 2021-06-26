@@ -8,7 +8,7 @@ namespace FontStashSharp.Tests
 		[Test]
 		public void CacheNull()
 		{
-			var fontSystem = new FontSystem(TestsEnvironment.GraphicsDevice, 1024, 1024);
+			var fontSystem = new FontSystem(TestsEnvironment.GraphicsDevice);
 			fontSystem.AddFont(TestsEnvironment.Assembly.ReadResourceAsBytes("Resources.DroidSans.ttf"));
 
 			var font = fontSystem.GetFont(32);

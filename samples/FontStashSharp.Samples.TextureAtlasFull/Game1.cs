@@ -43,7 +43,12 @@ namespace FontStashSharp.Samples
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
 			// TODO: use this.Content to load your game content here
-			_fontSystem = FontSystemFactory.Create(GraphicsDevice, AtlasSize, AtlasSize);
+			var settings = new FontSystemSettings
+			{
+				TextureWidth = AtlasSize,
+				TextureHeight = AtlasSize
+			};
+			_fontSystem = new FontSystem(GraphicsDevice, settings);
 			_fontSystem.AddFont(File.ReadAllBytes(@"Fonts/DroidSans.ttf"));
 
 			_white = new Texture2D(GraphicsDevice, 1, 1);
