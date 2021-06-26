@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 
 #if MONOGAME || FNA
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
 using Stride.Core.Mathematics;
