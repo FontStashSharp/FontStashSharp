@@ -1,6 +1,7 @@
 ﻿using FontStashSharp.Interfaces;
 using System.Collections.Generic;
 using System.Text;
+using System;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
@@ -54,6 +55,18 @@ namespace FontStashSharp
 		public float DrawText(IFontStashRenderer renderer, string text, Vector2 position, Color color,
 													Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0.0f)
 		{
+#if MONOGAME || FNA || STRIDE
+			if (renderer.GraphicsDevice == null)
+			{
+				throw new ArgumentNullException("renderer.GraphicsDevice can't be null.");
+			}
+#else
+			if (renderer.TextureManager == null)
+			{
+				throw new ArgumentNullException("renderer.TextureManager can't be null.");
+			}
+#endif
+
 			if (string.IsNullOrEmpty(text)) return 0.0f;
 
 			float ascent, lineHeight;
@@ -149,6 +162,23 @@ namespace FontStashSharp
 		public float DrawText(IFontStashRenderer renderer, string text, Vector2 position, Color[] colors,
 													Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0.0f)
 		{
+			if (renderer == null)
+			{
+				throw new ArgumentNullException(nameof(renderer));
+			}
+
+#if MONOGAME || FNA || STRIDE
+			if (renderer.GraphicsDevice == null)
+			{
+				throw new ArgumentNullException("renderer.GraphicsDevice can't be null.");
+			}
+#else
+			if (renderer.TextureManager == null)
+			{
+				throw new ArgumentNullException("renderer.TextureManager can't be null.");
+			}
+#endif
+
 			if (string.IsNullOrEmpty(text)) return 0.0f;
 
 			float ascent, lineHeight;
@@ -251,6 +281,23 @@ namespace FontStashSharp
 		public float DrawText(IFontStashRenderer renderer, StringBuilder text, Vector2 position, Color color,
 													Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0.0f)
 		{
+			if (renderer == null)
+			{
+				throw new ArgumentNullException(nameof(renderer));
+			}
+
+#if MONOGAME || FNA || STRIDE
+			if (renderer.GraphicsDevice == null)
+			{
+				throw new ArgumentNullException("renderer.GraphicsDevice can't be null.");
+			}
+#else
+			if (renderer.TextureManager == null)
+			{
+				throw new ArgumentNullException("renderer.TextureManager can't be null.");
+			}
+#endif
+
 			if (text == null || text.Length == 0) return 0.0f;
 
 			float ascent, lineHeight;
@@ -347,6 +394,23 @@ namespace FontStashSharp
 		public float DrawText(IFontStashRenderer renderer, StringBuilder text, Vector2 position, Color[] colors,
 													Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0.0f)
 		{
+			if (renderer == null)
+			{
+				throw new ArgumentNullException(nameof(renderer));
+			}
+
+#if MONOGAME || FNA || STRIDE
+			if (renderer.GraphicsDevice == null)
+			{
+				throw new ArgumentNullException("renderer.GraphicsDevice can't be null.");
+			}
+#else
+			if (renderer.TextureManager == null)
+			{
+				throw new ArgumentNullException("renderer.TextureManager can't be null.");
+			}
+#endif
+
 			if (text == null || text.Length == 0) return 0.0f;
 
 			float ascent, lineHeight;

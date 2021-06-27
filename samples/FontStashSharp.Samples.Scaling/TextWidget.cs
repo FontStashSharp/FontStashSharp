@@ -97,13 +97,22 @@ namespace FontStashSharp.Samples
 		{
 			base.InternalRender(context);
 
+			var text = $"Font Resolution Factor: {FontResolutionFactor}\nKernel Width: {KernelWidth}\nKernel Height: {KernelHeight}";
+			var scale = new Vector2(Scale, Scale);
+
+			if (SampleEnvironment.DrawBackground)
+			{
+				var dimensions = _font.MeasureString(text, scale);
+				context.FillRectangle(
+					new Rectangle(ActualBounds.X, ActualBounds.Y, (int)dimensions.X, (int)dimensions.Y),
+					Color.Green);
+				context.Flush();
+			}
+
 			_spriteBatch.Begin();
+
 			var position = new Vector2(ActualBounds.X, ActualBounds.Y);
-			_spriteBatch.DrawString(Font, 
-				$"Font Resolution Factor: {FontResolutionFactor}\nKernel Width: {KernelWidth}\nKernel Height: {KernelHeight}", 
-				position,
-				Color.White,
-				new Vector2(Scale, Scale));
+			_spriteBatch.DrawString(Font, text, position, Color.White, scale);
 			_spriteBatch.End();
 		}
 	}

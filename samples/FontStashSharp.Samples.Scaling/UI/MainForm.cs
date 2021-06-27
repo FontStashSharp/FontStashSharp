@@ -21,6 +21,7 @@ namespace FontStashSharp.Samples.UI
 			_spinButtonKernelWidth.ValueChanged += (s, a) => Update();
 			_spinButtonKernelHeight.ValueChanged += (s, a) => Update();
 			_spinButtonScale.ValueChanged += (s, a) => Update();
+			_checkBoxDrawBackground.PressedChanged += (s, a) => Update();
 
 			Update();
 		}
@@ -33,6 +34,8 @@ namespace FontStashSharp.Samples.UI
 
 			_top.Scale = _spinButtonScale.Value.Value;
 			_bottom.Scale = _spinButtonScale.Value.Value;
+
+			SampleEnvironment.DrawBackground = _checkBoxDrawBackground.IsChecked;
 		}
 	}
 }

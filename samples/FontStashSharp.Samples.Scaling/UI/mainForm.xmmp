@@ -28,6 +28,8 @@
         <Label Text="Scale:" />
         <SpinButton Value="2" Width="50" Id="_spinButtonScale" />
       </HorizontalStackPanel>
+      <VerticalSeparator />
+      <CheckBox Text="Draw Background" Id="_checkBoxDrawBackground" />
     </HorizontalStackPanel>
     <HorizontalSeparator />
     <Panel Id="_panelTopContainer" />
