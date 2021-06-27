@@ -1,5 +1,6 @@
 ﻿using FontStashSharp.Interfaces;
 using System;
+using System.Reflection;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
@@ -16,9 +17,27 @@ namespace FontStashSharp
 	{
 		public static readonly SpriteBatchRenderer Instance = new SpriteBatchRenderer();
 
-		public GraphicsDevice GraphicsDevice => _batch.GraphicsDevice;
-
+		private GraphicsDevice _graphicsDevice;
 		private SpriteBatch _batch;
+
+		public GraphicsDevice GraphicsDevice
+		{
+			get
+			{
+				if (_graphicsDevice != null)
+				{
+					return _graphicsDevice;
+				}
+
+				var bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic;
+
+				// get the field info
+				var fieldInfo = typeof(SpriteBatch).GetField("graphicsDevice", bindingFlags);
+				_graphicsDevice = (GraphicsDevice)fieldInfo.GetValue(_batch);
+
+				return _graphicsDevice;
+			}
+		}
 
 		public SpriteBatch Batch
 		{
@@ -34,7 +53,13 @@ namespace FontStashSharp
 					throw new ArgumentNullException(nameof(value));
 				}
 
+				if (value == _batch)
+				{
+					return;
+				}
+
 				_batch = value;
+				_graphicsDevice = null;
 			}
 		}
 

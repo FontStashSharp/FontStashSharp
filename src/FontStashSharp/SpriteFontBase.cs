@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
 using Stride.Core.Mathematics;
+using Stride.Graphics;
 #else
 using System.Drawing;
 using System.Numerics;
@@ -76,7 +77,11 @@ namespace FontStashSharp
 					continue;
 				}
 
+#if MONOGAME || FNA || STRIDE
 				var glyph = GetGlyph(renderer.GraphicsDevice, codepoint);
+#else
+				var glyph = GetGlyph(renderer.TextureManager, codepoint);
+#endif
 				if (glyph == null)
 				{
 					continue;
@@ -170,7 +175,11 @@ namespace FontStashSharp
 					continue;
 				}
 
+#if MONOGAME || FNA || STRIDE
 				var glyph = GetGlyph(renderer.GraphicsDevice, codepoint);
+#else
+				var glyph = GetGlyph(renderer.TextureManager, codepoint);
+#endif
 				if (glyph == null)
 				{
 					++pos;
@@ -266,7 +275,11 @@ namespace FontStashSharp
 					continue;
 				}
 
+#if MONOGAME || FNA || STRIDE
 				var glyph = GetGlyph(renderer.GraphicsDevice, codepoint);
+#else
+				var glyph = GetGlyph(renderer.TextureManager, codepoint);
+#endif
 				if (glyph == null)
 				{
 					continue;
@@ -360,7 +373,11 @@ namespace FontStashSharp
 					continue;
 				}
 
+#if MONOGAME || FNA || STRIDE
 				var glyph = GetGlyph(renderer.GraphicsDevice, codepoint);
+#else
+				var glyph = GetGlyph(renderer.TextureManager, codepoint);
+#endif
 				if (glyph == null)
 				{
 					++pos;

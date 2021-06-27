@@ -11,7 +11,7 @@ namespace FontStashSharp
 		SpriteBatch _batch;
 		Texture2DManager _textureManager;
 
-		public ITexture2DManager GraphicsDevice => _textureManager;
+		public ITexture2DManager TextureManager => _textureManager;
 
 		public Renderer(SpriteBatch batch)
 		{
