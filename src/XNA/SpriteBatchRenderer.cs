@@ -1,11 +1,11 @@
 ﻿using FontStashSharp.Interfaces;
 using System;
-using System.Reflection;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
+using System.Reflection;
 using Stride.Core.Mathematics;
 using Stride.Graphics;
 using Texture2D = Stride.Graphics.Texture;
@@ -17,9 +17,12 @@ namespace FontStashSharp
 	{
 		public static readonly SpriteBatchRenderer Instance = new SpriteBatchRenderer();
 
-		private GraphicsDevice _graphicsDevice;
 		private SpriteBatch _batch;
 
+#if MONOGAME || FNA
+		public GraphicsDevice GraphicsDevice => _batch.GraphicsDevice;
+#elif STRIDE
+		private GraphicsDevice _graphicsDevice;
 		public GraphicsDevice GraphicsDevice
 		{
 			get
@@ -38,6 +41,7 @@ namespace FontStashSharp
 				return _graphicsDevice;
 			}
 		}
+#endif
 
 		public SpriteBatch Batch
 		{
@@ -59,7 +63,9 @@ namespace FontStashSharp
 				}
 
 				_batch = value;
+#if STRIDE
 				_graphicsDevice = null;
+#endif
 			}
 		}
 
