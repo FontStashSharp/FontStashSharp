@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using NUnit.Framework;
 
 namespace FontStashSharp.Tests
 {
@@ -27,6 +29,55 @@ namespace FontStashSharp.Tests
 
 			// And should be equal to null too
 			Assert.AreEqual(glyph, null);
+		}
+
+		[Test]
+		public void ExistingTexture()
+		{
+			Texture2D existingTexture;
+			using (var stream = TestsEnvironment.Assembly.OpenResourceStream("Resources.default_ui_skin.png"))
+			{
+				existingTexture = Texture2D.FromStream(TestsEnvironment.GraphicsDevice, stream);
+			}
+
+			var settings = new FontSystemSettings
+			{
+				ExistingTexture = existingTexture,
+				ExistingTextureUsedSpace = new Rectangle(0, 0, existingTexture.Width, 160)
+			};
+
+			var fontSystem = new FontSystem(settings);
+			fontSystem.AddFont(TestsEnvironment.Assembly.ReadResourceAsBytes("Resources.DroidSans.ttf"));
+
+			var atlasFull = false;
+			fontSystem.CurrentAtlasFull += (s, a) => atlasFull = true;
+
+			for (var size = 64; size < 128; ++size)
+			{
+				var font = fontSystem.GetFont(size);
+				for (var codePoint = (int)'a'; codePoint < 'z'; ++codePoint)
+				{
+					var glyph = (DynamicFontGlyph)font.GetGlyph(TestsEnvironment.GraphicsDevice, codePoint);
+
+					// Make sure glyph doesnt intersects with the used space
+					if (!atlasFull)
+					{
+						Assert.IsFalse(settings.ExistingTextureUsedSpace.Intersects(glyph.Bounds));
+					}
+					else
+					{
+						// If we've moved to the next atlas
+						// The new glyph should override old existing texture used space
+						Assert.IsTrue(settings.ExistingTextureUsedSpace.Intersects(glyph.Bounds));
+
+						// This concludes the testing
+						goto finish;
+					}
+				}
+			}
+
+		finish:
+			;
 		}
 	}
 }

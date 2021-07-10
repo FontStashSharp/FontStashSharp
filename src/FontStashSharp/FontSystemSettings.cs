@@ -1,5 +1,18 @@
 ﻿using System;
 
+#if MONOGAME || FNA
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+#elif STRIDE
+using Stride.Core.Mathematics;
+using Stride.Graphics;
+using Texture2D = Stride.Graphics.Texture;
+#else
+using System.Drawing;
+using System.Numerics;
+using Texture2D = System.Object;
+#endif
+
 namespace FontStashSharp
 {
 	public enum FontSystemEffect
@@ -112,6 +125,13 @@ namespace FontStashSharp
 			}
 		}
 
+		/// <summary>
+		/// Use existing texture for storing glyphs
+		/// If this is set, then TextureWidth & TextureHeight are ignored
+		/// </summary>
+		public Texture2D ExistingTexture { get; set; }
+		public Rectangle ExistingTextureUsedSpace { get; set; }
+
 		public FontSystemSettings Clone()
 		{
 			return new FontSystemSettings
@@ -123,7 +143,9 @@ namespace FontStashSharp
 				PremultiplyAlpha = PremultiplyAlpha,
 				FontResolutionFactor = FontResolutionFactor,
 				KernelWidth = KernelWidth,
-				KernelHeight = KernelHeight
+				KernelHeight = KernelHeight,
+				ExistingTexture = ExistingTexture,
+				ExistingTextureUsedSpace = ExistingTextureUsedSpace
 			};
 		}
 	}

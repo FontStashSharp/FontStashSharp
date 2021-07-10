@@ -2,6 +2,7 @@
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
 using Stride.Core.Mathematics;
 #else
@@ -33,6 +34,11 @@ namespace FontStashSharp
 			}
 
 			return bytes;
+		}
+
+		public static Point Size(this Texture2D texture)
+		{
+			return new Point(texture.Width, texture.Height);
 		}
 	}
 }

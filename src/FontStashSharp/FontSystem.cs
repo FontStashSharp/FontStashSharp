@@ -5,11 +5,14 @@ using System.IO;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 #elif STRIDE
 using Stride.Core.Mathematics;
 using Stride.Graphics;
+using Texture2D = Stride.Graphics.Texture;
 #else
 using System.Drawing;
+using Texture2D = System.Object;
 #endif
 
 namespace FontStashSharp
@@ -37,6 +40,9 @@ namespace FontStashSharp
 		public int KernelWidth => _settings.KernelWidth;
 		public int KernelHeight => _settings.KernelHeight;
 
+		public Texture2D ExistingTexture => _settings.ExistingTexture;
+		public Rectangle ExistingTextureUsedSpace => _settings.ExistingTextureUsedSpace;
+
 		public bool UseKernings = true;
 		public int? DefaultCharacter = ' ';
 
@@ -45,20 +51,6 @@ namespace FontStashSharp
 
 		internal int BlurAmount => Effect == FontSystemEffect.Blurry ? EffectAmount : 0;
 		internal int StrokeAmount => Effect == FontSystemEffect.Stroked ? EffectAmount : 0;
-
-		public FontAtlas CurrentAtlas
-		{
-			get
-			{
-				if (_currentAtlas == null)
-				{
-					_currentAtlas = new FontAtlas(TextureWidth, TextureHeight, 256);
-					Atlases.Add(_currentAtlas);
-				}
-
-				return _currentAtlas;
-			}
-		}
 
 		public List<FontAtlas> Atlases { get; } = new List<FontAtlas>();
 
@@ -151,22 +143,67 @@ namespace FontStashSharp
 		}
 
 #if MONOGAME || FNA || STRIDE
+		private FontAtlas GetCurrentAtlas(GraphicsDevice device, int textureWidth, int textureHeight)
+#else
+		private FontAtlas GetCurrentAtlas(ITexture2D device, int textureWidth, int textureHeight)
+#endif
+		{
+			if (_currentAtlas == null)
+			{
+				Texture2D existingTexture = null;
+				if (ExistingTexture != null && Atlases.Count == 0)
+				{
+					existingTexture = ExistingTexture;
+				}
+
+				_currentAtlas = new FontAtlas(textureWidth, textureHeight, 256, existingTexture);
+
+				// If existing texture is used, mark existing used rect as used
+				if (existingTexture != null && !ExistingTextureUsedSpace.IsEmpty)
+				{
+					if (!_currentAtlas.AddSkylineLevel(0, ExistingTextureUsedSpace.X, ExistingTextureUsedSpace.Y, ExistingTextureUsedSpace.Width, ExistingTextureUsedSpace.Height))
+					{
+						throw new Exception(string.Format("Unable to specify existing texture used space: {0}", ExistingTextureUsedSpace));
+					}
+
+					// TODO: Clear remaining space
+				}
+
+				Atlases.Add(_currentAtlas);
+			}
+
+			return _currentAtlas;
+		}
+
+#if MONOGAME || FNA || STRIDE
 		internal void RenderGlyphOnAtlas(GraphicsDevice device, DynamicFontGlyph glyph)
 #else
 		internal void RenderGlyphOnAtlas(ITexture2DManager device, DynamicFontGlyph glyph)
 #endif
 		{
-			var currentAtlas = CurrentAtlas;
+			var textureSize = new Point(TextureWidth, TextureHeight);
+
+			if (ExistingTexture != null)
+			{
+#if MONOGAME || FNA || STRIDE
+				textureSize = new Point(ExistingTexture.Width, ExistingTexture.Height);
+#else
+				textureSize = device.GetTextureSize(ExistingTexture);
+#endif
+			}
+
 			int gx = 0, gy = 0;
 			var gw = glyph.Bounds.Width;
 			var gh = glyph.Bounds.Height;
+
+			var currentAtlas = GetCurrentAtlas(device, textureSize.X, textureSize.Y);
 			if (!currentAtlas.AddRect(gw, gh, ref gx, ref gy))
 			{
 				CurrentAtlasFull?.Invoke(this, EventArgs.Empty);
 
 				// This code will force creation of new atlas
 				_currentAtlas = null;
-				currentAtlas = CurrentAtlas;
+				currentAtlas = GetCurrentAtlas(device, textureSize.X, textureSize.Y);
 
 				// Try to add again
 				if (!currentAtlas.AddRect(gw, gh, ref gx, ref gy))

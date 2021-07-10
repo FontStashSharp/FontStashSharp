@@ -24,10 +24,16 @@ namespace FontStashSharp
 			return new Texture2D(_device, width, height);
 		}
 
+		public Point GetTextureSize(object texture)
+		{
+			var mgTexture = (Texture2D)texture;
+			return new Point(mgTexture.Width, mgTexture.Height);
+		}
+
 		public void SetTextureData(object texture, Rectangle bounds, byte[] data)
 		{
 			var mgTexture = (Texture2D)texture;
-			mgTexture.SetData(0, 0, new Microsoft.Xna.Framework.Rectangle(bounds.X, bounds.Y, bounds.Width, bounds.Height), 
+			mgTexture.SetData(0, 0, new Microsoft.Xna.Framework.Rectangle(bounds.X, bounds.Y, bounds.Width, bounds.Height),
 				data, 0, bounds.Width * bounds.Height * 4);
 		}
 	}

@@ -28,10 +28,11 @@ namespace FontStashSharp
 
 		public Texture2D Texture { get; set; }
 
-		public FontAtlas(int w, int h, int count)
+		public FontAtlas(int w, int h, int count, Texture2D texture)
 		{
 			Width = w;
 			Height = h;
+			Texture = texture;
 			Nodes = new FontAtlasNode[count];
 			Nodes[0].X = 0;
 			Nodes[0].Y = 0;
