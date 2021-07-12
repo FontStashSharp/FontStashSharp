@@ -5,8 +5,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
 using Stride.Core.Mathematics;
+using Texture2D = Stride.Graphics.Texture;
 #else
 using System.Numerics;
+using System.Drawing;
+using Texture2D = System.Object;
 #endif
 
 
@@ -34,11 +37,6 @@ namespace FontStashSharp
 			}
 
 			return bytes;
-		}
-
-		public static Point Size(this Texture2D texture)
-		{
-			return new Point(texture.Width, texture.Height);
 		}
 	}
 }

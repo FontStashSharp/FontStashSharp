@@ -8,7 +8,6 @@ namespace FontStashSharp
 	internal unsafe class StbTrueTypeSharpFontSource: IFontSource
 	{
 		private int? _lastSize;
-		private GCHandle? dataPtr = null;
 		private float AscentBase, DescentBase, LineHeightBase;
 		readonly Int32Map<int> _kernings = new Int32Map<int>();
 
@@ -17,7 +16,7 @@ namespace FontStashSharp
 		public float LineHeight { get; private set; }
 		public float Scale { get; private set; }
 
-		public stbtt_fontinfo _font = new stbtt_fontinfo();
+		public stbtt_fontinfo _font;
 
 		public StbTrueTypeSharpFontSource(byte[] data)
 		{
@@ -26,21 +25,28 @@ namespace FontStashSharp
 				throw new ArgumentNullException(nameof(data));
 			}
 
-			dataPtr = GCHandle.Alloc(data, GCHandleType.Pinned);
+			_font = CreateFont(data, 0);
+			if (_font == null)
+				throw new Exception("stbtt_InitFont failed");
 		}
 
 		~StbTrueTypeSharpFontSource()
 		{
-			Dispose();
+			Dispose(false);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing && _font != null)
+			{
+				_font.Dispose();
+				_font = null;
+			}
 		}
 
 		public void Dispose()
 		{
-			if (dataPtr != null)
-			{
-				dataPtr.Value.Free();
-				dataPtr = null;
-			}
+			Dispose(true);
 		}
 
 		public void UpdateSize(int size)
@@ -125,10 +131,6 @@ namespace FontStashSharp
 		public static StbTrueTypeSharpFontSource FromMemory(byte[] data)
 		{
 			var font = new StbTrueTypeSharpFontSource(data);
-
-			byte* dataPtr = (byte *)font.dataPtr.Value.AddrOfPinnedObject();
-			if (stbtt_InitFont(font._font, dataPtr, 0) == 0)
-				throw new Exception("stbtt_InitFont failed");
 
 			int ascent, descent, lineGap;
 			stbtt_GetFontVMetrics(font._font , &ascent, &descent, &lineGap);
