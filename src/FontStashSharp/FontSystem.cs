@@ -145,7 +145,7 @@ namespace FontStashSharp
 #if MONOGAME || FNA || STRIDE
 		private FontAtlas GetCurrentAtlas(GraphicsDevice device, int textureWidth, int textureHeight)
 #else
-		private FontAtlas GetCurrentAtlas(ITexture2D device, int textureWidth, int textureHeight)
+		private FontAtlas GetCurrentAtlas(ITexture2DManager device, int textureWidth, int textureHeight)
 #endif
 		{
 			if (_currentAtlas == null)
