@@ -200,9 +200,7 @@ namespace FontStashSharp
 				pad + pad * glyph.Bounds.Width,
 				glyph.Bounds.Width - pad * 2,
 				glyph.Bounds.Height - pad * 2,
-				glyph.Bounds.Width,
-				kernelWidth,
-				kernelHeight);
+				glyph.Bounds.Width);
 
 			if (strokeAmount > 0)
 			{

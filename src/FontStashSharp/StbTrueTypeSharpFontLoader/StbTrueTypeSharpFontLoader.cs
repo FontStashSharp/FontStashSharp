@@ -10,9 +10,9 @@ namespace FontStashSharp
 		{
 		}
 
-		public IFontSource Load(byte[] data)
+		public IFontSource Load(byte[] data, FontSystemSettings settings)
 		{
-			return StbTrueTypeSharpFontSource.FromMemory(data);
+			return StbTrueTypeSharpFontSource.FromMemory(data, settings);
 		}
 	}
 }

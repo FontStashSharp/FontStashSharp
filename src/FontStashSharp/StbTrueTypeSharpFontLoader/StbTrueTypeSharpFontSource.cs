@@ -9,7 +9,8 @@ namespace FontStashSharp
 	{
 		private int? _lastSize;
 		private float AscentBase, DescentBase, LineHeightBase;
-		readonly Int32Map<int> _kernings = new Int32Map<int>();
+		private readonly Int32Map<int> _kernings = new Int32Map<int>();
+		private readonly FontSystemSettings _settings;
 
 		public float Ascent { get; private set; }
 		public float Descent { get; private set; }
@@ -18,16 +19,23 @@ namespace FontStashSharp
 
 		public stbtt_fontinfo _font;
 
-		public StbTrueTypeSharpFontSource(byte[] data)
+		public StbTrueTypeSharpFontSource(byte[] data, FontSystemSettings settings)
 		{
 			if (data == null)
 			{
 				throw new ArgumentNullException(nameof(data));
 			}
 
+			if (settings == null)
+	  {
+				throw new ArgumentNullException(nameof(settings));
+	  }
+
 			_font = CreateFont(data, 0);
 			if (_font == null)
 				throw new Exception("stbtt_InitFont failed");
+
+			_settings = settings;
 		}
 
 		~StbTrueTypeSharpFontSource()
@@ -95,21 +103,21 @@ namespace FontStashSharp
 			stbtt_GetGlyphBitmapBox(_font, glyphId, Scale, Scale, &x0Temp, &y0Temp, &x1Temp, &y1Temp);
 			x0 = x0Temp;
 			y0 = y0Temp;
-			x1 = x1Temp;
-			y1 = y1Temp;
+			x1 = x1Temp + _settings.KernelWidth;
+			y1 = y1Temp + _settings.KernelHeight;
 		}
 
-		public void RasterizeGlyphBitmap(int glyphId, int fontSize, byte[] buffer, int startIndex, int outWidth, int outHeight, int outStride, int kernelWidth, int kernelHeight)
+		public void RasterizeGlyphBitmap(int glyphId, int fontSize, byte[] buffer, int startIndex, int outWidth, int outHeight, int outStride)
 		{
 			UpdateSize(fontSize);
 
 			fixed (byte* output = &buffer[startIndex])
 			{
 				stbtt_MakeGlyphBitmap(_font, output, outWidth, outHeight, outStride, Scale, Scale, glyphId);
-				if(kernelWidth > 0)
-					stbtt__v_prefilter(output, outWidth, outHeight, outStride, (uint)kernelWidth);
-				if(kernelHeight > 0)
-					stbtt__h_prefilter(output, outWidth, outHeight, outStride, (uint)kernelHeight);
+				if(_settings.KernelWidth > 0)
+					stbtt__v_prefilter(output, outWidth, outHeight, outStride, (uint)_settings.KernelWidth);
+				if(_settings.KernelHeight > 0)
+					stbtt__h_prefilter(output, outWidth, outHeight, outStride, (uint)_settings.KernelHeight);
 			}
 		}
 
@@ -128,9 +136,9 @@ namespace FontStashSharp
 			return (int)(result * Scale);
 		}
 
-		public static StbTrueTypeSharpFontSource FromMemory(byte[] data)
+		public static StbTrueTypeSharpFontSource FromMemory(byte[] data, FontSystemSettings settings)
 		{
-			var font = new StbTrueTypeSharpFontSource(data);
+			var font = new StbTrueTypeSharpFontSource(data, settings);
 
 			int ascent, descent, lineGap;
 			stbtt_GetFontVMetrics(font._font , &ascent, &descent, &lineGap);

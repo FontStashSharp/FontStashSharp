@@ -96,7 +96,7 @@ namespace FontStashSharp
 
 		public void AddFont(byte[] data)
 		{
-			var fontSource = _fontLoader.Load(data);
+			var fontSource = _fontLoader.Load(data, _settings);
 			_fontSources.Add(fontSource);
 		}
 

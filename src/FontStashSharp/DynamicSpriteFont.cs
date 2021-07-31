@@ -60,8 +60,8 @@ namespace FontStashSharp
 			font.GetGlyphMetrics(g.Value, fontSize, out advance, out x0, out y0, out x1, out y1);
 
 			var pad = Math.Max(DynamicFontGlyph.PadFromBlur(FontSystem.BlurAmount), DynamicFontGlyph.PadFromBlur(FontSystem.StrokeAmount));
-			var gw = (x1 - x0) + pad * 2 + FontSystem.KernelWidth;
-			var gh = (y1 - y0) + pad * 2 + FontSystem.KernelHeight;
+			var gw = (x1 - x0) + pad * 2;
+			var gh = (y1 - y0) + pad * 2;
 			var offset = DynamicFontGlyph.PadFromBlur(FontSystem.BlurAmount);
 
 			glyph = new DynamicFontGlyph
