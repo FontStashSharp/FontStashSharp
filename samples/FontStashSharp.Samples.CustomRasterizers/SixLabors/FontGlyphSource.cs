@@ -17,10 +17,7 @@ namespace TrippyGL.Fonts.Building
 	/// </summary>
 	public sealed class FontGlyphSource
 	{
-		/// <summary>The DPI to use for drawing the glyphs.</summary>
 		private const float Dpi = 96;
-
-		/// <summary>The DPI to use for calculations.</summary>
 		private const float PointsPerInch = 72;
 
 		/// <summary>The <see cref="IFontInstance"/> from which this <see cref="FontGlyphSource"/> gets glyph data.</summary>
@@ -60,7 +57,7 @@ namespace TrippyGL.Fonts.Building
 			RectangleF bounds = p.Bounds;
 
 			var area = bounds.Width * bounds.Height;
-			if (!float.IsFinite(area) || area == 0)
+			if (area == 0)
 			{
 				return null;
 			}

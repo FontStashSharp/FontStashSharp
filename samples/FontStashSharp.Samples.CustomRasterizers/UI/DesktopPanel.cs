@@ -1,4 +1,5 @@
 using FontStashSharp.Interfaces;
+using Myra;
 using System;
 using System.IO;
 
@@ -7,7 +8,7 @@ namespace FontStashSharp.Samples.UI
 	public partial class DesktopPanel
 	{
 		private FontSystem _fontSystem;
-		private Func<Stream> _streamOpener;
+		private Func<Stream> _streamOpener = () => DefaultAssets.OpenDefaultFontDataStream();
 		private IFontLoader _fontLoader;
 		private float _fontResolutionFactor = 1.0f;
 		public int _kernelWidth, _kernelHeight;
@@ -102,6 +103,7 @@ namespace FontStashSharp.Samples.UI
 		public DesktopPanel()
 		{
 			BuildUI();
+			UpdateFontSystem();
 		}
 
 		private FontSystem CreateFontSystem()

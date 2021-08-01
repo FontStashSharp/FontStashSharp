@@ -53,14 +53,6 @@ namespace FontStashSharp.Samples.UI
 			_textBoxFont.Text = "(default)";
 		}
 
-		private FontSystem LoadFontSystem(byte[] data)
-		{
-			var result = new FontSystem();
-			result.AddFont(data);
-
-			return result;
-		}
-
 		private void _buttonBrowseFont_Click(object sender, EventArgs e)
 		{
 			var dialog = new FileDialog(FileDialogMode.OpenFile)
@@ -80,6 +72,7 @@ namespace FontStashSharp.Samples.UI
 					var fontSystem = new FontSystem();
 					fontSystem.AddFont(File.ReadAllBytes(dialog.FilePath));
 					_textBoxFont.Text = dialog.FilePath;
+					TextRenderingGame.TopWidget.SetStreamOpener(() => File.OpenRead(dialog.FilePath));
 				}
 				catch(Exception ex)
 				{

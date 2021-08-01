@@ -11,16 +11,10 @@ namespace FontStashSharp.Samples
 	{
 		private readonly List<DesktopPanel> _panels = new List<DesktopPanel>();
 
-		public void AddFontSystem(string title, Func<Stream> streamOpener, IFontLoader fontLoader)
+		public void AddFontSystem(string title, IFontLoader fontLoader)
 		{
-			if (streamOpener == null)
-			{
-				throw new ArgumentNullException(nameof(streamOpener));
-			}
-
 			var panel = new DesktopPanel
 			{
-				StreamOpener = streamOpener,
 				FontLoader = fontLoader
 			};
 

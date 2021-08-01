@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using FontStashSharp.Samples.UI;
 using Myra;
 using FontStashSharp.Samples.SixLabors;
+using FontStashSharp.SharpFont;
 
 namespace FontStashSharp.Samples
 {
@@ -57,8 +58,9 @@ namespace FontStashSharp.Samples
 			_bottomDesktop.Root = _mainPanel;
 
 			_topWidget = new TopWidget();
-			_topWidget.AddFontSystem("StbTrueTypeSharp(default)", DefaultAssets.OpenDefaultFontDataStream, null);
-			_topWidget.AddFontSystem("SixLabors.Fonts", DefaultAssets.OpenDefaultFontDataStream, new SixLaborsFontLoader());
+			_topWidget.AddFontSystem("StbTrueTypeSharp(default)", null);
+			_topWidget.AddFontSystem("SixLabors.Fonts", new SixLaborsFontLoader());
+			_topWidget.AddFontSystem("SharpFont", new SharpFontLoader());
 
 			_topWidget.SetFontSize(32);
 

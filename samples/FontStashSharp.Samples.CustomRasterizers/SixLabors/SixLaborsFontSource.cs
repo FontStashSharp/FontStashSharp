@@ -9,13 +9,11 @@ namespace FontStashSharp.Samples.SixLabors
 {
 	public class SixLaborsFontSource : IFontSource
 	{
-		private byte[] _data;
 		private FontGlyphSource _source;
 		private float AscentBase, DescentBase, LineHeightBase;
 
 		public SixLaborsFontSource(byte[] data)
 		{
-			_data = data;
 			FontInstance fontInstance;
 			using (var ms = new MemoryStream(data))
 			{
