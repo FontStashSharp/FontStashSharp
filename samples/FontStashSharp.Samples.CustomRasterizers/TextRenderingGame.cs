@@ -4,6 +4,7 @@ using FontStashSharp.Samples.UI;
 using Myra;
 using FontStashSharp.Samples.SixLabors;
 using FontStashSharp.SharpFont;
+using FontStashSharp.StbTrueTypeNative;
 
 namespace FontStashSharp.Samples
 {
@@ -59,6 +60,7 @@ namespace FontStashSharp.Samples
 
 			_topWidget = new TopWidget();
 			_topWidget.AddFontSystem("StbTrueTypeSharp(default)", null);
+			// _topWidget.AddFontSystem("StbTrueType(native)", new StbTrueTypeNativeLoader());
 			_topWidget.AddFontSystem("SixLabors.Fonts", new SixLaborsFontLoader());
 			_topWidget.AddFontSystem("SharpFont", new SharpFontLoader());
 

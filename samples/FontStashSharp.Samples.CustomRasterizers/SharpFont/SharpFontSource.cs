@@ -1,7 +1,6 @@
 ﻿using FontStashSharp.Interfaces;
 using SharpFont;
 using System;
-using System.Runtime.InteropServices;
 
 namespace FontStashSharp.SharpFont
 {

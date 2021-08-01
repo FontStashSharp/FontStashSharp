@@ -4,11 +4,7 @@
     <ApplicationIcon />
     <StartupObject />
     <TargetFramework>net472</TargetFramework>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Platforms>x64</Platforms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   
@@ -21,6 +17,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\..\src\XNA\FontStashSharp.MonoGame.csproj" />
+    <ProjectReference Include="..\StbTrueType.Native\StbTrueType.Native.vcxproj" />
   </ItemGroup>
   
   <ItemGroup>
