@@ -17,7 +17,6 @@
   
   <ItemGroup>
     <ProjectReference Include="..\..\src\XNA\FontStashSharp.MonoGame.csproj" />
-    <ProjectReference Include="..\StbTrueType.Native\StbTrueType.Native.vcxproj" />
   </ItemGroup>
   
   <ItemGroup>

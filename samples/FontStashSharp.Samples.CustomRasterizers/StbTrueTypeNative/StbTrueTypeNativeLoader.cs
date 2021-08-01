@@ -1,4 +1,6 @@
-﻿using FontStashSharp.Interfaces;
+﻿#if false
+
+using FontStashSharp.Interfaces;
 
 namespace FontStashSharp.StbTrueTypeNative
 {
@@ -10,3 +12,5 @@ namespace FontStashSharp.StbTrueTypeNative
 		}
 	}
 }
+
+#endif

@@ -4,7 +4,6 @@ using FontStashSharp.Samples.UI;
 using Myra;
 using FontStashSharp.Samples.SixLabors;
 using FontStashSharp.SharpFont;
-using FontStashSharp.StbTrueTypeNative;
 
 namespace FontStashSharp.Samples
 {

@@ -9,7 +9,7 @@ namespace FontStashSharp
 		private int? _lastSize;
 		private float AscentBase, DescentBase, LineHeightBase;
 		private readonly Int32Map<int> _kernings = new Int32Map<int>();
-		private readonly FontSystemSettings _settings;
+		private readonly FontLoaderSettings _settings;
 
 		public float Ascent { get; private set; }
 		public float Descent { get; private set; }
@@ -18,23 +18,26 @@ namespace FontStashSharp
 
 		public stbtt_fontinfo _font;
 
-		public StbTrueTypeSharpFontSource(byte[] data, FontSystemSettings settings)
+		public StbTrueTypeSharpFontSource(byte[] data, FontLoaderSettings settings)
 		{
 			if (data == null)
 			{
 				throw new ArgumentNullException(nameof(data));
 			}
 
-			if (settings == null)
-	  {
-				throw new ArgumentNullException(nameof(settings));
-	  }
-
 			_font = CreateFont(data, 0);
 			if (_font == null)
 				throw new Exception("stbtt_InitFont failed");
 
 			_settings = settings;
+
+			int ascent, descent, lineGap;
+			stbtt_GetFontVMetrics(_font, &ascent, &descent, &lineGap);
+
+			var fh = ascent - descent;
+			AscentBase = ascent / (float)fh;
+			DescentBase = descent / (float)fh;
+			LineHeightBase = (fh + lineGap) / (float)fh;
 		}
 
 		~StbTrueTypeSharpFontSource()
@@ -133,21 +136,6 @@ namespace FontStashSharp
 			}
 			
 			return (int)(result * Scale);
-		}
-
-		public static StbTrueTypeSharpFontSource FromMemory(byte[] data, FontSystemSettings settings)
-		{
-			var font = new StbTrueTypeSharpFontSource(data, settings);
-
-			int ascent, descent, lineGap;
-			stbtt_GetFontVMetrics(font._font , &ascent, &descent, &lineGap);
-
-			var fh = ascent - descent;
-			font.AscentBase = ascent / (float)fh;
-			font.DescentBase = descent / (float)fh;
-			font.LineHeightBase = (fh + lineGap) / (float)fh;
-
-			return font;
 		}
 	}
 }

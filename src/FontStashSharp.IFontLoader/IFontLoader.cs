@@ -54,11 +54,17 @@ namespace FontStashSharp.Interfaces
 		int GetGlyphKernAdvance(int previousGlyphId, int glyphId, int fontSize);
 	}
 
+	public struct FontLoaderSettings
+  {
+		public int KernelWidth;
+		public int KernelHeight;
+  }
+
 	/// <summary>
 	/// Font Rasterization Service
 	/// </summary>
 	public interface IFontLoader
 	{
-		IFontSource Load(byte[] data, FontSystemSettings settings);
+		IFontSource Load(byte[] data, FontLoaderSettings settings);
 	}
 }
