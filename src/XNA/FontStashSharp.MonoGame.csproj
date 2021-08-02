@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
     <PackageId>FontStashSharp.MonoGame</PackageId>
@@ -23,9 +23,5 @@
   <ItemGroup>
     <Compile Include="..\FontStashSharp\**\*.cs" LinkBase="FontStashSharp" />
     <Compile Remove="..\FontStashSharp\obj\**\*.cs" LinkBase="FontStashSharp" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\FontStashSharp.IFontLoader\FontStashSharp.IFontLoader.csproj" />
   </ItemGroup>
 </Project>
