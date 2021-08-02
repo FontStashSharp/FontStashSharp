@@ -23,8 +23,6 @@ namespace FontStashSharp
 		private readonly Int32Map<DynamicSpriteFont> _fonts = new Int32Map<DynamicSpriteFont>();
 		private readonly FontSystemSettings _settings;
 
-		private readonly IFontLoader _fontLoader;
-
 		private FontAtlas _currentAtlas;
 
 		public FontSystemEffect Effect => _settings.Effect;
@@ -55,25 +53,30 @@ namespace FontStashSharp
 		public List<FontAtlas> Atlases { get; } = new List<FontAtlas>();
 
 		public event EventHandler CurrentAtlasFull;
+		private readonly IFontLoader _fontLoader;
 
-		public FontSystem(IFontLoader fontLoader, FontSystemSettings settings)
+		public FontSystem(FontSystemSettings settings)
 		{
-			if (fontLoader == null)
-			{
-				throw new ArgumentNullException(nameof(fontLoader));
-			}
-
 			if (settings == null)
 			{
 				throw new ArgumentNullException(nameof(settings));
 			}
 
-			_fontLoader = fontLoader;
 			_settings = settings.Clone();
-		}
 
-		public FontSystem(FontSystemSettings settings) : this(StbTrueTypeSharpFontLoader.Instance, settings)
-		{
+			if (_settings.FontLoader == null)
+			{
+				var loaderSettings = new StbTrueTypeSharpSettings
+				{
+					KernelWidth = _settings.KernelWidth,
+					KernelHeight = _settings.KernelHeight
+				};
+				_fontLoader = new StbTrueTypeSharpFontLoader(loaderSettings);
+			}
+			else
+			{
+				_fontLoader = _settings.FontLoader;
+			}
 		}
 
 		public FontSystem() : this(FontSystemSettings.Default)
@@ -96,13 +99,7 @@ namespace FontStashSharp
 
 		public void AddFont(byte[] data)
 		{
-			var fontLoaderSettings = new FontLoaderSettings
-			{
-				KernelWidth = _settings.KernelWidth,
-				KernelHeight = _settings.KernelHeight
-			};
-
-			var fontSource = _fontLoader.Load(data, fontLoaderSettings);
+			var fontSource = _fontLoader.Load(data);
 			_fontSources.Add(fontSource);
 		}
 

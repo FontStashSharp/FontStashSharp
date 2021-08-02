@@ -9,7 +9,7 @@ namespace FontStashSharp
 		private int? _lastSize;
 		private float AscentBase, DescentBase, LineHeightBase;
 		private readonly Int32Map<int> _kernings = new Int32Map<int>();
-		private readonly FontLoaderSettings _settings;
+		private readonly StbTrueTypeSharpSettings _settings;
 
 		public float Ascent { get; private set; }
 		public float Descent { get; private set; }
@@ -18,7 +18,7 @@ namespace FontStashSharp
 
 		public stbtt_fontinfo _font;
 
-		public StbTrueTypeSharpFontSource(byte[] data, FontLoaderSettings settings)
+		public StbTrueTypeSharpFontSource(byte[] data, StbTrueTypeSharpSettings settings)
 		{
 			if (data == null)
 			{

@@ -112,10 +112,11 @@ namespace FontStashSharp.Samples.UI
 			{
 				FontResolutionFactor = _fontResolutionFactor,
 				KernelWidth = _kernelWidth,
-				KernelHeight = _kernelHeight
+				KernelHeight = _kernelHeight,
+				FontLoader = _fontLoader
 			};
 
-			var result = _fontLoader != null ? new FontSystem(_fontLoader, settings) : new FontSystem(settings);
+			var result = new FontSystem(settings);
 
 			byte[] data;
 

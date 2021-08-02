@@ -21,8 +21,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.Scal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.CustomRasterizers.MonoGame", "..\samples\FontStashSharp.Samples.CustomRasterizers\FontStashSharp.Samples.CustomRasterizers.MonoGame.csproj", "{8A654C3C-6EC2-444A-B492-76CF2DE57CE0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StbTrueType.Native", "..\samples\StbTrueType.Native\StbTrueType.Native.vcxproj", "{3757B167-92B4-4DE9-8F8B-7EDBE8E23109}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.IFontLoader", "..\src\FontStashSharp.IFontLoader\FontStashSharp.IFontLoader.csproj", "{AEB5D643-F2EC-4991-8D52-E28BBA1516ED}"
 EndProject
 Global
@@ -63,9 +61,6 @@ Global
 		{8A654C3C-6EC2-444A-B492-76CF2DE57CE0}.Debug|Any CPU.Build.0 = Debug|x64
 		{8A654C3C-6EC2-444A-B492-76CF2DE57CE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A654C3C-6EC2-444A-B492-76CF2DE57CE0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3757B167-92B4-4DE9-8F8B-7EDBE8E23109}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{3757B167-92B4-4DE9-8F8B-7EDBE8E23109}.Debug|Any CPU.Build.0 = Debug|x64
-		{3757B167-92B4-4DE9-8F8B-7EDBE8E23109}.Release|Any CPU.ActiveCfg = Release|x64
 		{AEB5D643-F2EC-4991-8D52-E28BBA1516ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AEB5D643-F2EC-4991-8D52-E28BBA1516ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEB5D643-F2EC-4991-8D52-E28BBA1516ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -81,7 +76,6 @@ Global
 		{128B548A-8D25-410A-AA0A-B59E586CED75} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
 		{C463718B-B31D-4CD1-97A4-071BAB0ACC9B} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
 		{8A654C3C-6EC2-444A-B492-76CF2DE57CE0} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
-		{3757B167-92B4-4DE9-8F8B-7EDBE8E23109} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {35ACDF4E-2CE2-46B1-A19F-35DC131069A1}

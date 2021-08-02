@@ -4,7 +4,6 @@
     <ApplicationIcon />
     <StartupObject />
     <TargetFramework>net472</TargetFramework>
-    <Platforms>x64</Platforms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   

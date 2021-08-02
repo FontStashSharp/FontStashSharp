@@ -1,4 +1,5 @@
 ﻿using System;
+using FontStashSharp.Interfaces;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
@@ -130,7 +131,16 @@ namespace FontStashSharp
 		/// If this is set, then TextureWidth & TextureHeight are ignored
 		/// </summary>
 		public Texture2D ExistingTexture { get; set; }
+
+		/// <summary>
+		/// Defines rectangle of the used space in the ExistingTexture
+		/// </summary>
 		public Rectangle ExistingTextureUsedSpace { get; set; }
+
+		/// <summary>
+		/// Font Rasterizer. If set to null then default rasterizer(StbTrueTypeSharp) is used.
+		/// </summary>
+		public IFontLoader FontLoader { get; set; }
 
 		public FontSystemSettings Clone()
 		{
@@ -145,7 +155,8 @@ namespace FontStashSharp
 				KernelWidth = KernelWidth,
 				KernelHeight = KernelHeight,
 				ExistingTexture = ExistingTexture,
-				ExistingTextureUsedSpace = ExistingTextureUsedSpace
+				ExistingTextureUsedSpace = ExistingTextureUsedSpace,
+				FontLoader = FontLoader
 			};
 		}
 	}
