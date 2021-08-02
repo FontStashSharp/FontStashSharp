@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\FNA\FNA.csproj" />
+    <ProjectReference Include="..\FontStashSharp.IFontLoader\FontStashSharp.IFontLoader.csproj" />
   </ItemGroup>
   
   <ItemGroup>

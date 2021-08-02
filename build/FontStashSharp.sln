@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.Mono
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.MonoGameBackendRotating", "..\samples\FontStashSharp.Samples.MonoGameBackendRotating\FontStashSharp.Samples.MonoGameBackendRotating.csproj", "{4047DB36-7104-4314-9027-507374CD1532}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.IFontLoader", "..\src\FontStashSharp.IFontLoader\FontStashSharp.IFontLoader.csproj", "{D374E7C2-4017-4471-AF1D-96B8A88FDFB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{4047DB36-7104-4314-9027-507374CD1532}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4047DB36-7104-4314-9027-507374CD1532}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4047DB36-7104-4314-9027-507374CD1532}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D374E7C2-4017-4471-AF1D-96B8A88FDFB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D374E7C2-4017-4471-AF1D-96B8A88FDFB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D374E7C2-4017-4471-AF1D-96B8A88FDFB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D374E7C2-4017-4471-AF1D-96B8A88FDFB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
