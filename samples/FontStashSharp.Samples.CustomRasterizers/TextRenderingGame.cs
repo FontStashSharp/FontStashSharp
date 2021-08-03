@@ -61,7 +61,7 @@ namespace FontStashSharp.Samples
 			_topWidget.AddFontSystem("StbTrueTypeSharp(default)", null);
 			// _topWidget.AddFontSystem("StbTrueType(native)", new StbTrueTypeNativeLoader());
 			_topWidget.AddFontSystem("SixLabors.Fonts", new SixLaborsFontLoader());
-			_topWidget.AddFontSystem("SharpFont", new SharpFontLoader());
+			_topWidget.AddFontSystem("FreeType", new FreeTypeLoader());
 
 			_topWidget.SetFontSize(32);
 

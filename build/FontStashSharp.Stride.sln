@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.Stat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.RotatingText.Stride", "..\samples\FontStashSharp.Samples.RotatingText\FontStashSharp.Samples.RotatingText.Stride.csproj", "{E8B2F7BE-292B-4069-BEE8-211EB592D050}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.IFontLoader", "..\src\FontStashSharp.IFontLoader\FontStashSharp.IFontLoader.csproj", "{3568AB20-B42A-41BB-800B-DC38A9FC6835}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,10 +35,6 @@ Global
 		{E8B2F7BE-292B-4069-BEE8-211EB592D050}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8B2F7BE-292B-4069-BEE8-211EB592D050}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8B2F7BE-292B-4069-BEE8-211EB592D050}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3568AB20-B42A-41BB-800B-DC38A9FC6835}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3568AB20-B42A-41BB-800B-DC38A9FC6835}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3568AB20-B42A-41BB-800B-DC38A9FC6835}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3568AB20-B42A-41BB-800B-DC38A9FC6835}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

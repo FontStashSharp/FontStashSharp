@@ -24,8 +24,4 @@
     <Compile Include="..\FontStashSharp\**\*.cs" LinkBase="FontStashSharp" />
     <Compile Remove="..\FontStashSharp\obj\**\*.cs" LinkBase="FontStashSharp" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\FontStashSharp.IFontLoader\FontStashSharp.IFontLoader.csproj" />
-  </ItemGroup>
 </Project>
