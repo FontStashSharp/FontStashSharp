@@ -33,3 +33,4 @@ Stroked Text:
 * [stb](https://github.com/nothings/stb)
 * [bartwe's fork of SpriteFontPlus](https://github.com/bartwe/SpriteFontPlus)
 * [MonoGame](http://www.monogame.net/)
+* [SharpFont](https://github.com/Robmaister/SharpFont)
