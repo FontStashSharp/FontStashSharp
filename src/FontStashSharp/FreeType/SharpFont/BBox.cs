@@ -28,14 +28,14 @@ using System.Runtime.InteropServices;
 using FT_Long = System.IntPtr;
 using FT_ULong = System.UIntPtr;
 
-namespace SharpFont
+namespace SharpFontInternal
 {
 	/// <summary>
 	/// A structure used to hold an outline's bounding box, i.e., the
 	/// coordinates of its extrema in the horizontal and vertical directions.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-	public struct BBox : IEquatable<BBox>
+	internal struct BBox : IEquatable<BBox>
 	{
 		#region Fields
 

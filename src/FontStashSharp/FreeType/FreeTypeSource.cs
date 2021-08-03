@@ -1,6 +1,5 @@
 ﻿using FontStashSharp.Interfaces;
-using SharpFont;
-using SharpFont.Internal;
+using SharpFontInternal;
 using System;
 using System.Runtime.InteropServices;
 

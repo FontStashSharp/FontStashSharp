@@ -25,7 +25,7 @@ SOFTWARE.*/
 using System;
 using System.Runtime.InteropServices;
 
-namespace SharpFont.Internal
+namespace SharpFontInternal
 {
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct GenericRec

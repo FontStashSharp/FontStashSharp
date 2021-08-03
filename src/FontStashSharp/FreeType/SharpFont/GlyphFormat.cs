@@ -24,13 +24,13 @@ SOFTWARE.*/
 
 using System;
 
-namespace SharpFont
+namespace SharpFontInternal
 {
 	/// <summary>
 	/// An enumeration type used to describe the format of a given glyph image. Note that this version of FreeType only
 	/// supports two image formats, even though future font drivers will be able to register their own format.
 	/// </summary>
-	public enum GlyphFormat : uint
+	internal enum GlyphFormat : uint
 	{
 		/// <summary>
 		/// The value 0 is reserved.

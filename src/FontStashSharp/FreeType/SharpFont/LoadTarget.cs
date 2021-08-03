@@ -24,7 +24,7 @@ SOFTWARE.*/
 
 using System;
 
-namespace SharpFont
+namespace SharpFontInternal
 {
 	/// <summary><para>
 	/// A list of values that are used to select a specific hinting algorithm to use by the hinter. You should OR one
@@ -53,7 +53,7 @@ namespace SharpFont
 	/// FT_Render_Glyph( face->glyph, FT_RENDER_MODE_LCD );
 	/// </code>
 	/// </para></remarks>
-	public enum LoadTarget
+	internal enum LoadTarget
 	{
 		/// <summary>
 		/// This corresponds to the default hinting algorithm, optimized for standard gray-level rendering. For

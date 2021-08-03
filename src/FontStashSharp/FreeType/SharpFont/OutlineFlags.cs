@@ -24,7 +24,7 @@ SOFTWARE.*/
 
 using System;
 
-namespace SharpFont
+namespace SharpFontInternal
 {
 	/// <summary>
 	/// A list of bit-field constants use for the flags in an outline's ‘flags’ field.
@@ -40,7 +40,7 @@ namespace SharpFont
 	/// ‘ttinst1.doc’) how simple drop-outs, smart drop-outs, and stubs are defined.
 	/// </para></remarks>
 	[Flags]
-	public enum OutlineFlags
+	internal enum OutlineFlags
 	{
 		/// <summary>
 		/// Value 0 is reserved.

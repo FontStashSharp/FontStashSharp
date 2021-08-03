@@ -24,7 +24,7 @@ SOFTWARE.*/
 
 using System;
 
-namespace SharpFont
+namespace SharpFontInternal
 {
 	/// <summary><para>
 	/// An enumeration type that lists the render modes supported by FreeType 2. Each mode corresponds to a specific
@@ -44,7 +44,7 @@ namespace SharpFont
 	/// mode like <see cref="PixelMode.Mono"/>. You can use <see cref="FTBitmap.Convert"/> to transform them into 8-bit
 	/// pixmaps.
 	/// </para></remarks>
-	public enum RenderMode
+	internal enum RenderMode
 	{
 		/// <summary>
 		/// This is the default render mode; it corresponds to 8-bit anti-aliased bitmaps.

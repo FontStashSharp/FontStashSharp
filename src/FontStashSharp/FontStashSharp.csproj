@@ -17,9 +17,5 @@
     <PackageReference Include="StbImageSharp" Version="$(StbImageSharpVersion)" />
     <PackageReference Include="StbTrueTypeSharp" Version="$(StbTrueTypeSharpVersion)" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
-  </ItemGroup>   
-  
-  <ItemGroup>
-    <ProjectReference Include="..\FontStashSharp.IFontLoader\FontStashSharp.IFontLoader.csproj" />
   </ItemGroup>
 </Project>

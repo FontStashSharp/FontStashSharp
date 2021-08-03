@@ -24,7 +24,7 @@ SOFTWARE.*/
 
 using System;
 
-namespace SharpFont
+namespace SharpFontInternal
 {
 	/// <summary>
 	/// FreeType error codes.

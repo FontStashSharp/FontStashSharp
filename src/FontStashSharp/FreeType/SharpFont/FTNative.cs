@@ -1,8 +1,7 @@
-﻿using SharpFont;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
-namespace FontStashSharp
+namespace SharpFontInternal
 {
 	internal static class FTNative
 	{

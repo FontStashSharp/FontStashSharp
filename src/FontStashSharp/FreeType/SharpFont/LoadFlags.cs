@@ -24,7 +24,7 @@ SOFTWARE.*/
 
 using System;
 
-namespace SharpFont
+namespace SharpFontInternal
 {
 	/// <summary>
 	/// A list of bit-field constants used with <see cref="Face.LoadGlyph"/> to indicate what kind of operations to
@@ -43,7 +43,7 @@ namespace SharpFont
 	/// <see cref="LoadTarget"/> for details.
 	/// </para></remarks>
 	[Flags]
-	public enum LoadFlags : uint
+	internal enum LoadFlags : uint
 	{
 		/// <summary>
 		/// Corresponding to 0, this value is used as the default glyph load operation. In this case, the following
