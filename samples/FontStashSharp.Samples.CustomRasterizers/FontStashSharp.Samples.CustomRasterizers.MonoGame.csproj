@@ -18,7 +18,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <None Update="freetype6.dll">
+    <None Update="freetype.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
