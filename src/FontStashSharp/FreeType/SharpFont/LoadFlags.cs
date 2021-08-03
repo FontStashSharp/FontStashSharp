@@ -43,7 +43,6 @@ namespace SharpFont
 	/// <see cref="LoadTarget"/> for details.
 	/// </para></remarks>
 	[Flags]
-	[CLSCompliant(false)]
 	public enum LoadFlags : uint
 	{
 		/// <summary>
