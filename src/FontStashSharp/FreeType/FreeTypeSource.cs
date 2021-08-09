@@ -14,7 +14,6 @@ namespace FontStashSharp
 		private GCHandle _memoryHandle;
 		private IntPtr _faceHandle;
 		private readonly FaceRec _rec;
-		private float AscentBase, DescentBase, LineHeightBase;
 
 		public FreeTypeSource(byte[] data)
 		{
@@ -40,11 +39,6 @@ namespace FontStashSharp
 
 			_faceHandle = faceRef;
 			_rec = PInvokeHelper.PtrToStructure<FaceRec>(_faceHandle);
-
-			var fh = _rec.ascender - _rec.descender;
-			AscentBase = _rec.ascender / (float)fh;
-			DescentBase = _rec.descender / (float)fh;
-			LineHeightBase = _rec.height / (float)fh;
 		}
 
 		~FreeTypeSource()
@@ -110,11 +104,11 @@ namespace FontStashSharp
 			y1 = y0 + ((int)glyph.metrics.height >> 6);
 		}
 
-		public void GetMetricsForSize(int fontSize, out float ascent, out float descent, out float lineHeight)
+		public void GetMetrics(out float ascent, out float descent, out float lineHeight)
 		{
-			ascent = fontSize * AscentBase;
-			descent = fontSize * DescentBase;
-			lineHeight = fontSize * LineHeightBase;
+			ascent = _rec.ascender;
+			descent = _rec.descender;
+			lineHeight = _rec.height;
 		}
 
 		public unsafe void RasterizeGlyphBitmap(int glyphId, int fontSize, byte[] buffer, int startIndex, int outWidth, int outHeight, int outStride)

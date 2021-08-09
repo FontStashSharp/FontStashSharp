@@ -142,7 +142,12 @@ namespace FontStashSharp
 				}
 
 				float descent;
-				glyph.Font.GetMetricsForSize(fontSize, out ascent, out descent, out lineHeight);
+				glyph.Font.GetMetrics(out ascent, out descent, out lineHeight);
+				var fh = ascent - descent;
+				var scale = fontSize / (float)fh;
+				ascent *= scale;
+				lineHeight *= scale;
+
 				lineHeight += FontSystem.LineSpacing;
 				break;
 			}
@@ -165,7 +170,12 @@ namespace FontStashSharp
 				}
 
 				float descent;
-				glyph.Font.GetMetricsForSize(fontSize, out ascent, out descent, out lineHeight);
+				glyph.Font.GetMetrics(out ascent, out descent, out lineHeight);
+
+				var fh = ascent - descent;
+				var scale = fontSize / (float)fh;
+				ascent *= scale;
+				lineHeight *= scale;
 				break;
 			}
 		}
