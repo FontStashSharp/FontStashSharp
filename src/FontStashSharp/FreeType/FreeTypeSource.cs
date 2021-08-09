@@ -104,11 +104,14 @@ namespace FontStashSharp
 			y1 = y0 + ((int)glyph.metrics.height >> 6);
 		}
 
-		public void GetMetrics(out float ascent, out float descent, out float lineHeight)
+		public void GetMetricsForSize(int fontSize, out float ascent, out float descent, out float lineHeight)
 		{
-			ascent = _rec.ascender;
-			descent = _rec.descender;
-			lineHeight = _rec.height;
+			SetPixelSizes(0, fontSize);
+			var sizeRec = PInvokeHelper.PtrToStructure<SizeRec>(_rec.size);
+
+			ascent = (int)sizeRec.metrics.ascender >> 6;
+			descent = (int)sizeRec.metrics.descender >> 6;
+			lineHeight = (int)sizeRec.metrics.height >> 6;
 		}
 
 		public unsafe void RasterizeGlyphBitmap(int glyphId, int fontSize, byte[] buffer, int startIndex, int outWidth, int outHeight, int outStride)

@@ -10,7 +10,7 @@ namespace FontStashSharp.Samples.SixLabors
 	public class SixLaborsFontSource : IFontSource
 	{
 		private FontGlyphSource _source;
-		private float _ascent, _descent, _lineHeight;
+		private float AscentBase, DescentBase, LineHeightBase;
 
 		public SixLaborsFontSource(byte[] data)
 		{
@@ -19,10 +19,12 @@ namespace FontStashSharp.Samples.SixLabors
 			{
 				fontInstance = FontInstance.LoadFont(ms);
 				_source = new FontGlyphSource(fontInstance);
-				_ascent = fontInstance.Ascender;
-				_descent = fontInstance.Descender;
-				_lineHeight = fontInstance.LineHeight;
 			}
+
+			var fh = fontInstance.Ascender - fontInstance.Descender;
+			AscentBase = fontInstance.Ascender / (float)fh;
+			DescentBase = fontInstance.Descender / (float)fh;
+			LineHeightBase = fontInstance.LineHeight / (float)fh;
 		}
 
 		public void Dispose()
@@ -51,11 +53,11 @@ namespace FontStashSharp.Samples.SixLabors
 			y1 = path.Bounds.Bottom;
 		}
 
-		public void GetMetrics(out float ascent, out float descent, out float lineHeight)
+		public void GetMetricsForSize(int fontSize, out float ascent, out float descent, out float lineHeight)
 		{
-			ascent = _ascent;
-			descent = _descent;
-			lineHeight = _lineHeight;
+			ascent = fontSize * AscentBase;
+			descent = fontSize * DescentBase;
+			lineHeight = fontSize * LineHeightBase;
 		}
 
 		public void RasterizeGlyphBitmap(int glyphId, int fontSize, byte[] buffer, int startIndex, int outWidth, int outHeight, int outStride)
