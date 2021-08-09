@@ -4,7 +4,7 @@ using static StbTrueTypeSharp.StbTrueType;
 
 namespace FontStashSharp
 {
-	internal unsafe class StbTrueTypeSharpFontSource: IFontSource
+	internal unsafe class StbTrueTypeSharpSource: IFontSource
 	{
 		private int? _lastSize;
 		private readonly Int32Map<int> _kernings = new Int32Map<int>();
@@ -13,7 +13,7 @@ namespace FontStashSharp
 
 		public stbtt_fontinfo _font;
 
-		public StbTrueTypeSharpFontSource(byte[] data, StbTrueTypeSharpSettings settings)
+		public StbTrueTypeSharpSource(byte[] data, StbTrueTypeSharpSettings settings)
 		{
 			if (data == null)
 			{
@@ -34,7 +34,7 @@ namespace FontStashSharp
 			_lineHeight = ascent - descent + lineGap;
 		}
 
-		~StbTrueTypeSharpFontSource()
+		~StbTrueTypeSharpSource()
 		{
 			Dispose(false);
 		}

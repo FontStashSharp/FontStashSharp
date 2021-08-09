@@ -71,7 +71,7 @@ namespace FontStashSharp
 					KernelWidth = _settings.KernelWidth,
 					KernelHeight = _settings.KernelHeight
 				};
-				_fontLoader = new StbTrueTypeSharpFontLoader(loaderSettings);
+				_fontLoader = new StbTrueTypeSharpLoader(loaderSettings);
 			}
 			else
 			{
