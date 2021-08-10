@@ -7,9 +7,6 @@ namespace FontStashSharp
 {
 	internal class FreeTypeSource: IFontSource
 	{
-		private const float Dpi = 96;
-		private const float PointsPerInch = 72;
-
 		private static IntPtr _libraryHandle;
 		private GCHandle _memoryHandle;
 		private IntPtr _faceHandle;
@@ -51,11 +48,11 @@ namespace FontStashSharp
 			if (_faceHandle != IntPtr.Zero)
 			{
 				FTNative.FT_Done_Face(_faceHandle);
-				if (_memoryHandle.IsAllocated)
-					_memoryHandle.Free();
-
 				_faceHandle = IntPtr.Zero;
 			}
+
+			if (_memoryHandle.IsAllocated)
+				_memoryHandle.Free();
 		}
 
 		public void Dispose()
