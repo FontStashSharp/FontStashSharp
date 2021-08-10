@@ -67,7 +67,7 @@ namespace FontStashSharp
 			}
 
 			Ascent = (int)(AscentBase * size + 0.5f);
-			Descent = (int)(DescentBase * size + 0.5f);
+			Descent = (int)(DescentBase * size - 0.5f);
 			LineHeight = (int)(LineHeightBase * size + 0.5f);
 			Scale = stbtt_ScaleForPixelHeight(_font, size);
 			_lastSize = size;

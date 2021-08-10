@@ -56,7 +56,7 @@ namespace FontStashSharp.Samples.SixLabors
 		public void GetMetricsForSize(int fontSize, out int ascent, out int descent, out int lineHeight)
 		{
 			ascent = (int)(fontSize * AscentBase + 0.5f);
-			descent = (int)(fontSize * DescentBase + 0.5f);
+			descent = (int)(fontSize * DescentBase - 0.5f);
 			lineHeight = (int)(fontSize * LineHeightBase + 0.5f);
 		}
 
