@@ -116,7 +116,17 @@ namespace FontStashSharp
 				return result;
 			}
 
-			result = new DynamicSpriteFont(this, fontSize);
+			if (_fontSources.Count == 0)
+			{
+				throw new Exception("Could not create a font without a single font source. Use AddFont to add at least one font source.");
+			}
+
+			var fontSource = _fontSources[0];
+
+			int ascent, descent, lineHeight;
+			fontSource.GetMetricsForSize(fontSize, out ascent, out descent, out lineHeight);
+
+			result = new DynamicSpriteFont(this, fontSize, lineHeight);
 			_fonts[fontSize] = result;
 			return result;
 		}

@@ -15,14 +15,14 @@ using System.Numerics;
 
 namespace FontStashSharp
 {
-	public partial class DynamicSpriteFont: SpriteFontBase
+	public partial class DynamicSpriteFont : SpriteFontBase
 	{
 		internal readonly Int32Map<DynamicFontGlyph> Glyphs = new Int32Map<DynamicFontGlyph>();
 		internal readonly Int32Map<DynamicFontGlyph> GlyphsWithoutBitmap = new Int32Map<DynamicFontGlyph>();
 
 		public FontSystem FontSystem { get; private set; }
 
-		internal DynamicSpriteFont(FontSystem system, int size): base(size)
+		internal DynamicSpriteFont(FontSystem system, int size, int lineHeight) : base(size, lineHeight)
 		{
 			if (system == null)
 			{
@@ -56,7 +56,7 @@ namespace FontStashSharp
 			}
 
 			int advance = 0, x0 = 0, y0 = 0, x1 = 0, y1 = 0;
-			var fontSize = (int) (FontSize * (withoutBitmap ? 1 : FontSystem.FontResolutionFactor));
+			var fontSize = (int)(FontSize * (withoutBitmap ? 1 : FontSystem.FontResolutionFactor));
 			font.GetGlyphMetrics(g.Value, fontSize, out advance, out x0, out y0, out x1, out y1);
 
 			var pad = Math.Max(DynamicFontGlyph.PadFromBlur(FontSystem.BlurAmount), DynamicFontGlyph.PadFromBlur(FontSystem.StrokeAmount));
@@ -121,11 +121,11 @@ namespace FontStashSharp
 #else
 		protected internal override FontGlyph GetGlyph(ITexture2DManager device, int codepoint)
 #endif
-	{
+		{
 			return GetDynamicGlyph(device, codepoint);
-	}
+		}
 
-	protected override void PreDraw(string str, out float ascent, out float lineHeight, bool withoutBitmap)
+		protected override void PreDraw(string str, out int ascent, out int lineHeight, bool withoutBitmap)
 		{
 			// Determine ascent and lineHeight from first character
 			ascent = 0;
@@ -141,14 +141,14 @@ namespace FontStashSharp
 					continue;
 				}
 
-				float descent;
+				int descent;
 				glyph.Font.GetMetricsForSize(fontSize, out ascent, out descent, out lineHeight);
 				lineHeight += FontSystem.LineSpacing;
 				break;
 			}
 		}
 
-		protected override void PreDraw(StringBuilder str, out float ascent, out float lineHeight, bool withoutBitmap)
+		protected override void PreDraw(StringBuilder str, out int ascent, out int lineHeight, bool withoutBitmap)
 		{
 			// Determine ascent and lineHeight from first character
 			ascent = 0;
@@ -164,15 +164,17 @@ namespace FontStashSharp
 					continue;
 				}
 
-				float descent;
+				int descent;
 				glyph.Font.GetMetricsForSize(fontSize, out ascent, out descent, out lineHeight);
+				lineHeight += FontSystem.LineSpacing;
 				break;
 			}
 		}
 
 		public override float TextBounds(string str, Vector2 position, ref Bounds bounds, Vector2 scale)
 		{
-			if (string.IsNullOrEmpty(str)) return 0.0f;
+			if (string.IsNullOrEmpty(str))
+				return 0.0f;
 
 			var result = base.TextBounds(str, position, ref bounds, scale);
 
@@ -183,7 +185,8 @@ namespace FontStashSharp
 
 		public override float TextBounds(StringBuilder str, Vector2 position, ref Bounds bounds, Vector2 scale)
 		{
-			if (str == null || str.Length == 0) return 0.0f;
+			if (str == null || str.Length == 0)
+				return 0.0f;
 
 			var result = base.TextBounds(str, position, ref bounds, scale);
 

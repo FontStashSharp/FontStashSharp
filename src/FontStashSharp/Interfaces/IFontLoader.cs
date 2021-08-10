@@ -11,7 +11,7 @@ namespace FontStashSharp.Interfaces
 		/// <param name="ascent"></param>
 		/// <param name="descent"></param>
 		/// <param name="lineHeight"></param>
-		void GetMetricsForSize(int fontSize, out float ascent, out float descent, out float lineHeight);
+		void GetMetricsForSize(int fontSize, out int ascent, out int descent, out int lineHeight);
 
 		/// <summary>
 		/// Returns Id of a glyph corresponding to a codepoint

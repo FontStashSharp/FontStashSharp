@@ -56,7 +56,7 @@ namespace FontStashSharp
 
 		public bool UseKernings { get; set; } = true;
 
-		public StaticSpriteFont(int fontSize): base(fontSize)
+		public StaticSpriteFont(int fontSize, int lineHeight): base(fontSize, lineHeight)
 		{
 		}
 
@@ -82,16 +82,16 @@ namespace FontStashSharp
 			return result;
 		}
 
-		protected override void PreDraw(string str, out float ascent, out float lineHeight, bool withoutBitmap)
+		protected override void PreDraw(string str, out int ascent, out int lineHeight, bool withoutBitmap)
 		{
 			ascent = 0;
-			lineHeight = FontSize + LineSpacing;
+			lineHeight = LineHeight + LineSpacing;
 		}
 
-		protected override void PreDraw(StringBuilder str, out float ascent, out float lineHeight, bool withoutBitmap)
+		protected override void PreDraw(StringBuilder str, out int ascent, out int lineHeight, bool withoutBitmap)
 		{
 			ascent = 0;
-			lineHeight = FontSize + LineSpacing;
+			lineHeight = LineHeight + LineSpacing;
 		}
 
 		private static int KerningKey(int codepoint1, int codepoint2)
@@ -147,7 +147,7 @@ namespace FontStashSharp
 
 		private static StaticSpriteFont FromBMFont(BitmapFont bmFont, Func<string, TextureWithOffset> textureGetter)
 		{
-			var result = new StaticSpriteFont(bmFont.LineHeight);
+			var result = new StaticSpriteFont(bmFont.LineHeight, bmFont.LineHeight);
 
 			var characters = bmFont.Characters.Values.OrderBy(c => c.Char);
 

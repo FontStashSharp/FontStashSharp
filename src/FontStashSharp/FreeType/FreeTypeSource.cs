@@ -64,7 +64,16 @@ namespace FontStashSharp
 			GC.SuppressFinalize(this);
 		}
 
-		public int? GetGlyphId(int codepoint) => (int?)FTNative.FT_Get_Char_Index(_faceHandle, (uint)codepoint);
+		public int? GetGlyphId(int codepoint)
+		{
+			var result = FTNative.FT_Get_Char_Index(_faceHandle, (uint)codepoint);
+			if (result == 0)
+			{
+				return null;
+			}
+
+			return (int?)result;
+		}
 
 		public int GetGlyphKernAdvance(int previousGlyphId, int glyphId, int fontSize)
 		{
@@ -104,7 +113,7 @@ namespace FontStashSharp
 			y1 = y0 + ((int)glyph.metrics.height >> 6);
 		}
 
-		public void GetMetricsForSize(int fontSize, out float ascent, out float descent, out float lineHeight)
+		public void GetMetricsForSize(int fontSize, out int ascent, out int descent, out int lineHeight)
 		{
 			SetPixelSizes(0, fontSize);
 			var sizeRec = PInvokeHelper.PtrToStructure<SizeRec>(_rec.size);

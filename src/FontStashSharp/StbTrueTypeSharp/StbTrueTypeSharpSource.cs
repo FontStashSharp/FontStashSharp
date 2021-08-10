@@ -11,9 +11,9 @@ namespace FontStashSharp
 		private readonly Int32Map<int> _kernings = new Int32Map<int>();
 		private readonly StbTrueTypeSharpSettings _settings;
 
-		public float Ascent { get; private set; }
-		public float Descent { get; private set; }
-		public float LineHeight { get; private set; }
+		public int Ascent { get; private set; }
+		public int Descent { get; private set; }
+		public int LineHeight { get; private set; }
 		public float Scale { get; private set; }
 
 		public stbtt_fontinfo _font;
@@ -66,14 +66,14 @@ namespace FontStashSharp
 				return;
 			}
 
-			Ascent = AscentBase * size;
-			Descent = DescentBase * size;
-			LineHeight = LineHeightBase * size;
+			Ascent = (int)(AscentBase * size + 0.5f);
+			Descent = (int)(DescentBase * size + 0.5f);
+			LineHeight = (int)(LineHeightBase * size + 0.5f);
 			Scale = stbtt_ScaleForPixelHeight(_font, size);
 			_lastSize = size;
 		}
 
-		public void GetMetricsForSize(int fontSize, out float ascent, out float descent, out float lineHeight)
+		public void GetMetricsForSize(int fontSize, out int ascent, out int descent, out int lineHeight)
 		{
 			UpdateSize(fontSize);
 

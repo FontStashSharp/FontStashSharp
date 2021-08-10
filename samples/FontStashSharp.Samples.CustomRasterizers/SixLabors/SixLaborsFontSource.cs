@@ -53,11 +53,11 @@ namespace FontStashSharp.Samples.SixLabors
 			y1 = path.Bounds.Bottom;
 		}
 
-		public void GetMetricsForSize(int fontSize, out float ascent, out float descent, out float lineHeight)
+		public void GetMetricsForSize(int fontSize, out int ascent, out int descent, out int lineHeight)
 		{
-			ascent = fontSize * AscentBase;
-			descent = fontSize * DescentBase;
-			lineHeight = fontSize * LineHeightBase;
+			ascent = (int)(fontSize * AscentBase + 0.5f);
+			descent = (int)(fontSize * DescentBase + 0.5f);
+			lineHeight = (int)(fontSize * LineHeightBase + 0.5f);
 		}
 
 		public void RasterizeGlyphBitmap(int glyphId, int fontSize, byte[] buffer, int startIndex, int outWidth, int outHeight, int outStride)

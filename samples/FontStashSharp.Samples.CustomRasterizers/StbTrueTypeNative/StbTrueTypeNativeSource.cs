@@ -69,7 +69,7 @@ namespace FontStashSharp.StbTrueTypeNative
 			_lastSize = size;
 		}
 
-		public void GetMetricsForSize(int fontSize, out float ascent, out float descent, out float lineHeight)
+		public void GetMetricsForSize(int fontSize, out int ascent, out int descent, out int lineHeight)
 		{
 			UpdateSize(fontSize);
 
