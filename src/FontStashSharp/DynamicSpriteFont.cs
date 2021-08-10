@@ -19,6 +19,7 @@ namespace FontStashSharp
 	{
 		internal readonly Int32Map<DynamicFontGlyph> Glyphs = new Int32Map<DynamicFontGlyph>();
 		internal readonly Int32Map<DynamicFontGlyph> GlyphsWithoutBitmap = new Int32Map<DynamicFontGlyph>();
+		internal readonly Int32Map<int> Kernings = new Int32Map<int>();
 
 		public FontSystem FontSystem { get; private set; }
 
@@ -195,20 +196,30 @@ namespace FontStashSharp
 			return result;
 		}
 
+		private static int GetKerningsKey(int glyph1, int glyph2)
+		{
+			return ((glyph1 << 16) | (glyph1 >> 16)) ^ glyph2;
+		}
+
 		internal override void GetQuad(FontGlyph glyph, FontGlyph prevGlyph, Vector2 scale, ref float x, ref float y, ref FontGlyphSquad q)
 		{
 			if (prevGlyph != null)
 			{
-				float adv = 0;
+				var adv = 0;
 
 				var dynamicGlyph = (DynamicFontGlyph)glyph;
 				var dynamicPrevGlyph = (DynamicFontGlyph)prevGlyph;
 				if (FontSystem.UseKernings && dynamicGlyph.Font == dynamicPrevGlyph.Font)
 				{
-					adv = dynamicPrevGlyph.Font.GetGlyphKernAdvance(prevGlyph.Id, dynamicGlyph.Id, dynamicGlyph.Size);
+					var key = GetKerningsKey(prevGlyph.Id, dynamicGlyph.Id);
+					if (!Kernings.TryGetValue(key, out adv))
+					{
+						adv = dynamicPrevGlyph.Font.GetGlyphKernAdvance(prevGlyph.Id, dynamicGlyph.Id, dynamicGlyph.Size);
+						Kernings[key] = adv;
+					}
 				}
 
-				x += (int)(adv + FontSystem.CharacterSpacing + 0.5f);
+				x += adv + FontSystem.CharacterSpacing;
 			}
 
 			base.GetQuad(glyph, prevGlyph, scale, ref x, ref y, ref q);

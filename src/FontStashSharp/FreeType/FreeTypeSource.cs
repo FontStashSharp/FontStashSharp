@@ -74,7 +74,13 @@ namespace FontStashSharp
 
 		public int GetGlyphKernAdvance(int previousGlyphId, int glyphId, int fontSize)
 		{
-			return 0;
+			IntPtr kerningX, kerningY;
+			if (FTNative.FT_Get_Kerning(_faceHandle, (uint)previousGlyphId, (uint)glyphId, 0, out kerningX, out kerningY) != Error.Ok)
+			{
+				return 0;
+			}
+
+			return (int)kerningX >> 6;
 		}
 
 		private void SetPixelSizes(int width, int height)

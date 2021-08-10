@@ -32,5 +32,8 @@ namespace SharpFontInternal
 
 		[DllImport(FreetypeDll, CallingConvention = CallConvention)]
 		internal static extern Error FT_Render_Glyph(IntPtr slot, RenderMode render_mode);
+
+		[DllImport(FreetypeDll, CallingConvention = CallConvention)]
+		internal static extern Error FT_Get_Kerning(IntPtr face, uint left_glyph, uint right_glyph, uint kern_mode, out IntPtr kerningX, out IntPtr kerningY);
 	}
 }
