@@ -48,7 +48,7 @@ namespace FontStashSharp
 				return glyph;
 			}
 
-			IFontSource font;
+			FontSourceWrapper font;
 			var g = FontSystem.GetCodepointIndex(codepoint, out font);
 			if (g == null)
 			{
@@ -58,7 +58,8 @@ namespace FontStashSharp
 
 			int advance = 0, x0 = 0, y0 = 0, x1 = 0, y1 = 0;
 			var fontSize = (int)(FontSize * (withoutBitmap ? 1 : FontSystem.FontResolutionFactor));
-			font.GetGlyphMetrics(g.Value, fontSize, out advance, out x0, out y0, out x1, out y1);
+
+			font.Source.GetGlyphMetrics(g.Value, fontSize, out advance, out x0, out y0, out x1, out y1);
 
 			var pad = Math.Max(DynamicFontGlyph.PadFromBlur(FontSystem.BlurAmount), DynamicFontGlyph.PadFromBlur(FontSystem.StrokeAmount));
 			var gw = (x1 - x0) + pad * 2;
@@ -142,9 +143,9 @@ namespace FontStashSharp
 					continue;
 				}
 
-				int descent;
-				glyph.Font.GetMetricsForSize(fontSize, out ascent, out descent, out lineHeight);
-				lineHeight += FontSystem.LineSpacing;
+				var metrics = glyph.Font.GetMetrics(fontSize);
+				ascent = metrics.Ascent;
+				lineHeight = metrics.LineHeight + FontSystem.LineSpacing;
 				break;
 			}
 		}
@@ -165,9 +166,9 @@ namespace FontStashSharp
 					continue;
 				}
 
-				int descent;
-				glyph.Font.GetMetricsForSize(fontSize, out ascent, out descent, out lineHeight);
-				lineHeight += FontSystem.LineSpacing;
+				var metrics = glyph.Font.GetMetrics(fontSize);
+				ascent = metrics.Ascent;
+				lineHeight = metrics.LineHeight + FontSystem.LineSpacing;
 				break;
 			}
 		}
@@ -214,7 +215,7 @@ namespace FontStashSharp
 					var key = GetKerningsKey(prevGlyph.Id, dynamicGlyph.Id);
 					if (!Kernings.TryGetValue(key, out adv))
 					{
-						adv = dynamicPrevGlyph.Font.GetGlyphKernAdvance(prevGlyph.Id, dynamicGlyph.Id, dynamicGlyph.Size);
+						adv = dynamicPrevGlyph.Font.Source.GetGlyphKernAdvance(prevGlyph.Id, dynamicGlyph.Id, dynamicGlyph.Size);
 						Kernings[key] = adv;
 					}
 				}

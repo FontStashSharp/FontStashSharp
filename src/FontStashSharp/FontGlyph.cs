@@ -14,7 +14,7 @@ using Texture2D = System.Object;
 namespace FontStashSharp
 {
 	public class FontGlyph
-  {
+	{
 		public int Codepoint;
 		public int Id;
 		public Rectangle Bounds;
@@ -32,10 +32,10 @@ namespace FontStashSharp
 		}
 	}
 
-	public class DynamicFontGlyph: FontGlyph
+	public class DynamicFontGlyph : FontGlyph
 	{
 		public int Size;
-		public IFontSource Font;
+		internal FontSourceWrapper Font;
 
 		public static int PadFromBlur(int blur)
 		{

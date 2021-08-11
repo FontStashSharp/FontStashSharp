@@ -194,7 +194,7 @@ namespace FontStashSharp
 				_colorBuffer = colorBuffer;
 			}
 
-			glyph.Font.RasterizeGlyphBitmap(glyph.Id,
+			glyph.Font.Source.RasterizeGlyphBitmap(glyph.Id,
 				glyph.Size,
 				buffer,
 				pad + pad * glyph.Bounds.Width,

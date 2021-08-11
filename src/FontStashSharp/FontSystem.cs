@@ -19,7 +19,7 @@ namespace FontStashSharp
 {
 	public class FontSystem : IDisposable
 	{
-		private readonly List<IFontSource> _fontSources = new List<IFontSource>();
+		private readonly List<FontSourceWrapper> _fontSources = new List<FontSourceWrapper>();
 		private readonly Int32Map<DynamicSpriteFont> _fonts = new Int32Map<DynamicSpriteFont>();
 		private readonly FontSystemSettings _settings;
 
@@ -100,7 +100,8 @@ namespace FontStashSharp
 		public void AddFont(byte[] data)
 		{
 			var fontSource = _fontLoader.Load(data);
-			_fontSources.Add(fontSource);
+			var fontSourceWrapper = new FontSourceWrapper(fontSource);
+			_fontSources.Add(fontSourceWrapper);
 		}
 
 		public void AddFont(Stream stream)
@@ -123,10 +124,9 @@ namespace FontStashSharp
 
 			var fontSource = _fontSources[0];
 
-			int ascent, descent, lineHeight;
-			fontSource.GetMetricsForSize(fontSize, out ascent, out descent, out lineHeight);
+			var metrics = fontSource.GetMetrics(fontSize);
 
-			result = new DynamicSpriteFont(this, fontSize, lineHeight);
+			result = new DynamicSpriteFont(this, fontSize, metrics.LineHeight);
 			_fonts[fontSize] = result;
 			return result;
 		}
@@ -137,14 +137,14 @@ namespace FontStashSharp
 			_fonts.Clear();
 		}
 
-		internal int? GetCodepointIndex(int codepoint, out IFontSource font)
+		internal int? GetCodepointIndex(int codepoint, out FontSourceWrapper font)
 		{
 			font = null;
 
 			var g = default(int?);
 			foreach (var f in _fontSources)
 			{
-				g = f.GetGlyphId(codepoint);
+				g = f.Source.GetGlyphId(codepoint);
 				if (g != null)
 				{
 					font = f;
