@@ -169,9 +169,9 @@ namespace FontStashSharp
 		}
 
 #if MONOGAME || FNA || STRIDE
-		public void RenderGlyph(GraphicsDevice graphicsDevice, DynamicFontGlyph glyph, int blurAmount, int strokeAmount, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
+		public void RenderGlyph(GraphicsDevice graphicsDevice, DynamicFontGlyph glyph, IFontSource fontSource, int blurAmount, int strokeAmount, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
 #else
-		public void RenderGlyph(ITexture2DManager textureManager, DynamicFontGlyph glyph, int blurAmount, int strokeAmount, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
+		public void RenderGlyph(ITexture2DManager textureManager, DynamicFontGlyph glyph, IFontSource fontSource, int blurAmount, int strokeAmount, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
 #endif
 		{
 			var pad = Math.Max(DynamicFontGlyph.PadFromBlur(blurAmount), DynamicFontGlyph.PadFromBlur(strokeAmount));
@@ -194,7 +194,7 @@ namespace FontStashSharp
 				_colorBuffer = colorBuffer;
 			}
 
-			glyph.Font.Source.RasterizeGlyphBitmap(glyph.Id,
+			fontSource.RasterizeGlyphBitmap(glyph.Id,
 				glyph.Size,
 				buffer,
 				pad + pad * glyph.Bounds.Width,

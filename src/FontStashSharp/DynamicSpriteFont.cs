@@ -17,9 +17,16 @@ namespace FontStashSharp
 {
 	public partial class DynamicSpriteFont : SpriteFontBase
 	{
+		private struct FontMetricsPair
+		{
+			public FontMetrics Ordinary;
+			public FontMetrics Scaled;
+		}
+
 		internal readonly Int32Map<DynamicFontGlyph> Glyphs = new Int32Map<DynamicFontGlyph>();
 		internal readonly Int32Map<DynamicFontGlyph> GlyphsWithoutBitmap = new Int32Map<DynamicFontGlyph>();
-		internal readonly Int32Map<int> Kernings = new Int32Map<int>();
+		private readonly Int32Map<int> Kernings = new Int32Map<int>();
+		private FontMetricsPair[] IndexedMetrics;
 
 		public FontSystem FontSystem { get; private set; }
 
@@ -48,8 +55,8 @@ namespace FontStashSharp
 				return glyph;
 			}
 
-			FontSourceWrapper font;
-			var g = FontSystem.GetCodepointIndex(codepoint, out font);
+			int fontSourceIndex;
+			var g = FontSystem.GetCodepointIndex(codepoint, out fontSourceIndex);
 			if (g == null)
 			{
 				glyphs[codepoint] = null;
@@ -59,7 +66,8 @@ namespace FontStashSharp
 			int advance = 0, x0 = 0, y0 = 0, x1 = 0, y1 = 0;
 			var fontSize = (int)(FontSize * (withoutBitmap ? 1 : FontSystem.FontResolutionFactor));
 
-			font.Source.GetGlyphMetrics(g.Value, fontSize, out advance, out x0, out y0, out x1, out y1);
+			var font = FontSystem.FontSources[fontSourceIndex];
+			font.GetGlyphMetrics(g.Value, fontSize, out advance, out x0, out y0, out x1, out y1);
 
 			var pad = Math.Max(DynamicFontGlyph.PadFromBlur(FontSystem.BlurAmount), DynamicFontGlyph.PadFromBlur(FontSystem.StrokeAmount));
 			var gw = (x1 - x0) + pad * 2;
@@ -71,7 +79,7 @@ namespace FontStashSharp
 				Codepoint = codepoint,
 				Id = g.Value,
 				Size = fontSize,
-				Font = font,
+				FontSourceIndex = fontSourceIndex,
 				Bounds = new Rectangle(0, 0, gw, gh),
 				XAdvance = advance,
 				XOffset = x0 - offset,
@@ -127,6 +135,30 @@ namespace FontStashSharp
 			return GetDynamicGlyph(device, codepoint);
 		}
 
+		private void GetMetrics(int fontSourceIndex, bool withoutBitmap, out FontMetrics result)
+		{
+			if (IndexedMetrics == null || IndexedMetrics.Length != FontSystem.FontSources.Count)
+			{
+				IndexedMetrics = new FontMetricsPair[FontSystem.FontSources.Count];
+				for (var i = 0; i < IndexedMetrics.Length; ++i)
+				{
+					int ascent, descent, lineHeight;
+					FontSystem.FontSources[i].GetMetricsForSize(FontSize, out ascent, out descent, out lineHeight);
+					var ordinary = new FontMetrics(ascent, descent, lineHeight);
+					FontSystem.FontSources[i].GetMetricsForSize((int)(FontSize * RenderFontSizeMultiplicator), out ascent, out descent, out lineHeight);
+					var scaled = new FontMetrics(ascent, descent, lineHeight);
+
+					IndexedMetrics[i] = new FontMetricsPair
+					{
+						Ordinary = ordinary,
+						Scaled = scaled
+					};
+				}
+			}
+
+			result = withoutBitmap ? IndexedMetrics[fontSourceIndex].Ordinary : IndexedMetrics[fontSourceIndex].Scaled;
+		}
+
 		protected override void PreDraw(string str, out int ascent, out int lineHeight, bool withoutBitmap)
 		{
 			// Determine ascent and lineHeight from first character
@@ -143,7 +175,8 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var metrics = glyph.Font.GetMetrics(fontSize);
+				FontMetrics metrics;
+				GetMetrics(glyph.FontSourceIndex, withoutBitmap, out metrics);
 				ascent = metrics.Ascent;
 				lineHeight = metrics.LineHeight + FontSystem.LineSpacing;
 				break;
@@ -166,7 +199,8 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var metrics = glyph.Font.GetMetrics(fontSize);
+				FontMetrics metrics;
+				GetMetrics(glyph.FontSourceIndex, withoutBitmap, out metrics);
 				ascent = metrics.Ascent;
 				lineHeight = metrics.LineHeight + FontSystem.LineSpacing;
 				break;
@@ -210,12 +244,13 @@ namespace FontStashSharp
 
 				var dynamicGlyph = (DynamicFontGlyph)glyph;
 				var dynamicPrevGlyph = (DynamicFontGlyph)prevGlyph;
-				if (FontSystem.UseKernings && dynamicGlyph.Font == dynamicPrevGlyph.Font)
+				if (FontSystem.UseKernings && dynamicGlyph.FontSourceIndex == dynamicPrevGlyph.FontSourceIndex)
 				{
 					var key = GetKerningsKey(prevGlyph.Id, dynamicGlyph.Id);
 					if (!Kernings.TryGetValue(key, out adv))
 					{
-						adv = dynamicPrevGlyph.Font.Source.GetGlyphKernAdvance(prevGlyph.Id, dynamicGlyph.Id, dynamicGlyph.Size);
+						var fontSource = FontSystem.FontSources[dynamicGlyph.FontSourceIndex];
+						adv = fontSource.GetGlyphKernAdvance(prevGlyph.Id, dynamicGlyph.Id, dynamicGlyph.Size);
 						Kernings[key] = adv;
 					}
 				}

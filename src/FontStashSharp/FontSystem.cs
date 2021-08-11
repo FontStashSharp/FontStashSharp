@@ -19,7 +19,7 @@ namespace FontStashSharp
 {
 	public class FontSystem : IDisposable
 	{
-		private readonly List<FontSourceWrapper> _fontSources = new List<FontSourceWrapper>();
+		private readonly List<IFontSource> _fontSources = new List<IFontSource>();
 		private readonly Int32Map<DynamicSpriteFont> _fonts = new Int32Map<DynamicSpriteFont>();
 		private readonly FontSystemSettings _settings;
 
@@ -49,6 +49,8 @@ namespace FontStashSharp
 
 		internal int BlurAmount => Effect == FontSystemEffect.Blurry ? EffectAmount : 0;
 		internal int StrokeAmount => Effect == FontSystemEffect.Stroked ? EffectAmount : 0;
+
+		internal List<IFontSource> FontSources => _fontSources;
 
 		public List<FontAtlas> Atlases { get; } = new List<FontAtlas>();
 
@@ -100,8 +102,7 @@ namespace FontStashSharp
 		public void AddFont(byte[] data)
 		{
 			var fontSource = _fontLoader.Load(data);
-			var fontSourceWrapper = new FontSourceWrapper(fontSource);
-			_fontSources.Add(fontSourceWrapper);
+			_fontSources.Add(fontSource);
 		}
 
 		public void AddFont(Stream stream)
@@ -124,9 +125,10 @@ namespace FontStashSharp
 
 			var fontSource = _fontSources[0];
 
-			var metrics = fontSource.GetMetrics(fontSize);
+			int ascent, descent, lineHeight;
+			fontSource.GetMetricsForSize(fontSize, out ascent, out descent, out lineHeight);
 
-			result = new DynamicSpriteFont(this, fontSize, metrics.LineHeight);
+			result = new DynamicSpriteFont(this, fontSize, lineHeight);
 			_fonts[fontSize] = result;
 			return result;
 		}
@@ -137,17 +139,18 @@ namespace FontStashSharp
 			_fonts.Clear();
 		}
 
-		internal int? GetCodepointIndex(int codepoint, out FontSourceWrapper font)
+		internal int? GetCodepointIndex(int codepoint, out int fontSourceIndex)
 		{
-			font = null;
-
+			fontSourceIndex = 0;
 			var g = default(int?);
-			foreach (var f in _fontSources)
+
+			for(var i = 0; i < _fontSources.Count; ++i)
 			{
-				g = f.Source.GetGlyphId(codepoint);
+				var f = _fontSources[i];
+				g = f.GetGlyphId(codepoint);
 				if (g != null)
 				{
-					font = f;
+					fontSourceIndex = i;
 					break;
 				}
 			}
@@ -228,7 +231,7 @@ namespace FontStashSharp
 			glyph.Bounds.X = gx;
 			glyph.Bounds.Y = gy;
 
-			currentAtlas.RenderGlyph(device, glyph, BlurAmount, StrokeAmount, PremultiplyAlpha, KernelWidth, KernelHeight);
+			currentAtlas.RenderGlyph(device, glyph, FontSources[glyph.FontSourceIndex], BlurAmount, StrokeAmount, PremultiplyAlpha, KernelWidth, KernelHeight);
 
 			glyph.Texture = currentAtlas.Texture;
 		}
