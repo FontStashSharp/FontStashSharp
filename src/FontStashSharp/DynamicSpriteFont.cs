@@ -17,16 +17,9 @@ namespace FontStashSharp
 {
 	public partial class DynamicSpriteFont : SpriteFontBase
 	{
-		private struct FontMetricsPair
-		{
-			public FontMetrics Ordinary;
-			public FontMetrics Scaled;
-		}
-
 		internal readonly Int32Map<DynamicFontGlyph> Glyphs = new Int32Map<DynamicFontGlyph>();
-		internal readonly Int32Map<DynamicFontGlyph> GlyphsWithoutBitmap = new Int32Map<DynamicFontGlyph>();
 		private readonly Int32Map<int> Kernings = new Int32Map<int>();
-		private FontMetricsPair[] IndexedMetrics;
+		private FontMetrics[] IndexedMetrics;
 
 		public FontSystem FontSystem { get; private set; }
 
@@ -41,16 +34,10 @@ namespace FontStashSharp
 			RenderFontSizeMultiplicator = FontSystem.FontResolutionFactor;
 		}
 
-		internal Int32Map<DynamicFontGlyph> GetGlyphMapFor(bool isForMeasurement)
+		private DynamicFontGlyph GetGlyphWithoutBitmap(int codepoint)
 		{
-			return isForMeasurement ? GlyphsWithoutBitmap : Glyphs;
-		}
-
-		private DynamicFontGlyph GetGlyphWithoutBitmap(int codepoint, bool withoutBitmap)
-		{
-			DynamicFontGlyph glyph = null;
-			var glyphs = GetGlyphMapFor(withoutBitmap);
-			if (glyphs.TryGetValue(codepoint, out glyph))
+			DynamicFontGlyph glyph;
+			if (Glyphs.TryGetValue(codepoint, out glyph))
 			{
 				return glyph;
 			}
@@ -59,14 +46,15 @@ namespace FontStashSharp
 			var g = FontSystem.GetCodepointIndex(codepoint, out fontSourceIndex);
 			if (g == null)
 			{
-				glyphs[codepoint] = null;
+				Glyphs[codepoint] = null;
 				return null;
 			}
 
-			int advance = 0, x0 = 0, y0 = 0, x1 = 0, y1 = 0;
-			var fontSize = (int)(FontSize * (withoutBitmap ? 1 : FontSystem.FontResolutionFactor));
+			var fontSize = (int)(FontSize * FontSystem.FontResolutionFactor);
 
 			var font = FontSystem.FontSources[fontSourceIndex];
+
+			int advance, x0, y0, x1, y1;
 			font.GetGlyphMetrics(g.Value, fontSize, out advance, out x0, out y0, out x1, out y1);
 
 			var pad = Math.Max(DynamicFontGlyph.PadFromBlur(FontSystem.BlurAmount), DynamicFontGlyph.PadFromBlur(FontSystem.StrokeAmount));
@@ -86,7 +74,7 @@ namespace FontStashSharp
 				YOffset = y0 - offset
 			};
 
-			glyphs[codepoint] = glyph;
+			Glyphs[codepoint] = glyph;
 
 			return glyph;
 		}
@@ -97,7 +85,7 @@ namespace FontStashSharp
 		private DynamicFontGlyph GetGlyphInternal(ITexture2DManager device, int codepoint)
 #endif
 		{
-			var glyph = GetGlyphWithoutBitmap(codepoint, device == null);
+			var glyph = GetGlyphWithoutBitmap(codepoint);
 			if (glyph == null)
 			{
 				return null;
@@ -135,36 +123,28 @@ namespace FontStashSharp
 			return GetDynamicGlyph(device, codepoint);
 		}
 
-		private void GetMetrics(int fontSourceIndex, bool withoutBitmap, out FontMetrics result)
+		private void GetMetrics(int fontSourceIndex, out FontMetrics result)
 		{
 			if (IndexedMetrics == null || IndexedMetrics.Length != FontSystem.FontSources.Count)
 			{
-				IndexedMetrics = new FontMetricsPair[FontSystem.FontSources.Count];
+				IndexedMetrics = new FontMetrics[FontSystem.FontSources.Count];
 				for (var i = 0; i < IndexedMetrics.Length; ++i)
 				{
 					int ascent, descent, lineHeight;
-					FontSystem.FontSources[i].GetMetricsForSize(FontSize, out ascent, out descent, out lineHeight);
-					var ordinary = new FontMetrics(ascent, descent, lineHeight);
 					FontSystem.FontSources[i].GetMetricsForSize((int)(FontSize * RenderFontSizeMultiplicator), out ascent, out descent, out lineHeight);
-					var scaled = new FontMetrics(ascent, descent, lineHeight);
 
-					IndexedMetrics[i] = new FontMetricsPair
-					{
-						Ordinary = ordinary,
-						Scaled = scaled
-					};
+					IndexedMetrics[i] = new FontMetrics(ascent, descent, lineHeight);
 				}
 			}
 
-			result = withoutBitmap ? IndexedMetrics[fontSourceIndex].Ordinary : IndexedMetrics[fontSourceIndex].Scaled;
+			result = IndexedMetrics[fontSourceIndex];
 		}
 
-		protected override void PreDraw(string str, out int ascent, out int lineHeight, bool withoutBitmap)
+		protected override void PreDraw(string str, out int ascent, out int lineHeight)
 		{
 			// Determine ascent and lineHeight from first character
 			ascent = 0;
 			lineHeight = 0;
-			var fontSize = (int)(withoutBitmap ? FontSize : FontSize * RenderFontSizeMultiplicator);
 			for (int i = 0; i < str.Length; i += char.IsSurrogatePair(str, i) ? 2 : 1)
 			{
 				var codepoint = char.ConvertToUtf32(str, i);
@@ -176,19 +156,18 @@ namespace FontStashSharp
 				}
 
 				FontMetrics metrics;
-				GetMetrics(glyph.FontSourceIndex, withoutBitmap, out metrics);
+				GetMetrics(glyph.FontSourceIndex, out metrics);
 				ascent = metrics.Ascent;
 				lineHeight = metrics.LineHeight + FontSystem.LineSpacing;
 				break;
 			}
 		}
 
-		protected override void PreDraw(StringBuilder str, out int ascent, out int lineHeight, bool withoutBitmap)
+		protected override void PreDraw(StringBuilder str, out int ascent, out int lineHeight)
 		{
 			// Determine ascent and lineHeight from first character
 			ascent = 0;
 			lineHeight = 0;
-			var fontSize = (int)(withoutBitmap ? FontSize : FontSize * RenderFontSizeMultiplicator);
 			for (int i = 0; i < str.Length; i += StringBuilderIsSurrogatePair(str, i) ? 2 : 1)
 			{
 				var codepoint = StringBuilderConvertToUtf32(str, i);
@@ -200,7 +179,7 @@ namespace FontStashSharp
 				}
 
 				FontMetrics metrics;
-				GetMetrics(glyph.FontSourceIndex, withoutBitmap, out metrics);
+				GetMetrics(glyph.FontSourceIndex, out metrics);
 				ascent = metrics.Ascent;
 				lineHeight = metrics.LineHeight + FontSystem.LineSpacing;
 				break;
@@ -236,7 +215,7 @@ namespace FontStashSharp
 			return ((glyph1 << 16) | (glyph1 >> 16)) ^ glyph2;
 		}
 
-		internal override void GetQuad(FontGlyph glyph, FontGlyph prevGlyph, Vector2 scale, ref float x, ref float y, ref FontGlyphSquad q)
+		internal override void GetQuad(FontGlyph glyph, FontGlyph prevGlyph, ref float x, float y, ref FontGlyphSquad q)
 		{
 			if (prevGlyph != null)
 			{
@@ -258,7 +237,7 @@ namespace FontStashSharp
 				x += adv + FontSystem.CharacterSpacing;
 			}
 
-			base.GetQuad(glyph, prevGlyph, scale, ref x, ref y, ref q);
+			base.GetQuad(glyph, prevGlyph, ref x, y, ref q);
 		}
 	}
 }

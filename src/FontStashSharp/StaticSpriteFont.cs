@@ -82,13 +82,13 @@ namespace FontStashSharp
 			return result;
 		}
 
-		protected override void PreDraw(string str, out int ascent, out int lineHeight, bool withoutBitmap)
+		protected override void PreDraw(string str, out int ascent, out int lineHeight)
 		{
 			ascent = 0;
 			lineHeight = LineHeight + LineSpacing;
 		}
 
-		protected override void PreDraw(StringBuilder str, out int ascent, out int lineHeight, bool withoutBitmap)
+		protected override void PreDraw(StringBuilder str, out int ascent, out int lineHeight)
 		{
 			ascent = 0;
 			lineHeight = LineHeight + LineSpacing;
@@ -114,7 +114,7 @@ namespace FontStashSharp
 			_kernings[key] = value;
 		}
 
-		internal override void GetQuad(FontGlyph glyph, FontGlyph prevGlyph, Vector2 scale, ref float x, ref float y, ref FontGlyphSquad q)
+		internal override void GetQuad(FontGlyph glyph, FontGlyph prevGlyph, ref float x, float y, ref FontGlyphSquad q)
 		{
 			if (prevGlyph != null)
 			{
@@ -126,7 +126,7 @@ namespace FontStashSharp
 				x += CharacterSpacing;
 			}
 
-			base.GetQuad(glyph, prevGlyph, scale, ref x, ref y, ref q);
+			base.GetQuad(glyph, prevGlyph, ref x, y, ref q);
 		}
 
 		private static BitmapFont LoadBMFont(string data)

@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.Scal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.CustomRasterizers.MonoGame", "..\samples\FontStashSharp.Samples.CustomRasterizers\FontStashSharp.Samples.CustomRasterizers.MonoGame.csproj", "{8A654C3C-6EC2-444A-B492-76CF2DE57CE0}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.MeasureString.MonoGame", "..\samples\FontStashSharp.Samples.MeasureString\FontStashSharp.Samples.MeasureString.MonoGame.csproj", "{42F0AA0C-44F4-44E8-BDFD-097E95F90E66}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{8A654C3C-6EC2-444A-B492-76CF2DE57CE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A654C3C-6EC2-444A-B492-76CF2DE57CE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A654C3C-6EC2-444A-B492-76CF2DE57CE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42F0AA0C-44F4-44E8-BDFD-097E95F90E66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42F0AA0C-44F4-44E8-BDFD-097E95F90E66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42F0AA0C-44F4-44E8-BDFD-097E95F90E66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42F0AA0C-44F4-44E8-BDFD-097E95F90E66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +76,7 @@ Global
 		{128B548A-8D25-410A-AA0A-B59E586CED75} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
 		{C463718B-B31D-4CD1-97A4-071BAB0ACC9B} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
 		{8A654C3C-6EC2-444A-B492-76CF2DE57CE0} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
+		{42F0AA0C-44F4-44E8-BDFD-097E95F90E66} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {35ACDF4E-2CE2-46B1-A19F-35DC131069A1}
