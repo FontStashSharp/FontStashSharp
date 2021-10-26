@@ -186,28 +186,24 @@ namespace FontStashSharp
 			}
 		}
 
-		public override float TextBounds(string str, Vector2 position, ref Bounds bounds, Vector2 scale)
+		protected override void InternalTextBounds(string str, Vector2 position, ref Bounds bounds)
 		{
 			if (string.IsNullOrEmpty(str))
-				return 0.0f;
+				return;
 
-			var result = base.TextBounds(str, position, ref bounds, scale);
+			base.InternalTextBounds(str, position, ref bounds);
 
 			bounds.X2 += FontSystem.StrokeAmount * 2;
-
-			return result;
 		}
 
-		public override float TextBounds(StringBuilder str, Vector2 position, ref Bounds bounds, Vector2 scale)
+		protected override void InternalTextBounds(StringBuilder str, Vector2 position, ref Bounds bounds)
 		{
 			if (str == null || str.Length == 0)
-				return 0.0f;
+				return;
 
-			var result = base.TextBounds(str, position, ref bounds, scale);
+			base.InternalTextBounds(str, position, ref bounds);
 
 			bounds.X2 += FontSystem.StrokeAmount * 2;
-
-			return result;
 		}
 
 		private static int GetKerningsKey(int glyph1, int glyph2)

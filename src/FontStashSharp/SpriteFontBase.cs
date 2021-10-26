@@ -511,11 +511,9 @@ namespace FontStashSharp
 			return DrawText(renderer, text, position, colors, DefaultScale, 0, DefaultOrigin, layerDepth);
 		}
 
-		public virtual float TextBounds(string str, Vector2 position, ref Bounds bounds, Vector2 scale)
+		protected virtual void InternalTextBounds(string str, Vector2 position, ref Bounds bounds)
 		{
-			if (string.IsNullOrEmpty(str)) return 0.0f;
-
-			scale /= RenderFontSizeMultiplicator;
+			if (string.IsNullOrEmpty(str)) return;
 
 			int ascent, lineHeight;
 			PreDraw(str, out ascent, out lineHeight);
@@ -563,27 +561,26 @@ namespace FontStashSharp
 				prevGlyph = glyph;
 			}
 
-			float advance = x - startx;
 			bounds.X = minx;
 			bounds.Y = miny;
 			bounds.X2 = maxx;
 			bounds.Y2 = maxy;
-
-			bounds.ApplyScale(scale);
-
-			return advance;
 		}
 
-		public float TextBounds(string str, Vector2 position, ref Bounds bounds)
+		public void TextBounds(string str, Vector2 position, ref Bounds bounds, Vector2 scale)
 		{
-			return TextBounds(str, position, ref bounds, DefaultScale);
+			InternalTextBounds(str, position, ref bounds);
+			bounds.ApplyScale(scale / RenderFontSizeMultiplicator);
 		}
 
-		public virtual float TextBounds(StringBuilder str, Vector2 position, ref Bounds bounds, Vector2 scale)
+		public void TextBounds(string str, Vector2 position, ref Bounds bounds)
 		{
-			if (str == null || str.Length == 0) return 0.0f;
+			TextBounds(str, position, ref bounds, DefaultScale);
+		}
 
-			scale /= RenderFontSizeMultiplicator;
+		protected virtual void InternalTextBounds(StringBuilder str, Vector2 position, ref Bounds bounds)
+		{
+			if (str == null || str.Length == 0) return;
 
 			int ascent, lineHeight;
 			PreDraw(str, out ascent, out lineHeight);
@@ -633,20 +630,29 @@ namespace FontStashSharp
 				prevGlyph = glyph;
 			}
 
-			float advance = x - startx;
 			bounds.X = minx;
 			bounds.Y = miny;
 			bounds.X2 = maxx;
 			bounds.Y2 = maxy;
-
-			bounds.ApplyScale(scale);
-
-			return advance;
 		}
 
-		public float TextBounds(StringBuilder str, Vector2 position, ref Bounds bounds)
+		public void TextBounds(StringBuilder str, Vector2 position, ref Bounds bounds, Vector2 scale)
 		{
-			return TextBounds(str, position, ref bounds, DefaultScale);
+			InternalTextBounds(str, position, ref bounds);
+			bounds.ApplyScale(scale / RenderFontSizeMultiplicator);
+		}
+
+		public void TextBounds(StringBuilder str, Vector2 position, ref Bounds bounds)
+		{
+			TextBounds(str, position, ref bounds, DefaultScale);
+		}
+
+		private static Rectangle ApplyScale(Rectangle rect, Vector2 scale)
+		{
+			return new Rectangle((int)(rect.X * scale.X),
+				(int)(rect.Y * scale.Y),
+				(int)(rect.Width * scale.X),
+				(int)(rect.Height * scale.Y));
 		}
 
 		public List<Rectangle> GetGlyphRects(string str, Vector2 position, Vector2 scale)
@@ -688,7 +694,8 @@ namespace FontStashSharp
 
 				GetQuad(glyph, prevGlyph, ref x, y, ref q);
 
-				Rects.Add(new Rectangle((int)q.X0, (int)q.Y0, (int)(q.X1 - q.X0), (int)(q.Y1 - q.Y0)));
+				var rect = ApplyScale(new Rectangle((int)q.X0, (int)q.Y0, (int)(q.X1 - q.X0), (int)(q.Y1 - q.Y0)), scale);
+				Rects.Add(rect);
 				prevGlyph = glyph;
 			}
 
@@ -741,7 +748,8 @@ namespace FontStashSharp
 
 				GetQuad(glyph, prevGlyph, ref x, y, ref q);
 
-				Rects.Add(new Rectangle((int)q.X0, (int)q.Y0, (int)(q.X1 - q.X0), (int)(q.Y1 - q.Y0)));
+				var rect = ApplyScale(new Rectangle((int)q.X0, (int)q.Y0, (int)(q.X1 - q.X0), (int)(q.Y1 - q.Y0)), scale);
+				Rects.Add(rect);
 				prevGlyph = glyph;
 			}
 
