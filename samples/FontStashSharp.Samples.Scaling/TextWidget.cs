@@ -102,7 +102,7 @@ namespace FontStashSharp.Samples
 
 			if (SampleEnvironment.DrawBackground)
 			{
-				var dimensions = _font.MeasureString(text, scale);
+				var dimensions = Font.MeasureString(text, scale);
 				context.FillRectangle(
 					new Rectangle(ActualBounds.X, ActualBounds.Y, (int)dimensions.X, (int)dimensions.Y),
 					Color.Green);
