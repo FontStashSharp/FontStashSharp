@@ -174,7 +174,10 @@ namespace FontStashSharp
 		public void RenderGlyph(ITexture2DManager textureManager, DynamicFontGlyph glyph, IFontSource fontSource, int blurAmount, int strokeAmount, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
 #endif
 		{
-			var pad = Math.Max(DynamicFontGlyph.PadFromBlur(blurAmount), DynamicFontGlyph.PadFromBlur(strokeAmount));
+			if (glyph.Bounds.Width == 0 || glyph.Bounds.Height == 0)
+			{
+				return;
+			}
 
 			// Render glyph to byte buffer
 			var bufferSize = glyph.Bounds.Width * glyph.Bounds.Height;
@@ -194,12 +197,13 @@ namespace FontStashSharp
 				_colorBuffer = colorBuffer;
 			}
 
+			var effectPad = Math.Max(blurAmount, strokeAmount);
 			fontSource.RasterizeGlyphBitmap(glyph.Id,
 				glyph.Size,
 				buffer,
-				pad + pad * glyph.Bounds.Width,
-				glyph.Bounds.Width - pad * 2,
-				glyph.Bounds.Height - pad * 2,
+				effectPad + effectPad * glyph.Bounds.Width,
+				glyph.Bounds.Width - effectPad * 2,
+				glyph.Bounds.Height - effectPad * 2,
 				glyph.Bounds.Width);
 
 			if (strokeAmount > 0)

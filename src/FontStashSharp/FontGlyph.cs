@@ -36,10 +36,5 @@ namespace FontStashSharp
 	{
 		public int Size;
 		public int FontSourceIndex;
-
-		public static int PadFromBlur(int blur)
-		{
-			return blur + 2;
-		}
 	}
 }

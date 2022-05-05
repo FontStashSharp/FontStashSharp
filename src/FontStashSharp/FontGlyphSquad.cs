@@ -21,6 +21,7 @@ namespace FontStashSharp
 		public float Y1;
 		public float S1;
 		public float T1;
-		public Vector2 Offset;
+
+		public Vector2 Offset => new Vector2(X0, Y0);
 	}
 }

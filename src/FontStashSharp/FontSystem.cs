@@ -19,6 +19,8 @@ namespace FontStashSharp
 {
 	public class FontSystem : IDisposable
 	{
+		public const int GlyphPad = 2;
+
 		private readonly List<IFontSource> _fontSources = new List<IFontSource>();
 		private readonly Int32Map<DynamicSpriteFont> _fonts = new Int32Map<DynamicSpriteFont>();
 		private readonly FontSystemSettings _settings;
@@ -209,8 +211,8 @@ namespace FontStashSharp
 			}
 
 			int gx = 0, gy = 0;
-			var gw = glyph.Bounds.Width;
-			var gh = glyph.Bounds.Height;
+			var gw = glyph.Bounds.Width + GlyphPad * 2;
+			var gh = glyph.Bounds.Height + GlyphPad * 2;
 
 			var currentAtlas = GetCurrentAtlas(device, textureSize.X, textureSize.Y);
 			if (!currentAtlas.AddRect(gw, gh, ref gx, ref gy))
@@ -228,8 +230,8 @@ namespace FontStashSharp
 				}
 			}
 
-			glyph.Bounds.X = gx;
-			glyph.Bounds.Y = gy;
+			glyph.Bounds.X = gx + GlyphPad;
+			glyph.Bounds.Y = gy + GlyphPad;
 
 			currentAtlas.RenderGlyph(device, glyph, FontSources[glyph.FontSourceIndex], BlurAmount, StrokeAmount, PremultiplyAlpha, KernelWidth, KernelHeight);
 

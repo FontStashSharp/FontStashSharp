@@ -118,7 +118,7 @@ namespace FontStashSharp
 						sourceRect,
 						color,
 						rotation,
-						origin * (float) RenderFontSizeMultiplicator - q.Offset,
+						origin * (float)RenderFontSizeMultiplicator - q.Offset,
 						scale,
 						layerDepth);
 				}
@@ -817,7 +817,6 @@ namespace FontStashSharp
 			q.T0 = glyph.Bounds.Y;
 			q.S1 = glyph.Bounds.Right;
 			q.T1 = glyph.Bounds.Bottom;
-			q.Offset = new Vector2(rx, ry);
 
 			x += glyph.XAdvance;
 		}
