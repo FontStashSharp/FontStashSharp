@@ -657,8 +657,8 @@ namespace FontStashSharp
 
 		public List<Rectangle> GetGlyphRects(string str, Vector2 position, Vector2 scale)
 		{
-			List<Rectangle> Rects = new List<Rectangle>();
-			if (string.IsNullOrEmpty(str)) return Rects;
+			List<Rectangle> rects = new List<Rectangle>();
+			if (string.IsNullOrEmpty(str)) return rects;
 
 			scale /= RenderFontSizeMultiplicator;
 
@@ -698,10 +698,10 @@ namespace FontStashSharp
 				}
 
 				rect = ApplyScale(rect, scale);
-				Rects.Add(rect);
+				rects.Add(rect);
 			}
 
-			return Rects;
+			return rects;
 		}
 
 		public List<Rectangle> GetGlyphRects(string str, Vector2 position)
@@ -711,8 +711,10 @@ namespace FontStashSharp
 
 		public List<Rectangle> GetGlyphRects(StringBuilder str, Vector2 position, Vector2 scale)
 		{
-			List<Rectangle> Rects = new List<Rectangle>();
-			if (str == null || str.Length == 0) return Rects;
+			List<Rectangle> rects = new List<Rectangle>();
+			if (str == null || str.Length == 0) return rects;
+
+			scale /= RenderFontSizeMultiplicator;
 
 			int ascent, lineHeight;
 			PreDraw(str, out ascent, out lineHeight);
@@ -721,38 +723,39 @@ namespace FontStashSharp
 
 			var x = position.X;
 			var y = position.Y;
-			y += ascent;
+			y += ascent * scale.Y;
 
 			float startx = x;
 
 			FontGlyph prevGlyph = null;
-
 			for (int i = 0; i < str.Length; i += StringBuilderIsSurrogatePair(str, i) ? 2 : 1)
 			{
 				var codepoint = StringBuilderConvertToUtf32(str, i);
 
+				var rect = new Rectangle((int)x, (int)y - LineHeight, 0, LineHeight);
 				if (codepoint == '\n')
 				{
 					x = startx;
 					y += lineHeight;
 					prevGlyph = null;
-					continue;
 				}
-
-				var glyph = GetGlyph(null, codepoint);
-				if (glyph == null)
+				else
 				{
-					continue;
+
+					var glyph = GetGlyph(null, codepoint);
+					if (glyph != null)
+					{
+						GetQuad(glyph, prevGlyph, ref x, y, ref q);
+						rect = new Rectangle((int)q.X0, (int)q.Y0, (int)(q.X1 - q.X0), (int)(q.Y1 - q.Y0));
+						prevGlyph = glyph;
+					}
 				}
 
-				GetQuad(glyph, prevGlyph, ref x, y, ref q);
-
-				var rect = ApplyScale(new Rectangle((int)q.X0, (int)q.Y0, (int)(q.X1 - q.X0), (int)(q.Y1 - q.Y0)), scale);
-				Rects.Add(rect);
-				prevGlyph = glyph;
+				rect = ApplyScale(rect, scale);
+				rects.Add(rect);
 			}
 
-			return Rects;
+			return rects;
 		}
 
 		public List<Rectangle> GetGlyphRects(StringBuilder str, Vector2 position)
