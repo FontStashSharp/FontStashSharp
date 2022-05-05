@@ -678,25 +678,27 @@ namespace FontStashSharp
 			{
 				var codepoint = char.ConvertToUtf32(str, i);
 
+				var rect = new Rectangle((int)x, (int)y - LineHeight, 0, LineHeight);
 				if (codepoint == '\n')
 				{
 					x = startx;
 					y += lineHeight;
 					prevGlyph = null;
-					continue;
 				}
-
-				var glyph = GetGlyph(null, codepoint);
-				if (glyph == null)
+				else
 				{
-					continue;
+
+					var glyph = GetGlyph(null, codepoint);
+					if (glyph != null)
+					{
+						GetQuad(glyph, prevGlyph, ref x, y, ref q);
+						rect = new Rectangle((int)q.X0, (int)q.Y0, (int)(q.X1 - q.X0), (int)(q.Y1 - q.Y0));
+						prevGlyph = glyph;
+					}
 				}
 
-				GetQuad(glyph, prevGlyph, ref x, y, ref q);
-
-				var rect = ApplyScale(new Rectangle((int)q.X0, (int)q.Y0, (int)(q.X1 - q.X0), (int)(q.Y1 - q.Y0)), scale);
+				rect = ApplyScale(rect, scale);
 				Rects.Add(rect);
-				prevGlyph = glyph;
 			}
 
 			return Rects;
@@ -721,9 +723,6 @@ namespace FontStashSharp
 			var y = position.Y;
 			y += ascent;
 
-			float minx, maxx, miny, maxy;
-			minx = maxx = x;
-			miny = maxy = y;
 			float startx = x;
 
 			FontGlyph prevGlyph = null;
