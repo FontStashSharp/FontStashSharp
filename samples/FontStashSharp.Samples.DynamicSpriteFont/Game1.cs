@@ -217,7 +217,17 @@ namespace FontStashSharp.Samples
 
 			if (_drawBackground)
 			{
-				DrawRectangle(cursor, origin, dimensions, scale);
+				var backgroundRect = new Rectangle((int)Math.Round(cursor.X - origin.X * scale.X),
+					(int)Math.Round(cursor.Y - origin.Y * scale.Y),
+					(int)Math.Round(dimensions.X * scale.X),
+					(int)Math.Round(dimensions.Y * scale.Y));
+				DrawRectangle(backgroundRect, Color.Green);
+
+				var rects = _font.GetGlyphRects(text, cursor, origin, scale);
+				foreach (var r in rects)
+				{
+					DrawRectangle(r, Color.Gray);
+				}
 			}
 
 			_spriteBatch.DrawString(_font, text, cursor, glyphColors, scale, 0, origin);
@@ -231,7 +241,17 @@ namespace FontStashSharp.Samples
 
 			if (_drawBackground)
 			{
-				DrawRectangle(cursor, origin, dimensions, scale);
+				var backgroundRect = new Rectangle((int)Math.Round(cursor.X - origin.X * scale.X),
+					(int)Math.Round(cursor.Y - origin.Y * scale.Y),
+					(int)Math.Round(dimensions.X * scale.X),
+					(int)Math.Round(dimensions.Y * scale.Y));
+				DrawRectangle(backgroundRect, Color.Green);
+
+				var rects = _font.GetGlyphRects(text, cursor, origin, scale);
+				foreach (var r in rects)
+				{
+					DrawRectangle(r, Color.Gray);
+				}
 			}
 
 			_spriteBatch.DrawString(_font, text, cursor, color, scale, 0, origin);
@@ -243,11 +263,9 @@ namespace FontStashSharp.Samples
 			DrawString(text, ref cursor, alignment, Color.White, scale);
 		}
 
-		private void DrawRectangle(Vector2 position, Vector2 origin, Vector2 dimensions, Vector2 scale)
+		private void DrawRectangle(Rectangle rectangle, Color color)
 		{
-			Vector2 textureScaler = dimensions / new Vector2(_white.Width, _white.Height) * scale;
-			_spriteBatch.Draw(_white, position - origin * scale, new Rectangle(0, 0, _white.Width, _white.Height), Color.Green, 0, Vector2.Zero, textureScaler,
-				SpriteEffects.None, 0);
+			_spriteBatch.Draw(_white, rectangle, color);
 		}
 
 		private static Vector2 AlignmentOrigin(Alignment alignment, Vector2 dimensions)

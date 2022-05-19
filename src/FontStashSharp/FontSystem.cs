@@ -211,8 +211,8 @@ namespace FontStashSharp
 			}
 
 			int gx = 0, gy = 0;
-			var gw = glyph.Bounds.Width + GlyphPad * 2;
-			var gh = glyph.Bounds.Height + GlyphPad * 2;
+			var gw = glyph.Size.X + GlyphPad * 2;
+			var gh = glyph.Size.Y + GlyphPad * 2;
 
 			var currentAtlas = GetCurrentAtlas(device, textureSize.X, textureSize.Y);
 			if (!currentAtlas.AddRect(gw, gh, ref gx, ref gy))
@@ -230,8 +230,8 @@ namespace FontStashSharp
 				}
 			}
 
-			glyph.Bounds.X = gx + GlyphPad;
-			glyph.Bounds.Y = gy + GlyphPad;
+			glyph.TextureOffset.X = gx + GlyphPad;
+			glyph.TextureOffset.Y = gy + GlyphPad;
 
 			currentAtlas.RenderGlyph(device, glyph, FontSources[glyph.FontSourceIndex], BlurAmount, StrokeAmount, PremultiplyAlpha, KernelWidth, KernelHeight);
 

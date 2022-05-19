@@ -114,19 +114,20 @@ namespace FontStashSharp
 			_kernings[key] = value;
 		}
 
-		internal override void GetQuad(FontGlyph glyph, FontGlyph prevGlyph, ref float x, float y, ref FontGlyphSquad q)
+		internal override float GetXAdvance(FontGlyph glyph, FontGlyph prevGlyph)
 		{
+			var result = glyph.XAdvance;
 			if (prevGlyph != null)
 			{
 				if (UseKernings)
 				{
-					x += GetGlyphKernAdvance(prevGlyph.Codepoint, glyph.Codepoint);
+					result += GetGlyphKernAdvance(prevGlyph.Codepoint, glyph.Codepoint);
 				}
 
-				x += CharacterSpacing;
+				result += CharacterSpacing;
 			}
 
-			base.GetQuad(glyph, prevGlyph, ref x, y, ref q);
+			return result;
 		}
 
 		private static BitmapFont LoadBMFont(string data)
@@ -161,9 +162,9 @@ namespace FontStashSharp
 				{
 					Id = ch.Char,
 					Codepoint = ch.Char,
-					Bounds = bounds,
-					XOffset = ch.XOffset,
-					YOffset = ch.YOffset,
+					RenderOffset = new Point(ch.XOffset, ch.YOffset),
+					TextureOffset = new Point(ch.X, ch.Y),
+					Size = new Point(ch.Width, ch.Height),
 					XAdvance = ch.XAdvance,
 					Texture = texture.Texture
 				};

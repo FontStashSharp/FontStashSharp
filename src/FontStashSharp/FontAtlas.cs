@@ -174,13 +174,13 @@ namespace FontStashSharp
 		public void RenderGlyph(ITexture2DManager textureManager, DynamicFontGlyph glyph, IFontSource fontSource, int blurAmount, int strokeAmount, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
 #endif
 		{
-			if (glyph.Bounds.Width == 0 || glyph.Bounds.Height == 0)
+			if (glyph.IsEmpty)
 			{
 				return;
 			}
 
 			// Render glyph to byte buffer
-			var bufferSize = glyph.Bounds.Width * glyph.Bounds.Height;
+			var bufferSize = glyph.Size.X * glyph.Size.Y;
 			var buffer = _byteBuffer;
 
 			if ((buffer == null) || (buffer.Length < bufferSize))
@@ -199,19 +199,19 @@ namespace FontStashSharp
 
 			var effectPad = Math.Max(blurAmount, strokeAmount);
 			fontSource.RasterizeGlyphBitmap(glyph.Id,
-				glyph.Size,
+				glyph.FontSize,
 				buffer,
-				effectPad + effectPad * glyph.Bounds.Width,
-				glyph.Bounds.Width - effectPad * 2,
-				glyph.Bounds.Height - effectPad * 2,
-				glyph.Bounds.Width);
+				effectPad + effectPad * glyph.Size.X,
+				glyph.Size.X - effectPad * 2,
+				glyph.Size.Y - effectPad * 2,
+				glyph.Size.X);
 
 			if (strokeAmount > 0)
 			{
-				var width = glyph.Bounds.Width;
+				var width = glyph.Size.X;
 				var top = width * strokeAmount;
-				var bottom = (glyph.Bounds.Height - strokeAmount) * glyph.Bounds.Width;
-				var right = glyph.Bounds.Width - strokeAmount;
+				var bottom = (glyph.Size.Y - strokeAmount) * glyph.Size.X;
+				var right = glyph.Size.X - strokeAmount;
 				var left = strokeAmount;
 
 				byte d;
@@ -291,7 +291,7 @@ namespace FontStashSharp
 				{
 					fixed (byte* bdst = &buffer[0])
 					{
-						Blur(bdst, glyph.Bounds.Width, glyph.Bounds.Height, glyph.Bounds.Width, blurAmount);
+						Blur(bdst, glyph.Size.X, glyph.Size.Y, glyph.Size.X, blurAmount);
 					}
 				}
 
@@ -319,7 +319,7 @@ namespace FontStashSharp
 				Texture = Texture2DManager.CreateTexture(graphicsDevice, Width, Height);
 			}
 
-			Texture2DManager.SetTextureData(Texture, glyph.Bounds, colorBuffer);
+			Texture2DManager.SetTextureData(Texture, glyph.TextureRectangle, colorBuffer);
 #else
 			// Write to texture
 			if (Texture == null)

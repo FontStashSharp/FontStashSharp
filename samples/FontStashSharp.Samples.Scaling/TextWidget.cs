@@ -106,12 +106,19 @@ namespace FontStashSharp.Samples
 				context.FillRectangle(
 					new Rectangle(ActualBounds.X, ActualBounds.Y, (int)dimensions.X, (int)dimensions.Y),
 					Color.Green);
+
+				var rects = _font.GetGlyphRects(text, ActualBounds.Location.ToVector2(), Vector2.Zero, scale);
+				foreach (var r in rects)
+				{
+					context.FillRectangle(r, Color.Gray);
+				}
 				context.Flush();
 			}
 
 			_spriteBatch.Begin();
 
-			var position = new Vector2(ActualBounds.X, ActualBounds.Y);
+			var screenPosition = ToGlobal(ActualBounds.Location);
+			var position = new Vector2(screenPosition.X, screenPosition.Y);
 			_spriteBatch.DrawString(Font, text, position, Color.White, scale);
 			_spriteBatch.End();
 		}

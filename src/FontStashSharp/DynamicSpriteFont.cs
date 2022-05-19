@@ -65,12 +65,11 @@ namespace FontStashSharp
 			{
 				Codepoint = codepoint,
 				Id = g.Value,
-				Size = fontSize,
+				FontSize = fontSize,
 				FontSourceIndex = fontSourceIndex,
-				Bounds = new Rectangle(0, 0, gw, gh),
+				RenderOffset = new Point(x0, y0),
+				Size = new Point(gw, gh),
 				XAdvance = advance,
-				XOffset = x0,
-				YOffset = y0
 			};
 
 			Glyphs[codepoint] = glyph;
@@ -210,8 +209,9 @@ namespace FontStashSharp
 			return ((glyph1 << 16) | (glyph1 >> 16)) ^ glyph2;
 		}
 
-		internal override void GetQuad(FontGlyph glyph, FontGlyph prevGlyph, ref float x, float y, ref FontGlyphSquad q)
+		internal override float GetXAdvance(FontGlyph glyph, FontGlyph prevGlyph)
 		{
+			var result = glyph.XAdvance;
 			if (prevGlyph != null)
 			{
 				var adv = 0;
@@ -224,15 +224,15 @@ namespace FontStashSharp
 					if (!Kernings.TryGetValue(key, out adv))
 					{
 						var fontSource = FontSystem.FontSources[dynamicGlyph.FontSourceIndex];
-						adv = fontSource.GetGlyphKernAdvance(prevGlyph.Id, dynamicGlyph.Id, dynamicGlyph.Size);
+						adv = fontSource.GetGlyphKernAdvance(prevGlyph.Id, dynamicGlyph.Id, dynamicGlyph.FontSize);
 						Kernings[key] = adv;
 					}
 				}
 
-				x += adv + FontSystem.CharacterSpacing;
+				result += adv + FontSystem.CharacterSpacing;
 			}
 
-			base.GetQuad(glyph, prevGlyph, ref x, y, ref q);
+			return result;
 		}
 	}
 }
