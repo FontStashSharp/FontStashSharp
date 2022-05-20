@@ -62,13 +62,13 @@ namespace FontStashSharp.Tests
 					// Make sure glyph doesnt intersects with the used space
 					if (!atlasFull)
 					{
-						Assert.IsFalse(settings.ExistingTextureUsedSpace.Intersects(glyph.Bounds));
+						Assert.IsFalse(settings.ExistingTextureUsedSpace.Intersects(glyph.TextureRectangle));
 					}
 					else
 					{
 						// If we've moved to the next atlas
 						// The new glyph should override old existing texture used space
-						Assert.IsTrue(settings.ExistingTextureUsedSpace.Intersects(glyph.Bounds));
+						Assert.IsTrue(settings.ExistingTextureUsedSpace.Intersects(glyph.TextureRectangle));
 
 						// This concludes the testing
 						goto finish;

@@ -138,14 +138,18 @@ namespace FontStashSharp
 			result = IndexedMetrics[fontSourceIndex];
 		}
 
-		protected override void PreDraw(string str, out int ascent, out int lineHeight)
+		internal override void PreDraw(TextSource source, out int ascent, out int lineHeight)
 		{
 			// Determine ascent and lineHeight from first character
 			ascent = 0;
 			lineHeight = 0;
-			for (int i = 0; i < str.Length; i += char.IsSurrogatePair(str, i) ? 2 : 1)
+			while (true)
 			{
-				var codepoint = char.ConvertToUtf32(str, i);
+				int codepoint;
+				if (!source.GetNextCodepoint(out codepoint))
+				{
+					break;
+				}
 
 				var glyph = GetDynamicGlyph(null, codepoint);
 				if (glyph == null)
@@ -159,47 +163,16 @@ namespace FontStashSharp
 				lineHeight = metrics.LineHeight + FontSystem.LineSpacing;
 				break;
 			}
+
+			source.Reset();
 		}
 
-		protected override void PreDraw(StringBuilder str, out int ascent, out int lineHeight)
+		internal override void InternalTextBounds(TextSource source, Vector2 position, ref Bounds bounds)
 		{
-			// Determine ascent and lineHeight from first character
-			ascent = 0;
-			lineHeight = 0;
-			for (int i = 0; i < str.Length; i += StringBuilderIsSurrogatePair(str, i) ? 2 : 1)
-			{
-				var codepoint = StringBuilderConvertToUtf32(str, i);
-
-				var glyph = GetDynamicGlyph(null, codepoint);
-				if (glyph == null)
-				{
-					continue;
-				}
-
-				FontMetrics metrics;
-				GetMetrics(glyph.FontSourceIndex, out metrics);
-				ascent = metrics.Ascent;
-				lineHeight = metrics.LineHeight + FontSystem.LineSpacing;
-				break;
-			}
-		}
-
-		protected override void InternalTextBounds(string str, Vector2 position, ref Bounds bounds)
-		{
-			if (string.IsNullOrEmpty(str))
+			if (source.IsNull)
 				return;
 
-			base.InternalTextBounds(str, position, ref bounds);
-
-			bounds.X2 += FontSystem.StrokeAmount * 2;
-		}
-
-		protected override void InternalTextBounds(StringBuilder str, Vector2 position, ref Bounds bounds)
-		{
-			if (str == null || str.Length == 0)
-				return;
-
-			base.InternalTextBounds(str, position, ref bounds);
+			base.InternalTextBounds(source, position, ref bounds);
 
 			bounds.X2 += FontSystem.StrokeAmount * 2;
 		}

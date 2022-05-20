@@ -82,13 +82,7 @@ namespace FontStashSharp
 			return result;
 		}
 
-		protected override void PreDraw(string str, out int ascent, out int lineHeight)
-		{
-			ascent = 0;
-			lineHeight = LineHeight + LineSpacing;
-		}
-
-		protected override void PreDraw(StringBuilder str, out int ascent, out int lineHeight)
+		internal override void PreDraw(TextSource source, out int ascent, out int lineHeight)
 		{
 			ascent = 0;
 			lineHeight = LineHeight + LineSpacing;
