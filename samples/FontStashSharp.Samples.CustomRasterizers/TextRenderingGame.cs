@@ -3,7 +3,8 @@ using Microsoft.Xna.Framework;
 using FontStashSharp.Samples.UI;
 using Myra;
 using FontStashSharp.Samples.SixLabors;
-using FontStashSharp.SharpFont;
+using FontStashSharp.Samples.FreeType;
+using System;
 
 namespace FontStashSharp.Samples
 {
@@ -60,7 +61,12 @@ namespace FontStashSharp.Samples
 			_topWidget = new TopWidget();
 			_topWidget.AddFontSystem("StbTrueTypeSharp(default)", null);
 			// _topWidget.AddFontSystem("StbTrueType(native)", new StbTrueTypeNativeLoader());
-			_topWidget.AddFontSystem("FreeType", new FreeTypeLoader());
+
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+			{
+				_topWidget.AddFontSystem("FreeType", new FreeTypeLoader());
+			}
+
 			_topWidget.AddFontSystem("SixLabors.Fonts", new SixLaborsFontLoader());
 
 			_topWidget.SetFontSize(32);

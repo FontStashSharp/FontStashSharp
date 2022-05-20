@@ -3,7 +3,7 @@ using SharpFontInternal;
 using System;
 using System.Runtime.InteropServices;
 
-namespace FontStashSharp
+namespace FontStashSharp.Samples.FreeType
 {
 	internal class FreeTypeSource: IFontSource
 	{

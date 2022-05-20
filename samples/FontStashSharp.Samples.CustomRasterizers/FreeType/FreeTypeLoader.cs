@@ -1,6 +1,6 @@
 ﻿using FontStashSharp.Interfaces;
 
-namespace FontStashSharp.SharpFont
+namespace FontStashSharp.Samples.FreeType
 {
 	public class FreeTypeLoader : IFontLoader
 	{
