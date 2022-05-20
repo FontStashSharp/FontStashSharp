@@ -327,7 +327,7 @@ namespace FontStashSharp
 				Texture = textureManager.CreateTexture(Width, Height);
 			}
 
-			textureManager.SetTextureData(Texture, glyph.Bounds, colorBuffer);
+			textureManager.SetTextureData(Texture, glyph.TextureRectangle, colorBuffer);
 #endif
 		}
 

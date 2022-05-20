@@ -59,8 +59,6 @@ namespace FontStashSharp.Samples
 			}
 		}
 
-		public float Scale = 2.0f;
-
 		private DynamicSpriteFont Font
 		{
 			get
@@ -98,16 +96,15 @@ namespace FontStashSharp.Samples
 			base.InternalRender(context);
 
 			var text = $"Font Resolution Factor: {FontResolutionFactor}\nKernel Width: {KernelWidth}\nKernel Height: {KernelHeight}";
-			var scale = new Vector2(Scale, Scale);
 
 			if (SampleEnvironment.DrawBackground)
 			{
-				var dimensions = Font.MeasureString(text, scale);
+				var dimensions = Font.MeasureString(text, Scale);
 				context.FillRectangle(
 					new Rectangle(ActualBounds.X, ActualBounds.Y, (int)dimensions.X, (int)dimensions.Y),
 					Color.Green);
 
-				var rects = _font.GetGlyphRects(text, ActualBounds.Location.ToVector2(), Vector2.Zero, scale);
+				var rects = _font.GetGlyphRects(text, ActualBounds.Location.ToVector2(), Vector2.Zero, Scale);
 				foreach (var r in rects)
 				{
 					context.FillRectangle(r, Color.Gray);
@@ -119,7 +116,7 @@ namespace FontStashSharp.Samples
 
 			var screenPosition = ToGlobal(ActualBounds.Location);
 			var position = new Vector2(screenPosition.X, screenPosition.Y);
-			_spriteBatch.DrawString(Font, text, position, Color.White, scale);
+			_spriteBatch.DrawString(Font, text, position, Color.White, Scale);
 			_spriteBatch.End();
 		}
 	}
