@@ -39,10 +39,8 @@ namespace FontStashSharp
 		/// <param name="color">A color mask.</param>
 		/// <param name="scale">A scaling of this text.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(SpriteBatch batch, string text, Vector2 position, Color color, Vector2 scale, float layerDepth = 0.0f)
-		{
-			return DrawText(batch, text, position, color, scale, 0, DefaultOrigin, layerDepth);
-		}
+		public float DrawText(SpriteBatch batch, string text, Vector2 position, Color color, Vector2 scale, float layerDepth = 0.0f) => 
+			DrawText(batch, text, position, color, scale, 0, DefaultOrigin, layerDepth);
 
 		/// <summary>
 		/// Draws a text
@@ -52,10 +50,8 @@ namespace FontStashSharp
 		/// <param name="position">The drawing location on screen.</param>
 		/// <param name="color">A color mask.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(SpriteBatch batch, string text, Vector2 position, Color color, float layerDepth = 0.0f)
-		{
-			return DrawText(batch, text, position, color, DefaultScale, 0, DefaultOrigin, layerDepth);
-		}
+		public float DrawText(SpriteBatch batch, string text, Vector2 position, Color color, float layerDepth = 0.0f) =>
+			DrawText(batch, text, position, color, DefaultScale, 0, DefaultOrigin, layerDepth);
 
 		/// <summary>
 		/// Draws a text
@@ -85,10 +81,8 @@ namespace FontStashSharp
 		/// <param name="colors">Colors of glyphs.</param>
 		/// <param name="scale">A scaling of this text.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(SpriteBatch batch, string text, Vector2 position, Color[] colors, Vector2 scale, float layerDepth = 0.0f)
-		{
-			return DrawText(batch, text, position, colors, scale, 0, DefaultOrigin, layerDepth);
-		}
+		public float DrawText(SpriteBatch batch, string text, Vector2 position, Color[] colors, Vector2 scale, float layerDepth = 0.0f) =>
+			DrawText(batch, text, position, colors, scale, 0, DefaultOrigin, layerDepth);
 
 		/// <summary>
 		/// Draws a text
@@ -98,10 +92,8 @@ namespace FontStashSharp
 		/// <param name="position">The drawing location on screen.</param>
 		/// <param name="colors">Colors of glyphs.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(SpriteBatch batch, string text, Vector2 position, Color[] colors, float layerDepth = 0.0f)
-		{
-			return DrawText(batch, text, position, colors, DefaultScale, 0, DefaultOrigin, layerDepth);
-		}
+		public float DrawText(SpriteBatch batch, string text, Vector2 position, Color[] colors, float layerDepth = 0.0f) =>
+			DrawText(batch, text, position, colors, DefaultScale, 0, DefaultOrigin, layerDepth);
 
 		/// <summary>
 		/// Draws a text
@@ -131,10 +123,8 @@ namespace FontStashSharp
 		/// <param name="color">A color mask.</param>
 		/// <param name="scale">A scaling of this text.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(SpriteBatch batch, StringBuilder text, Vector2 position, Color color, Vector2 scale, float layerDepth = 0.0f)
-		{
-			return DrawText(batch, text, position, color, scale, 0, DefaultOrigin, layerDepth);
-		}
+		public float DrawText(SpriteBatch batch, StringBuilder text, Vector2 position, Color color, Vector2 scale, float layerDepth = 0.0f) =>
+			DrawText(batch, text, position, color, scale, 0, DefaultOrigin, layerDepth);
 
 		/// <summary>
 		/// Draws a text
@@ -144,10 +134,8 @@ namespace FontStashSharp
 		/// <param name="position">The drawing location on screen.</param>
 		/// <param name="color">A color mask.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(SpriteBatch batch, StringBuilder text, Vector2 position, Color color, float layerDepth = 0.0f)
-		{
-			return DrawText(batch, text, position, color, DefaultScale, 0, DefaultOrigin, layerDepth);
-		}
+		public float DrawText(SpriteBatch batch, StringBuilder text, Vector2 position, Color color, float layerDepth = 0.0f) =>
+			DrawText(batch, text, position, color, DefaultScale, 0, DefaultOrigin, layerDepth);
 
 		/// <summary>
 		/// Draws a text
@@ -177,10 +165,8 @@ namespace FontStashSharp
 		/// <param name="colors">Colors of glyphs.</param>
 		/// <param name="scale">A scaling of this text.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(SpriteBatch batch, StringBuilder text, Vector2 position, Color[] colors, Vector2 scale, float layerDepth = 0.0f)
-		{
-			return DrawText(batch, text, position, colors, scale, 0, DefaultOrigin, layerDepth);
-		}
+		public float DrawText(SpriteBatch batch, StringBuilder text, Vector2 position, Color[] colors, Vector2 scale, float layerDepth = 0.0f) =>
+			DrawText(batch, text, position, colors, scale, 0, DefaultOrigin, layerDepth);
 
 		/// <summary>
 		/// Draws a text
@@ -190,9 +176,7 @@ namespace FontStashSharp
 		/// <param name="position">The drawing location on screen.</param>
 		/// <param name="colors">Colors of glyphs.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(SpriteBatch batch, StringBuilder text, Vector2 position, Color[] colors, float layerDepth = 0.0f)
-		{
-			return DrawText(batch, text, position, colors, DefaultScale, 0, DefaultOrigin, layerDepth);
-		}
+		public float DrawText(SpriteBatch batch, StringBuilder text, Vector2 position, Color[] colors, float layerDepth = 0.0f) =>
+			DrawText(batch, text, position, colors, DefaultScale, 0, DefaultOrigin, layerDepth);
 	}
 }
