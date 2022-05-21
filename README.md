@@ -5,12 +5,6 @@
 
 FontStashSharp is C# port of https://github.com/memononen/fontstash
 
-Or - in other words - it is the text rendering library with following features:
-* Fonts can be loaded from ttf or [fnt](https://www.angelcode.com/products/bmfont/)
-* It's possible to have multiple ttf fonts per one FontSystem(i.e. one ttf with Latin characters, second with Japanese characters and third with emojis)
-* Colored text
-* Blurry and stroked text
-
 # Usage
 [Using FontStashSharp in MonoGame, FNA or Stride](https://github.com/rds1983/FontStashSharp/wiki/Using-FontStashSharp-in-MonoGame,-FNA-or-Stride)
 
