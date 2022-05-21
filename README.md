@@ -6,7 +6,7 @@
 FontStashSharp is C# port of https://github.com/memononen/fontstash
 
 Or - in other words - it is the text rendering library with following features:
-* Fonts can be loaded from ttf(DynamicSpriteFont) or [AngelCode BMFont format](https://www.angelcode.com/products/bmfont/)(StaticSpriteFont) formats.
+* Fonts can be loaded from ttf or [AngelCode BMFont format](https://www.angelcode.com/products/bmfont/) formats.
 * Colored text
 * Blurry and stroked text
 
