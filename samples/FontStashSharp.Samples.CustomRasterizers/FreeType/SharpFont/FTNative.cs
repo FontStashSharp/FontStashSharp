@@ -5,7 +5,7 @@ namespace SharpFontInternal
 {
 	internal static class FTNative
 	{
-		private const string FreetypeDll = "freetype6";
+		private const string FreetypeDll = "freetype";
 
 		/// <summary>
 		/// Defines the calling convention for P/Invoking the native freetype methods.
