@@ -10,6 +10,7 @@ Or - in other words - it is the text rendering library with following features:
 * It's possible to have multiple ttf fonts per one FontSystem(i.e. one ttf with Latin characters, second with Japanese characters and third with emojis)
 * Colored text
 * Blurry and stroked text
+* Fonts with prerendered atlases are also supported and could be loaded from [AngelCode BMFont format](https://www.angelcode.com/products/bmfont/)
 
 # Usage
 [Using FontStashSharp in MonoGame, FNA or Stride](https://github.com/rds1983/FontStashSharp/wiki/Using-FontStashSharp-in-MonoGame,-FNA-or-Stride)
