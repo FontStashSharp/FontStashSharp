@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <ApplicationIcon />
@@ -18,7 +18,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <None Update="freetype6.dll">
+    <None Update="freetype.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
