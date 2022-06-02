@@ -24,7 +24,7 @@ namespace FontStashSharp
 			_textureManager = new Texture2DManager(batch.GraphicsDevice);
 		}
 
-		public void Draw(object texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, float depth)
+		public void Draw(object texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 scale, float depth)
 		{
 			var textureWrapper = (Texture2D)texture;
 
@@ -33,7 +33,7 @@ namespace FontStashSharp
 				sourceRectangle == null?default(Microsoft.Xna.Framework.Rectangle?):sourceRectangle.Value.ToXNA(),
 				color.ToXNA(),
 				rotation,
-				origin.ToXNA(),
+				Microsoft.Xna.Framework.Vector2.Zero,
 				scale.ToXNA(),
 				SpriteEffects.None,
 				depth);

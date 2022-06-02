@@ -12,6 +12,7 @@ using Stride.Graphics;
 #else
 using System.Drawing;
 using System.Numerics;
+using Matrix = System.Numerics.Matrix3x2;
 #endif
 
 namespace FontStashSharp
@@ -58,12 +59,14 @@ namespace FontStashSharp
 
 			// This code had been borrowed from MonoGame's SpriteBatch.DrawString
 			transformation = Matrix.Identity;
+
+			float offsetX, offsetY;
 			if (rotation == 0)
 			{
 				transformation.M11 = scale.X;
 				transformation.M22 = scale.Y;
-				transformation.M41 = ((-origin.X) * transformation.M11) + position.X;
-				transformation.M42 = ((-origin.Y) * transformation.M22) + position.Y;
+				offsetX = position.X - (origin.X * transformation.M11);
+				offsetY = position.Y - (origin.Y * transformation.M22);
 			}
 			else
 			{
@@ -73,9 +76,17 @@ namespace FontStashSharp
 				transformation.M12 = scale.X * sin;
 				transformation.M21 = scale.Y * -sin;
 				transformation.M22 = scale.Y * cos;
-				transformation.M41 = position.X - (origin.X * transformation.M11) - (origin.Y * transformation.M21);
-				transformation.M42 = position.Y - (origin.X * transformation.M12) - (origin.Y * transformation.M22);
+				offsetX = position.X - (origin.X * transformation.M11) - (origin.Y * transformation.M21);
+				offsetY = position.Y - (origin.X * transformation.M12) - (origin.Y * transformation.M22);
 			}
+
+#if MONOGAME || FNA || STRIDE
+			transformation.M41 = offsetX;
+			transformation.M42 = offsetY;
+#else
+			transformation.M31 = offsetX;
+			transformation.M32 = offsetY;
+#endif
 		}
 
 		private float DrawText(IFontStashRenderer renderer, TextColorSource source, Vector2 position, 
@@ -135,7 +146,7 @@ namespace FontStashSharp
 				if (!glyph.IsEmpty)
 				{
 					var p = pos + new Vector2(glyph.RenderOffset.X, glyph.RenderOffset.Y);
-					Vector2.Transform(ref p, ref transformation, out p);
+					p = p.Transform(ref transformation);
 
 					renderer.Draw(glyph.Texture,
 						p,
@@ -428,7 +439,7 @@ namespace FontStashSharp
 
 				// Apply transformation to rect
 				var p = new Vector2(rect.X, rect.Y);
-				Vector2.Transform(ref p, ref transformation, out p);
+				p = p.Transform(ref transformation);
 				var s = new Vector2(rect.Width * scale.X, rect.Height * scale.Y);
 
 				// Add to the result
