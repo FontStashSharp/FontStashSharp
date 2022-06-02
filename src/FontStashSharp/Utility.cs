@@ -9,6 +9,7 @@ using Texture2D = Stride.Graphics.Texture;
 #else
 using System.Numerics;
 using Matrix = System.Numerics.Matrix3x2;
+using Matrix = System.Numerics.Matrix3x2;
 #endif
 
 
