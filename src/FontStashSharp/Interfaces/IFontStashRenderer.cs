@@ -21,6 +21,6 @@ namespace FontStashSharp.Interfaces
 		ITexture2DManager TextureManager { get; }
 #endif
 
-		void Draw(Texture2D texture, Vector2 pos, Rectangle? src, Color color, float rotation, Vector2 origin, Vector2 scale, float depth);
+		void Draw(Texture2D texture, Vector2 pos, Rectangle? src, Color color, float rotation, Vector2 scale, float depth);
 	}
 }

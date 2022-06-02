@@ -73,8 +73,7 @@ namespace FontStashSharp
 		{
 		}
 
-		public void Draw(Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, 
-			float rotation, Vector2 origin, Vector2 scale, float depth)
+		public void Draw(Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 scale, float depth)
 		{
 #if MONOGAME || FNA
 			_batch.Draw(texture,
@@ -82,7 +81,7 @@ namespace FontStashSharp
 				sourceRectangle,
 				color,
 				rotation,
-				origin,
+				Vector2.Zero,
 				scale,
 				SpriteEffects.None,
 				depth);
@@ -92,7 +91,7 @@ namespace FontStashSharp
 				sourceRectangle,
 				color,
 				rotation,
-				origin,
+				Vector2.Zero,
 				scale,
 				SpriteEffects.None,
 				ImageOrientation.AsIs,

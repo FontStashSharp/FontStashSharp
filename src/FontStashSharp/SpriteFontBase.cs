@@ -47,6 +47,37 @@ namespace FontStashSharp
 
 		internal abstract void PreDraw(TextSource str, out int ascent, out int lineHeight);
 
+		private void Prepare(TextSource source, ref Vector2 position, ref Vector2 scale, float rotation, Vector2 origin, out int lineHeight, out Matrix transformation)
+		{
+			scale /= RenderFontSizeMultiplicator;
+
+			int ascent;
+			PreDraw(source, out ascent, out lineHeight);
+
+			position.Y += ascent * scale.Y;
+
+			// This code had been borrowed from MonoGame's SpriteBatch.DrawString
+			transformation = Matrix.Identity;
+			if (rotation == 0)
+			{
+				transformation.M11 = scale.X;
+				transformation.M22 = scale.Y;
+				transformation.M41 = ((-origin.X) * transformation.M11) + position.X;
+				transformation.M42 = ((-origin.Y) * transformation.M22) + position.Y;
+			}
+			else
+			{
+				var cos = (float)Math.Cos(rotation);
+				var sin = (float)Math.Sin(rotation);
+				transformation.M11 = scale.X * cos;
+				transformation.M12 = scale.X * sin;
+				transformation.M21 = scale.Y * -sin;
+				transformation.M22 = scale.Y * cos;
+				transformation.M41 = position.X - (origin.X * transformation.M11) - (origin.Y * transformation.M21);
+				transformation.M42 = position.Y - (origin.X * transformation.M12) - (origin.Y * transformation.M22);
+			}
+		}
+
 		private float DrawText(IFontStashRenderer renderer, TextColorSource source, Vector2 position, 
 			Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0.0f)
 		{
@@ -69,12 +100,11 @@ namespace FontStashSharp
 
 			if (source.IsNull) return 0.0f;
 
-			scale /= RenderFontSizeMultiplicator;
+			Matrix transformation;
+			int lineHeight;
+			Prepare(source.TextSource, ref position, ref scale, rotation, origin, out lineHeight, out transformation);
 
-			int ascent, lineHeight;
-			PreDraw(source.TextSource, out ascent, out lineHeight);
-
-			var originOffset = new Vector2(0, ascent);
+			var pos = Vector2.Zero;
 
 			FontGlyph prevGlyph = null;
 			while(true)
@@ -86,8 +116,8 @@ namespace FontStashSharp
 
 				if (codepoint == '\n')
 				{
-					originOffset.X = 0.0f;
-					originOffset.Y += lineHeight;
+					pos.X = 0.0f;
+					pos.Y += lineHeight;
 					prevGlyph = null;
 					continue;
 				}
@@ -104,18 +134,19 @@ namespace FontStashSharp
 
 				if (!glyph.IsEmpty)
 				{
-					var renderOffset = new Vector2(glyph.RenderOffset.X, glyph.RenderOffset.Y) + originOffset;
+					var p = pos + new Vector2(glyph.RenderOffset.X, glyph.RenderOffset.Y);
+					Vector2.Transform(ref p, ref transformation, out p);
+
 					renderer.Draw(glyph.Texture,
-						position,
+						p,
 						glyph.TextureRectangle,
 						color,
 						rotation,
-						origin - renderOffset,
 						scale,
 						layerDepth);
 				}
 
-				originOffset.X += GetXAdvance(glyph, prevGlyph);
+				pos.X += GetXAdvance(glyph, prevGlyph);
 				prevGlyph = glyph;
 			}
 
@@ -355,25 +386,16 @@ namespace FontStashSharp
 
 		public void TextBounds(StringBuilder text, Vector2 position, ref Bounds bounds) => TextBounds(text, position, ref bounds, DefaultScale);
 
-		private static Rectangle ApplyScale(Rectangle rect, Vector2 scale)
-		{
-			return new Rectangle((int)Math.Round(rect.X * scale.X),
-				(int)Math.Round(rect.Y * scale.Y),
-				(int)Math.Round(rect.Width * scale.X),
-				(int)Math.Round(rect.Height * scale.Y));
-		}
-
 		private List<Rectangle> GetGlyphRects(TextSource source, Vector2 position, Vector2 origin, Vector2 scale)
 		{
 			List<Rectangle> rects = new List<Rectangle>();
 			if (source.IsNull) return rects;
 
-			scale /= RenderFontSizeMultiplicator;
+			Matrix transformation;
+			int lineHeight;
+			Prepare(source, ref position, ref scale, 0, origin, out lineHeight, out transformation);
 
-			int ascent, lineHeight;
-			PreDraw(source, out ascent, out lineHeight);
-
-			var originOffset = new Vector2(-origin.X, -origin.Y + ascent);
+			var pos = Vector2.Zero;
 
 			FontGlyph prevGlyph = null;
 			while(true)
@@ -384,11 +406,11 @@ namespace FontStashSharp
 					break;
 				}
 
-				var rect = new Rectangle((int)originOffset.X, (int)originOffset.Y - LineHeight, 0, LineHeight);
+				var rect = new Rectangle((int)pos.X, (int)pos.Y - LineHeight, 0, LineHeight);
 				if (codepoint == '\n')
 				{
-					originOffset.X = -origin.X;
-					originOffset.Y += lineHeight;
+					pos.X = 0;
+					pos.Y += lineHeight;
 					prevGlyph = null;
 				}
 				else
@@ -397,17 +419,20 @@ namespace FontStashSharp
 					if (glyph != null)
 					{
 						rect = glyph.RenderRectangle;
-						rect.Offset((int)originOffset.X, (int)originOffset.Y);
+						rect.Offset((int)pos.X, (int)pos.Y);
 
-						originOffset.X += GetXAdvance(glyph, prevGlyph);
+						pos.X += GetXAdvance(glyph, prevGlyph);
 						prevGlyph = glyph;
 					}
 				}
 
-				rect = ApplyScale(rect, scale);
-				rect.Offset((int)position.X, (int)position.Y);
+				// Apply transformation to rect
+				var p = new Vector2(rect.X, rect.Y);
+				Vector2.Transform(ref p, ref transformation, out p);
+				var s = new Vector2(rect.Width * scale.X, rect.Height * scale.Y);
 
-				rects.Add(rect);
+				// Add to the result
+				rects.Add(new Rectangle((int)p.X, (int)p.Y, (int)s.X, (int)s.Y));
 			}
 
 			return rects;

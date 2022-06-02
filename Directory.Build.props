@@ -5,9 +5,9 @@
     <PackageLicenseExpression>Zlib</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/rds1983/FontStashSharp</PackageProjectUrl>
     <RootNamespace>FontStashSharp</RootNamespace>
-    <Version>1.0.8</Version>
-    <StbTrueTypeSharpVersion>1.24.8</StbTrueTypeSharpVersion>
-    <StbImageSharpVersion>2.22.6</StbImageSharpVersion>
-    <CyotekDrawingBitmapFontVersion>2.0.1</CyotekDrawingBitmapFontVersion>
+    <Version>1.1.0</Version>
+    <StbTrueTypeSharpVersion>1.26.9</StbTrueTypeSharpVersion>
+    <StbImageSharpVersion>2.27.8</StbImageSharpVersion>
+    <CyotekDrawingBitmapFontVersion>2.0.4</CyotekDrawingBitmapFontVersion>
   </PropertyGroup>
 </Project>
