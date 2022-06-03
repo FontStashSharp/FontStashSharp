@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.1.32328.378
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp", "..\src\FontStashSharp\FontStashSharp.csproj", "{9EAEB3FB-6808-478F-B643-57B9280E4896}"
 EndProject
@@ -10,12 +10,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.MonoGameBackend", "..\samples\FontStashSharp.Samples.MonoGameBackend\FontStashSharp.Samples.MonoGameBackend.csproj", "{CC6EF4B2-EE55-4EE5-AB0A-8E38DD3DC7F4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.MonoGameBackendRotating", "..\samples\FontStashSharp.Samples.MonoGameBackendRotating\FontStashSharp.Samples.MonoGameBackendRotating.csproj", "{4047DB36-7104-4314-9027-507374CD1532}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Custom Rasterizers", "Custom Rasterizers", "{93E51C52-9807-484E-B159-9D6B713E343D}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Rasterizers.FreeType", "..\src\FontStashSharp.Rasterizers.FreeType\FontStashSharp.Rasterizers.FreeType.csproj", "{3141638C-F98A-43B9-BFD5-6160546FB1BC}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Rasterizers.SixLabors.Fonts", "..\src\FontStashSharp.Rasterizers.SixLabors.Fonts\FontStashSharp.Rasterizers.SixLabors.Fonts.csproj", "{AA662D20-29C6-4205-B1AE-AA0424A31FCD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,14 +29,6 @@ Global
 		{4047DB36-7104-4314-9027-507374CD1532}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4047DB36-7104-4314-9027-507374CD1532}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4047DB36-7104-4314-9027-507374CD1532}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3141638C-F98A-43B9-BFD5-6160546FB1BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3141638C-F98A-43B9-BFD5-6160546FB1BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3141638C-F98A-43B9-BFD5-6160546FB1BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3141638C-F98A-43B9-BFD5-6160546FB1BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AA662D20-29C6-4205-B1AE-AA0424A31FCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AA662D20-29C6-4205-B1AE-AA0424A31FCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AA662D20-29C6-4205-B1AE-AA0424A31FCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AA662D20-29C6-4205-B1AE-AA0424A31FCD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,8 +36,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{CC6EF4B2-EE55-4EE5-AB0A-8E38DD3DC7F4} = {B239F30F-0011-45CD-8862-62A0BC2ED694}
 		{4047DB36-7104-4314-9027-507374CD1532} = {B239F30F-0011-45CD-8862-62A0BC2ED694}
-		{3141638C-F98A-43B9-BFD5-6160546FB1BC} = {93E51C52-9807-484E-B159-9D6B713E343D}
-		{AA662D20-29C6-4205-B1AE-AA0424A31FCD} = {93E51C52-9807-484E-B159-9D6B713E343D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {35ACDF4E-2CE2-46B1-A19F-35DC131069A1}
