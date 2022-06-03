@@ -28,3 +28,5 @@ Stroked Text:
 * [bartwe's fork of SpriteFontPlus](https://github.com/bartwe/SpriteFontPlus)
 * [MonoGame](http://www.monogame.net/)
 * [SharpFont](https://github.com/Robmaister/SharpFont)
+* [FreeTypeSharp](https://github.com/ryancheung/FreeTypeSharp)
+* [TrippyGL](https://github.com/SilkCommunity/TrippyGL)
