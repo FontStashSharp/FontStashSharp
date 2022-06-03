@@ -17,6 +17,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.Rota
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.MeasureString.FNA", "..\samples\FontStashSharp.Samples.MeasureString\FontStashSharp.Samples.MeasureString.FNA.csproj", "{14D0E5C2-3A14-415B-B203-995E741E0427}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Custom Rasterizers", "Custom Rasterizers", "{7035D259-003A-4E59-ABE7-A6253891B8B9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Rasterizers.FreeType", "..\src\FontStashSharp.Rasterizers.FreeType\FontStashSharp.Rasterizers.FreeType.csproj", "{A5D50FCC-8C6C-41D8-8087-1CCD666837E8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Rasterizers.SixLabors.Fonts", "..\src\FontStashSharp.Rasterizers.SixLabors.Fonts\FontStashSharp.Rasterizers.SixLabors.Fonts.csproj", "{6B59BE42-7D4B-4ACE-9D76-6760FEBA8425}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +53,14 @@ Global
 		{14D0E5C2-3A14-415B-B203-995E741E0427}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14D0E5C2-3A14-415B-B203-995E741E0427}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14D0E5C2-3A14-415B-B203-995E741E0427}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5D50FCC-8C6C-41D8-8087-1CCD666837E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5D50FCC-8C6C-41D8-8087-1CCD666837E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5D50FCC-8C6C-41D8-8087-1CCD666837E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5D50FCC-8C6C-41D8-8087-1CCD666837E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B59BE42-7D4B-4ACE-9D76-6760FEBA8425}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B59BE42-7D4B-4ACE-9D76-6760FEBA8425}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B59BE42-7D4B-4ACE-9D76-6760FEBA8425}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B59BE42-7D4B-4ACE-9D76-6760FEBA8425}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,6 +70,8 @@ Global
 		{3D512DCD-BB4F-43E3-B553-707C506E6FB5} = {8ED83526-FD30-4BA1-90C4-8CE29F53E5FB}
 		{6C4E9D2A-437C-421B-9B9C-FC24969A77D2} = {8ED83526-FD30-4BA1-90C4-8CE29F53E5FB}
 		{14D0E5C2-3A14-415B-B203-995E741E0427} = {8ED83526-FD30-4BA1-90C4-8CE29F53E5FB}
+		{A5D50FCC-8C6C-41D8-8087-1CCD666837E8} = {7035D259-003A-4E59-ABE7-A6253891B8B9}
+		{6B59BE42-7D4B-4ACE-9D76-6760FEBA8425} = {7035D259-003A-4E59-ABE7-A6253891B8B9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A9C9D369-EE58-4E9D-B9FE-63023B644741}
