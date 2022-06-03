@@ -2,9 +2,9 @@
 using Microsoft.Xna.Framework;
 using FontStashSharp.Samples.UI;
 using Myra;
-using FontStashSharp.Samples.SixLabors;
-using FontStashSharp.Samples.FreeType;
 using System;
+using FontStashSharp.Rasterizers.FreeType;
+using FontStashSharp.Rasterizers.SixLabors.Fonts;
 
 namespace FontStashSharp.Samples
 {
