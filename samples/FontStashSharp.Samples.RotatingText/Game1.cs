@@ -46,7 +46,7 @@ namespace FontStashSharp.Samples
 #endif
 
 		public static Game1 Instance { get; private set; }
-		
+
 		private SpriteBatch _spriteBatch;
 		private FontSystem _currentFontSystem;
 		private FontSystem[] _fontSystems;
@@ -155,7 +155,7 @@ namespace FontStashSharp.Samples
 			{
 				var i = 0;
 
-				for(; i < _fontSystems.Length; ++i)
+				for (; i < _fontSystems.Length; ++i)
 				{
 					if (_currentFontSystem == _fontSystems[i])
 					{
@@ -222,21 +222,22 @@ namespace FontStashSharp.Samples
 #endif
 
 			var font = _currentFontSystem.GetFont(32);
-
 			var size = font.MeasureString(Text, scale);
-
 			var rads = (float)(_angle * Math.PI / 180);
-			_spriteBatch.DrawString(font, Text, position, Color.White, 
-						scale, rads, new Vector2(size.X / 2, size.Y / 2));
+
+			_spriteBatch.Draw(_white, new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y), 
+				null, Color.Green, rads, new Vector2(0.5f, 0.5f), SpriteEffects.None, 0.0f);
+			_spriteBatch.DrawString(font, Text, position, Color.White,
+				scale, rads, new Vector2(size.X / 2, size.Y / 2));
 
 			_spriteBatch.End();
 
 			_angle += 0.4f;
 
-			if (_angle >= 360.0f)
-	  {
+			while (_angle >= 360.0f)
+			{
 				_angle -= 360.0f;
-	  }
+			}
 
 			base.Draw(gameTime);
 		}

@@ -48,14 +48,9 @@ namespace FontStashSharp
 
 		internal abstract void PreDraw(TextSource str, out int ascent, out int lineHeight);
 
-		private void Prepare(TextSource source, ref Vector2 position, ref Vector2 scale, float rotation, Vector2 origin, out int lineHeight, out Matrix transformation)
+		private void Prepare(Vector2 position, ref Vector2 scale, float rotation, Vector2 origin, out Matrix transformation)
 		{
 			scale /= RenderFontSizeMultiplicator;
-
-			int ascent;
-			PreDraw(source, out ascent, out lineHeight);
-
-			position.Y += ascent * scale.Y;
 
 			// This code had been borrowed from MonoGame's SpriteBatch.DrawString
 			transformation = Matrix.Identity;
@@ -112,10 +107,12 @@ namespace FontStashSharp
 			if (source.IsNull) return 0.0f;
 
 			Matrix transformation;
-			int lineHeight;
-			Prepare(source.TextSource, ref position, ref scale, rotation, origin, out lineHeight, out transformation);
+			Prepare(position, ref scale, rotation, origin, out transformation);
 
-			var pos = Vector2.Zero;
+			int ascent, lineHeight;
+			PreDraw(source.TextSource, out ascent, out lineHeight);
+
+			var pos = new Vector2(0, ascent);
 
 			FontGlyph prevGlyph = null;
 			while(true)
@@ -403,10 +400,12 @@ namespace FontStashSharp
 			if (source.IsNull) return rects;
 
 			Matrix transformation;
-			int lineHeight;
-			Prepare(source, ref position, ref scale, 0, origin, out lineHeight, out transformation);
+			Prepare(position, ref scale, 0, origin, out transformation);
 
-			var pos = Vector2.Zero;
+			int ascent, lineHeight;
+			PreDraw(source, out ascent, out lineHeight);
+
+			var pos = new Vector2(0, ascent);
 
 			FontGlyph prevGlyph = null;
 			while(true)
