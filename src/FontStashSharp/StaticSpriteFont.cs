@@ -149,15 +149,13 @@ namespace FontStashSharp
 			foreach (var ch in characters)
 			{
 				var texture = textureGetter(bmFont.Pages[ch.TexturePage].FileName);
-				var bounds = new Rectangle(ch.X, ch.Y, ch.Width, ch.Height);
-				bounds.Offset(texture.Offset);
 
 				var glyph = new FontGlyph
 				{
 					Id = ch.Char,
 					Codepoint = ch.Char,
 					RenderOffset = new Point(ch.XOffset, ch.YOffset),
-					TextureOffset = new Point(ch.X, ch.Y),
+					TextureOffset = new Point(ch.X + texture.Offset.X, ch.Y + texture.Offset.Y),
 					Size = new Point(ch.Width, ch.Height),
 					XAdvance = ch.XAdvance,
 					Texture = texture.Texture
