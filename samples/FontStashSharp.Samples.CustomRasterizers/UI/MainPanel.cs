@@ -23,7 +23,7 @@ namespace FontStashSharp.Samples.UI
 			{
 				UpdateLabelScale();
 				var scale = _sliderScale.Value;
-				TextRenderingGame.TopDesktop.Transform = Matrix.CreateScale(scale, scale, 1.0f);
+				TextRenderingGame.TopDesktop.Scale = new Vector2(scale, scale);
 			};
 			_spinButtonFontSize.ValueChanged += (s, a) => TextRenderingGame.TopWidget.SetFontSize((int)_spinButtonFontSize.Value.Value);
 			_spinButtonResolutionFactor.ValueChanged += (s, a) => TextRenderingGame.TopWidget.SetFontResolutionFactor((int)_spinButtonResolutionFactor.Value.Value);

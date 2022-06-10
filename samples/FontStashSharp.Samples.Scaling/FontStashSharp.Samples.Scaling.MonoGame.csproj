@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.7.1.189" />
-    <PackageReference Include="Myra" Version="1.4.0" />
+    <PackageReference Include="Myra" Version="1.4.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,8 +18,8 @@
   </ItemGroup>  
 
   <ItemGroup>
-    <None Update="Fonts\DroidSans.ttf">
+    <None Include="..\Fonts\DroidSans.ttf" Link="Fonts\DroidSans.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>  
+  </ItemGroup>
 </Project>

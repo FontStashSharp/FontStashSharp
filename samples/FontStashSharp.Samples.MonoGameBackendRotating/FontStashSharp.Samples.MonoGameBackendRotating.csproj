@@ -19,14 +19,14 @@
   </ItemGroup>  
 
   <ItemGroup>
-    <None Update="Fonts\DroidSans.ttf">
+    <None Include="..\Fonts\DroidSans.ttf" Link="Fonts\DroidSans.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Fonts\DroidSansJapanese.ttf">
+    <None Include="..\Fonts\DroidSansJapanese.ttf" Link="Fonts\DroidSansJapanese.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Fonts\Symbola-Emoji.ttf">
+    <None Include="..\Fonts\Symbola-Emoji.ttf" Link="Fonts\Symbola-Emoji.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>  
+  </ItemGroup>
 </Project>

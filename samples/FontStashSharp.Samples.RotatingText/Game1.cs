@@ -227,8 +227,7 @@ namespace FontStashSharp.Samples
 
 			_spriteBatch.Draw(_white, new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y), 
 				null, Color.Green, rads, new Vector2(0.5f, 0.5f), SpriteEffects.None, 0.0f);
-			_spriteBatch.DrawString(font, Text, position, Color.White,
-				scale, rads, new Vector2(size.X / 2, size.Y / 2));
+			_spriteBatch.DrawString(font, Text, position, Color.White, scale, rads, new Vector2(size.X / 2, size.Y / 2));
 
 			_spriteBatch.End();
 

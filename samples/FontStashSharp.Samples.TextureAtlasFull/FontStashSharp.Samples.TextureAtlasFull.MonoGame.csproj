@@ -16,8 +16,8 @@
   </ItemGroup>  
 
   <ItemGroup>
-    <None Update="Fonts\DroidSans.ttf">
+    <None Include="..\Fonts\DroidSans.ttf" Link="Fonts\DroidSans.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>  
+  </ItemGroup>
 </Project>
