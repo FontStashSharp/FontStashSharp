@@ -1,13 +1,19 @@
-#version 330 core
-in vec2 fUv;
+#ifdef GL_ES
+	#define LOWP lowp
+	precision mediump float;
+#else
+	#define LOWP
+#endif
 
-//A uniform of the type sampler2D will have the storage value of our texture.
-uniform sampler2D uTexture0;
 
-out vec4 FragColor;
+// Uniforms
+uniform sampler2D TextureSampler;
+
+// Varyings
+varying vec4 v_color;
+varying vec2 v_texCoords;
 
 void main()
 {
-    //Here we sample the texture based on the Uv coordinates of the fragment
-    FragColor = texture(uTexture0, fUv);
+	gl_FragColor = v_color * texture2D(TextureSampler, v_texCoords);
 }

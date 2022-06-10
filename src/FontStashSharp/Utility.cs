@@ -8,7 +8,7 @@ using Stride.Core.Mathematics;
 using Texture2D = Stride.Graphics.Texture;
 #else
 using System.Numerics;
-using Matrix = System.Numerics.Matrix3x2;
+using System.Drawing;
 using Matrix = System.Numerics.Matrix3x2;
 #endif
 
@@ -52,6 +52,12 @@ namespace FontStashSharp
 #else
 			return Vector2.Transform(v, matrix);
 #endif
+		}
+
+		public static Vector3 TransformToVector3(this Vector2 v, ref Matrix matrix)
+		{
+			var result = v.Transform(ref matrix);
+			return new Vector3(result.X, result.Y, 0.0f);
 		}
 	}
 }

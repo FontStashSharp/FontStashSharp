@@ -11,13 +11,14 @@ using Stride.Graphics;
 #else
 using System.Drawing;
 using System.Numerics;
+using Matrix = System.Numerics.Matrix3x2;
 #endif
 
 namespace FontStashSharp
 {
 	partial class SpriteFontBase
 	{
-		private float DrawText(IFontStashRenderer renderer, TextColorSource source, Vector2 position, 
+		private float DrawText(IFontStashRenderer renderer, TextColorSource source, Vector2 position,
 			Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0.0f)
 		{
 			if (renderer == null)
@@ -39,15 +40,16 @@ namespace FontStashSharp
 
 			if (source.IsNull) return 0.0f;
 
-			scale /= RenderFontSizeMultiplicator;
+			Matrix transformation;
+			Prepare(position, ref scale, rotation, origin, out transformation);
 
 			int ascent, lineHeight;
 			PreDraw(source.TextSource, out ascent, out lineHeight);
 
-			var originOffset = new Vector2(0, ascent);
+			var pos = new Vector2(0, ascent);
 
 			FontGlyph prevGlyph = null;
-			while(true)
+			while (true)
 			{
 				int codepoint;
 				Color color;
@@ -56,8 +58,8 @@ namespace FontStashSharp
 
 				if (codepoint == '\n')
 				{
-					originOffset.X = 0.0f;
-					originOffset.Y += lineHeight;
+					pos.X = 0.0f;
+					pos.Y += lineHeight;
 					prevGlyph = null;
 					continue;
 				}
@@ -74,18 +76,19 @@ namespace FontStashSharp
 
 				if (!glyph.IsEmpty)
 				{
-					var renderOffset = new Vector2(glyph.RenderOffset.X, glyph.RenderOffset.Y) + originOffset;
+					var p = pos + new Vector2(glyph.RenderOffset.X, glyph.RenderOffset.Y);
+					p = p.Transform(ref transformation);
+
 					renderer.Draw(glyph.Texture,
-						position,
+						p,
 						glyph.TextureRectangle,
 						color,
 						rotation,
-						origin - renderOffset,
 						scale,
 						layerDepth);
 				}
 
-				originOffset.X += GetXAdvance(glyph, prevGlyph);
+				pos.X += GetXAdvance(glyph, prevGlyph);
 				prevGlyph = glyph;
 			}
 
@@ -107,15 +110,15 @@ namespace FontStashSharp
 			Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0.0f) =>
 				DrawText(renderer, new TextColorSource(text, color), position, scale, rotation, origin, layerDepth);
 
-			/// <summary>
-			/// Draws a text
-			/// </summary>
-			/// <param name="renderer">A renderer.</param>
-			/// <param name="text">The text which will be drawn.</param>
-			/// <param name="position">The drawing location on screen.</param>
-			/// <param name="color">A color mask.</param>
-			/// <param name="scale">A scaling of this text.</param>
-			/// <param name="layerDepth">A depth of the layer of this string.</param>
+		/// <summary>
+		/// Draws a text
+		/// </summary>
+		/// <param name="renderer">A renderer.</param>
+		/// <param name="text">The text which will be drawn.</param>
+		/// <param name="position">The drawing location on screen.</param>
+		/// <param name="color">A color mask.</param>
+		/// <param name="scale">A scaling of this text.</param>
+		/// <param name="layerDepth">A depth of the layer of this string.</param>
 		public float DrawText(IFontStashRenderer renderer, string text, Vector2 position, Color color, Vector2 scale, float layerDepth = 0.0f)
 		{
 			return DrawText(renderer, text, position, color, scale, 0, DefaultOrigin, layerDepth);

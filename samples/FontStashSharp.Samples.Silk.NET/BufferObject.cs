@@ -1,33 +1,53 @@
 using Silk.NET.OpenGL;
 using System;
+using System.Runtime.InteropServices;
 
-namespace Tutorial
+namespace FontStashSharp
 {
-	public class BufferObject<TDataType> : IDisposable
-			where TDataType : unmanaged
+	public class BufferObject<T> : IDisposable where T : unmanaged
 	{
-		private uint _handle;
-		private BufferTargetARB _bufferType;
-		private GL _gl;
+		private readonly uint _handle;
+		private readonly BufferTargetARB _bufferType;
+		private readonly int _size;
 
-		public unsafe BufferObject(GL gl, int size, BufferTargetARB bufferType, bool isDynamic)
+		public unsafe BufferObject(int size, BufferTargetARB bufferType, bool isDynamic)
 		{
-			_gl = gl;
 			_bufferType = bufferType;
+			_size = size;
 
-			_handle = _gl.GenBuffer();
+			_handle = Env.Gl.GenBuffer();
+			GLUtility.CheckError();
+			
 			Bind();
-			_gl.BufferData(bufferType, (nuint)(size * sizeof(TDataType)), null, isDynamic ? BufferUsageARB.StreamDraw : BufferUsageARB.StaticDraw);
+
+			var elementSizeInBytes = Marshal.SizeOf<T>();
+			Env.Gl.BufferData(bufferType, (nuint)(size * elementSizeInBytes), null, isDynamic ? BufferUsageARB.StreamDraw : BufferUsageARB.StaticDraw);
+			GLUtility.CheckError();
 		}
 
 		public void Bind()
 		{
-			_gl.BindBuffer(_bufferType, _handle);
+			Env.Gl.BindBuffer(_bufferType, _handle);
+			GLUtility.CheckError();
 		}
 
 		public void Dispose()
 		{
-			_gl.DeleteBuffer(_handle);
+			Env.Gl.DeleteBuffer(_handle);
+			GLUtility.CheckError();
+		}
+
+		public unsafe void SetData(T[] data, int startIndex, int elementCount)
+		{
+			Bind();
+
+			fixed(T* dataPtr = &data[startIndex])
+			{
+				var elementSizeInBytes = sizeof(T);
+
+				Env.Gl.BufferSubData(_bufferType, 0, (nuint)(elementCount * elementSizeInBytes), dataPtr);
+				GLUtility.CheckError();
+			}
 		}
 	}
 }

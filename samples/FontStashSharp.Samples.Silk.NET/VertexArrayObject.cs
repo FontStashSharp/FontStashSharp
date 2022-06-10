@@ -1,39 +1,43 @@
-using Silk.NET.OpenGL;
+﻿using Silk.NET.OpenGL;
 using System;
 
-namespace Tutorial
+namespace FontStashSharp
 {
-    public class VertexArrayObject<TVertexType, TIndexType> : IDisposable
-        where TVertexType : unmanaged
-        where TIndexType : unmanaged
-    {
-        private uint _handle;
-        private GL _gl;
+	public class VertexArrayObject: IDisposable
+	{
+		private readonly uint _handle;
+		private readonly int _stride;
 
-        public VertexArrayObject(GL gl, BufferObject<TVertexType> vbo, BufferObject<TIndexType> ebo)
-        {
-            _gl = gl;
+		public VertexArrayObject(int stride)
+		{
+			if (stride <= 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(stride));
+			}
 
-            _handle = _gl.GenVertexArray();
-            Bind();
-            vbo.Bind();
-            ebo.Bind();
-        }
+			_stride = stride;
 
-        public unsafe void VertexAttributePointer(uint index, int count, VertexAttribPointerType type, uint vertexSize, int offSet)
-        {
-            _gl.VertexAttribPointer(index, count, type, false, vertexSize * (uint) sizeof(TVertexType), (void*) (offSet * sizeof(TVertexType)));
-            _gl.EnableVertexAttribArray(index);
-        }
+			Env.Gl.GenVertexArrays(1, out _handle);
+			GLUtility.CheckError();
+		}
 
-        public void Bind()
-        {
-            _gl.BindVertexArray(_handle);
-        }
+		public void Dispose()
+		{
+			Env.Gl.DeleteVertexArray(_handle);
+			GLUtility.CheckError();
+		}
 
-        public void Dispose()
-        {
-            _gl.DeleteVertexArray(_handle);
-        }
-    }
+		public void Bind()
+		{
+			Env.Gl.BindVertexArray(_handle);
+			GLUtility.CheckError();
+		}
+
+		public unsafe void VertexAttribPointer(int location, int size, VertexAttribPointerType type, bool normalized, int offset)
+		{
+			Env.Gl.EnableVertexAttribArray((uint)location);
+			Env.Gl.VertexAttribPointer((uint)location, size, type, normalized, (uint)_stride, (void*)offset);
+			GLUtility.CheckError();
+		}
+	}
 }

@@ -1,25 +1,15 @@
 ﻿using FontStashSharp.Interfaces;
-using Silk.NET.OpenGL;
-using System;
 using System.Drawing;
-
-using Texture = Tutorial.Texture;
 
 namespace FontStashSharp.Platform
 {
 	internal class Texture2DManager : ITexture2DManager
 	{
-		public GL Gl { get; }
-
-		public Texture2DManager(GL gl)
+		public Texture2DManager()
 		{
-			if (gl == null)
-				throw new ArgumentNullException(nameof(gl));
-
-			Gl = gl;
 		}
 
-		public object CreateTexture(int width, int height) => new Texture(Gl, width, height);
+		public object CreateTexture(int width, int height) => new Texture(width, height);
 
 		public Point GetTextureSize(object texture)
 		{

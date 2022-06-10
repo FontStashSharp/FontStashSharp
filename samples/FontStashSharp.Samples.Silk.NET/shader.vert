@@ -1,12 +1,18 @@
-#version 330 core
-layout (location = 0) in vec3 vPos;
-layout (location = 1) in vec2 vUv;
+// Attributes
+attribute vec3 a_position;
+attribute vec4 a_color;
+attribute vec2 a_texCoords0;
 
-out vec2 fUv;
+// Uniforms
+uniform mat4 MatrixTransform;
+
+// Varyings
+varying vec4 v_color;
+varying vec2 v_texCoords;
 
 void main()
 {
-    gl_Position = vec4(vPos, 1.0);
-    //Setting the uv coordinates on the vertices will mean they get correctly divided out amongst the fragments.
-    fUv = vUv;
+	v_color = a_color;
+	v_texCoords = a_texCoords0;
+	gl_Position = MatrixTransform * vec4(a_position, 1.0);
 }
