@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.7.1.189" />
+    <PackageReference Include="SpriteFontPlus" Version="0.9.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,12 +19,6 @@
 
   <ItemGroup>
     <None Include="..\Fonts\DroidSans.ttf" Link="Fonts\DroidSans.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Fonts\DroidSansJapanese.ttf" Link="Fonts\DroidSansJapanese.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Fonts\Symbola-Emoji.ttf" Link="Fonts\Symbola-Emoji.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

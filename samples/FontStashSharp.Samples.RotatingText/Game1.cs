@@ -6,6 +6,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SpriteFontPlus;
 #if ANDROID
 using System;
 using Microsoft.Xna.Framework.GamerServices;
@@ -39,7 +40,7 @@ namespace FontStashSharp.Samples
 	public class Game1 : Game
 	{
 		private const int EffectAmount = 1;
-		private const string Text = "The quick いろは brown\nfox にほへ jumps over\nt🙌h📦e l👏a👏zy dog adfasoqiw yraldh ald\nhalwdha ldjahw dlawe havbx\nget872rq";
+		private const string Text = "The quick brown\nfox jumps over\nthe lazy dog";
 
 #if !STRIDE
 		private readonly GraphicsDeviceManager _graphics;
@@ -50,6 +51,7 @@ namespace FontStashSharp.Samples
 		private SpriteBatch _spriteBatch;
 		private FontSystem _currentFontSystem;
 		private FontSystem[] _fontSystems;
+		private SpriteFont _font;
 
 		private Texture2D _white;
 		private bool _animatedScaling = false;
@@ -86,8 +88,6 @@ namespace FontStashSharp.Samples
 		private void LoadFontSystem(FontSystem result)
 		{
 			result.AddFont(File.ReadAllBytes(@"Fonts/DroidSans.ttf"));
-			result.AddFont(File.ReadAllBytes(@"Fonts/DroidSansJapanese.ttf"));
-			result.AddFont(File.ReadAllBytes(@"Fonts/Symbola-Emoji.ttf"));
 		}
 
 		/// <summary>
@@ -129,6 +129,21 @@ namespace FontStashSharp.Samples
 
 			_fontSystems = fontSystems.ToArray();
 			_currentFontSystem = _fontSystems[0];
+
+			var fontBakeResult = TtfFontBaker.Bake(File.ReadAllBytes(@"C:\\Windows\\Fonts\arial.ttf"),
+					32,
+					1024,
+					1024,
+					new[]
+					{
+						CharacterRange.BasicLatin,
+						CharacterRange.Latin1Supplement,
+						CharacterRange.LatinExtendedA,
+						CharacterRange.Cyrillic
+					}
+				);
+
+			_font = fontBakeResult.CreateSpriteFont(GraphicsDevice);
 
 #if MONOGAME || FNA
 			_white = new Texture2D(GraphicsDevice, 1, 1);
@@ -216,19 +231,30 @@ namespace FontStashSharp.Samples
 				: Vector2.One;
 
 #if !STRIDE
-			var position = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
+			var position = new Vector2(GraphicsDevice.Viewport.Width / 4, GraphicsDevice.Viewport.Height / 2);
 #else
-			var position = new Vector2(GraphicsDevice.Presenter.BackBuffer.Width / 2, GraphicsDevice.Presenter.BackBuffer.Height / 2);
+			var position = new Vector2(GraphicsDevice.Presenter.BackBuffer.Width / 4, GraphicsDevice.Presenter.BackBuffer.Height / 2);
 #endif
 
 			var font = _currentFontSystem.GetFont(32);
 			var size = font.MeasureString(Text, scale);
 			var rads = (float)(_angle * Math.PI / 180);
+			var normalizedOrigin = new Vector2(0.5f, 0.5f);
 
 			_spriteBatch.Draw(_white, new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y), 
-				null, Color.Green, rads, new Vector2(0.5f, 0.5f), SpriteEffects.None, 0.0f);
-			_spriteBatch.DrawString(font, Text, position, Color.White, scale, rads, new Vector2(size.X / 2, size.Y / 2));
+				null, Color.Green, rads, normalizedOrigin, SpriteEffects.None, 0.0f);
+			_spriteBatch.DrawString(font, Text, position, Color.White, scale, rads, size * normalizedOrigin);
 
+#if !STRIDE
+			position = new Vector2(GraphicsDevice.Viewport.Width * 3 / 4, GraphicsDevice.Viewport.Height / 2);
+#else
+			position = new Vector2(GraphicsDevice.Presenter.BackBuffer.Width * 3 / 4, GraphicsDevice.Presenter.BackBuffer.Height / 2);
+#endif
+
+			size = _font.MeasureString(Text) * scale;
+			_spriteBatch.Draw(_white, new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y),
+				null, Color.Green, rads, normalizedOrigin, SpriteEffects.None, 0.0f);
+			_spriteBatch.DrawString(_font, Text, position, Color.White, rads, size * normalizedOrigin, scale, SpriteEffects.None, 0);
 			_spriteBatch.End();
 
 			_angle += 0.4f;
