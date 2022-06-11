@@ -54,10 +54,10 @@ namespace FontStashSharp
 #endif
 		}
 
-		public static Vector3 TransformToVector3(this Vector2 v, ref Matrix matrix)
+		public static Vector3 TransformToVector3(this Vector2 v, ref Matrix matrix, float z)
 		{
 			var result = v.Transform(ref matrix);
-			return new Vector3(result.X, result.Y, 0.0f);
+			return new Vector3(result.X, result.Y, z);
 		}
 	}
 }

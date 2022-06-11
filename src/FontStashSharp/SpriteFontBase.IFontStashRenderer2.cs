@@ -18,7 +18,7 @@ namespace FontStashSharp
 {
 	partial class SpriteFontBase
 	{
-		private float DrawText(IFontStashRenderer2 renderer, TextColorSource source, Vector2 position, Vector2 scale, float rotation, Vector2 origin)
+		private float DrawText(IFontStashRenderer2 renderer, TextColorSource source, Vector2 position, Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0)
 		{
 			if (renderer == null)
 			{
@@ -89,22 +89,22 @@ namespace FontStashSharp
 #endif
 					var baseOffset = new Vector2(glyph.RenderOffset.X, glyph.RenderOffset.Y) + offset;
 
-					topLeft.Position = baseOffset.TransformToVector3(ref transformation);
+					topLeft.Position = baseOffset.TransformToVector3(ref transformation, layerDepth);
 					topLeft.TextureCoordinate = new Vector2((float)glyph.TextureRectangle.X / textureSize.X, 
 															(float)glyph.TextureRectangle.Y / textureSize.Y);
 					topLeft.Color = setColor;
 
-					topRight.Position = (baseOffset + new Vector2(glyph.Size.X, 0)).TransformToVector3(ref transformation);
+					topRight.Position = (baseOffset + new Vector2(glyph.Size.X, 0)).TransformToVector3(ref transformation, layerDepth);
 					topRight.TextureCoordinate = new Vector2((float)glyph.TextureRectangle.Right / textureSize.X,
 															 (float)glyph.TextureRectangle.Y / textureSize.Y);
 					topRight.Color = setColor;
 
-					bottomLeft.Position = (baseOffset + new Vector2(0, glyph.Size.Y)).TransformToVector3(ref transformation);
+					bottomLeft.Position = (baseOffset + new Vector2(0, glyph.Size.Y)).TransformToVector3(ref transformation, layerDepth);
 					bottomLeft.TextureCoordinate = new Vector2((float)glyph.TextureRectangle.Left / textureSize.X,
 																 (float)glyph.TextureRectangle.Bottom / textureSize.Y);
 					bottomLeft.Color = setColor;
 
-					bottomRight.Position = (baseOffset + new Vector2(glyph.Size.X, glyph.Size.Y)).TransformToVector3(ref transformation);
+					bottomRight.Position = (baseOffset + new Vector2(glyph.Size.X, glyph.Size.Y)).TransformToVector3(ref transformation, layerDepth);
 					bottomRight.TextureCoordinate = new Vector2((float)glyph.TextureRectangle.Right / textureSize.X,
 																(float)glyph.TextureRectangle.Bottom / textureSize.Y);
 					bottomRight.Color = setColor;
@@ -130,8 +130,8 @@ namespace FontStashSharp
 		/// <param name="origin">Center of the rotation.</param>
 		/// <param name="scale">A scaling of this text.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(IFontStashRenderer2 renderer, string text, Vector2 position, Color color, Vector2 scale, float rotation, Vector2 origin) =>
-				DrawText(renderer, new TextColorSource(text, color), position, scale, rotation, origin);
+		public float DrawText(IFontStashRenderer2 renderer, string text, Vector2 position, Color color, Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0) =>
+				DrawText(renderer, new TextColorSource(text, color), position, scale, rotation, origin, layerDepth);
 
 			/// <summary>
 			/// Draws a text
@@ -142,8 +142,8 @@ namespace FontStashSharp
 			/// <param name="color">A color mask.</param>
 			/// <param name="scale">A scaling of this text.</param>
 			/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(IFontStashRenderer2 renderer, string text, Vector2 position, Color color, Vector2 scale) =>
-			DrawText(renderer, text, position, color, scale, 0, DefaultOrigin);
+		public float DrawText(IFontStashRenderer2 renderer, string text, Vector2 position, Color color, Vector2 scale, float layerDepth = 0) =>
+			DrawText(renderer, text, position, color, scale, 0, DefaultOrigin, layerDepth);
 
 		/// <summary>
 		/// Draws a text
@@ -153,8 +153,8 @@ namespace FontStashSharp
 		/// <param name="position">The drawing location on screen.</param>
 		/// <param name="color">A color mask.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(IFontStashRenderer2 renderer, string text, Vector2 position, Color color) =>
-			DrawText(renderer, text, position, color, DefaultScale, 0, DefaultOrigin);
+		public float DrawText(IFontStashRenderer2 renderer, string text, Vector2 position, Color color, float layerDepth = 0) =>
+			DrawText(renderer, text, position, color, DefaultScale, 0, DefaultOrigin, layerDepth);
 
 		/// <summary>
 		/// Draws a text
@@ -168,8 +168,8 @@ namespace FontStashSharp
 		/// <param name="scale">A scaling of this text.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
 		public float DrawText(IFontStashRenderer2 renderer, string text, Vector2 position, Color[] colors,
-			Vector2 scale, float rotation, Vector2 origin) =>
-				DrawText(renderer, new TextColorSource(text, colors), position, scale, rotation, origin);
+			Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0) =>
+				DrawText(renderer, new TextColorSource(text, colors), position, scale, rotation, origin, layerDepth);
 
 		/// <summary>
 		/// Draws a text
@@ -180,8 +180,8 @@ namespace FontStashSharp
 		/// <param name="colors">Colors of glyphs.</param>
 		/// <param name="scale">A scaling of this text.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(IFontStashRenderer2 renderer, string text, Vector2 position, Color[] colors, Vector2 scale) =>
-			DrawText(renderer, text, position, colors, scale, 0, DefaultOrigin);
+		public float DrawText(IFontStashRenderer2 renderer, string text, Vector2 position, Color[] colors, Vector2 scale, float layerDepth = 0) =>
+			DrawText(renderer, text, position, colors, scale, 0, DefaultOrigin, layerDepth);
 
 		/// <summary>
 		/// Draws a text
@@ -191,8 +191,8 @@ namespace FontStashSharp
 		/// <param name="position">The drawing location on screen.</param>
 		/// <param name="colors">Colors of glyphs.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(IFontStashRenderer2 renderer, string text, Vector2 position, Color[] colors) =>
-			DrawText(renderer, text, position, colors, DefaultScale, 0, DefaultOrigin);
+		public float DrawText(IFontStashRenderer2 renderer, string text, Vector2 position, Color[] colors, float layerDepth = 0) =>
+			DrawText(renderer, text, position, colors, DefaultScale, 0, DefaultOrigin, layerDepth);
 
 		/// <summary>
 		/// Draws a text
@@ -206,8 +206,8 @@ namespace FontStashSharp
 		/// <param name="scale">A scaling of this text.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
 		public float DrawText(IFontStashRenderer2 renderer, StringBuilder text, Vector2 position, Color color,
-			Vector2 scale, float rotation, Vector2 origin) =>
-				DrawText(renderer, new TextColorSource(text, color), position, scale, rotation, origin);
+			Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0) =>
+				DrawText(renderer, new TextColorSource(text, color), position, scale, rotation, origin, layerDepth);
 
 		/// <summary>
 		/// Draws a text
@@ -218,8 +218,8 @@ namespace FontStashSharp
 		/// <param name="color">A color mask.</param>
 		/// <param name="scale">A scaling of this text.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(IFontStashRenderer2 renderer, StringBuilder text, Vector2 position, Color color, Vector2 scale) =>
-			DrawText(renderer, text, position, color, scale, 0, DefaultOrigin);
+		public float DrawText(IFontStashRenderer2 renderer, StringBuilder text, Vector2 position, Color color, Vector2 scale, float layerDepth = 0) =>
+			DrawText(renderer, text, position, color, scale, 0, DefaultOrigin, layerDepth);
 
 		/// <summary>
 		/// Draws a text
@@ -229,8 +229,8 @@ namespace FontStashSharp
 		/// <param name="position">The drawing location on screen.</param>
 		/// <param name="color">A color mask.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(IFontStashRenderer2 renderer, StringBuilder text, Vector2 position, Color color) =>
-			DrawText(renderer, text, position, color, DefaultScale, 0, DefaultOrigin);
+		public float DrawText(IFontStashRenderer2 renderer, StringBuilder text, Vector2 position, Color color, float layerDepth = 0) =>
+			DrawText(renderer, text, position, color, DefaultScale, 0, DefaultOrigin, layerDepth);
 
 		/// <summary>
 		/// Draws a text
@@ -244,8 +244,8 @@ namespace FontStashSharp
 		/// <param name="scale">A scaling of this text.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
 		public float DrawText(IFontStashRenderer2 renderer, StringBuilder text, Vector2 position, Color[] colors,
-			Vector2 scale, float rotation, Vector2 origin) =>
-				DrawText(renderer, new TextColorSource(text, colors), position, scale, rotation, origin);
+			Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0) =>
+				DrawText(renderer, new TextColorSource(text, colors), position, scale, rotation, origin, layerDepth);
 
 		/// <summary>
 		/// Draws a text
@@ -256,8 +256,8 @@ namespace FontStashSharp
 		/// <param name="colors">Colors of glyphs.</param>
 		/// <param name="scale">A scaling of this text.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(IFontStashRenderer2 renderer, StringBuilder text, Vector2 position, Color[] colors, Vector2 scale) =>
-			DrawText(renderer, text, position, colors, scale, 0, DefaultOrigin);
+		public float DrawText(IFontStashRenderer2 renderer, StringBuilder text, Vector2 position, Color[] colors, Vector2 scale, float layerDepth = 0) =>
+			DrawText(renderer, text, position, colors, scale, 0, DefaultOrigin, layerDepth);
 
 		/// <summary>
 		/// Draws a text
@@ -267,7 +267,7 @@ namespace FontStashSharp
 		/// <param name="position">The drawing location on screen.</param>
 		/// <param name="colors">Colors of glyphs.</param>
 		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(IFontStashRenderer2 renderer, StringBuilder text, Vector2 position, Color[] colors) =>
-			DrawText(renderer, text, position, colors, DefaultScale, 0, DefaultOrigin);
+		public float DrawText(IFontStashRenderer2 renderer, StringBuilder text, Vector2 position, Color[] colors, float layerDepth = 0) =>
+			DrawText(renderer, text, position, colors, DefaultScale, 0, DefaultOrigin, layerDepth);
 	}
 }
