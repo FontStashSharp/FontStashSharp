@@ -44,6 +44,7 @@ namespace FontStashSharp.Samples
 
 #if !STRIDE
 		private readonly GraphicsDeviceManager _graphics;
+		private SpriteFont _font;
 #endif
 
 		public static Game1 Instance { get; private set; }
@@ -51,7 +52,6 @@ namespace FontStashSharp.Samples
 		private SpriteBatch _spriteBatch;
 		private FontSystem _currentFontSystem;
 		private FontSystem[] _fontSystems;
-		private SpriteFont _font;
 
 		private Texture2D _white;
 		private bool _animatedScaling = false;
@@ -130,6 +130,7 @@ namespace FontStashSharp.Samples
 			_fontSystems = fontSystems.ToArray();
 			_currentFontSystem = _fontSystems[0];
 
+#if MONOGAME || FNA
 			var fontBakeResult = TtfFontBaker.Bake(File.ReadAllBytes(@"C:\\Windows\\Fonts\arial.ttf"),
 					32,
 					1024,
@@ -142,10 +143,8 @@ namespace FontStashSharp.Samples
 						CharacterRange.Cyrillic
 					}
 				);
-
 			_font = fontBakeResult.CreateSpriteFont(GraphicsDevice);
-
-#if MONOGAME || FNA
+			
 			_white = new Texture2D(GraphicsDevice, 1, 1);
 			_white.SetData(new[] { Color.White });
 #elif STRIDE
@@ -233,7 +232,7 @@ namespace FontStashSharp.Samples
 #if !STRIDE
 			var position = new Vector2(GraphicsDevice.Viewport.Width / 4, GraphicsDevice.Viewport.Height / 2);
 #else
-			var position = new Vector2(GraphicsDevice.Presenter.BackBuffer.Width / 4, GraphicsDevice.Presenter.BackBuffer.Height / 2);
+			var position = new Vector2(GraphicsDevice.Presenter.BackBuffer.Width / 2, GraphicsDevice.Presenter.BackBuffer.Height / 2);
 #endif
 
 			var font = _currentFontSystem.GetFont(32);
@@ -247,14 +246,13 @@ namespace FontStashSharp.Samples
 
 #if !STRIDE
 			position = new Vector2(GraphicsDevice.Viewport.Width * 3 / 4, GraphicsDevice.Viewport.Height / 2);
-#else
-			position = new Vector2(GraphicsDevice.Presenter.BackBuffer.Width * 3 / 4, GraphicsDevice.Presenter.BackBuffer.Height / 2);
-#endif
 
 			size = _font.MeasureString(Text) * scale;
 			_spriteBatch.Draw(_white, new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y),
 				null, Color.Green, rads, normalizedOrigin, SpriteEffects.None, 0.0f);
 			_spriteBatch.DrawString(_font, Text, position, Color.White, rads, size * normalizedOrigin, scale, SpriteEffects.None, 0);
+#endif
+
 			_spriteBatch.End();
 
 			_angle += 0.4f;
