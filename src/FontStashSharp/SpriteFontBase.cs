@@ -116,6 +116,11 @@ namespace FontStashSharp
 					continue;
 				}
 
+				if (prevGlyph != null)
+				{
+					x += characterSpacing;
+				}
+
 				var glyph = GetGlyph(null, codepoint);
 				if (glyph == null)
 				{
@@ -125,7 +130,7 @@ namespace FontStashSharp
 				var x0 = x + glyph.RenderOffset.X;
 				if (x0 < minx)
 					minx = x0;
-				x += GetXAdvance(glyph, prevGlyph, characterSpacing);
+				x += GetXAdvance(glyph, prevGlyph);
 				if (x > maxx)
 					maxx = x;
 
@@ -184,6 +189,11 @@ namespace FontStashSharp
 					break;
 				}
 
+				if (prevGlyph != null)
+				{
+					pos.X += characterSpacing;
+				}
+
 				var rect = new Rectangle((int)pos.X, (int)pos.Y - LineHeight, 0, LineHeight);
 				if (codepoint == '\n')
 				{
@@ -199,7 +209,7 @@ namespace FontStashSharp
 						rect = glyph.RenderRectangle;
 						rect.Offset((int)pos.X, (int)pos.Y);
 
-						pos.X += GetXAdvance(glyph, prevGlyph, characterSpacing);
+						pos.X += GetXAdvance(glyph, prevGlyph);
 						prevGlyph = glyph;
 					}
 				}
@@ -238,6 +248,6 @@ namespace FontStashSharp
 			return new Vector2(bounds.X2, bounds.Y2);
 		}
 
-		internal abstract float GetXAdvance(FontGlyph glyph, FontGlyph prevGlyph, float characterSpacing);
+		internal abstract float GetXAdvance(FontGlyph glyph, FontGlyph prevGlyph);
 	}
 }

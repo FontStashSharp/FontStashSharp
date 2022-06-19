@@ -65,11 +65,17 @@ namespace FontStashSharp
 					continue;
 				}
 
+				if (prevGlyph != null)
+				{
+					pos.X += characterSpacing;
+				}
+
 #if MONOGAME || FNA || STRIDE
 				var glyph = GetGlyph(renderer.GraphicsDevice, codepoint);
 #else
 				var glyph = GetGlyph(renderer.TextureManager, codepoint);
 #endif
+
 				if (glyph == null)
 				{
 					continue;
@@ -89,7 +95,7 @@ namespace FontStashSharp
 						layerDepth);
 				}
 
-				pos.X += GetXAdvance(glyph, prevGlyph, characterSpacing);
+				pos.X += GetXAdvance(glyph, prevGlyph);
 				prevGlyph = glyph;
 			}
 

@@ -48,7 +48,7 @@ namespace FontStashSharp
 			int ascent, lineHeight;
 			PreDraw(source.TextSource, out ascent, out lineHeight);
 
-			var offset = new Vector2(0, ascent);
+			var pos = new Vector2(0, ascent);
 
 			FontGlyph prevGlyph = null;
 			var topLeft = new VertexPositionColorTexture();
@@ -65,10 +65,15 @@ namespace FontStashSharp
 
 				if (codepoint == '\n')
 				{
-					offset.X = 0.0f;
-					offset.Y += lineHeight;
+					pos.X = 0.0f;
+					pos.Y += lineHeight;
 					prevGlyph = null;
 					continue;
+				}
+
+				if (prevGlyph != null)
+				{
+					pos.X += characterSpacing;
 				}
 
 #if MONOGAME || FNA || STRIDE
@@ -90,7 +95,7 @@ namespace FontStashSharp
 					var textureSize = renderer.TextureManager.GetTextureSize(glyph.Texture);
 					var setColor = (uint)(color.A << 24 | color.B << 16 | color.G << 8 | color.R);
 #endif
-					var baseOffset = new Vector2(glyph.RenderOffset.X, glyph.RenderOffset.Y) + offset;
+					var baseOffset = new Vector2(glyph.RenderOffset.X, glyph.RenderOffset.Y) + pos;
 
 					topLeft.Position = baseOffset.TransformToVector3(ref transformation, layerDepth);
 					topLeft.TextureCoordinate = new Vector2((float)glyph.TextureRectangle.X / textureSize.X,
@@ -115,7 +120,7 @@ namespace FontStashSharp
 					renderer.DrawQuad(glyph.Texture, ref topLeft, ref topRight, ref bottomLeft, ref bottomRight);
 				}
 
-				offset.X += GetXAdvance(glyph, prevGlyph, characterSpacing);
+				pos.X += GetXAdvance(glyph, prevGlyph);
 				prevGlyph = glyph;
 			}
 

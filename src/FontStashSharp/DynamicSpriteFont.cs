@@ -182,7 +182,7 @@ namespace FontStashSharp
 			return ((glyph1 << 16) | (glyph1 >> 16)) ^ glyph2;
 		}
 
-		internal override float GetXAdvance(FontGlyph glyph, FontGlyph prevGlyph, float characterSpacing)
+		internal override float GetXAdvance(FontGlyph glyph, FontGlyph prevGlyph)
 		{
 			float result = glyph.XAdvance;
 			if (prevGlyph != null)
@@ -202,7 +202,7 @@ namespace FontStashSharp
 					}
 				}
 
-				result += adv + characterSpacing;
+				result += adv;
 			}
 
 			return result;

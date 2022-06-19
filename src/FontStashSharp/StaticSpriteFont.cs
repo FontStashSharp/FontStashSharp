@@ -105,7 +105,7 @@ namespace FontStashSharp
 			_kernings[key] = value;
 		}
 
-		internal override float GetXAdvance(FontGlyph glyph, FontGlyph prevGlyph, float characterSpacing)
+		internal override float GetXAdvance(FontGlyph glyph, FontGlyph prevGlyph)
 		{
 			float result = glyph.XAdvance;
 			if (prevGlyph != null)
@@ -114,8 +114,6 @@ namespace FontStashSharp
 				{
 					result += GetGlyphKernAdvance(prevGlyph.Codepoint, glyph.Codepoint);
 				}
-
-				result += characterSpacing;
 			}
 
 			return result;

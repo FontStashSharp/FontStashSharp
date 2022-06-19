@@ -40,7 +40,8 @@ namespace FontStashSharp.Samples
 	public class Game1 : Game
 	{
 		private const int EffectAmount = 1;
-		private const int LineSpacing = 10;
+		private const int CharacterSpacing = 2;
+		private const int LineSpacing = 4;
 
 #if !STRIDE
 		private readonly GraphicsDeviceManager _graphics;
@@ -236,7 +237,7 @@ namespace FontStashSharp.Samples
 
 		private void DrawString(string text, ref Vector2 cursor, Alignment alignment, Color color, Vector2 scale)
 		{
-			Vector2 dimensions = _font.MeasureString(text);
+			Vector2 dimensions = _font.MeasureString(text, characterSpacing: CharacterSpacing, lineSpacing: LineSpacing);
 			Vector2 origin = AlignmentOrigin(alignment, dimensions);
 
 			if (_drawBackground)
@@ -247,14 +248,14 @@ namespace FontStashSharp.Samples
 					(int)Math.Round(dimensions.Y * scale.Y));
 				DrawRectangle(backgroundRect, Color.Green);
 
-				var rects = _font.GetGlyphRects(text, cursor, origin, scale);
+				var rects = _font.GetGlyphRects(text, cursor, origin, scale, characterSpacing: CharacterSpacing, lineSpacing: LineSpacing);
 				foreach (var r in rects)
 				{
 					DrawRectangle(r, Color.Gray);
 				}
 			}
 
-			_spriteBatch.DrawString(_font, text, cursor, color, scale, 0, origin);
+			_spriteBatch.DrawString(_font, text, cursor, color, scale, 0, origin, characterSpacing: CharacterSpacing, lineSpacing: LineSpacing);
 			cursor.Y += dimensions.Y + LineSpacing;
 		}
 

@@ -41,6 +41,8 @@ namespace FontStashSharp.Samples
 	{
 		private const int EffectAmount = 1;
 		private const string Text = "The quick brown\nfox jumps over\nthe lazy dog";
+		private const int CharacterSpacing = 4;
+		private const int LineSpacing = 8;
 
 #if !STRIDE
 		private readonly GraphicsDeviceManager _graphics;
@@ -236,13 +238,13 @@ namespace FontStashSharp.Samples
 #endif
 
 			var font = _currentFontSystem.GetFont(32);
-			var size = font.MeasureString(Text, scale);
+			var size = font.MeasureString(Text, scale, characterSpacing: CharacterSpacing, lineSpacing: LineSpacing);
 			var rads = (float)(_angle * Math.PI / 180);
 			var normalizedOrigin = new Vector2(0.5f, 0.5f);
 
 			_spriteBatch.Draw(_white, new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y), 
 				null, Color.Green, rads, normalizedOrigin, SpriteEffects.None, 0.0f);
-			_spriteBatch.DrawString(font, Text, position, Color.White, scale, rads, size * normalizedOrigin);
+			_spriteBatch.DrawString(font, Text, position, Color.White, scale, rads, size * normalizedOrigin, characterSpacing: CharacterSpacing, lineSpacing: LineSpacing);
 
 #if !STRIDE
 			position = new Vector2(GraphicsDevice.Viewport.Width * 3 / 4, GraphicsDevice.Viewport.Height / 2);
