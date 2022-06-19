@@ -46,9 +46,6 @@ namespace FontStashSharp
 		public bool UseKernings = true;
 		public int? DefaultCharacter = ' ';
 
-		public int CharacterSpacing = 0;
-		public int LineSpacing = 0;
-
 		internal int BlurAmount => Effect == FontSystemEffect.Blurry ? EffectAmount : 0;
 		internal int StrokeAmount => Effect == FontSystemEffect.Stroked ? EffectAmount : 0;
 

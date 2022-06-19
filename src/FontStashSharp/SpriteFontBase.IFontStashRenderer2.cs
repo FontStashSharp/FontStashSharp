@@ -18,7 +18,9 @@ namespace FontStashSharp
 {
 	partial class SpriteFontBase
 	{
-		private float DrawText(IFontStashRenderer2 renderer, TextColorSource source, Vector2 position, Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0)
+		private float DrawText(IFontStashRenderer2 renderer, TextColorSource source,
+			Vector2 position, Vector2? sourceScale, float rotation, Vector2 origin,
+			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f)
 		{
 			if (renderer == null)
 			{
@@ -40,6 +42,7 @@ namespace FontStashSharp
 			if (source.IsNull) return 0.0f;
 
 			Matrix transformation;
+			var scale = sourceScale ?? DefaultScale;
 			Prepare(position, ref scale, rotation, origin, out transformation);
 
 			int ascent, lineHeight;
@@ -90,7 +93,7 @@ namespace FontStashSharp
 					var baseOffset = new Vector2(glyph.RenderOffset.X, glyph.RenderOffset.Y) + offset;
 
 					topLeft.Position = baseOffset.TransformToVector3(ref transformation, layerDepth);
-					topLeft.TextureCoordinate = new Vector2((float)glyph.TextureRectangle.X / textureSize.X, 
+					topLeft.TextureCoordinate = new Vector2((float)glyph.TextureRectangle.X / textureSize.X,
 															(float)glyph.TextureRectangle.Y / textureSize.Y);
 					topLeft.Color = setColor;
 
@@ -112,162 +115,83 @@ namespace FontStashSharp
 					renderer.DrawQuad(glyph.Texture, ref topLeft, ref topRight, ref bottomLeft, ref bottomRight);
 				}
 
-				offset.X += GetXAdvance(glyph, prevGlyph);
+				offset.X += GetXAdvance(glyph, prevGlyph, characterSpacing);
 				prevGlyph = glyph;
 			}
 
-			return position.X;
+			return position.X + position.X;
 		}
 
 		/// <summary>
 		/// Draws a text
 		/// </summary>
-		/// <param name="renderer">A renderer.</param>
-		/// <param name="text">The text which will be drawn.</param>
-		/// <param name="position">The drawing location on screen.</param>
-		/// <param name="color">A color mask.</param>
-		/// <param name="rotation">A rotation of this text in radians.</param>
-		/// <param name="origin">Center of the rotation.</param>
-		/// <param name="scale">A scaling of this text.</param>
-		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(IFontStashRenderer2 renderer, string text, Vector2 position, Color color, Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0) =>
-				DrawText(renderer, new TextColorSource(text, color), position, scale, rotation, origin, layerDepth);
-
-			/// <summary>
-			/// Draws a text
-			/// </summary>
-			/// <param name="renderer">A renderer.</param>
-			/// <param name="text">The text which will be drawn.</param>
-			/// <param name="position">The drawing location on screen.</param>
-			/// <param name="color">A color mask.</param>
-			/// <param name="scale">A scaling of this text.</param>
-			/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(IFontStashRenderer2 renderer, string text, Vector2 position, Color color, Vector2 scale, float layerDepth = 0) =>
-			DrawText(renderer, text, position, color, scale, 0, DefaultOrigin, layerDepth);
+		/// <param name="renderer">A renderer</param>
+		/// <param name="text">The text which will be drawn</param>
+		/// <param name="position">The drawing location on screen</param>
+		/// <param name="color">A color mask</param>
+		/// <param name="rotation">A rotation of this text in radians</param>
+		/// <param name="origin">Center of the rotation</param>
+		/// <param name="scale">A scaling of this text. Null means the scaling is (1, 1)</param>
+		/// <param name="layerDepth">A depth of the layer of this string</param>
+		/// <param name="characterSpacing">A character spacing</param>
+		/// <param name="lineSpacing">A line spacing</param>
+		public float DrawText(IFontStashRenderer2 renderer, string text, Vector2 position, Color color,
+			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
+			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f) =>
+				DrawText(renderer, new TextColorSource(text, color), position, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing);
 
 		/// <summary>
 		/// Draws a text
 		/// </summary>
-		/// <param name="renderer">A renderer.</param>
-		/// <param name="text">The text which will be drawn.</param>
-		/// <param name="position">The drawing location on screen.</param>
-		/// <param name="color">A color mask.</param>
-		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(IFontStashRenderer2 renderer, string text, Vector2 position, Color color, float layerDepth = 0) =>
-			DrawText(renderer, text, position, color, DefaultScale, 0, DefaultOrigin, layerDepth);
-
-		/// <summary>
-		/// Draws a text
-		/// </summary>
-		/// <param name="renderer">A renderer.</param>
-		/// <param name="text">The text which will be drawn.</param>
-		/// <param name="position">The drawing location on screen.</param>
-		/// <param name="colors">Colors of glyphs.</param>
-		/// <param name="rotation">A rotation of this text in radians.</param>
-		/// <param name="origin">Center of the rotation.</param>
-		/// <param name="scale">A scaling of this text.</param>
-		/// <param name="layerDepth">A depth of the layer of this string.</param>
+		/// <param name="renderer">A renderer</param>
+		/// <param name="text">The text which will be drawn</param>
+		/// <param name="position">The drawing location on screen</param>
+		/// <param name="colors">Colors of glyphs</param>
+		/// <param name="rotation">A rotation of this text in radians</param>
+		/// <param name="origin">Center of the rotation</param>
+		/// <param name="scale">A scaling of this text. Null means the scaling is (1, 1)</param>
+		/// <param name="layerDepth">A depth of the layer of this string</param>
+		/// <param name="characterSpacing">A character spacing</param>
+		/// <param name="lineSpacing">A line spacing</param>
 		public float DrawText(IFontStashRenderer2 renderer, string text, Vector2 position, Color[] colors,
-			Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0) =>
-				DrawText(renderer, new TextColorSource(text, colors), position, scale, rotation, origin, layerDepth);
+			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
+			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f) =>
+				DrawText(renderer, new TextColorSource(text, colors), position, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing);
 
 		/// <summary>
 		/// Draws a text
 		/// </summary>
-		/// <param name="renderer">A renderer.</param>
-		/// <param name="text">The text which will be drawn.</param>
-		/// <param name="position">The drawing location on screen.</param>
-		/// <param name="colors">Colors of glyphs.</param>
-		/// <param name="scale">A scaling of this text.</param>
-		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(IFontStashRenderer2 renderer, string text, Vector2 position, Color[] colors, Vector2 scale, float layerDepth = 0) =>
-			DrawText(renderer, text, position, colors, scale, 0, DefaultOrigin, layerDepth);
-
-		/// <summary>
-		/// Draws a text
-		/// </summary>
-		/// <param name="renderer">A renderer.</param>
-		/// <param name="text">The text which will be drawn.</param>
-		/// <param name="position">The drawing location on screen.</param>
-		/// <param name="colors">Colors of glyphs.</param>
-		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(IFontStashRenderer2 renderer, string text, Vector2 position, Color[] colors, float layerDepth = 0) =>
-			DrawText(renderer, text, position, colors, DefaultScale, 0, DefaultOrigin, layerDepth);
-
-		/// <summary>
-		/// Draws a text
-		/// </summary>
-		/// <param name="renderer">A renderer.</param>
-		/// <param name="text">The text which will be drawn.</param>
-		/// <param name="position">The drawing location on screen.</param>
-		/// <param name="color">A color mask.</param>
-		/// <param name="rotation">A rotation of this text in radians.</param>
-		/// <param name="origin">Center of the rotation.</param>
-		/// <param name="scale">A scaling of this text.</param>
-		/// <param name="layerDepth">A depth of the layer of this string.</param>
+		/// <param name="renderer">A renderer</param>
+		/// <param name="text">The text which will be drawn</param>
+		/// <param name="position">The drawing location on screen</param>
+		/// <param name="color">A color mask</param>
+		/// <param name="rotation">A rotation of this text in radians</param>
+		/// <param name="origin">Center of the rotation</param>
+		/// <param name="scale">A scaling of this text. Null means the scaling is (1, 1)</param>
+		/// <param name="layerDepth">A depth of the layer of this string</param>
+		/// <param name="characterSpacing">A character spacing</param>
+		/// <param name="lineSpacing">A line spacing</param>
 		public float DrawText(IFontStashRenderer2 renderer, StringBuilder text, Vector2 position, Color color,
-			Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0) =>
-				DrawText(renderer, new TextColorSource(text, color), position, scale, rotation, origin, layerDepth);
+			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
+			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f) =>
+				DrawText(renderer, new TextColorSource(text, color), position, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing);
 
 		/// <summary>
 		/// Draws a text
 		/// </summary>
-		/// <param name="renderer">A renderer.</param>
-		/// <param name="text">The text which will be drawn.</param>
-		/// <param name="position">The drawing location on screen.</param>
-		/// <param name="color">A color mask.</param>
-		/// <param name="scale">A scaling of this text.</param>
-		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(IFontStashRenderer2 renderer, StringBuilder text, Vector2 position, Color color, Vector2 scale, float layerDepth = 0) =>
-			DrawText(renderer, text, position, color, scale, 0, DefaultOrigin, layerDepth);
-
-		/// <summary>
-		/// Draws a text
-		/// </summary>
-		/// <param name="renderer">A renderer.</param>
-		/// <param name="text">The text which will be drawn.</param>
-		/// <param name="position">The drawing location on screen.</param>
-		/// <param name="color">A color mask.</param>
-		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(IFontStashRenderer2 renderer, StringBuilder text, Vector2 position, Color color, float layerDepth = 0) =>
-			DrawText(renderer, text, position, color, DefaultScale, 0, DefaultOrigin, layerDepth);
-
-		/// <summary>
-		/// Draws a text
-		/// </summary>
-		/// <param name="renderer">A renderer.</param>
-		/// <param name="text">The text which will be drawn.</param>
-		/// <param name="position">The drawing location on screen.</param>
-		/// <param name="colors">Colors of glyphs.</param>
-		/// <param name="rotation">A rotation of this text in radians.</param>
-		/// <param name="origin">Center of the rotation.</param>
-		/// <param name="scale">A scaling of this text.</param>
-		/// <param name="layerDepth">A depth of the layer of this string.</param>
+		/// <param name="renderer">A renderer</param>
+		/// <param name="text">The text which will be drawn</param>
+		/// <param name="position">The drawing location on screen</param>
+		/// <param name="colors">Colors of glyphs</param>
+		/// <param name="rotation">A rotation of this text in radians</param>
+		/// <param name="origin">Center of the rotation</param>
+		/// <param name="scale">A scaling of this text. Null means the scaling is (1, 1)</param>
+		/// <param name="layerDepth">A depth of the layer of this string</param>
+		/// <param name="characterSpacing">A character spacing</param>
+		/// <param name="lineSpacing">A line spacing</param>
 		public float DrawText(IFontStashRenderer2 renderer, StringBuilder text, Vector2 position, Color[] colors,
-			Vector2 scale, float rotation, Vector2 origin, float layerDepth = 0) =>
-				DrawText(renderer, new TextColorSource(text, colors), position, scale, rotation, origin, layerDepth);
-
-		/// <summary>
-		/// Draws a text
-		/// </summary>
-		/// <param name="renderer">A renderer.</param>
-		/// <param name="text">The text which will be drawn.</param>
-		/// <param name="position">The drawing location on screen.</param>
-		/// <param name="colors">Colors of glyphs.</param>
-		/// <param name="scale">A scaling of this text.</param>
-		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(IFontStashRenderer2 renderer, StringBuilder text, Vector2 position, Color[] colors, Vector2 scale, float layerDepth = 0) =>
-			DrawText(renderer, text, position, colors, scale, 0, DefaultOrigin, layerDepth);
-
-		/// <summary>
-		/// Draws a text
-		/// </summary>
-		/// <param name="renderer">A renderer.</param>
-		/// <param name="text">The text which will be drawn.</param>
-		/// <param name="position">The drawing location on screen.</param>
-		/// <param name="colors">Colors of glyphs.</param>
-		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		public float DrawText(IFontStashRenderer2 renderer, StringBuilder text, Vector2 position, Color[] colors, float layerDepth = 0) =>
-			DrawText(renderer, text, position, colors, DefaultScale, 0, DefaultOrigin, layerDepth);
+			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
+			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f) =>
+				DrawText(renderer, new TextColorSource(text, colors), position, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing);
 	}
 }

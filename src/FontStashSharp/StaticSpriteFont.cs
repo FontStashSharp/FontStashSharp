@@ -51,9 +51,6 @@ namespace FontStashSharp
 
 		public int? DefaultCharacter { get; set; }
 
-		public int CharacterSpacing { get; set; }
-		public int LineSpacing { get; set; }
-
 		public bool UseKernings { get; set; } = true;
 
 		public StaticSpriteFont(int fontSize, int lineHeight): base(fontSize, lineHeight)
@@ -85,7 +82,7 @@ namespace FontStashSharp
 		internal override void PreDraw(TextSource source, out int ascent, out int lineHeight)
 		{
 			ascent = 0;
-			lineHeight = LineHeight + LineSpacing;
+			lineHeight = LineHeight;
 		}
 
 		private static int KerningKey(int codepoint1, int codepoint2)
@@ -108,9 +105,9 @@ namespace FontStashSharp
 			_kernings[key] = value;
 		}
 
-		internal override float GetXAdvance(FontGlyph glyph, FontGlyph prevGlyph)
+		internal override float GetXAdvance(FontGlyph glyph, FontGlyph prevGlyph, float characterSpacing)
 		{
-			var result = glyph.XAdvance;
+			float result = glyph.XAdvance;
 			if (prevGlyph != null)
 			{
 				if (UseKernings)
@@ -118,7 +115,7 @@ namespace FontStashSharp
 					result += GetGlyphKernAdvance(prevGlyph.Codepoint, glyph.Codepoint);
 				}
 
-				result += CharacterSpacing;
+				result += characterSpacing;
 			}
 
 			return result;

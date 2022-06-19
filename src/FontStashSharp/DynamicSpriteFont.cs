@@ -160,21 +160,21 @@ namespace FontStashSharp
 				FontMetrics metrics;
 				GetMetrics(glyph.FontSourceIndex, out metrics);
 				ascent = metrics.Ascent;
-				lineHeight = metrics.LineHeight + FontSystem.LineSpacing;
+				lineHeight = metrics.LineHeight;
 				break;
 			}
 
 			source.Reset();
 		}
 
-		internal override void InternalTextBounds(TextSource source, Vector2 position, ref Bounds bounds)
+		internal override Bounds InternalTextBounds(TextSource source, Vector2 position, float characterSpacing, float lineSpacing)
 		{
 			if (source.IsNull)
-				return;
+				return Bounds.Empty;
 
-			base.InternalTextBounds(source, position, ref bounds);
-
+			var bounds = base.InternalTextBounds(source, position, characterSpacing, lineSpacing);
 			bounds.X2 += FontSystem.StrokeAmount * 2;
+			return bounds;
 		}
 
 		private static int GetKerningsKey(int glyph1, int glyph2)
@@ -182,9 +182,9 @@ namespace FontStashSharp
 			return ((glyph1 << 16) | (glyph1 >> 16)) ^ glyph2;
 		}
 
-		internal override float GetXAdvance(FontGlyph glyph, FontGlyph prevGlyph)
+		internal override float GetXAdvance(FontGlyph glyph, FontGlyph prevGlyph, float characterSpacing)
 		{
-			var result = glyph.XAdvance;
+			float result = glyph.XAdvance;
 			if (prevGlyph != null)
 			{
 				var adv = 0;
@@ -202,7 +202,7 @@ namespace FontStashSharp
 					}
 				}
 
-				result += adv + FontSystem.CharacterSpacing;
+				result += adv + characterSpacing;
 			}
 
 			return result;
