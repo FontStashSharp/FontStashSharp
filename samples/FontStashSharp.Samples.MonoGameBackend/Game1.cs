@@ -138,13 +138,7 @@ namespace FontStashSharp
 			KeyboardUtils.End();
 		}
 
-		public Vector2 MeasureString(string text)
-		{
-			Bounds bounds = new Bounds();
-			_font.TextBounds(text, System.Numerics.Vector2.Zero, ref bounds);
-
-			return new Vector2(bounds.X2, bounds.Y2);
-		}
+		public Vector2 MeasureString(string text) => _font.MeasureString(text).ToXNA();
 
 		public void DrawString(string text, Vector2 position, System.Drawing.Color[] glyphColors)
 		{
