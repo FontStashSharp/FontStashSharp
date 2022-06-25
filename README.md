@@ -12,6 +12,20 @@ FontStashSharp is C# port of https://github.com/memononen/fontstash
 
 Additional documentation is available at [wiki](https://github.com/rds1983/FontStashSharp/wiki)
 
+## Support
+[Discord](https://discord.gg/ZeHxhCY)
+
+## Building From Source Code
+1. Clone this repo.
+2. Open a solution from the "build" folder.
+
+## Sponsor
+https://www.patreon.com/rds1983
+
+https://boosty.to/rds1983
+
+bitcoin: 3GeKFcv8X1cn8WqH1mr8i7jgPBkQjQuyN1
+
 # Screenshots
 Ordinary Text:
 ![](/screenshots/simple.png)
