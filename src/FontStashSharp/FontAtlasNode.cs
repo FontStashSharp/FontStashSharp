@@ -3,7 +3,7 @@
 namespace FontStashSharp
 {
 	[StructLayout(LayoutKind.Sequential)]
-	public struct FontAtlasNode
+	internal struct FontAtlasNode
 	{
 		public int X;
 		public int Y;

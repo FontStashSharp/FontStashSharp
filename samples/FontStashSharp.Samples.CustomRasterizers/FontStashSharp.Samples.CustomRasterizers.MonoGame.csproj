@@ -1,26 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <ApplicationIcon />
-    <StartupObject />
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
+    <PackageReference Include="FontStashSharp.Rasterizers.FreeType" Version="1.1.6" />
+    <PackageReference Include="FontStashSharp.Rasterizers.SixLabors.Fonts" Version="1.1.6-beta1" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="$(MonoGameVersion)" />
     <PackageReference Include="Myra" Version="1.4.1" />
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\src\FontStashSharp.Rasterizers.FreeType\FontStashSharp.Rasterizers.FreeType.csproj" />
-    <ProjectReference Include="..\..\src\FontStashSharp.Rasterizers.SixLabors.Fonts\FontStashSharp.Rasterizers.SixLabors.Fonts.csproj" />
     <ProjectReference Include="..\..\src\XNA\FontStashSharp.MonoGame.csproj" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <None Update="freetype.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 </Project>

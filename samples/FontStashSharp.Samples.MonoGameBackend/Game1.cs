@@ -203,8 +203,7 @@ namespace FontStashSharp
 			_font = _currentFontSystem.GetFont(26);
 			DrawString("Texture:", 380);
 
-			var atlas = _currentFontSystem.Atlases.First();
-			var wrapper = (Texture2D)atlas.Texture;
+			var wrapper = (Texture2D)_currentFontSystem.Atlases[0].Texture;
 			_spriteBatch.Draw(wrapper, new Vector2(0, 410), Color.White);
 
 			_spriteBatch.End();

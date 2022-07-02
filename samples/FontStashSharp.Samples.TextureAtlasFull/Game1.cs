@@ -74,8 +74,9 @@ namespace FontStashSharp.Samples
 			_spriteBatch.DrawString(font, c.ToString(), Vector2.Zero, Color.White);
 
 			var count = 0;
-			foreach (var texture in _fontSystem.EnumerateTextures())
+			foreach (var atlas in _fontSystem.Atlases)
 			{
+				var texture = atlas.Texture;
 				var x = (count % AtlasesPerRow) * (texture.Width + TexturePadding);
 				var y = 50 + (count / AtlasesPerRow) * (texture.Height + TexturePadding);
 

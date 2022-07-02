@@ -17,7 +17,7 @@ namespace FontStashSharp.Samples
 #if MONOGAME || FNA
 		private static KeyboardState _state, _oldState;
 #elif STRIDE
-		private static IReadOnlySet<Keys> _state;
+		private static Stride.Core.Collections.IReadOnlySet<Keys> _state;
 		private static readonly HashSet<Keys> _oldState = new HashSet<Keys>();
 #endif
 
@@ -71,7 +71,7 @@ namespace FontStashSharp.Samples
 		}
 
 #if STRIDE
-		private static bool IsKeyDown(this IReadOnlySet<Keys> keysDown, Keys key)
+		private static bool IsKeyDown(this Stride.Core.Collections.IReadOnlySet<Keys> keysDown, Keys key)
 		{
 			return keysDown.Contains(key);
 		}

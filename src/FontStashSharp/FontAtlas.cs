@@ -13,7 +13,7 @@ using Texture2D = System.Object;
 
 namespace FontStashSharp
 {
-	public unsafe class FontAtlas
+	public class FontAtlas
 	{
 		byte[] _byteBuffer;
 		byte[] _colorBuffer;
@@ -24,7 +24,7 @@ namespace FontStashSharp
 
 		public int NodesNumber { get; private set; }
 
-		public FontAtlasNode[] Nodes { get; private set; }
+		internal FontAtlasNode[] Nodes { get; private set; }
 
 		public Texture2D Texture { get; set; }
 
@@ -289,10 +289,7 @@ namespace FontStashSharp
 			{
 				if (blurAmount > 0)
 				{
-					fixed (byte* bdst = &buffer[0])
-					{
-						Blur(bdst, glyph.Size.X, glyph.Size.Y, glyph.Size.X, blurAmount);
-					}
+					Blur(buffer, glyph.Size.X, glyph.Size.Y, glyph.Size.X, blurAmount);
 				}
 
 				for (var i = 0; i < bufferSize; ++i)
@@ -331,7 +328,7 @@ namespace FontStashSharp
 #endif
 		}
 
-		void Blur(byte* dst, int w, int h, int dstStride, int blur)
+		void Blur(byte[] dst, int w, int h, int dstStride, int blur)
 		{
 			int alpha;
 			float sigma;
@@ -345,55 +342,58 @@ namespace FontStashSharp
 			BlurCols(dst, w, h, dstStride, alpha);
 		}
 
-		static void BlurCols(byte* dst, int w, int h, int dstStride, int alpha)
+		static void BlurCols(byte[] dst, int w, int h, int dstStride, int alpha)
 		{
 			int x;
 			int y;
+
+			int index = 0;
 			for (y = 0; y < h; y++)
 			{
 				var z = 0;
 				for (x = 1; x < w; x++)
 				{
-					z += (alpha * ((dst[x] << 7) - z)) >> 16;
-					dst[x] = (byte)(z >> 7);
+					z += (alpha * ((dst[index + x] << 7) - z)) >> 16;
+					dst[index + x] = (byte)(z >> 7);
 				}
 
-				dst[w - 1] = 0;
+				dst[index + w - 1] = 0;
 				z = 0;
 				for (x = w - 2; x >= 0; x--)
 				{
-					z += (alpha * ((dst[x] << 7) - z)) >> 16;
-					dst[x] = (byte)(z >> 7);
+					z += (alpha * ((dst[index + x] << 7) - z)) >> 16;
+					dst[index + x] = (byte)(z >> 7);
 				}
 
-				dst[0] = 0;
-				dst += dstStride;
+				dst[index] = 0;
+				index += dstStride;
 			}
 		}
 
-		static void BlurRows(byte* dst, int w, int h, int dstStride, int alpha)
+		static void BlurRows(byte[] dst, int w, int h, int dstStride, int alpha)
 		{
 			int x;
 			int y;
+			int index = 0;
 			for (x = 0; x < w; x++)
 			{
 				var z = 0;
 				for (y = dstStride; y < h * dstStride; y += dstStride)
 				{
-					z += (alpha * ((dst[y] << 7) - z)) >> 16;
-					dst[y] = (byte)(z >> 7);
+					z += (alpha * ((dst[index + y] << 7) - z)) >> 16;
+					dst[index +y] = (byte)(z >> 7);
 				}
 
-				dst[(h - 1) * dstStride] = 0;
+				dst[index +(h - 1) * dstStride] = 0;
 				z = 0;
 				for (y = (h - 2) * dstStride; y >= 0; y -= dstStride)
 				{
-					z += (alpha * ((dst[y] << 7) - z)) >> 16;
-					dst[y] = (byte)(z >> 7);
+					z += (alpha * ((dst[index +y] << 7) - z)) >> 16;
+					dst[index +y] = (byte)(z >> 7);
 				}
 
-				dst[0] = 0;
-				dst++;
+				dst[index] = 0;
+				++index;
 			}
 		}
 	}

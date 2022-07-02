@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30309.148
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{8ED83526-FD30-4BA1-90C4-8CE29F53E5FB}"
 EndProject
@@ -22,6 +22,7 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6ED7B053-7CD7-4F9B-8F06-597F56F698D1}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{6ED7B053-7CD7-4F9B-8F06-597F56F698D1}.Debug|Any CPU.Build.0 = Debug|x64
 		{6ED7B053-7CD7-4F9B-8F06-597F56F698D1}.Debug|x64.ActiveCfg = Debug|x64
 		{6ED7B053-7CD7-4F9B-8F06-597F56F698D1}.Debug|x64.Build.0 = Debug|x64
 		{6ED7B053-7CD7-4F9B-8F06-597F56F698D1}.Release|Any CPU.ActiveCfg = Release|x64

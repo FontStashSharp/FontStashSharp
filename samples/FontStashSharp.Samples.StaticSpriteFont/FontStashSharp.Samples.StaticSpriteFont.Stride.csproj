@@ -1,9 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <ApplicationIcon />
-    <StartupObject />
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
+    <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
     <OutputPath>bin\Stride\$(Configuration)</OutputPath>
     <DefineConstants>$(DefineConstants);STRIDE</DefineConstants>
     <RootNamespace>FontStashSharp.Samples.StaticSpriteFont</RootNamespace>
@@ -11,6 +10,10 @@
   
   <ItemGroup>
     <EmbeddedResource Include="Fonts\*.*" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Include="..\FontStashSharp.Samples.DynamicSpriteFont\KeyboardUtils.cs" Link="KeyboardUtils.cs" />
   </ItemGroup>
 
   <ItemGroup>

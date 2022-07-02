@@ -350,8 +350,8 @@ namespace FontStashSharp.Samples
 			// Render the atlas texture
 			_font = _currentFontSystem.GetFont(26);
 			DrawString("Texture:", ref cursor, Alignment.Left, Vector2.One);
-			
-			var texture = _currentFontSystem.EnumerateTextures().First();
+
+			var texture = _currentFontSystem.Atlases[0].Texture;
 			_spriteBatch.Draw(texture, cursor, Color.White);
 
 			_spriteBatch.End();

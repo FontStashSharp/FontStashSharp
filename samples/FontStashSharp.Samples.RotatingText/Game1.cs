@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 
+#if MONOGAME
+using SpriteFontPlus;
+#endif
+
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SpriteFontPlus;
 #if ANDROID
 using System;
 using Microsoft.Xna.Framework.GamerServices;
@@ -46,6 +49,9 @@ namespace FontStashSharp.Samples
 
 #if !STRIDE
 		private readonly GraphicsDeviceManager _graphics;
+#endif
+
+#if MONOGAME
 		private SpriteFont _font;
 #endif
 
@@ -132,7 +138,7 @@ namespace FontStashSharp.Samples
 			_fontSystems = fontSystems.ToArray();
 			_currentFontSystem = _fontSystems[0];
 
-#if MONOGAME || FNA
+#if MONOGAME
 			var fontBakeResult = TtfFontBaker.Bake(File.ReadAllBytes(@"C:\\Windows\\Fonts\arial.ttf"),
 					32,
 					1024,
@@ -146,7 +152,9 @@ namespace FontStashSharp.Samples
 					}
 				);
 			_font = fontBakeResult.CreateSpriteFont(GraphicsDevice);
-			
+#endif
+		
+#if MONOGAME || FNA
 			_white = new Texture2D(GraphicsDevice, 1, 1);
 			_white.SetData(new[] { Color.White });
 #elif STRIDE
@@ -246,7 +254,7 @@ namespace FontStashSharp.Samples
 				null, Color.Green, rads, normalizedOrigin, SpriteEffects.None, 0.0f);
 			_spriteBatch.DrawString(font, Text, position, Color.White, scale, rads, size * normalizedOrigin, characterSpacing: CharacterSpacing, lineSpacing: LineSpacing);
 
-#if !STRIDE
+#if MONOGAME
 			position = new Vector2(GraphicsDevice.Viewport.Width * 3 / 4, GraphicsDevice.Viewport.Height / 2);
 
 			size = _font.MeasureString(Text) * scale;
