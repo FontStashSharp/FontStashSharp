@@ -13,7 +13,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '5.0.x'
+        dotnet-version: '6.0.x'
     - name: Build FontStashSharp
       run: dotnet build build\FontStashSharp.sln --configuration Release
     - name: Build FontStashSharp.MonoGame
@@ -24,13 +24,12 @@ jobs:
       run: dotnet test build\FontStashSharp.MonoGame.sln
     - name: Install NuGet
       uses: NuGet/setup-nuget@v1
-    - name: Publish FontStashSharp.Rasterizers.FreeType to NuGet
-      run: nuget.exe push src\FontStashSharp.Rasterizers.FreeType\bin\Release\FontStashSharp.Rasterizers.FreeType.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
-    - name: Publish FontStashSharp.Rasterizers.SixLabors.Fonts to NuGet
-      run: nuget.exe push src\FontStashSharp.Rasterizers.SixLabors.Fonts\bin\Release\FontStashSharp.Rasterizers.SixLabors.Fonts.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
     - name: Publish FontStashSharp to NuGet
       run: nuget.exe push src\FontStashSharp\bin\Release\FontStashSharp.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
+      continue-on-error: true
     - name: Publish FontStashSharp.MonoGame to NuGet
       run: nuget.exe push src\XNA\bin\MonoGame\Release\FontStashSharp.MonoGame.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
+      continue-on-error: true
     - name: Publish FontStashSharp.Stride to NuGet
       run: nuget.exe push src\XNA\bin\Stride\Release\FontStashSharp.Stride.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
+      continue-on-error: true      
