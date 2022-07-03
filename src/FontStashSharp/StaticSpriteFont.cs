@@ -47,11 +47,11 @@ namespace FontStashSharp
 	{
 		private readonly Int32Map<int> _kernings = new Int32Map<int>();
 
-		public Int32Map<FontGlyph> Glyphs { get; } = new Int32Map<FontGlyph>();
+		public readonly Int32Map<FontGlyph> Glyphs = new Int32Map<FontGlyph>();
 
-		public int? DefaultCharacter { get; set; }
+		public int? DefaultCharacter;
 
-		public bool UseKernings { get; set; } = true;
+		public bool UseKernings = true;
 
 		public StaticSpriteFont(int fontSize, int lineHeight): base(fontSize, lineHeight)
 		{

@@ -20,7 +20,13 @@ namespace FontStashSharp
 		private SpriteBatch _batch;
 
 #if MONOGAME || FNA
-		public GraphicsDevice GraphicsDevice => _batch.GraphicsDevice;
+		public GraphicsDevice GraphicsDevice
+		{
+			get
+			{
+				return _batch.GraphicsDevice;
+			}
+		}
 #elif STRIDE
 		private GraphicsDevice _graphicsDevice;
 		public GraphicsDevice GraphicsDevice
@@ -54,7 +60,7 @@ namespace FontStashSharp
 			{
 				if (value == null)
 				{
-					throw new ArgumentNullException(nameof(value));
+					throw new ArgumentNullException("value");
 				}
 
 				if (value == _batch)

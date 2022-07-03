@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <OutputPath>bin\ConsoleCheck\$(Configuration)</OutputPath>
+    <DefineConstants>$(DefineConstants);MONOGAME</DefineConstants>
+	<LangVersion>5</LangVersion>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="FontStashSharp.Base" Version="$(FontStashSharpBaseVersion)" />
+    <PackageReference Include="FontStashSharp.Rasterizers.StbTrueTypeSharp" Version="$(FontStashSharpBaseVersion)" />
+    <PackageReference Include="MonoGame.Framework.Portable" PrivateAssets="All" Version="3.7.1.189" />
+    <PackageReference Include="Cyotek.Drawing.BitmapFont" Version="$(CyotekDrawingBitmapFontVersion)" />
+    <PackageReference Include="StbImageSharp" Version="$(StbImageSharpVersion)" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Include="..\FontStashSharp\**\*.cs" LinkBase="FontStashSharp" />
+    <Compile Remove="..\FontStashSharp\obj\**\*.cs" LinkBase="FontStashSharp" />
+  </ItemGroup>
+</Project>

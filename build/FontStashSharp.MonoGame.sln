@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.Cust
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.MeasureString.MonoGame", "..\samples\FontStashSharp.Samples.MeasureString\FontStashSharp.Samples.MeasureString.MonoGame.csproj", "{42F0AA0C-44F4-44E8-BDFD-097E95F90E66}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.ConsoleCheck", "..\src\XNA\FontStashSharp.ConsoleCheck.csproj", "{99EC1DFD-FFD2-4A97-ACFE-9B1998F6CD3D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,10 @@ Global
 		{42F0AA0C-44F4-44E8-BDFD-097E95F90E66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42F0AA0C-44F4-44E8-BDFD-097E95F90E66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42F0AA0C-44F4-44E8-BDFD-097E95F90E66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99EC1DFD-FFD2-4A97-ACFE-9B1998F6CD3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99EC1DFD-FFD2-4A97-ACFE-9B1998F6CD3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99EC1DFD-FFD2-4A97-ACFE-9B1998F6CD3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99EC1DFD-FFD2-4A97-ACFE-9B1998F6CD3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

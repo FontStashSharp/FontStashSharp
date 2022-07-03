@@ -22,7 +22,13 @@ namespace FontStashSharp
 			Position = 0;
 		}
 
-		public bool IsNull => StringText == null && StringBuilderText == null;
+		public bool IsNull
+		{
+			get
+			{
+				return StringText == null && StringBuilderText == null;
+			}
+		}
 
 		public bool GetNextCodepoint(out int result)
 		{

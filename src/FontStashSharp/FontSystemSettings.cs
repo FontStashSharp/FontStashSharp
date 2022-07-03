@@ -28,7 +28,7 @@ namespace FontStashSharp
 		internal static readonly FontSystemSettings Default = new FontSystemSettings();
 
 		private int _effectAmount = 0;
-		public FontSystemEffect Effect { get; set; } = FontSystemEffect.None;
+		public FontSystemEffect Effect = FontSystemEffect.None;
 
 		private int _textureWidth = 1024, _textureHeight = 1024;
 		private float _fontResolutionFactor = 1.0f;
@@ -36,12 +36,16 @@ namespace FontStashSharp
 
 		public int EffectAmount
 		{
-			get => _effectAmount;
+			get
+			{
+				return _effectAmount;
+			}
+
 			set
 			{
 				if (value < 0 || value > 20)
 				{
-					throw new ArgumentOutOfRangeException(nameof(value));
+					throw new ArgumentOutOfRangeException("value");
 				}
 
 				_effectAmount = value;
@@ -50,13 +54,16 @@ namespace FontStashSharp
 
 		public int TextureWidth
 		{
-			get => _textureWidth;
+			get
+			{
+				return _textureWidth;
+			}
 
 			set
 			{
 				if (value <= 0)
 				{
-					throw new ArgumentOutOfRangeException(nameof(value));
+					throw new ArgumentOutOfRangeException("value");
 
 				}
 
@@ -66,13 +73,16 @@ namespace FontStashSharp
 
 		public int TextureHeight
 		{
-			get => _textureHeight;
+			get
+			{
+				return _textureHeight;
+			}
 
 			set
 			{
 				if (value <= 0)
 				{
-					throw new ArgumentOutOfRangeException(nameof(value));
+					throw new ArgumentOutOfRangeException("value");
 
 				}
 
@@ -80,16 +90,20 @@ namespace FontStashSharp
 			}
 		}
 
-		public bool PremultiplyAlpha { get; set; } = true;
+		public bool PremultiplyAlpha = true;
 
 		public float FontResolutionFactor
 		{
-			get => _fontResolutionFactor;
+			get
+			{
+				return _fontResolutionFactor;
+			}
+
 			set
 			{
 				if (value < 0)
 				{
-					throw new ArgumentOutOfRangeException(nameof(value), value, "This cannot be smaller than 0");
+					throw new ArgumentOutOfRangeException("value", value, "This cannot be smaller than 0");
 				}
 
 				_fontResolutionFactor = value;
@@ -98,13 +112,16 @@ namespace FontStashSharp
 
 		public int KernelWidth
 		{
-			get => _kernelWidth;
+			get
+			{
+				return _kernelWidth;
+			}
 
 			set
 			{
 				if (value < 0)
 				{
-					throw new ArgumentOutOfRangeException(nameof(value), value, "This cannot be smaller than 0");
+					throw new ArgumentOutOfRangeException("value", value, "This cannot be smaller than 0");
 				}
 
 				_kernelWidth = value;
@@ -113,13 +130,16 @@ namespace FontStashSharp
 
 		public int KernelHeight
 		{
-			get => _kernelHeight;
+			get
+			{
+				return _kernelHeight;
+			}
 
 			set
 			{
 				if (value < 0)
 				{
-					throw new ArgumentOutOfRangeException(nameof(value), value, "This cannot be smaller than 0");
+					throw new ArgumentOutOfRangeException("value", value, "This cannot be smaller than 0");
 				}
 
 				_kernelHeight = value;
