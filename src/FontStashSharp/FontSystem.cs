@@ -27,114 +27,31 @@ namespace FontStashSharp
 
 		private FontAtlas _currentAtlas;
 
-		public FontSystemEffect Effect
-		{
-			get
-			{
-				return _settings.Effect;
-			}
-		}
+		public FontSystemEffect Effect => _settings.Effect;
+		public int EffectAmount => _settings.EffectAmount;
 
-		public int EffectAmount
-		{
-			get
-			{
-				return _settings.EffectAmount;
-			}
-		}
+		public int TextureWidth => _settings.TextureWidth;
+		public int TextureHeight => _settings.TextureHeight;
 
-		public int TextureWidth
-		{
-			get
-			{
-				return _settings.TextureWidth;
-			}
-		}
+		public bool PremultiplyAlpha => _settings.PremultiplyAlpha;
 
-		public int TextureHeight
-		{
-			get
-			{
-				return _settings.TextureHeight;
-			}
-		}
+		public float FontResolutionFactor => _settings.FontResolutionFactor;
 
-		public bool PremultiplyAlpha
-		{
-			get
-			{
-				return _settings.PremultiplyAlpha;
-			}
-		}
+		public int KernelWidth => _settings.KernelWidth;
+		public int KernelHeight => _settings.KernelHeight;
 
-		public float FontResolutionFactor
-		{
-			get
-			{
-				return _settings.FontResolutionFactor;
-			}
-		}
-
-		public int KernelWidth
-		{
-			get
-			{
-				return _settings.KernelWidth;
-			}
-		}
-
-		public int KernelHeight
-		{
-			get
-			{
-				return _settings.KernelHeight;
-			}
-		}
-
-		public Texture2D ExistingTexture
-		{
-			get
-			{
-				return _settings.ExistingTexture;
-			}
-		}
-
-		public Rectangle ExistingTextureUsedSpace
-		{
-			get
-			{
-				return _settings.ExistingTextureUsedSpace;
-			}
-		}
+		public Texture2D ExistingTexture => _settings.ExistingTexture;
+		public Rectangle ExistingTextureUsedSpace => _settings.ExistingTextureUsedSpace;
 
 		public bool UseKernings = true;
 		public int? DefaultCharacter = ' ';
 
-		internal int BlurAmount
-		{
-			get
-			{
-				return Effect == FontSystemEffect.Blurry ? EffectAmount : 0;
-			}
-		}
+		internal int BlurAmount => Effect == FontSystemEffect.Blurry ? EffectAmount : 0;
+		internal int StrokeAmount => Effect == FontSystemEffect.Stroked ? EffectAmount : 0;
 
-		internal int StrokeAmount
-		{
-			get
-			{
-				return Effect == FontSystemEffect.Stroked ? EffectAmount : 0;
-			}
-		}
+		internal List<IFontSource> FontSources => _fontSources;
 
-		internal List<IFontSource> FontSources
-		{
-			get
-			{
-				return _fontSources;
-			}
-		}
-
-		public readonly List<FontAtlas> Atlases = new List<FontAtlas>();
+		public List<FontAtlas> Atlases { get; } = new List<FontAtlas>();
 
 		public event EventHandler CurrentAtlasFull;
 		private readonly IFontLoader _fontLoader;
@@ -143,7 +60,7 @@ namespace FontStashSharp
 		{
 			if (settings == null)
 			{
-				throw new ArgumentNullException("settings");
+				throw new ArgumentNullException(nameof(settings));
 			}
 
 			_settings = settings.Clone();
@@ -176,7 +93,7 @@ namespace FontStashSharp
 				_fontSources.Clear();
 			}
 
-			Atlases.Clear();
+			Atlases?.Clear();
 			_currentAtlas = null;
 			_fonts.Clear();
 		}
@@ -226,7 +143,7 @@ namespace FontStashSharp
 			fontSourceIndex = 0;
 			var g = default(int?);
 
-			for (var i = 0; i < _fontSources.Count; ++i)
+			for(var i = 0; i < _fontSources.Count; ++i)
 			{
 				var f = _fontSources[i];
 				g = f.GetGlyphId(codepoint);
@@ -297,10 +214,7 @@ namespace FontStashSharp
 			var currentAtlas = GetCurrentAtlas(device, textureSize.X, textureSize.Y);
 			if (!currentAtlas.AddRect(gw, gh, ref gx, ref gy))
 			{
-				if (CurrentAtlasFull != null)
-				{
-					CurrentAtlasFull.Invoke(this, EventArgs.Empty);
-				}
+				CurrentAtlasFull?.Invoke(this, EventArgs.Empty);
 
 				// This code will force creation of new atlas
 				_currentAtlas = null;

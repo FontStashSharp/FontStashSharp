@@ -32,7 +32,7 @@ namespace FontStashSharp
 		/// </summary>
 		public int LineHeight { get; private set; }
 
-		protected float RenderFontSizeMultiplicator = 1f;
+		protected float RenderFontSizeMultiplicator { get; set; } = 1f;
 
 		protected SpriteFontBase(int fontSize, int lineHeight)
 		{
@@ -228,17 +228,13 @@ namespace FontStashSharp
 
 		public List<Rectangle> GetGlyphRects(string text, Vector2 position,
 			Vector2 origin = default(Vector2), Vector2? scale = null,
-			float characterSpacing = 0.0f, float lineSpacing = 0.0f)
-		{
-			return GetGlyphRects(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing);
-		}
+			float characterSpacing = 0.0f, float lineSpacing = 0.0f) =>
+			GetGlyphRects(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing);
 
 		public List<Rectangle> GetGlyphRects(StringBuilder text, Vector2 position,
-				Vector2 origin = default(Vector2), Vector2? scale = null,
-				float characterSpacing = 0.0f, float lineSpacing = 0.0f)
-		{
-			return GetGlyphRects(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing);
-		}
+			Vector2 origin = default(Vector2), Vector2? scale = null,
+			float characterSpacing = 0.0f, float lineSpacing = 0.0f) =>
+			GetGlyphRects(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing);
 
 		public Vector2 MeasureString(string text, Vector2? scale = null, float characterSpacing = 0.0f, float lineSpacing = 0.0f)
 		{

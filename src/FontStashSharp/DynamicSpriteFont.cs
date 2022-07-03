@@ -27,7 +27,7 @@ namespace FontStashSharp
 		{
 			if (system == null)
 			{
-				throw new ArgumentNullException("system");
+				throw new ArgumentNullException(nameof(system));
 			}
 
 			FontSystem = system;

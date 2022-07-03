@@ -49,13 +49,7 @@ namespace FontStashSharp
 			ColorPosition = 0;
 		}
 
-		public bool IsNull
-		{
-			get
-			{
-				return TextSource.IsNull;
-			}
-		}
+		public bool IsNull => TextSource.IsNull;
 
 		public bool GetNextCodepoint(out int codepoint, out Color color)
 		{

@@ -1,4 +1,6 @@
-﻿#if MONOGAME || FNA
+﻿using FontStashSharp.Interfaces;
+
+#if MONOGAME || FNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
@@ -29,21 +31,8 @@ namespace FontStashSharp
 			}
 		}
 
-		public Rectangle TextureRectangle
-		{
-			get
-			{
-				return new Rectangle(TextureOffset.X, TextureOffset.Y, Size.X, Size.Y);
-			}
-		}
-
-		public Rectangle RenderRectangle
-		{
-			get
-			{
-				return new Rectangle(RenderOffset.X, RenderOffset.Y, Size.X, Size.Y);
-			}
-		}
+		public Rectangle TextureRectangle => new Rectangle(TextureOffset.X, TextureOffset.Y, Size.X, Size.Y);
+		public Rectangle RenderRectangle => new Rectangle(RenderOffset.X, RenderOffset.Y, Size.X, Size.Y);
 	}
 
 	public class DynamicFontGlyph : FontGlyph
