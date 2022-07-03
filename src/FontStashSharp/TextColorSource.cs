@@ -10,7 +10,7 @@ using System.Drawing;
 
 namespace FontStashSharp
 {
-	internal struct TextColorSource
+	internal ref struct TextColorSource
 	{
 		public TextSource TextSource;
 		public Color? SingleColor;
@@ -26,6 +26,22 @@ namespace FontStashSharp
 		}
 
 		public TextColorSource(string text, Color[] colors)
+		{
+			TextSource = new TextSource(text);
+			SingleColor = null;
+			Colors = colors;
+			ColorPosition = 0;
+		}
+
+		public TextColorSource(StringSegment text, Color color)
+		{
+			TextSource = new TextSource(text);
+			SingleColor = color;
+			Colors = null;
+			ColorPosition = 0;
+		}
+
+		public TextColorSource(StringSegment text, Color[] colors)
 		{
 			TextSource = new TextSource(text);
 			SingleColor = null;

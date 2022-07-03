@@ -2,13 +2,20 @@
 
 namespace FontStashSharp
 {
-	internal struct TextSource
+	internal ref struct TextSource
 	{
-		public string StringText;
+		public StringSegment StringText;
 		public StringBuilder StringBuilderText;
 		private int Position;
 
 		public TextSource(string text)
+		{
+			StringText = new StringSegment(text);
+			StringBuilderText = null;
+			Position = 0;
+		}
+
+		public TextSource(StringSegment text)
 		{
 			StringText = text;
 			StringBuilderText = null;
@@ -17,26 +24,26 @@ namespace FontStashSharp
 
 		public TextSource(StringBuilder text)
 		{
-			StringText = null;
+			StringText = new StringSegment();
 			StringBuilderText = text;
 			Position = 0;
 		}
 
-		public bool IsNull => StringText == null && StringBuilderText == null;
+		public bool IsNull => StringText.IsNullOrEmpty && StringBuilderText == null;
 
 		public bool GetNextCodepoint(out int result)
 		{
 			result = 0;
 
-			if (StringText != null)
+			if (!StringText.IsNullOrEmpty)
 			{
 				if (Position >= StringText.Length)
 				{
 					return false;
 				}
 
-				result = char.ConvertToUtf32(StringText, Position);
-				Position += char.IsSurrogatePair(StringText, Position) ? 2 : 1;
+				result = char.ConvertToUtf32(StringText.String, StringText.Offset + Position);
+				Position += char.IsSurrogatePair(StringText.String, StringText.Offset + Position) ? 2 : 1;
 				return true;
 			}
 
