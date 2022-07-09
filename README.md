@@ -6,7 +6,7 @@
 FontStashSharp is C# port of https://github.com/memononen/fontstash
 
 # Usage
-[Using FontStashSharp in MonoGame, FNA or Stride](https://github.com/rds1983/FontStashSharp/wiki/Using-FontStashSharp-in-MonoGame,-FNA-or-Stride)
+[Using FontStashSharp in MonoGame or FNA](https://github.com/rds1983/FontStashSharp/wiki/Using-FontStashSharp-in-MonoGame,-FNA-or-Stride)
 
 [Using FontStashSharp in generic game engine](https://github.com/rds1983/FontStashSharp/wiki/Using-FontStashSharp-in-generic-game-engine)
 
