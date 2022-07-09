@@ -43,4 +43,5 @@ Stroked Text:
 * [MonoGame](http://www.monogame.net/)
 * [SharpFont](https://github.com/Robmaister/SharpFont)
 * [FreeTypeSharp](https://github.com/ryancheung/FreeTypeSharp)
+* [SixLabors.Fonts](https://github.com/SixLabors/Fonts)
 * [TrippyGL](https://github.com/SilkCommunity/TrippyGL)
