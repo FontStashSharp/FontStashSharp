@@ -3,7 +3,7 @@
 ![Build & Publish](https://github.com/rds1983/FontStashSharp/workflows/Build%20&%20Publish/badge.svg)
 [![Chat](https://img.shields.io/discord/628186029488340992.svg)](https://discord.gg/ZeHxhCY)
 
-FontStashSharp is C# port of https://github.com/memononen/fontstash
+FontStashSharp is the text rendering library.
 
 # Usage
 [Using FontStashSharp in MonoGame or FNA](https://github.com/FontStashSharp/FontStashSharp/wiki/Using-FontStashSharp-in-MonoGame-or-FNA)
