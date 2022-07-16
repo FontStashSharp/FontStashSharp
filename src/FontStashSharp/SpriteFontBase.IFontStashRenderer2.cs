@@ -60,7 +60,7 @@ namespace FontStashSharp
 			{
 				int codepoint;
 				Color color;
-				if (!source.GetNextCodepoint(out codepoint)
+				if (!source.GetNextCodepoint(out codepoint))
 					break;
 
 				if (codepoint == '\n')
