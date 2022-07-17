@@ -54,7 +54,7 @@ namespace FontStashSharp
 			{
 				int codepoint;
 				Color color;
-				if (!source.GetNextCodepoint(out codepoint, out color))
+				if (!source.GetNextCodepoint(out codepoint))
 					break;
 
 				if (codepoint == '\n')
@@ -83,6 +83,8 @@ namespace FontStashSharp
 
 				if (!glyph.IsEmpty)
 				{
+					color = source.GetNextColor();
+					
 					var p = pos + new Vector2(glyph.RenderOffset.X, glyph.RenderOffset.Y);
 					p = p.Transform(ref transformation);
 
