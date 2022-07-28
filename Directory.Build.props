@@ -9,6 +9,6 @@
     <FontStashSharpBaseVersion>1.1.6</FontStashSharpBaseVersion>
     <StbImageSharpVersion>2.27.11</StbImageSharpVersion>
     <CyotekDrawingBitmapFontVersion>2.0.4</CyotekDrawingBitmapFontVersion>
-    <MonoGameVersion>3.8.0.1641</MonoGameVersion>
+    <MonoGameVersion>3.8.1.303</MonoGameVersion>
   </PropertyGroup>
 </Project>

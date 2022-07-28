@@ -9,7 +9,7 @@
     <PackageReference Include="FontStashSharp.Rasterizers.FreeType" Version="1.1.6" />
     <PackageReference Include="FontStashSharp.Rasterizers.SixLabors.Fonts" Version="1.1.6-beta1" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="$(MonoGameVersion)" />
-    <PackageReference Include="Myra" Version="1.4.1" />
+    <PackageReference Include="Myra" Version="1.4.2" />
   </ItemGroup>
   
   <ItemGroup>

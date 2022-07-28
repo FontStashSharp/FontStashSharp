@@ -1,6 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FontStashSharp.Interfaces;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NUnit.Framework;
+using System.IO;
+using System.Text;
 
 namespace FontStashSharp.Tests
 {
@@ -78,6 +81,61 @@ namespace FontStashSharp.Tests
 
 		finish:
 			;
+		}
+
+		private class RendererCall
+		{
+			public Texture2D Texture;
+			public Vector2 Pos;
+			public Rectangle? Source;
+			public Color Color;
+			public float Rotation;
+			public Vector2 Scale;
+			public float Depth;
+		}
+
+		private class Renderer : IFontStashRenderer
+		{
+			public GraphicsDevice GraphicsDevice => TestsEnvironment.GraphicsDevice;
+			public readonly System.Collections.Generic.List<RendererCall> Calls = new System.Collections.Generic.List<RendererCall>();
+
+			public void Draw(Texture2D texture, Vector2 pos, Rectangle? src, Color color, float rotation, Vector2 scale, float depth)
+			{
+				Calls.Add(new RendererCall
+				{
+					Texture = texture,
+					Pos = pos,
+					Source = src,
+					Color = color,
+					Rotation = rotation,
+					Scale = scale,
+					Depth = depth
+				});
+			}
+		}
+
+		[TestCase("Tuesday", 45, 4, true, new int[] { 2, 9, 22, 17, 43, 18, 63, 17, 86, 10, 109, 17, 132, 18 })]
+		[TestCase("Tuesday", 45, 4, false, new int[] { 2, 9, 24, 17, 45, 18, 65, 17, 88, 10, 111, 17, 134, 18 })]
+		public void DrawText(string text, int size, int characterSpacing, bool useKernings, int[] glyphPos)
+		{
+			var settings = new FontSystemSettings();
+			var fontSystem = new FontSystem(settings)
+			{
+				UseKernings = useKernings
+			};
+			fontSystem.AddFont(TestsEnvironment.Assembly.ReadResourceAsBytes("Resources.Komika.ttf"));
+
+			var renderer = new Renderer();
+			var font = fontSystem.GetFont(size);
+
+			font.DrawText(renderer, text, Vector2.Zero, Color.White, characterSpacing: characterSpacing);
+
+			Assert.AreEqual(glyphPos.Length, renderer.Calls.Count * 2);
+			for (var i = 0; i < renderer.Calls.Count; i++)
+			{
+				Assert.AreEqual(glyphPos[i * 2], (int)renderer.Calls[i].Pos.X);
+				Assert.AreEqual(glyphPos[i * 2 + 1], (int)renderer.Calls[i].Pos.Y);
+			}
 		}
 	}
 }

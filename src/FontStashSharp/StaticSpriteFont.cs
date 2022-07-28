@@ -105,18 +105,14 @@ namespace FontStashSharp
 			_kernings[key] = value;
 		}
 
-		internal override float GetXAdvance(FontGlyph glyph, FontGlyph prevGlyph)
+		internal override float GetKerning(FontGlyph glyph, FontGlyph prevGlyph)
 		{
-			float result = glyph.XAdvance;
-			if (prevGlyph != null)
+			if (!UseKernings)
 			{
-				if (UseKernings)
-				{
-					result += GetGlyphKernAdvance(prevGlyph.Codepoint, glyph.Codepoint);
-				}
+				return 0.0f;
 			}
 
-			return result;
+			return GetGlyphKernAdvance(prevGlyph.Codepoint, glyph.Codepoint);
 		}
 
 		private static BitmapFont LoadBMFont(string data)

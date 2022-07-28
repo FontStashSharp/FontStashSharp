@@ -182,27 +182,29 @@ namespace FontStashSharp
 			return ((glyph1 << 16) | (glyph1 >> 16)) ^ glyph2;
 		}
 
-		internal override float GetXAdvance(FontGlyph glyph, FontGlyph prevGlyph)
+		internal override float GetKerning(FontGlyph glyph, FontGlyph prevGlyph)
 		{
-			float result = glyph.XAdvance;
-			if (prevGlyph != null)
+			if (!FontSystem.UseKernings)
 			{
-				var adv = 0;
+				return 0.0f;
+			}
 
-				var dynamicGlyph = (DynamicFontGlyph)glyph;
-				var dynamicPrevGlyph = (DynamicFontGlyph)prevGlyph;
-				if (FontSystem.UseKernings && dynamicGlyph.FontSourceIndex == dynamicPrevGlyph.FontSourceIndex)
-				{
-					var key = GetKerningsKey(prevGlyph.Id, dynamicGlyph.Id);
-					if (!Kernings.TryGetValue(key, out adv))
-					{
-						var fontSource = FontSystem.FontSources[dynamicGlyph.FontSourceIndex];
-						adv = fontSource.GetGlyphKernAdvance(prevGlyph.Id, dynamicGlyph.Id, dynamicGlyph.FontSize);
-						Kernings[key] = adv;
-					}
-				}
 
-				result += adv;
+			var dynamicGlyph = (DynamicFontGlyph)glyph;
+			var dynamicPrevGlyph = (DynamicFontGlyph)prevGlyph;
+			if (dynamicGlyph.FontSourceIndex != dynamicPrevGlyph.FontSourceIndex)
+			{
+				return 0.0f;
+			}
+
+			var key = GetKerningsKey(prevGlyph.Id, dynamicGlyph.Id);
+			var result = 0;
+			if (!Kernings.TryGetValue(key, out result))
+			{
+				var fontSource = FontSystem.FontSources[dynamicGlyph.FontSourceIndex];
+				result = fontSource.GetGlyphKernAdvance(prevGlyph.Id, dynamicGlyph.Id, dynamicGlyph.FontSize);
+
+				Kernings[key] = result;
 			}
 
 			return result;

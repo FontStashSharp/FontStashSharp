@@ -71,11 +71,6 @@ namespace FontStashSharp
 					continue;
 				}
 
-				if (prevGlyph != null)
-				{
-					pos.X += characterSpacing;
-				}
-
 #if MONOGAME || FNA || STRIDE
 				var glyph = GetGlyph(renderer.GraphicsDevice, codepoint);
 #else
@@ -84,6 +79,12 @@ namespace FontStashSharp
 				if (glyph == null)
 				{
 					continue;
+				}
+
+				if (prevGlyph != null)
+				{
+					pos.X += characterSpacing;
+					pos.X += GetKerning(glyph, prevGlyph);
 				}
 
 				if (!glyph.IsEmpty)
@@ -122,7 +123,7 @@ namespace FontStashSharp
 					renderer.DrawQuad(glyph.Texture, ref topLeft, ref topRight, ref bottomLeft, ref bottomRight);
 				}
 
-				pos.X += GetXAdvance(glyph, prevGlyph);
+				pos.X += glyph.XAdvance;
 				prevGlyph = glyph;
 			}
 
