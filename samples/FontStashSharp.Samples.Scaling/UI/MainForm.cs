@@ -13,9 +13,11 @@ namespace FontStashSharp.Samples.UI
 			BuildUI();
 
 			_top = new TextWidget(device);
+			_top.TransformOrigin = Vector2.Zero;
 			_panelTopContainer.Widgets.Add(_top);
 
 			_bottom = new TextWidget(device);
+			_bottom.TransformOrigin = Vector2.Zero;
 			_panelBottomContainer.Widgets.Add(_bottom);
 
 			_spinButtonFontResolutionFactor.ValueChanged += (s, a) => Update();

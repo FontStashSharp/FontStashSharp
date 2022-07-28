@@ -99,12 +99,12 @@ namespace FontStashSharp.Samples
 
 			if (SampleEnvironment.DrawBackground)
 			{
-				var dimensions = Font.MeasureString(text, Scale);
+				var dimensions = Font.MeasureString(text);
 				context.FillRectangle(
 					new Rectangle(ActualBounds.X, ActualBounds.Y, (int)dimensions.X, (int)dimensions.Y),
 					Color.Green);
 
-				var rects = _font.GetGlyphRects(text, ActualBounds.Location.ToVector2(), Vector2.Zero, Scale);
+				var rects = _font.GetGlyphRects(text, ActualBounds.Location.ToVector2());
 				foreach (var r in rects)
 				{
 					context.FillRectangle(r, Color.Gray);
