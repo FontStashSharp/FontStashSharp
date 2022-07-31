@@ -72,6 +72,7 @@ namespace FontStashSharp.Platform
 			GL.Enable(EnableCap.Blend);
 			GLUtility.CheckError();
 			GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+			GLUtility.CheckError();
 
 			_shader.Use();
 			_shader.SetUniform("TextureSampler", 0);
