@@ -8,9 +8,19 @@ FontStashSharp is the text rendering library.
 # Usage
 [Using FontStashSharp in MonoGame or FNA](https://github.com/FontStashSharp/FontStashSharp/wiki/Using-FontStashSharp-in-MonoGame-or-FNA)
 
-[Using FontStashSharp in generic game engine](https://github.com/rds1983/FontStashSharp/wiki/Using-FontStashSharp-in-generic-game-engine)
+[Custom Render Interfaces](https://github.com/FontStashSharp/FontStashSharp/wiki/Custom-Render-Interfaces)
 
-Additional documentation is available at [wiki](https://github.com/rds1983/FontStashSharp/wiki)
+[[Dealing With Texture Atlas Overflow]]
+
+[[Making Fonts Sharper And Better At Scaling]]
+
+[[Using Existing Texture As Font Glyphs Atlas]]
+
+[[Custom Font Rasterizer]]
+
+[[StaticSpriteFont]]
+
+[Using FontStashSharp in any C# engine](https://github.com/rds1983/FontStashSharp/wiki/Using-FontStashSharp-in-generic-game-engine)
 
 ## Support
 [Discord](https://discord.gg/ZeHxhCY)
