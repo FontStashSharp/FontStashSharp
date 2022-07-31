@@ -10,15 +10,15 @@ FontStashSharp is the text rendering library.
 
 [Custom Render Interfaces](https://github.com/FontStashSharp/FontStashSharp/wiki/Custom-Render-Interfaces)
 
-[[Dealing With Texture Atlas Overflow]]
+[Dealing With Texture Atlas Overflow](https://github.com/FontStashSharp/FontStashSharp/wiki/Dealing-With-Texture-Atlas-Overflow)
 
-[[Making Fonts Sharper And Better At Scaling]]
+[Making Fonts Sharper And Better At Scaling](https://github.com/FontStashSharp/FontStashSharp/wiki/Making-Fonts-Sharper-And-Better-At-Scaling)
 
-[[Using Existing Texture As Font Glyphs Atlas]]
+[Using Existing Texture As Font Glyphs Atlas](https://github.com/FontStashSharp/FontStashSharp/wiki/Using-Existing-Texture-As-Font-Glyphs-Atlas)
 
-[[Custom Font Rasterizer]]
+[Custom Font Rasterizer](https://github.com/FontStashSharp/FontStashSharp/wiki/Custom-Font-Rasterizer)
 
-[[StaticSpriteFont]]
+[StaticSpriteFont](https://github.com/FontStashSharp/FontStashSharp/wiki/StaticSpriteFont)
 
 [Using FontStashSharp in any C# engine](https://github.com/rds1983/FontStashSharp/wiki/Using-FontStashSharp-in-generic-game-engine)
 
