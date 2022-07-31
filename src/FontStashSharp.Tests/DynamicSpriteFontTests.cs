@@ -2,8 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NUnit.Framework;
-using System.IO;
-using System.Text;
 
 namespace FontStashSharp.Tests
 {
