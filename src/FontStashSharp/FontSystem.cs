@@ -136,6 +136,7 @@ namespace FontStashSharp
 		{
 			Atlases.Clear();
 			_fonts.Clear();
+			_currentAtlas = null;
 		}
 
 		internal int? GetCodepointIndex(int codepoint, out int fontSourceIndex)
