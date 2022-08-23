@@ -41,7 +41,7 @@ namespace FontStashSharp
 			if (source.IsNull) return 0.0f;
 
 			Matrix transformation;
-			var scale = sourceScale ?? DefaultScale;
+			var scale = sourceScale ?? Utility.DefaultScale;
 			Prepare(position, ref scale, rotation, origin, out transformation);
 
 			int ascent, lineHeight;

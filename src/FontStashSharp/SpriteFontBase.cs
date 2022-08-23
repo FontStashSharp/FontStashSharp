@@ -19,9 +19,6 @@ namespace FontStashSharp
 {
 	public abstract partial class SpriteFontBase
 	{
-		internal static readonly Vector2 DefaultScale = new Vector2(1.0f, 1.0f);
-		internal static readonly Vector2 DefaultOrigin = new Vector2(0.0f, 0.0f);
-
 		/// <summary>
 		/// Font Size
 		/// </summary>
@@ -52,36 +49,7 @@ namespace FontStashSharp
 		{
 			scale /= RenderFontSizeMultiplicator;
 
-			// This code had been borrowed from MonoGame's SpriteBatch.DrawString
-			transformation = Matrix.Identity;
-
-			float offsetX, offsetY;
-			if (rotation == 0)
-			{
-				transformation.M11 = scale.X;
-				transformation.M22 = scale.Y;
-				offsetX = position.X - (origin.X * transformation.M11);
-				offsetY = position.Y - (origin.Y * transformation.M22);
-			}
-			else
-			{
-				var cos = (float)Math.Cos(rotation);
-				var sin = (float)Math.Sin(rotation);
-				transformation.M11 = scale.X * cos;
-				transformation.M12 = scale.X * sin;
-				transformation.M21 = scale.Y * -sin;
-				transformation.M22 = scale.Y * cos;
-				offsetX = position.X - (origin.X * transformation.M11) - (origin.Y * transformation.M21);
-				offsetY = position.Y - (origin.X * transformation.M12) - (origin.Y * transformation.M22);
-			}
-
-#if MONOGAME || FNA || STRIDE
-			transformation.M41 = offsetX;
-			transformation.M42 = offsetY;
-#else
-			transformation.M31 = offsetX;
-			transformation.M32 = offsetY;
-#endif
+			Utility.BuildTransform(position, ref scale, rotation, origin, out transformation);
 		}
 
 		internal virtual Bounds InternalTextBounds(TextSource source, Vector2 position, float characterSpacing, float lineSpacing)
@@ -152,7 +120,7 @@ namespace FontStashSharp
 		{
 			var bounds = InternalTextBounds(new TextSource(text), position, characterSpacing, lineSpacing);
 
-			var realScale = scale ?? DefaultScale;
+			var realScale = scale ?? Utility.DefaultScale;
 			bounds.ApplyScale(realScale / RenderFontSizeMultiplicator);
 			return bounds;
 		}
@@ -161,7 +129,7 @@ namespace FontStashSharp
 		{
 			var bounds = InternalTextBounds(new TextSource(text), position, characterSpacing, lineSpacing);
 
-			var realScale = scale ?? DefaultScale;
+			var realScale = scale ?? Utility.DefaultScale;
 			bounds.ApplyScale(realScale / RenderFontSizeMultiplicator);
 			return bounds;
 		}
@@ -173,7 +141,7 @@ namespace FontStashSharp
 
 			Matrix transformation;
 
-			var scale = sourceScale ?? DefaultScale;
+			var scale = sourceScale ?? Utility.DefaultScale;
 			Prepare(position, ref scale, 0, origin, out transformation);
 
 			int ascent, lineHeight;

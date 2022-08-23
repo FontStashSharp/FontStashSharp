@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <OutputPath>bin\MonoGame\$(Configuration)</OutputPath>
+    <DefineConstants>$(DefineConstants);MONOGAME</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\FontStashSharp.Samples.DynamicSpriteFont\KeyboardUtils.cs" Link="KeyboardUtils.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="$(MonoGameVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\XNA\FontStashSharp.MonoGame.csproj" />
+  </ItemGroup>  
+
+  <ItemGroup>
+    <None Include="..\Fonts\DroidSans.ttf" Link="Fonts\DroidSans.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
