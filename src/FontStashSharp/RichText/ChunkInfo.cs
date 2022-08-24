@@ -8,15 +8,21 @@ using System.Drawing;
 
 namespace FontStashSharp.RichText
 {
+	internal enum ChunkInfoType
+	{
+		Text,
+		Space,
+		Image
+	}
+
 	internal struct ChunkInfo
 	{
+		public ChunkInfoType Type;
 		public int X;
 		public int Y;
-		public int Top;
 		public int StartIndex;
 		public int CharsCount;
 		public int SkipCount;
-		public Color? Color;
 		public bool LineEnd;
 	}
 }

@@ -15,7 +15,7 @@ using System.Numerics;
 
 namespace FontStashSharp.RichText
 {
-	public class TextChunk
+	public class TextChunk : BaseChunk
 	{
 		protected string _text;
 		protected readonly SpriteFontBase _font;
@@ -25,13 +25,9 @@ namespace FontStashSharp.RichText
 
 		public int Count { get { return _text.Length(); } }
 		public string Text { get { return _text; } }
-		public Point Size { get { return _size; } }
+		public override Point Size { get { return _size; } }
 
-		public int LineIndex { get; internal set; }
-		public int ChunkIndex { get; internal set; }
-		public int Top { get; internal set; }
 		public int TextStartIndex { get; internal set; }
-		public Color? Color { get; set; }
 		public SpriteFontBase Font => _font;
 
 		public TextChunk(SpriteFontBase font, string text, Point size, bool calculateGlyps)
@@ -61,7 +57,7 @@ namespace FontStashSharp.RichText
 			var rects = _font.GetGlyphRects(_text, Vector2.Zero);
 
 			Glyphs.Clear();
-			for(var i = 0; i < rects.Count; ++i)
+			for (var i = 0; i < rects.Count; ++i)
 			{
 				Glyphs.Add(new GlyphInfo
 				{
@@ -117,6 +113,16 @@ namespace FontStashSharp.RichText
 			}
 
 			return i;
+		}
+
+		public override void Draw(IFontStashRenderer renderer, Vector2 position, Color color, Vector2? scale, float rotation, float layerDepth)
+		{
+			if (string.IsNullOrEmpty(Text))
+			{
+				return;
+			}
+
+			Font.DrawText(renderer, Text, position, color, scale, rotation, default(Vector2), layerDepth);
 		}
 	}
 }

@@ -32,19 +32,22 @@ namespace FontStashSharp.RichText
 			get; internal set;
 		}
 
-		public List<TextChunk> Chunks { get; } = new List<TextChunk>();
+		public List<BaseChunk> Chunks { get; } = new List<BaseChunk>();
 
 		public GlyphInfo GetGlyphInfoByIndex(int index)
 		{
-			foreach (var si in Chunks)
+			foreach (var chunk in Chunks)
 			{
-				if (index >= si.Count)
+				var textChunk = chunk as TextChunk;
+				if (textChunk == null) continue;
+
+				if (index >= textChunk.Count)
 				{
-					index -= si.Count;
+					index -= textChunk.Count;
 				}
 				else
 				{
-					return si.GetGlyphInfoByIndex(index);
+					return textChunk.GetGlyphInfoByIndex(index);
 				}
 			}
 
@@ -61,7 +64,7 @@ namespace FontStashSharp.RichText
 			var x = startX;
 			for(var i = 0; i < Chunks.Count; ++i)
 			{
-				var chunk = Chunks[i];
+				var chunk = (TextChunk)Chunks[i];
 
 				if (x >= chunk.Size.X)
 				{
@@ -81,7 +84,7 @@ namespace FontStashSharp.RichText
 
 			// Use last chunk
 			x = startX;
-			return Chunks[Chunks.Count - 1].GetGlyphIndexByX(startX);
+			return ((TextChunk)Chunks[Chunks.Count - 1]).GetGlyphIndexByX(startX);
 		}
 	}
 }
