@@ -166,6 +166,8 @@ namespace FontStashSharp.RichText
 			}
 		}
 
+		public bool IgnoreColorCommand { get; set; } = false;
+
 		public Func<string, SpriteFontBase> FontResolver { get; set; }
 
 		private bool ProcessCommand(bool parseCommands, ref int i, ref ChunkInfo r)
@@ -242,7 +244,7 @@ namespace FontStashSharp.RichText
 			var r = new ChunkInfo
 			{
 				StartIndex = startIndex,
-				LineEnd = true,
+				LineEnd = true
 			};
 
 			if (string.IsNullOrEmpty(_text))
@@ -269,7 +271,7 @@ namespace FontStashSharp.RichText
 				{
 					if (i < _text.Length - 1 && _text[i + 1] == 'n')
 					{
-						var sz2 = new Point(r.X + NewLineWidth, Math.Max(r.Y, _font.LineHeight));
+						var sz2 = new Point(r.X + NewLineWidth, Math.Max(r.Y, _currentFont.LineHeight));
 
 						// Break right here
 						r.SkipCount += 2;
@@ -294,12 +296,12 @@ namespace FontStashSharp.RichText
 				Point sz;
 				if (c != '\n')
 				{
-					var v = Font.MeasureString(_stringBuilder);
-					sz = new Point((int)v.X, _font.LineHeight);
+					var v = _currentFont.MeasureString(_stringBuilder);
+					sz = new Point((int)v.X, _currentFont.LineHeight);
 				}
 				else
 				{
-					sz = new Point(r.X + NewLineWidth, Math.Max(r.Y, _font.LineHeight));
+					sz = new Point(r.X + NewLineWidth, Math.Max(r.Y, _currentFont.LineHeight));
 
 					// Break right here
 					++r.CharsCount;
@@ -393,7 +395,7 @@ namespace FontStashSharp.RichText
 				// If text ends with '\n', then add additional line to the measure
 				if (_text[_text.Length - 1] == '\n')
 				{
-					var lineSize = Font.MeasureString(" ");
+					var lineSize = _currentFont.MeasureString(" ");
 					y += (int)lineSize.Y;
 				}
 
@@ -402,7 +404,7 @@ namespace FontStashSharp.RichText
 
 			if (result.Y == 0)
 			{
-				result.Y = _font.LineHeight;
+				result.Y = _currentFont.LineHeight;
 			}
 
 			_measures[key] = result;
@@ -482,7 +484,7 @@ namespace FontStashSharp.RichText
 					TextStartIndex = _text.Length
 				};
 
-				var lineSize = Font.MeasureString(" ");
+				var lineSize = _currentFont.MeasureString(" ");
 				additionalLine.Size.Y = (int)lineSize.Y;
 
 				_lines.Add(additionalLine);
@@ -592,7 +594,7 @@ namespace FontStashSharp.RichText
 
 		public void Draw(IFontStashRenderer renderer, Vector2 position, Color color,
 			Vector2? sourceScale = null, float rotation = 0, Vector2 origin = default(Vector2),
-			float layerDepth = 0.0f, bool ignoreColors = false)
+			float layerDepth = 0.0f)
 		{
 			Matrix transformation;
 			var scale = sourceScale ?? Utility.DefaultScale;
@@ -604,7 +606,7 @@ namespace FontStashSharp.RichText
 				pos.X = 0;
 				foreach (var chunk in line.Chunks)
 				{
-					if (!ignoreColors && chunk.Color != null)
+					if (!IgnoreColorCommand && chunk.Color != null)
 					{
 						color = chunk.Color.Value;
 					}
@@ -629,11 +631,11 @@ namespace FontStashSharp.RichText
 
 		public void Draw(SpriteBatch batch, Vector2 position, Color color,
 			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
-			float layerDepth = 0.0f, bool ignoreColors = false)
+			float layerDepth = 0.0f)
 		{
 			var renderer = SpriteBatchRenderer.Instance;
 			renderer.Batch = batch;
-			Draw(renderer, position, color, scale, rotation, origin, layerDepth, ignoreColors);
+			Draw(renderer, position, color, scale, rotation, origin, layerDepth);
 		}
 
 #endif
