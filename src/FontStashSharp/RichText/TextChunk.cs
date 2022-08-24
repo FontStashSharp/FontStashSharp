@@ -31,7 +31,8 @@ namespace FontStashSharp.RichText
 		public int ChunkIndex { get; internal set; }
 		public int Top { get; internal set; }
 		public int TextStartIndex { get; internal set; }
-		public Color? Color;
+		public Color? Color { get; set; }
+		public SpriteFontBase Font => _font;
 
 		public TextChunk(SpriteFontBase font, string text, Point size, bool calculateGlyps)
 		{

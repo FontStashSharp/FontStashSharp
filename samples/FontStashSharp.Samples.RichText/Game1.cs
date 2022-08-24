@@ -29,10 +29,7 @@ namespace FontStashSharp.Samples
 	/// </summary>
 	public class Game1 : Game
 	{
-		private const int EffectAmount = 1;
-		private const string Text = @"This is \c[red]colored \c[#00f0fa]ext,\n\c[white]color could be set either\n\c[lightGreen]by name or \c[#fa9000]by hex code";
-		private const int CharacterSpacing = 4;
-		private const int LineSpacing = 8;
+		private const string Text = @"This is \c[red]colored \c[#00f0fa]ext,\n\c[white]color could be set either\n\c[lightGreen]by name or \c[#fa9000]by hex code\n\f[def, 16]This text uses smaller font.\n\c[blue]\fdThis text uses smaller font.";
 
 #if !STRIDE
 		private readonly GraphicsDeviceManager _graphics;
@@ -96,6 +93,14 @@ namespace FontStashSharp.Samples
 			{
 				Font = fontSystem.GetFont(32),
 				Text = Text
+			};
+
+			_formattedText.FontResolver = p =>
+			{
+				var args = p.Split(',');
+				var fontName = args[0].Trim();
+				var fontSize = int.Parse(args[1].Trim());
+				return fontSystem.GetFont(fontSize);
 			};
 
 #if MONOGAME || FNA
@@ -174,7 +179,7 @@ namespace FontStashSharp.Samples
 
 			_spriteBatch.End();
 
-			_angle += 0.4f;
+//			_angle += 0.4f;
 
 			while (_angle >= 360.0f)
 			{

@@ -18,6 +18,7 @@ namespace FontStashSharp.RichText
 	public class FormattedText
 	{
 		public const int NewLineWidth = 0;
+		public const string Commands = "cfi";
 
 		private SpriteFontBase _font;
 		private string _text = string.Empty;
@@ -29,6 +30,7 @@ namespace FontStashSharp.RichText
 		private bool _dirty = true;
 		private StringBuilder _stringBuilder = new StringBuilder();
 		private readonly Dictionary<int, Point> _measures = new Dictionary<int, Point>();
+		private SpriteFontBase _currentFont;
 
 		public SpriteFontBase Font
 		{
@@ -164,12 +166,83 @@ namespace FontStashSharp.RichText
 			}
 		}
 
-		internal ChunkInfo LayoutRow(int startIndex, int? width, bool parseCommands)
+		public Func<string, SpriteFontBase> FontResolver { get; set; }
+
+		private bool ProcessCommand(bool parseCommands, ref int i, ref ChunkInfo r)
+		{
+			var command = _text[i + 1].ToString();
+			if (!Commands.Contains(command))
+			{
+				throw new Exception($"Unknown command '{command}'.");
+			}
+
+			var j = i;
+			if (command == "f" && _text[i + 2] == 'd')
+			{
+				// Switch to default font
+				_currentFont = Font;
+				j = i + 2;
+			}
+			else
+			{
+				// Find end
+				var startPos = i + 3;
+				j = _text.IndexOf(']', startPos);
+
+				if (j == -1)
+				{
+					throw new Exception($"Command '{command}' doesnt have ']'.");
+				}
+
+				// Found
+				if (i > r.StartIndex)
+				{
+					// Break right here, so the command
+					// would be processed in the next chunk
+					r.LineEnd = false;
+					return true;
+				}
+
+				if (parseCommands)
+				{
+					var parameters = _text.Substring(startPos, j - startPos);
+					var parts = parameters.Split('|');
+					switch (command)
+					{
+						case "c":
+							r.Color = ColorStorage.FromName(parameters);
+							break;
+
+						case "f":
+							if (FontResolver == null)
+							{
+								throw new Exception($"FontResolver isnt set");
+							}
+
+							_currentFont = FontResolver(parts[0].Trim());
+
+							if (parts.Length > 1)
+							{
+								var offset = int.Parse(parts[1].Trim());
+								r.Top += offset;
+							}
+							break;
+					}
+				}
+			}
+
+			r.StartIndex = j + 1;
+			i = j;
+
+			return false;
+		}
+
+		private ChunkInfo LayoutRow(int startIndex, int? width, bool parseCommands)
 		{
 			var r = new ChunkInfo
 			{
 				StartIndex = startIndex,
-				LineEnd = true
+				LineEnd = true,
 			};
 
 			if (string.IsNullOrEmpty(_text))
@@ -205,31 +278,14 @@ namespace FontStashSharp.RichText
 						break;
 					}
 
-					if (i < _text.Length - 2 && _text[i + 1] == 'c' && _text[i + 2] == '[')
+					if (i < _text.Length - 2)
 					{
-						// Find end
-						var startPos = i + 3;
-						var j = _text.IndexOf(']', startPos);
-
-						if (j != -1)
+						if (ProcessCommand(parseCommands, ref i, ref r))
 						{
-							// Found
-							if (i > r.StartIndex)
-							{
-								// Break right here, as next chunk has another color
-								r.LineEnd = false;
-								return r;
-							}
-
-							if (parseCommands)
-							{
-								r.Color = ColorStorage.FromName(_text.Substring(startPos, j - startPos));
-							}
-
-							r.StartIndex = j + 1;
-							i = j;
-							continue;
+							return r;
 						}
+
+						continue;
 					}
 				}
 
@@ -297,6 +353,7 @@ namespace FontStashSharp.RichText
 				return result;
 			}
 
+			_currentFont = Font;
 			if (!string.IsNullOrEmpty(_text))
 			{
 				var i = 0;
@@ -368,6 +425,8 @@ namespace FontStashSharp.RichText
 				return;
 			}
 
+			_currentFont = Font;
+
 			var i = 0;
 			var line = new TextLine
 			{
@@ -381,10 +440,11 @@ namespace FontStashSharp.RichText
 				if (i == c.StartIndex && c.CharsCount == 0)
 					break;
 
-				var chunk = new TextChunk(_font, _text.Substring(c.StartIndex, c.CharsCount), new Point(c.X, c.Y), CalculateGlyphs)
+				var chunk = new TextChunk(_currentFont, _text.Substring(c.StartIndex, c.CharsCount), new Point(c.X, c.Y), CalculateGlyphs)
 				{
 					TextStartIndex = i,
-					Color = c.Color
+					Color = c.Color,
+					Top = c.Top,
 				};
 
 				width -= chunk.Size.X;
@@ -442,7 +502,6 @@ namespace FontStashSharp.RichText
 					var chunk = line.Chunks[j];
 					chunk.LineIndex = line.LineIndex;
 					chunk.ChunkIndex = j;
-					chunk.Top = line.Top;
 				}
 
 				if (line.Size.X > _size.X)
@@ -552,8 +611,10 @@ namespace FontStashSharp.RichText
 
 					if (!string.IsNullOrEmpty(chunk.Text))
 					{
-						var p = pos.Transform(ref transformation);
-						Font.DrawText(renderer, chunk.Text, p, color, scale, rotation, default(Vector2), layerDepth);
+						var p = pos;
+						p.Y += chunk.Top;
+						p = p.Transform(ref transformation);
+						chunk.Font.DrawText(renderer, chunk.Text, p, color, scale, rotation, default(Vector2), layerDepth);
 					}
 
 					pos.X += chunk.Size.X;

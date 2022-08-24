@@ -12,6 +12,7 @@ namespace FontStashSharp.RichText
 	{
 		public int X;
 		public int Y;
+		public int Top;
 		public int StartIndex;
 		public int CharsCount;
 		public int SkipCount;
