@@ -29,7 +29,7 @@ namespace FontStashSharp.Samples
 	/// </summary>
 	public class Game1 : Game
 	{
-		private const string Text = @"This is \c[red]colored \c[#00f0fa]ext,\n\c[white]color could be set either\n\c[lightGreen]by name or \c[#fa9000]by hex code\n\f[def, 16]This text uses smaller font.\n\c[blue]\fdThis text uses smaller font.";
+		private const string Text = @"This is \c[red]colored \c[#00f0fa]ext,\n\c[white]color could be set either\n\c[lightGreen]by name or \c[#fa9000]by hex code\f[def, 16]\v[-8]This text uses smaller font.\n\c[blue]\vdThis text\s[100]\v[-10]\i[mangrove2.png]\vdSome text after image.";
 
 #if !STRIDE
 		private readonly GraphicsDeviceManager _graphics;
@@ -95,12 +95,23 @@ namespace FontStashSharp.Samples
 				Text = Text
 			};
 
-			_formattedText.FontResolver = p =>
+			FormattedText.FontResolver = p =>
 			{
 				var args = p.Split(',');
 				var fontName = args[0].Trim();
 				var fontSize = int.Parse(args[1].Trim());
 				return fontSystem.GetFont(fontSize);
+			};
+
+			FormattedText.ImageResolver = p =>
+			{
+				Texture2D texture;
+				using (var stream = File.OpenRead(@"D:\Temp\DCSSTiles\dngn\trees\" + p))
+				{
+					texture = Texture2D.FromStream(GraphicsDevice, stream);
+				}
+
+				return new TextureInfo(texture);
 			};
 
 #if MONOGAME || FNA
@@ -172,14 +183,20 @@ namespace FontStashSharp.Samples
 #else
 			var position = new Vector2(GraphicsDevice.Presenter.BackBuffer.Width / 2, GraphicsDevice.Presenter.BackBuffer.Height / 2);
 #endif
+			var rads = (float)(_angle * Math.PI / 180);
+			var normalizedOrigin = new Vector2(0.5f, 0.5f);
+
+			var size = _formattedText.Size;
+			_spriteBatch.Draw(_white, new Rectangle((int)position.X, (int)position.Y, size.X, size.Y),
+				null, Color.Green, rads, normalizedOrigin, SpriteEffects.None, 0.0f);
+
 			var origin = new Vector2(_formattedText.Size.X / 2.0f, _formattedText.Size.Y / 2.0f);
 
-			var rads = (float)(_angle * Math.PI / 180);
 			_formattedText.Draw(_spriteBatch, position, Color.White, scale, rads, origin);
 
 			_spriteBatch.End();
 
-//			_angle += 0.4f;
+			_angle += 0.4f;
 
 			while (_angle >= 360.0f)
 			{

@@ -171,7 +171,8 @@ namespace FontStashSharp.RichText
 
 		public bool IgnoreColorCommand { get; set; } = false;
 
-		public Func<string, SpriteFontBase> FontResolver { get; set; }
+		public static Func<string, SpriteFontBase> FontResolver { get; set; }
+		public static Func<string, TextureInfo> ImageResolver { get; set; }
 
 		private bool ProcessCommand(ref int i, ref ChunkInfo r)
 		{
@@ -245,7 +246,26 @@ namespace FontStashSharp.RichText
 					case "v":
 						_currentVerticalOffset = int.Parse(parameters);
 						break;
+					case "i":
+						if (ImageResolver == null)
+						{
+							throw new Exception($"ImageResolver isnt set");
+						}
 
+						var textureInfo = ImageResolver(parameters);
+						r.Type = ChunkInfoType.Image;
+						r.Texture = textureInfo.Texture;
+						if (textureInfo.Region != null)
+						{
+							r.TextureRegion = textureInfo.Region.Value;
+						} else {
+							r.TextureRegion = new Rectangle(0, 0, r.Texture.Width, r.Texture.Height);
+						}
+
+						r.LineEnd = false;
+						result = true;
+
+						break;
 				}
 			}
 
@@ -471,17 +491,19 @@ namespace FontStashSharp.RichText
 					case ChunkInfoType.Text:
 						chunk = new TextChunk(_currentFont, _text.Substring(c.StartIndex, c.CharsCount), new Point(c.X, c.Y), CalculateGlyphs)
 						{
-							TextStartIndex = i,
-							Color = _currentColor,
-							Top = _currentVerticalOffset,
+							TextStartIndex = i
 						};
 						break;
 					case ChunkInfoType.Space:
 						chunk = new SpaceChunk(c.X);
 						break;
 					case ChunkInfoType.Image:
+						chunk = new ImageChunk(c.Texture, c.TextureRegion);
 						break;
 				}
+
+				chunk.Color = _currentColor;
+				chunk.Top = _currentVerticalOffset;
 
 				width -= chunk.Size.X;
 
