@@ -27,7 +27,6 @@ namespace FontStashSharp.RichText
 		public string Text { get { return _text; } }
 		public override Point Size { get { return _size; } }
 
-		public int TextStartIndex { get; internal set; }
 		public SpriteFontBase Font => _font;
 
 		public TextChunk(SpriteFontBase font, string text, Point size, bool calculateGlyps)

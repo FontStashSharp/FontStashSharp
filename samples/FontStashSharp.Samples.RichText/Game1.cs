@@ -29,7 +29,7 @@ namespace FontStashSharp.Samples
 	/// </summary>
 	public class Game1 : Game
 	{
-		private const string Text = @"This is \c[red]colored \c[#00f0fa]ext,\n\c[white]color could be set either\n\c[lightGreen]by name or \c[#fa9000]by hex code\f[def, 16]\v[-8]This text uses smaller font.\n\c[blue]\vdThis text\s[100]\v[-10]\i[mangrove2.png]\vdSome text after image.";
+		private const string Text = @"This is \c[red]colored \c[#00f0fa]text,\n\c[white]color could be set either\n\c[lightGreen]by name or \c[#fa9000]by hex code\f[def, 16]\v[-8]This text uses smaller font.\n\c[blue]\vdThis text\s[100]\v[-10]\i[mangrove2.png]\vdSome text after image.";
 
 #if !STRIDE
 		private readonly GraphicsDeviceManager _graphics;
