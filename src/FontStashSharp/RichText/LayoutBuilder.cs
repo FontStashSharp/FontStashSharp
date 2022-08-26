@@ -31,9 +31,9 @@ namespace FontStashSharp.RichText
 		{
 			chunkFilled = false;
 
-			if (_text[i] != '\\' || i >= _text.Length - 2 || _text[i + 1] == 'n')
+			if (_text[i] != '/' || i >= _text.Length - 2 || _text[i + 1] == 'n' || _text[i + 1] == '/')
 			{
-				// Not a command(or newline command that is processed differently
+				// Not a command(or newline command that is processed differently)
 				return false;
 			}
 
@@ -81,12 +81,12 @@ namespace FontStashSharp.RichText
 						break;
 
 					case "f":
-						if (FormattedText.FontResolver == null)
+						if (RichTextDefaults.FontResolver == null)
 						{
 							throw new Exception($"FontResolver isnt set");
 						}
 
-						_currentFont = FormattedText.FontResolver(parameters);
+						_currentFont = RichTextDefaults.FontResolver(parameters);
 						break;
 					case "s":
 						var size = int.Parse(parameters);
@@ -100,12 +100,12 @@ namespace FontStashSharp.RichText
 						_currentVerticalOffset = int.Parse(parameters);
 						break;
 					case "i":
-						if (FormattedText.ImageResolver == null)
+						if (RichTextDefaults.ImageResolver == null)
 						{
 							throw new Exception($"ImageResolver isnt set");
 						}
 
-						var textureInfo = FormattedText.ImageResolver(parameters);
+						var textureInfo = RichTextDefaults.ImageResolver(parameters);
 						r.Type = ChunkInfoType.Image;
 						r.Texture = textureInfo.Texture;
 						if (textureInfo.Region != null)
@@ -148,9 +148,13 @@ namespace FontStashSharp.RichText
 			}
 
 			_stringBuilder.Clear();
-			Point? lastBreakMeasure = null;
 
-			for (; i < _text.Length; ++i)
+			r.StartIndex = r.EndIndex = i;
+
+			Point? lastBreakMeasure = null;
+			var lastBreakIndex = i;
+
+			for (; i < _text.Length; ++i, ++r.EndIndex)
 			{
 				var c = _text[i];
 
@@ -160,7 +164,7 @@ namespace FontStashSharp.RichText
 					continue;
 				}
 
-				if (c == '\\')
+				if (c == '/')
 				{
 					if (i < _text.Length - 1 && _text[i + 1] == 'n')
 					{
@@ -173,7 +177,11 @@ namespace FontStashSharp.RichText
 						break;
 					}
 
-					if (_supportsCommands && i < _text.Length - 2)
+					if (i < _text.Length - 1 && _text[i + 1] == '/')
+					{
+						// Two '\' means one
+						++i;
+					} else if (_supportsCommands && i < _text.Length - 2)
 					{
 						// Return right here, so the command
 						// would be processed in the next chunk
@@ -184,8 +192,22 @@ namespace FontStashSharp.RichText
 
 				_stringBuilder.Append(c);
 
-				var v = _currentFont.MeasureString(_stringBuilder);
-				var sz = new Point((int)v.X, _currentFont.LineHeight);
+				Point sz;
+				if (c != '\n')
+				{
+					var v = _currentFont.MeasureString(_stringBuilder);
+					sz = new Point((int)v.X, _font.LineHeight);
+				}
+				else
+				{
+					sz = new Point(r.X + NewLineWidth, Math.Max(r.Y, _font.LineHeight));
+
+					// Break right here
+					++i;
+					r.X = sz.X;
+					r.Y = sz.Y;
+					break;
+				}
 
 				if (remainingWidth != null && sz.X > remainingWidth.Value)
 				{
@@ -193,21 +215,21 @@ namespace FontStashSharp.RichText
 					{
 						r.X = lastBreakMeasure.Value.X;
 						r.Y = lastBreakMeasure.Value.Y;
+						r.EndIndex = i = lastBreakIndex;
 					}
 
 					break;
 				}
 
-				if (char.IsWhiteSpace(c))
+				if (char.IsWhiteSpace(c) || c == '.')
 				{
 					lastBreakMeasure = sz;
+					lastBreakIndex = i + 1;
 				}
 
 				r.X = sz.X;
 				r.Y = sz.Y;
 			}
-
-			r.Text = _stringBuilder.ToString();
 
 			return r;
 		}
@@ -265,7 +287,8 @@ namespace FontStashSharp.RichText
 				switch (c.Type)
 				{
 					case ChunkInfoType.Text:
-						chunk = new TextChunk(_currentFont, c.Text, new Point(c.X, c.Y), calculateGlyphs);
+						var t = _text.Substring(c.StartIndex, c.EndIndex - c.StartIndex).Replace("//", "/");
+						chunk = new TextChunk(_currentFont, t, new Point(c.X, c.Y), calculateGlyphs);
 						break;
 					case ChunkInfoType.Space:
 						chunk = new SpaceChunk(c.X);

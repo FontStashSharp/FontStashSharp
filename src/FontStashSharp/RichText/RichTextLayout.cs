@@ -14,7 +14,7 @@ using System.Numerics;
 
 namespace FontStashSharp.RichText
 {
-	public class FormattedText
+	public class RichTextLayout
 	{
 		private SpriteFontBase _font;
 		private string _text = string.Empty;
@@ -162,9 +162,6 @@ namespace FontStashSharp.RichText
 		}
 
 		public bool IgnoreColorCommand { get; set; } = false;
-
-		public static Func<string, SpriteFontBase> FontResolver { get; set; }
-		public static Func<string, TextureInfo> ImageResolver { get; set; }
 
 		private static int GetMeasureKey(int? width)
 		{

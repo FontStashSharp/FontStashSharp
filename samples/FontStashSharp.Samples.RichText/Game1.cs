@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using FontStashSharp.RichText;
 
@@ -29,7 +28,11 @@ namespace FontStashSharp.Samples
 	/// </summary>
 	public class Game1 : Game
 	{
-		private const string Text = @"This is \c[red]colored \c[#00f0fa]text,\n\c[white]color could be set either\n\c[lightGreen]by name or \c[#fa9000]by hex code\f[def, 16]\v[-8]This text uses smaller font.\n\c[blue]\vdThis text\s[100]\v[-10]\i[mangrove2.png]\vdSome text after image.";
+		// private const string Text = @"This is /c[red]colored /c[#00f0fa]text,/n/c[white]color could be set either/n/c[lightGreen]by name or /c[#fa9000]by hex code/f[def, 16]/v[-8]This text uses smaller font./n/c[blue]/vdThis text/s[100]/v[-10]/i[mangrove2.png]/vdSome text after image.";
+		// private const string Text = @"This text is split into 3 lines./nFirst break is explicit through command '//n'. Second break is automatic since Width is set.";
+		private const string Text = "First line./nSecond line.";
+		private readonly static int? Width = null;
+
 
 #if !STRIDE
 		private readonly GraphicsDeviceManager _graphics;
@@ -41,7 +44,7 @@ namespace FontStashSharp.Samples
 		private Texture2D _white;
 		private bool _animatedScaling = false;
 		private float _angle;
-		private FormattedText _formattedText;
+		private RichTextLayout _formattedText;
 
 		public Game1()
 		{
@@ -87,15 +90,16 @@ namespace FontStashSharp.Samples
 			// TODO: use this.Content to load your game content here
 
 			var fontSystem = new FontSystem();
-			fontSystem.AddFont(File.ReadAllBytes(@"Fonts/DroidSans.ttf"));
+			fontSystem.AddFont(File.ReadAllBytes(@"C:/Windows/Fonts/arial.ttf"));
 
-			_formattedText = new FormattedText
+			_formattedText = new RichTextLayout
 			{
 				Font = fontSystem.GetFont(32),
-				Text = Text
+				Text = Text,
+				Width = Width
 			};
 
-			FormattedText.FontResolver = p =>
+			RichTextDefaults.FontResolver = p =>
 			{
 				var args = p.Split(',');
 				var fontName = args[0].Trim();
@@ -103,7 +107,7 @@ namespace FontStashSharp.Samples
 				return fontSystem.GetFont(fontSize);
 			};
 
-			FormattedText.ImageResolver = p =>
+			RichTextDefaults.ImageResolver = p =>
 			{
 				Texture2D texture;
 				using (var stream = File.OpenRead(@"D:\Temp\DCSSTiles\dngn\trees\" + p))
@@ -179,24 +183,26 @@ namespace FontStashSharp.Samples
 				: Vector2.One;
 
 #if !STRIDE
-			var position = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
+			var position = new Vector2(0, GraphicsDevice.Viewport.Height / 2);
 #else
 			var position = new Vector2(GraphicsDevice.Presenter.BackBuffer.Width / 2, GraphicsDevice.Presenter.BackBuffer.Height / 2);
 #endif
 			var rads = (float)(_angle * Math.PI / 180);
-			var normalizedOrigin = new Vector2(0.5f, 0.5f);
+			// var normalizedOrigin = new Vector2(0.5f, 0.5f);
+			var normalizedOrigin = Vector2.Zero;
 
 			var size = _formattedText.Size;
-			_spriteBatch.Draw(_white, new Rectangle((int)position.X, (int)position.Y, size.X, size.Y),
-				null, Color.Green, rads, normalizedOrigin, SpriteEffects.None, 0.0f);
+/*			_spriteBatch.Draw(_white, new Rectangle((int)position.X, (int)position.Y, size.X, size.Y),
+				null, Color.Green, rads, normalizedOrigin, SpriteEffects.None, 0.0f);*/
 
 			var origin = new Vector2(_formattedText.Size.X / 2.0f, _formattedText.Size.Y / 2.0f);
 
-			_formattedText.Draw(_spriteBatch, position, Color.White, scale, rads, origin);
+			_formattedText.Width = GraphicsDevice.Viewport.Width;
+			_formattedText.Draw(_spriteBatch, position, Color.White);
 
 			_spriteBatch.End();
 
-			_angle += 0.4f;
+//			_angle += 0.4f;
 
 			while (_angle >= 360.0f)
 			{

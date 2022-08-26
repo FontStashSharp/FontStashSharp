@@ -22,7 +22,7 @@ namespace FontStashSharp.RichText
 		public int X;
 		public int Y;
 		public bool LineEnd;
-		public string Text;
+		public int StartIndex, EndIndex;
 		public Texture2D Texture;
 		public Rectangle TextureRegion;
 
