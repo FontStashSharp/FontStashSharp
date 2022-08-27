@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FontStashSharp.Interfaces;
 
 #if MONOGAME || FNA
@@ -7,9 +6,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
 using Stride.Core.Mathematics;
+using Stride.Graphics;
 #else
 using System.Drawing;
 using System.Numerics;
+using Matrix = System.Numerics.Matrix3x2;
 #endif
 
 namespace FontStashSharp.RichText

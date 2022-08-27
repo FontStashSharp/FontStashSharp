@@ -240,7 +240,7 @@ namespace FontStashSharp.RichText
 			bool supportsCommands, bool calculateGlyphs, out Point size)
 		{
 			_lines.Clear();
-			size = Point.Zero;
+			size = Utility.PointZero;
 
 			if (string.IsNullOrEmpty(text))
 			{
@@ -325,6 +325,21 @@ namespace FontStashSharp.RichText
 					lineTop = lineBottom = 0;
 					width = rowWidth;
 				}
+			}
+
+			// Add last line if it isnt empty
+			if (line.Chunks.Count > 0)
+			{
+				// Shift all chunks top by lineTop
+				foreach (var lineChunk in line.Chunks)
+				{
+					lineChunk.Top -= lineTop;
+				}
+
+				line.Size.Y = lineBottom - lineTop;
+
+				// New line
+				_lines.Add(line);
 			}
 
 			// If text ends with '\n', then add additional line

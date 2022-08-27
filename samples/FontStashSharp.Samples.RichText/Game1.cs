@@ -33,7 +33,9 @@ namespace FontStashSharp.Samples
 		// private const string Text = "First line./nSecond line.";
 		// private const string Text = "This is /c[red]colored /c[#00f0fa]ext, /cdcolor could be set either /c[lightGreen]by name or /c[#fa9000ff]by hex code.";
 		// private const string Text = @"Text in default font./n/f[arialbd.ttf, 24]Bold and smaller font. /f[ariali.ttf, 48]Italic and larger font./n/fdBack to the default font.";
-		private const string Text = @"E=mc/v[-8]2/n/vdMass–energy equivalence.";
+		// private const string Text = @"E=mc/v[-8]2/n/vdMass–energy equivalence.";
+		// private const string Text = @"A small tree: /i[mangrove1.png]";
+		private const string Text = @"A small /c[red]tree: /v[8]/i[mangrove1.png]";
 		private readonly static int? Width = null;
 
 #if !STRIDE
@@ -48,6 +50,7 @@ namespace FontStashSharp.Samples
 		private float _angle;
 		private RichTextLayout _formattedText;
 		private readonly Dictionary<string, FontSystem> _fontCache = new Dictionary<string, FontSystem>();
+		private readonly Dictionary<string, Texture2D> _textureCache = new Dictionary<string, Texture2D>();
 
 		public Game1()
 		{
@@ -127,9 +130,17 @@ namespace FontStashSharp.Samples
 			RichTextDefaults.ImageResolver = p =>
 			{
 				Texture2D texture;
-				using (var stream = File.OpenRead(@"D:\Temp\DCSSTiles\dngn\trees\" + p))
+
+				// _textureCache is field of type Dictionary<string, Texture2D>
+				// it is used to cache textures
+				if (!_textureCache.TryGetValue(p, out texture))
 				{
-					texture = Texture2D.FromStream(GraphicsDevice, stream);
+					using (var stream = File.OpenRead(@"D:\Temp\DCSSTiles\dngn\trees\" + p))
+					{
+						texture = Texture2D.FromStream(GraphicsDevice, stream);
+					}
+
+					_textureCache[p] = texture;
 				}
 
 				return new TextureFragment(texture);
@@ -200,10 +211,12 @@ namespace FontStashSharp.Samples
 				: Vector2.One;
 
 #if !STRIDE
-			var position = new Vector2(0, GraphicsDevice.Viewport.Height / 2);
+			var viewportSize = new Point(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 #else
-			var position = new Vector2(GraphicsDevice.Presenter.BackBuffer.Width / 2, GraphicsDevice.Presenter.BackBuffer.Height / 2);
+			var viewportSize = new Point(GraphicsDevice.Presenter.BackBuffer.Width, GraphicsDevice.Presenter.BackBuffer.Height);
 #endif
+			var position = new Vector2(0, viewportSize.Y / 2);
+
 			var rads = (float)(_angle * Math.PI / 180);
 			// var normalizedOrigin = new Vector2(0.5f, 0.5f);
 			var normalizedOrigin = Vector2.Zero;

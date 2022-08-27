@@ -6,8 +6,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
 using Stride.Core.Mathematics;
+using Stride.Graphics;
+using Texture2D = Stride.Graphics.Texture;
 #else
+using System.Numerics;
 using System.Drawing;
+using Texture2D = System.Object;
 #endif
 
 namespace FontStashSharp.RichText
@@ -31,7 +35,7 @@ namespace FontStashSharp.RichText
 		}
 
 #if MONOGAME || FNA || STRIDE
-		public TextureFragment(Texture2D texture): 
+		public TextureFragment(Texture2D texture) :
 			this(texture, new Rectangle(0, 0, texture.Width, texture.Height))
 		{
 		}
