@@ -18,26 +18,24 @@ namespace FontStashSharp.RichText
 {
 	public class ImageChunk : BaseChunk
 	{
-		private readonly Texture2D _texture;
-		private readonly Rectangle _region;
+		private readonly IRenderable _renderable;
 		
-		public override Point Size => new Point(_region.Width, _region.Height);
+		public override Point Size => _renderable.Size;
 
-		public ImageChunk(Texture2D texture, Rectangle region)
+		public ImageChunk(IRenderable renderable)
 		{
-			if (texture == null)
+			if (renderable == null)
 			{
-				throw new ArgumentNullException(nameof(texture));
+				throw new ArgumentNullException(nameof(renderable));
 			}
 
-			_texture = texture;
-			_region = region;
+			_renderable = renderable;
 		}
 
-		public override void Draw(IFontStashRenderer renderer, Vector2 position, Color color, Vector2? sourceScale, float rotation, float layerDepth)
+		public override void Draw(IFontStashRenderer renderer, Vector2 position, Clr color, Vector2? sourceScale, float rotation, float layerDepth)
 		{
 			var scale = sourceScale ?? Vector2.One;
-			renderer.Draw(_texture, position, _region, Clr.White, rotation, scale, layerDepth);
+			_renderable.Draw(renderer, position, Clr.White, scale, rotation, layerDepth);
 		}
 	}
 }

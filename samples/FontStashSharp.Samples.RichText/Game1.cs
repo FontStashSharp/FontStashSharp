@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using FontStashSharp.RichText;
 
@@ -28,11 +29,12 @@ namespace FontStashSharp.Samples
 	/// </summary>
 	public class Game1 : Game
 	{
-		// private const string Text = @"This is /c[red]colored /c[#00f0fa]text,/n/c[white]color could be set either/n/c[lightGreen]by name or /c[#fa9000]by hex code/f[def, 16]/v[-8]This text uses smaller font./n/c[blue]/vdThis text/s[100]/v[-10]/i[mangrove2.png]/vdSome text after image.";
 		// private const string Text = @"This text is split into 3 lines./nFirst break is explicit through command '//n'. Second break is automatic since Width is set.";
-		private const string Text = "First line./nSecond line.";
+		// private const string Text = "First line./nSecond line.";
+		// private const string Text = "This is /c[red]colored /c[#00f0fa]ext, /cdcolor could be set either /c[lightGreen]by name or /c[#fa9000ff]by hex code.";
+		// private const string Text = @"Text in default font./n/f[arialbd.ttf, 24]Bold and smaller font. /f[ariali.ttf, 48]Italic and larger font./n/fdBack to the default font.";
+		private const string Text = @"E=mc/v[-8]2/n/vdMass–energy equivalence.";
 		private readonly static int? Width = null;
-
 
 #if !STRIDE
 		private readonly GraphicsDeviceManager _graphics;
@@ -45,6 +47,7 @@ namespace FontStashSharp.Samples
 		private bool _animatedScaling = false;
 		private float _angle;
 		private RichTextLayout _formattedText;
+		private readonly Dictionary<string, FontSystem> _fontCache = new Dictionary<string, FontSystem>();
 
 		public Game1()
 		{
@@ -101,9 +104,23 @@ namespace FontStashSharp.Samples
 
 			RichTextDefaults.FontResolver = p =>
 			{
+				// Parse font name and size
 				var args = p.Split(',');
 				var fontName = args[0].Trim();
 				var fontSize = int.Parse(args[1].Trim());
+
+				// _fontCache is field of type Dictionary<string, FontSystem>
+				// It is used to cache fonts
+				FontSystem fontSystem;
+				if (!_fontCache.TryGetValue(fontName, out fontSystem))
+				{
+					// Load and cache the font system
+					fontSystem = new FontSystem();
+					fontSystem.AddFont(File.ReadAllBytes(@$"C:\Windows\Fonts\{fontName}"));
+					_fontCache[fontName] = fontSystem;
+				}
+
+				// Return the required font
 				return fontSystem.GetFont(fontSize);
 			};
 
@@ -115,7 +132,7 @@ namespace FontStashSharp.Samples
 					texture = Texture2D.FromStream(GraphicsDevice, stream);
 				}
 
-				return new TextureInfo(texture);
+				return new TextureFragment(texture);
 			};
 
 #if MONOGAME || FNA

@@ -23,8 +23,7 @@ namespace FontStashSharp.RichText
 		public int Y;
 		public bool LineEnd;
 		public int StartIndex, EndIndex;
-		public Texture2D Texture;
-		public Rectangle TextureRegion;
+		public IRenderable Renderable;
 
 		public int Width
 		{
@@ -32,7 +31,7 @@ namespace FontStashSharp.RichText
 			{
 				if (Type == ChunkInfoType.Image)
 				{
-					return TextureRegion.Width;
+					return Renderable.Size.X;
 				}
 
 				return X;
@@ -45,7 +44,7 @@ namespace FontStashSharp.RichText
 			{
 				if (Type == ChunkInfoType.Image)
 				{
-					return TextureRegion.Height;
+					return Renderable.Size.Y;
 				}
 
 				return Y;

@@ -49,6 +49,9 @@ namespace FontStashSharp.RichText
 			{
 				switch (command)
 				{
+					case "c":
+						_currentColor = null;
+						break;
 					case "f":
 						// Switch to default font
 						_currentFont = _font;
@@ -105,17 +108,9 @@ namespace FontStashSharp.RichText
 							throw new Exception($"ImageResolver isnt set");
 						}
 
-						var textureInfo = RichTextDefaults.ImageResolver(parameters);
+						var renderable = RichTextDefaults.ImageResolver(parameters);
 						r.Type = ChunkInfoType.Image;
-						r.Texture = textureInfo.Texture;
-						if (textureInfo.Region != null)
-						{
-							r.TextureRegion = textureInfo.Region.Value;
-						}
-						else
-						{
-							r.TextureRegion = new Rectangle(0, 0, r.Texture.Width, r.Texture.Height);
-						}
+						r.Renderable = renderable;
 
 						r.LineEnd = false;
 						chunkFilled = true;
@@ -294,7 +289,7 @@ namespace FontStashSharp.RichText
 						chunk = new SpaceChunk(c.X);
 						break;
 					case ChunkInfoType.Image:
-						chunk = new ImageChunk(c.Texture, c.TextureRegion);
+						chunk = new ImageChunk(c.Renderable);
 						break;
 				}
 

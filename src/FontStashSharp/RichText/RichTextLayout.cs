@@ -266,15 +266,16 @@ namespace FontStashSharp.RichText
 				pos.X = 0;
 				foreach (var chunk in line.Chunks)
 				{
+					var chunkColor = color;
 					if (!IgnoreColorCommand && chunk.Color != null)
 					{
-						color = chunk.Color.Value;
+						chunkColor = chunk.Color.Value;
 					}
 
 					var p = pos;
 					p.Y += chunk.Top;
 					p = p.Transform(ref transformation);
-					chunk.Draw(renderer, p, color, scale, rotation, layerDepth);
+					chunk.Draw(renderer, p, chunkColor, scale, rotation, layerDepth);
 
 					pos.X += chunk.Size.X;
 				}
