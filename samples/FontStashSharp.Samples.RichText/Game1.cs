@@ -104,7 +104,8 @@ namespace FontStashSharp.Samples
 			_richText = new RichTextLayout
 			{
 				Font = fontSystem.GetFont(32),
-				Text = Strings[_stringIndex]
+				Text = Strings[_stringIndex],
+				VerticalSpacing = 8
 			};
 
 			RichTextDefaults.FontResolver = p =>
@@ -251,7 +252,7 @@ namespace FontStashSharp.Samples
 				(int)position.Y,
 				(int)(size.X * scale.X),
 				(int)(size.Y * scale.Y));
-			_spriteBatch.Draw(_white, rect, null, Color.Green);
+			_spriteBatch.Draw(_white, rect, Color.Green);
 
 			_richText.Draw(_spriteBatch, position, Color.White, scale);
 

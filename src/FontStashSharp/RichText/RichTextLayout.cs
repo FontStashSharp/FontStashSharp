@@ -20,7 +20,6 @@ namespace FontStashSharp.RichText
 		private SpriteFontBase _font;
 		private string _text = string.Empty;
 		private int? _width;
-		private List<TextLine> _lines;
 		private Point _size;
 		private bool _dirty = true;
 		private readonly Dictionary<int, Point> _measures = new Dictionary<int, Point>();
@@ -107,7 +106,7 @@ namespace FontStashSharp.RichText
 			get
 			{
 				Update();
-				return _lines;
+				return _layoutBuilder.Lines;
 			}
 		}
 
@@ -174,9 +173,7 @@ namespace FontStashSharp.RichText
 				return;
 			}
 
-			Point size;
-			_lines = _layoutBuilder.Layout(Text, Font, Width, out size);
-			_size = size;
+			_size = _layoutBuilder.Layout(Text, Font, Width);
 
 			var key = GetMeasureKey(Width);
 			_measures[key] = _size;
@@ -184,30 +181,46 @@ namespace FontStashSharp.RichText
 			_dirty = false;
 		}
 
+		public Point Measure(int? width)
+		{
+			var result = Utility.PointZero;
+
+			var key = GetMeasureKey(width);
+			if (_measures.TryGetValue(key, out result))
+			{
+				return result;
+			}
+
+			result = _layoutBuilder.Layout(Text, Font, Width, true);
+			_measures[key] = result;
+
+			return result;
+		}
+
 		public TextLine GetLineByCursorPosition(int cursorPosition)
 		{
 			Update();
 
-			if (_lines.Count == 0)
+			if (Lines.Count == 0)
 			{
 				return null;
 			}
 
 			if (cursorPosition < 0)
 			{
-				return _lines[0];
+				return Lines[0];
 			}
 
-			for (var i = 0; i < _lines.Count; ++i)
+			for (var i = 0; i < Lines.Count; ++i)
 			{
-				var s = _lines[i];
+				var s = Lines[i];
 				if (s.TextStartIndex <= cursorPosition && cursorPosition < s.TextStartIndex + s.Count)
 				{
 					return s;
 				}
 			}
 
-			return _lines[_lines.Count - 1];
+			return Lines[Lines.Count - 1];
 		}
 
 		public TextLine GetLineByY(int y)
@@ -219,9 +232,9 @@ namespace FontStashSharp.RichText
 
 			Update();
 
-			for (var i = 0; i < _lines.Count; ++i)
+			for (var i = 0; i < Lines.Count; ++i)
 			{
-				var s = _lines[i];
+				var s = Lines[i];
 
 				if (s.Top <= y && y < s.Top + s.Size.Y)
 				{

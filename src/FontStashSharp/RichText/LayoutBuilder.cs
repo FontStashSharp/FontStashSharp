@@ -19,20 +19,27 @@ namespace FontStashSharp.RichText
 
 		private string _text;
 		private SpriteFontBase _font;
+		private bool _measureRun;
 
 		private readonly List<TextLine> _lines = new List<TextLine>();
 		private TextLine _currentLine;
 		private int lineTop, lineBottom;
 		private int? width;
+		private int _lineCount;
+		private int _currentLineWidth;
+		private int _currentLineChunks;
 
 		private readonly StringBuilder _stringBuilder = new StringBuilder();
 		private Color? _currentColor;
 		private SpriteFontBase _currentFont;
 		private int _currentVerticalOffset;
 
+		public List<TextLine> Lines => _lines;
+
 		public int VerticalSpacing { get; set; }
 		public bool SupportsCommands { get; set; } = true;
 		public bool CalculateGlyphs { get; set; }
+		public bool ShiftByTop { get; set; } = true;
 
 		private bool ProcessCommand(ref int i, ref ChunkInfo r, out bool chunkFilled)
 		{
@@ -183,7 +190,8 @@ namespace FontStashSharp.RichText
 					{
 						// Two '\' means one
 						++i;
-					} else if (SupportsCommands && i < _text.Length - 2)
+					}
+					else if (SupportsCommands && i < _text.Length - 2)
 					{
 						// Return right here, so the command
 						// would be processed in the next chunk
@@ -245,41 +253,68 @@ namespace FontStashSharp.RichText
 
 		private void StartLine(int startIndex, int? rowWidth)
 		{
-			_currentLine = new TextLine
+			if (!_measureRun)
 			{
-				TextStartIndex = startIndex
-			};
+				_currentLine = new TextLine
+				{
+					TextStartIndex = startIndex
+				};
+			}
+
 			lineTop = 0;
 			lineBottom = 0;
+			_currentLineWidth = 0;
+			_currentLineChunks = 0;
 			width = rowWidth;
 		}
 
-		private void EndLine()
+		private void EndLine(ref Point size)
 		{
-			// Shift all chunks top by lineTop
-			foreach (var lineChunk in _currentLine.Chunks)
+			var lineHeight = lineBottom - lineTop;
+			++_lineCount;
+
+			if (_currentLineWidth > size.X)
 			{
-				lineChunk.Top -= lineTop;
+				size.X = _currentLineWidth;
 			}
+			size.Y += lineHeight;
 
-			_currentLine.Size.Y = lineBottom - lineTop;
+			if (!_measureRun)
+			{
+				if (ShiftByTop)
+				{
+					// Shift all chunks top by lineTop
+					foreach (var lineChunk in _currentLine.Chunks)
+					{
+						lineChunk.Top -= lineTop;
+					}
+				}
 
-			// New line
-			_lines.Add(_currentLine);
+				_currentLine.Size.Y = lineHeight;
+
+				// New line
+				_lines.Add(_currentLine);
+			}
 		}
 
-		public List<TextLine> Layout(string text, SpriteFontBase font, int? rowWidth, out Point size)
+		public Point Layout(string text, SpriteFontBase font, int? rowWidth, bool measureRun = false)
 		{
-			_lines.Clear();
-			size = Utility.PointZero;
+			if (!measureRun)
+			{
+				_lines.Clear();
+			}
+
+			_lineCount = 0;
+			var size = Utility.PointZero;
 
 			if (string.IsNullOrEmpty(text))
 			{
-				return _lines;
+				return size;
 			}
 
 			_text = text;
 			_font = font;
+			_measureRun = measureRun;
 
 			ResetCurrents();
 
@@ -294,12 +329,11 @@ namespace FontStashSharp.RichText
 				{
 					// New chunk doesn't fit in the line
 					// Hence move it to the second
-					EndLine();
+					EndLine(ref size);
 					StartLine(i, rowWidth);
 				}
 
 				width -= c.Width;
-				_currentLine.Size.X += c.Width;
 				if (_currentVerticalOffset < lineTop)
 				{
 					lineTop = _currentVerticalOffset;
@@ -310,89 +344,100 @@ namespace FontStashSharp.RichText
 					lineBottom = _currentVerticalOffset + c.Height;
 				}
 
-				BaseChunk chunk = null;
-				switch (c.Type)
+				_currentLineWidth += c.Width;
+
+				if (!_measureRun)
 				{
-					case ChunkInfoType.Text:
-						var t = _text.Substring(c.StartIndex, c.EndIndex - c.StartIndex).Replace("//", "/");
-						chunk = new TextChunk(_currentFont, t, new Point(c.X, c.Y), CalculateGlyphs);
-						break;
-					case ChunkInfoType.Space:
-						chunk = new SpaceChunk(c.X);
-						break;
-					case ChunkInfoType.Image:
-						chunk = new ImageChunk(c.Renderable);
-						break;
+					_currentLine.Size.X += c.Width;
+
+					BaseChunk chunk = null;
+					switch (c.Type)
+					{
+						case ChunkInfoType.Text:
+							var t = _text.Substring(c.StartIndex, c.EndIndex - c.StartIndex).Replace("//", "/");
+							chunk = new TextChunk(_currentFont, t, new Point(c.X, c.Y), CalculateGlyphs);
+							break;
+						case ChunkInfoType.Space:
+							chunk = new SpaceChunk(c.X);
+							break;
+						case ChunkInfoType.Image:
+							chunk = new ImageChunk(c.Renderable);
+							break;
+					}
+
+					chunk.Color = _currentColor;
+					chunk.Top = _currentVerticalOffset;
+
+					var asText = chunk as TextChunk;
+					if (asText != null)
+					{
+						_currentLine.Count += asText.Count;
+					}
+
+					_currentLine.Chunks.Add(chunk);
 				}
 
-				chunk.Color = _currentColor;
-				chunk.Top = _currentVerticalOffset;
-
-				var asText = chunk as TextChunk;
-				if (asText != null)
-				{
-					_currentLine.Count += asText.Count;
-				}
-
-				_currentLine.Chunks.Add(chunk);
+				++_currentLineChunks;
 
 				if (c.LineEnd)
 				{
-					EndLine();
+					EndLine(ref size);
 					StartLine(i, rowWidth);
 				}
 			}
 
 			// Add last line if it isnt empty
-			if (_currentLine.Chunks.Count > 0)
+			if (_currentLineChunks > 0)
 			{
-				EndLine();
+				EndLine(ref size);
 			}
 
 			// If text ends with '\n', then add additional line
 			if (_text[_text.Length - 1] == '\n')
 			{
-				var additionalLine = new TextLine
-				{
-					TextStartIndex = _text.Length
-				};
-
 				var lineSize = _currentFont.MeasureString(" ");
-				additionalLine.Size.Y = (int)lineSize.Y;
+				if (!_measureRun)
+				{
+					var additionalLine = new TextLine
+					{
+						TextStartIndex = _text.Length
+					};
 
-				_lines.Add(additionalLine);
+					additionalLine.Size.Y = (int)lineSize.Y;
+
+					_lines.Add(additionalLine);
+				}
+
+				size.Y += (int)lineSize.Y;
 			}
 
-			// Calculate size
-			size = Utility.PointZero;
-			for (i = 0; i < _lines.Count; ++i)
+			// Index lines and chunks
+			if (!_measureRun)
 			{
-				_currentLine = _lines[i];
-
-				_currentLine.LineIndex = i;
-				_currentLine.Top = size.Y;
-
-				for (var j = 0; j < _currentLine.Chunks.Count; ++j)
+				var top = 0;
+				for (i = 0; i < _lines.Count; ++i)
 				{
-					var chunk = _currentLine.Chunks[j];
-					chunk.LineIndex = _currentLine.LineIndex;
-					chunk.ChunkIndex = j;
-				}
+					_currentLine = _lines[i];
 
-				if (_currentLine.Size.X > size.X)
-				{
-					size.X = _currentLine.Size.X;
-				}
+					_currentLine.LineIndex = i;
+					_currentLine.Top = top;
 
-				size.Y += _currentLine.Size.Y;
+					for (var j = 0; j < _currentLine.Chunks.Count; ++j)
+					{
+						var chunk = _currentLine.Chunks[j];
+						chunk.LineIndex = _currentLine.LineIndex;
+						chunk.ChunkIndex = j;
+						chunk.Top = top;
+					}
 
-				if (i < _lines.Count - 1)
-				{
-					size.Y += VerticalSpacing;
+					top += _currentLine.Size.Y;
+					top += VerticalSpacing;
 				}
 			}
 
-			return _lines;
+			size.Y += (_lineCount - 1) * VerticalSpacing;
+
+			return size;
 		}
 	}
 }
