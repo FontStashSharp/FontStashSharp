@@ -19,7 +19,7 @@ using Stride.Graphics;
 using Stride.Core.Mathematics;
 using Stride.Input;
 using Texture2D = Stride.Graphics.Texture;
-using SharpDX.Direct3D11;
+using StbImageSharp;
 #endif
 
 namespace FontStashSharp.Samples
@@ -29,14 +29,16 @@ namespace FontStashSharp.Samples
 	/// </summary>
 	public class Game1 : Game
 	{
-		// private const string Text = @"This text is split into 3 lines./nFirst break is explicit through command '//n'. Second break is automatic since Width is set.";
-		// private const string Text = "First line./nSecond line.";
-		// private const string Text = "This is /c[red]colored /c[#00f0fa]ext, /cdcolor could be set either /c[lightGreen]by name or /c[#fa9000ff]by hex code.";
-		// private const string Text = @"Text in default font./n/f[arialbd.ttf, 24]Bold and smaller font. /f[ariali.ttf, 48]Italic and larger font./n/fdBack to the default font.";
-		// private const string Text = @"E=mc/v[-8]2/n/vdMass–energy equivalence.";
-		// private const string Text = @"A small tree: /i[mangrove1.png]";
-		private const string Text = @"A small /c[red]tree: /v[8]/i[mangrove1.png]";
-		private readonly static int? Width = null;
+		private static readonly string[] Strings = new[]
+		{
+			"First line./nSecond line.",
+			"This is /c[red]colored /c[#00f0fa]ext, /cdcolor could be set either /c[lightGreen]by name or /c[#fa9000ff]by hex code.",
+			"Text in default font./n/f[arialbd.ttf, 24]Bold and smaller font. /f[ariali.ttf, 48]Italic and larger font./n/fdBack to the default font.",
+			"E=mc/v[-8]2/n/vdMass–energy equivalence.",
+			"A small tree: /i[mangrove1.png]",
+			"A small /c[red]tree: /v[8]/i[mangrove1.png]",
+			"This is the first line. This is the second line. This is the third line.",
+		};
 
 #if !STRIDE
 		private readonly GraphicsDeviceManager _graphics;
@@ -48,7 +50,8 @@ namespace FontStashSharp.Samples
 		private Texture2D _white;
 		private bool _animatedScaling = false;
 		private float _angle;
-		private RichTextLayout _formattedText;
+		private RichTextLayout _richText;
+		private int _stringIndex = 0;
 		private readonly Dictionary<string, FontSystem> _fontCache = new Dictionary<string, FontSystem>();
 		private readonly Dictionary<string, Texture2D> _textureCache = new Dictionary<string, Texture2D>();
 
@@ -98,11 +101,10 @@ namespace FontStashSharp.Samples
 			var fontSystem = new FontSystem();
 			fontSystem.AddFont(File.ReadAllBytes(@"C:/Windows/Fonts/arial.ttf"));
 
-			_formattedText = new RichTextLayout
+			_richText = new RichTextLayout
 			{
 				Font = fontSystem.GetFont(32),
-				Text = Text,
-				Width = Width
+				Text = Strings[_stringIndex]
 			};
 
 			RichTextDefaults.FontResolver = p =>
@@ -119,7 +121,7 @@ namespace FontStashSharp.Samples
 				{
 					// Load and cache the font system
 					fontSystem = new FontSystem();
-					fontSystem.AddFont(File.ReadAllBytes(@$"C:\Windows\Fonts\{fontName}"));
+					fontSystem.AddFont(File.ReadAllBytes(Path.Combine(@"C:\Windows\Fonts", fontName)));
 					_fontCache[fontName] = fontSystem;
 				}
 
@@ -135,9 +137,16 @@ namespace FontStashSharp.Samples
 				// it is used to cache textures
 				if (!_textureCache.TryGetValue(p, out texture))
 				{
-					using (var stream = File.OpenRead(@"D:\Temp\DCSSTiles\dngn\trees\" + p))
+					using (var stream = File.OpenRead(Path.Combine(@"D:\Temp\DCSSTiles\dngn\trees\", p)))
 					{
+#if MONOGAME || FNA
 						texture = Texture2D.FromStream(GraphicsDevice, stream);
+#else
+						var image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
+						texture = Texture2D.New2D(GraphicsDevice, image.Width, image.Height, false, PixelFormat.R8G8B8A8_UNorm, TextureFlags.ShaderResource);
+						var context = new GraphicsContext(texture.GraphicsDevice);
+						texture.SetData(context.CommandList, image.Data, 0, 0, new ResourceRegion(0, 0, 0, image.Width, image.Height, 1));
+#endif
 					}
 
 					_textureCache[p] = texture;
@@ -151,7 +160,7 @@ namespace FontStashSharp.Samples
 			_white.SetData(new[] { Color.White });
 #elif STRIDE
 			_white = Texture2D.New2D(GraphicsDevice, 1, 1, false, PixelFormat.R8G8B8A8_UNorm_SRgb, TextureFlags.ShaderResource);
-			_white.SetData(GraphicsContext.CommandList, new[] { Color.White } );
+			_white.SetData(GraphicsContext.CommandList, new[] { Color.White });
 #endif
 
 			GC.Collect();
@@ -169,12 +178,23 @@ namespace FontStashSharp.Samples
 
 			if (KeyboardUtils.IsPressed(Keys.Enter))
 			{
-//				_currentFontSystem.UseKernings = !_currentFontSystem.UseKernings;
+				//				_currentFontSystem.UseKernings = !_currentFontSystem.UseKernings;
 			}
 
 			if (KeyboardUtils.IsPressed(Keys.LeftShift))
 			{
 				_animatedScaling = !_animatedScaling;
+			}
+
+			if (KeyboardUtils.IsPressed(Keys.Space))
+			{
+				++_stringIndex;
+				if (_stringIndex >= Strings.Length)
+				{
+					_stringIndex = 0;
+				}
+
+				_richText.Text = Strings[_stringIndex];
 			}
 
 			KeyboardUtils.End();
@@ -205,6 +225,7 @@ namespace FontStashSharp.Samples
 #elif STRIDE
 			_spriteBatch.Begin(GraphicsContext);
 #endif
+			_spriteBatch.DrawString(_richText.Font, "Press 'Space' to switch between strings.", Vector2.Zero, Color.White);
 
 			Vector2 scale = _animatedScaling
 				? new Vector2(1 + .25f * (float)Math.Sin(total.TotalSeconds * .5f))
@@ -215,29 +236,26 @@ namespace FontStashSharp.Samples
 #else
 			var viewportSize = new Point(GraphicsDevice.Presenter.BackBuffer.Width, GraphicsDevice.Presenter.BackBuffer.Height);
 #endif
-			var position = new Vector2(0, viewportSize.Y / 2);
+			if (_stringIndex != 6)
+			{
+				_richText.Width = viewportSize.X;
+			}
+			else
+			{
+				_richText.Width = 300;
+			}
 
-			var rads = (float)(_angle * Math.PI / 180);
-			// var normalizedOrigin = new Vector2(0.5f, 0.5f);
-			var normalizedOrigin = Vector2.Zero;
+			var position = new Vector2(0, viewportSize.Y / 2 - _richText.Size.Y / 2);
+			var size = _richText.Size;
+			var rect = new Rectangle((int)position.X,
+				(int)position.Y,
+				(int)(size.X * scale.X),
+				(int)(size.Y * scale.Y));
+			_spriteBatch.Draw(_white, rect, null, Color.Green);
 
-			var size = _formattedText.Size;
-/*			_spriteBatch.Draw(_white, new Rectangle((int)position.X, (int)position.Y, size.X, size.Y),
-				null, Color.Green, rads, normalizedOrigin, SpriteEffects.None, 0.0f);*/
-
-			var origin = new Vector2(_formattedText.Size.X / 2.0f, _formattedText.Size.Y / 2.0f);
-
-			_formattedText.Width = GraphicsDevice.Viewport.Width;
-			_formattedText.Draw(_spriteBatch, position, Color.White);
+			_richText.Draw(_spriteBatch, position, Color.White, scale);
 
 			_spriteBatch.End();
-
-//			_angle += 0.4f;
-
-			while (_angle >= 360.0f)
-			{
-				_angle -= 360.0f;
-			}
 
 			base.Draw(gameTime);
 		}

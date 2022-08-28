@@ -19,10 +19,8 @@ namespace FontStashSharp.RichText
 	{
 		private SpriteFontBase _font;
 		private string _text = string.Empty;
-		private int _verticalSpacing;
 		private int? _width;
 		private List<TextLine> _lines;
-		private bool _calculateGlyphs, _supportsCommands = true;
 		private Point _size;
 		private bool _dirty = true;
 		private readonly Dictionary<int, Point> _measures = new Dictionary<int, Point>();
@@ -70,17 +68,17 @@ namespace FontStashSharp.RichText
 		{
 			get
 			{
-				return _verticalSpacing;
+				return _layoutBuilder.VerticalSpacing;
 			}
 
 			set
 			{
-				if (value == _verticalSpacing)
+				if (value == _layoutBuilder.VerticalSpacing)
 				{
 					return;
 				}
 
-				_verticalSpacing = value;
+				_layoutBuilder.VerticalSpacing = value;
 				InvalidateLayout();
 				InvalidateMeasures();
 			}
@@ -126,17 +124,17 @@ namespace FontStashSharp.RichText
 		{
 			get
 			{
-				return _calculateGlyphs;
+				return _layoutBuilder.CalculateGlyphs;
 			}
 
 			set
 			{
-				if (value == _calculateGlyphs)
+				if (value == _layoutBuilder.CalculateGlyphs)
 				{
 					return;
 				}
 
-				_calculateGlyphs = value;
+				_layoutBuilder.CalculateGlyphs = value;
 				InvalidateLayout();
 				InvalidateMeasures();
 			}
@@ -146,17 +144,17 @@ namespace FontStashSharp.RichText
 		{
 			get
 			{
-				return _supportsCommands;
+				return _layoutBuilder.SupportsCommands;
 			}
 
 			set
 			{
-				if (value == _supportsCommands)
+				if (value == _layoutBuilder.SupportsCommands)
 				{
 					return;
 				}
 
-				_supportsCommands = value;
+				_layoutBuilder.SupportsCommands = value;
 				InvalidateLayout();
 				InvalidateMeasures();
 			}
@@ -177,7 +175,7 @@ namespace FontStashSharp.RichText
 			}
 
 			Point size;
-			_lines = _layoutBuilder.Layout(Text, Font, VerticalSpacing, Width, SupportsCommands, CalculateGlyphs, out size);
+			_lines = _layoutBuilder.Layout(Text, Font, Width, out size);
 			_size = size;
 
 			var key = GetMeasureKey(Width);
@@ -257,6 +255,8 @@ namespace FontStashSharp.RichText
 			Vector2? sourceScale = null, float rotation = 0, Vector2 origin = default(Vector2),
 			float layerDepth = 0.0f)
 		{
+			Update();
+
 			Matrix transformation;
 			var scale = sourceScale ?? Utility.DefaultScale;
 			Utility.BuildTransform(position, ref scale, rotation, origin, out transformation);
@@ -282,7 +282,7 @@ namespace FontStashSharp.RichText
 				}
 
 				pos.Y += line.Size.Y;
-				pos.Y += _verticalSpacing;
+				pos.Y += VerticalSpacing;
 			}
 		}
 

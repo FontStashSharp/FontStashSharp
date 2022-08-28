@@ -19,13 +19,20 @@ namespace FontStashSharp.RichText
 
 		private string _text;
 		private SpriteFontBase _font;
-		private bool _supportsCommands;
 
 		private readonly List<TextLine> _lines = new List<TextLine>();
+		private TextLine _currentLine;
+		private int lineTop, lineBottom;
+		private int? width;
+
 		private readonly StringBuilder _stringBuilder = new StringBuilder();
 		private Color? _currentColor;
 		private SpriteFontBase _currentFont;
 		private int _currentVerticalOffset;
+
+		public int VerticalSpacing { get; set; }
+		public bool SupportsCommands { get; set; } = true;
+		public bool CalculateGlyphs { get; set; }
 
 		private bool ProcessCommand(ref int i, ref ChunkInfo r, out bool chunkFilled)
 		{
@@ -176,7 +183,7 @@ namespace FontStashSharp.RichText
 					{
 						// Two '\' means one
 						++i;
-					} else if (_supportsCommands && i < _text.Length - 2)
+					} else if (SupportsCommands && i < _text.Length - 2)
 					{
 						// Return right here, so the command
 						// would be processed in the next chunk
@@ -236,8 +243,32 @@ namespace FontStashSharp.RichText
 			_currentVerticalOffset = 0;
 		}
 
-		public List<TextLine> Layout(string text, SpriteFontBase font, int verticalSpacing, int? rowWidth, 
-			bool supportsCommands, bool calculateGlyphs, out Point size)
+		private void StartLine(int startIndex, int? rowWidth)
+		{
+			_currentLine = new TextLine
+			{
+				TextStartIndex = startIndex
+			};
+			lineTop = 0;
+			lineBottom = 0;
+			width = rowWidth;
+		}
+
+		private void EndLine()
+		{
+			// Shift all chunks top by lineTop
+			foreach (var lineChunk in _currentLine.Chunks)
+			{
+				lineChunk.Top -= lineTop;
+			}
+
+			_currentLine.Size.Y = lineBottom - lineTop;
+
+			// New line
+			_lines.Add(_currentLine);
+		}
+
+		public List<TextLine> Layout(string text, SpriteFontBase font, int? rowWidth, out Point size)
 		{
 			_lines.Clear();
 			size = Utility.PointZero;
@@ -249,25 +280,26 @@ namespace FontStashSharp.RichText
 
 			_text = text;
 			_font = font;
-			_supportsCommands = supportsCommands;
 
 			ResetCurrents();
 
-			var width = rowWidth;
 			var i = 0;
-			var line = new TextLine
-			{
-				TextStartIndex = i
-			};
-			var lineTop = 0;
-			var lineBottom = 0;
 
+			StartLine(0, rowWidth);
 			while (i < _text.Length)
 			{
 				var c = GetNextChunk(ref i, width);
 
+				if (width != null && c.Width > width.Value && _currentLine.Chunks.Count > 0)
+				{
+					// New chunk doesn't fit in the line
+					// Hence move it to the second
+					EndLine();
+					StartLine(i, rowWidth);
+				}
+
 				width -= c.Width;
-				line.Size.X += c.Width;
+				_currentLine.Size.X += c.Width;
 				if (_currentVerticalOffset < lineTop)
 				{
 					lineTop = _currentVerticalOffset;
@@ -283,7 +315,7 @@ namespace FontStashSharp.RichText
 				{
 					case ChunkInfoType.Text:
 						var t = _text.Substring(c.StartIndex, c.EndIndex - c.StartIndex).Replace("//", "/");
-						chunk = new TextChunk(_currentFont, t, new Point(c.X, c.Y), calculateGlyphs);
+						chunk = new TextChunk(_currentFont, t, new Point(c.X, c.Y), CalculateGlyphs);
 						break;
 					case ChunkInfoType.Space:
 						chunk = new SpaceChunk(c.X);
@@ -299,47 +331,22 @@ namespace FontStashSharp.RichText
 				var asText = chunk as TextChunk;
 				if (asText != null)
 				{
-					line.Count += asText.Count;
+					_currentLine.Count += asText.Count;
 				}
 
-				line.Chunks.Add(chunk);
+				_currentLine.Chunks.Add(chunk);
 
 				if (c.LineEnd)
 				{
-					// Shift all chunks top by lineTop
-					foreach (var lineChunk in line.Chunks)
-					{
-						lineChunk.Top -= lineTop;
-					}
-
-					line.Size.Y = lineBottom - lineTop;
-
-					// New line
-					_lines.Add(line);
-
-					line = new TextLine
-					{
-						TextStartIndex = i
-					};
-
-					lineTop = lineBottom = 0;
-					width = rowWidth;
+					EndLine();
+					StartLine(i, rowWidth);
 				}
 			}
 
 			// Add last line if it isnt empty
-			if (line.Chunks.Count > 0)
+			if (_currentLine.Chunks.Count > 0)
 			{
-				// Shift all chunks top by lineTop
-				foreach (var lineChunk in line.Chunks)
-				{
-					lineChunk.Top -= lineTop;
-				}
-
-				line.Size.Y = lineBottom - lineTop;
-
-				// New line
-				_lines.Add(line);
+				EndLine();
 			}
 
 			// If text ends with '\n', then add additional line
@@ -360,28 +367,28 @@ namespace FontStashSharp.RichText
 			size = Utility.PointZero;
 			for (i = 0; i < _lines.Count; ++i)
 			{
-				line = _lines[i];
+				_currentLine = _lines[i];
 
-				line.LineIndex = i;
-				line.Top = size.Y;
+				_currentLine.LineIndex = i;
+				_currentLine.Top = size.Y;
 
-				for (var j = 0; j < line.Chunks.Count; ++j)
+				for (var j = 0; j < _currentLine.Chunks.Count; ++j)
 				{
-					var chunk = line.Chunks[j];
-					chunk.LineIndex = line.LineIndex;
+					var chunk = _currentLine.Chunks[j];
+					chunk.LineIndex = _currentLine.LineIndex;
 					chunk.ChunkIndex = j;
 				}
 
-				if (line.Size.X > size.X)
+				if (_currentLine.Size.X > size.X)
 				{
-					size.X = line.Size.X;
+					size.X = _currentLine.Size.X;
 				}
 
-				size.Y += line.Size.Y;
+				size.Y += _currentLine.Size.Y;
 
 				if (i < _lines.Count - 1)
 				{
-					size.Y += verticalSpacing;
+					size.Y += VerticalSpacing;
 				}
 			}
 
