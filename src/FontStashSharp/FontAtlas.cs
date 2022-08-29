@@ -2,12 +2,15 @@
 using System;
 
 #if MONOGAME || FNA
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
 using Stride.Graphics;
+using Stride.Core.Mathematics;
 using Texture2D = Stride.Graphics.Texture;
 #else
 using Texture2D = System.Object;
+using System.Drawing;
 #endif
 
 
@@ -169,9 +172,9 @@ namespace FontStashSharp
 		}
 
 #if MONOGAME || FNA || STRIDE
-		public void RenderGlyph(GraphicsDevice graphicsDevice, DynamicFontGlyph glyph, IFontSource fontSource, int blurAmount, int strokeAmount, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
+		public void RenderGlyph(GraphicsDevice graphicsDevice, DynamicFontGlyph glyph, IFontSource fontSource, int blurAmount, int strokeAmount, bool premultiplyAlpha, int kernelWidth, int kernelHeight, bool eraseTextureOnCreation)
 #else
-		public void RenderGlyph(ITexture2DManager textureManager, DynamicFontGlyph glyph, IFontSource fontSource, int blurAmount, int strokeAmount, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
+		public void RenderGlyph(ITexture2DManager textureManager, DynamicFontGlyph glyph, IFontSource fontSource, int blurAmount, int strokeAmount, bool premultiplyAlpha, int kernelWidth, int kernelHeight, bool eraseTextureOnCreation)
 #endif
 		{
 			if (glyph.IsEmpty)
@@ -314,6 +317,17 @@ namespace FontStashSharp
 			if (Texture == null)
 			{
 				Texture = Texture2DManager.CreateTexture(graphicsDevice, Width, Height);
+
+				if (eraseTextureOnCreation)
+				{
+					var eraseData = new byte[Width * Height * 4];
+					for (var i = 0; i < eraseData.Length; ++i)
+					{
+						eraseData[i] = 0;
+					}
+
+					Texture2DManager.SetTextureData(Texture, new Rectangle(0, 0, Width, Height), eraseData);
+				}
 			}
 
 			Texture2DManager.SetTextureData(Texture, glyph.TextureRectangle, colorBuffer);
@@ -322,6 +336,17 @@ namespace FontStashSharp
 			if (Texture == null)
 			{
 				Texture = textureManager.CreateTexture(Width, Height);
+
+				if (eraseTextureOnCreation)
+				{
+					var eraseData = new byte[Width * Height * 4];
+					for (var i = 0; i < eraseData.Length; ++i)
+					{
+						eraseData[i] = 0;
+					}
+
+					textureManager.SetTextureData(Texture, new Rectangle(0, 0, Width, Height), eraseData);
+				}
 			}
 
 			textureManager.SetTextureData(Texture, glyph.TextureRectangle, colorBuffer);

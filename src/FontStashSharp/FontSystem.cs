@@ -43,8 +43,10 @@ namespace FontStashSharp
 		public Texture2D ExistingTexture => _settings.ExistingTexture;
 		public Rectangle ExistingTextureUsedSpace => _settings.ExistingTextureUsedSpace;
 
-		public bool UseKernings = true;
-		public int? DefaultCharacter = ' ';
+		public bool UseKernings { get; set; } = true;
+		public int? DefaultCharacter { get; set; } = ' ';
+
+		public bool EraseTextureOnCreation { get; set; }
 
 		internal int BlurAmount => Effect == FontSystemEffect.Blurry ? EffectAmount : 0;
 		internal int StrokeAmount => Effect == FontSystemEffect.Stroked ? EffectAmount : 0;
@@ -231,7 +233,9 @@ namespace FontStashSharp
 			glyph.TextureOffset.X = gx + GlyphPad;
 			glyph.TextureOffset.Y = gy + GlyphPad;
 
-			currentAtlas.RenderGlyph(device, glyph, FontSources[glyph.FontSourceIndex], BlurAmount, StrokeAmount, PremultiplyAlpha, KernelWidth, KernelHeight);
+			currentAtlas.RenderGlyph(device, glyph, FontSources[glyph.FontSourceIndex], 
+				BlurAmount, StrokeAmount, PremultiplyAlpha, 
+				KernelWidth, KernelHeight, EraseTextureOnCreation);
 
 			glyph.Texture = currentAtlas.Texture;
 		}
