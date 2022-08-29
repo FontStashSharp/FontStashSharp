@@ -20,6 +20,8 @@ FontStashSharp is the text rendering library.
 
 [StaticSpriteFont](https://github.com/FontStashSharp/FontStashSharp/wiki/StaticSpriteFont)
 
+[RichTextLayout](https://github.com/FontStashSharp/FontStashSharp/wiki/Rich-Text)
+
 [Using FontStashSharp in any C# engine](https://github.com/rds1983/FontStashSharp/wiki/Using-FontStashSharp-in-generic-game-engine)
 
 ## Support
