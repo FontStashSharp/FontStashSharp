@@ -25,28 +25,10 @@ namespace FontStashSharp
 
 	public class FontSystemSettings
 	{
-		internal static readonly FontSystemSettings Default = new FontSystemSettings();
-
 		private int _effectAmount = 0;
-		public FontSystemEffect Effect { get; set; } = FontSystemEffect.None;
-
 		private int _textureWidth = 1024, _textureHeight = 1024;
 		private float _fontResolutionFactor = 1.0f;
 		private int _kernelWidth = 0, _kernelHeight = 0;
-
-		public int EffectAmount
-		{
-			get => _effectAmount;
-			set
-			{
-				if (value < 0 || value > 20)
-				{
-					throw new ArgumentOutOfRangeException(nameof(value));
-				}
-
-				_effectAmount = value;
-			}
-		}
 
 		public int TextureWidth
 		{
@@ -81,6 +63,22 @@ namespace FontStashSharp
 		}
 
 		public bool PremultiplyAlpha { get; set; } = true;
+
+		public int EffectAmount
+		{
+			get => _effectAmount;
+			set
+			{
+				if (value < 0 || value > 20)
+				{
+					throw new ArgumentOutOfRangeException(nameof(value));
+				}
+
+				_effectAmount = value;
+			}
+		}
+
+		public FontSystemEffect Effect { get; set; } = FontSystemEffect.None;
 
 		public float FontResolutionFactor
 		{
@@ -141,6 +139,19 @@ namespace FontStashSharp
 		/// Font Rasterizer. If set to null then default rasterizer(StbTrueTypeSharp) is used.
 		/// </summary>
 		public IFontLoader FontLoader { get; set; }
+
+		public FontSystemSettings()
+		{
+			TextureWidth = FontSystemDefaults.TextureWidth;
+			TextureHeight = FontSystemDefaults.TextureHeight;
+			PremultiplyAlpha = FontSystemDefaults.PremultiplyAlpha;
+			Effect = FontSystemDefaults.Effect;
+			EffectAmount = FontSystemDefaults.EffectAmount;
+			FontResolutionFactor = FontSystemDefaults.FontResolutionFactor;
+			KernelWidth = FontSystemDefaults.KernelWidth;
+			KernelHeight = FontSystemDefaults.KernelHeight;
+			FontLoader = FontSystemDefaults.FontLoader;
+		}
 
 		public FontSystemSettings Clone()
 		{

@@ -80,7 +80,7 @@ namespace FontStashSharp
 			}
 		}
 
-		public FontSystem() : this(FontSystemSettings.Default)
+		public FontSystem() : this(new FontSystemSettings())
 		{
 		}
 
