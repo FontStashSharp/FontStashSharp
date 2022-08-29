@@ -15,7 +15,7 @@ namespace FontStashSharp.RichText
 	internal class LayoutBuilder
 	{
 		public const int NewLineWidth = 0;
-		public const string Commands = "cfivs";
+		public const string Commands = "cfivsn";
 
 		private string _text;
 		private SpriteFontBase _font;
@@ -40,12 +40,18 @@ namespace FontStashSharp.RichText
 		public bool SupportsCommands { get; set; } = true;
 		public bool CalculateGlyphs { get; set; }
 		public bool ShiftByTop { get; set; } = true;
+		public char CommandPrefix { get; set; } = '/';
 
 		private bool ProcessCommand(ref int i, ref ChunkInfo r, out bool chunkFilled)
 		{
 			chunkFilled = false;
 
-			if (_text[i] != '/' || i >= _text.Length - 2 || _text[i + 1] == 'n' || _text[i + 1] == '/')
+			if (!SupportsCommands ||
+				i >= _text.Length - 2 ||
+				_text[i] != CommandPrefix || 
+				_text[i + 1] == 'n' || 
+				_text[i + 1] == CommandPrefix ||
+				Commands.IndexOf(_text[i + 1]) == -1)
 			{
 				// Not a command(or newline command that is processed differently)
 				return false;
@@ -54,11 +60,6 @@ namespace FontStashSharp.RichText
 			++i;
 
 			var command = _text[i].ToString();
-			if (!Commands.Contains(command))
-			{
-				throw new Exception($"Unknown command '{command}'.");
-			}
-
 			if (_text[i + 1] == 'd')
 			{
 				switch (command)
@@ -173,9 +174,12 @@ namespace FontStashSharp.RichText
 					continue;
 				}
 
-				if (c == '/')
+				if (SupportsCommands && 
+					c == CommandPrefix && 
+					i < _text.Length - 1 && 
+					Commands.IndexOf(_text[i + 1]) != -1)
 				{
-					if (i < _text.Length - 1 && _text[i + 1] == 'n')
+					if (_text[i + 1] == 'n')
 					{
 						var sz2 = new Point(r.X + NewLineWidth, Math.Max(r.Y, _currentFont.LineHeight));
 
@@ -186,12 +190,12 @@ namespace FontStashSharp.RichText
 						break;
 					}
 
-					if (i < _text.Length - 1 && _text[i + 1] == '/')
+					if (i < _text.Length - 1 && _text[i + 1] == CommandPrefix)
 					{
 						// Two '\' means one
 						++i;
 					}
-					else if (SupportsCommands && i < _text.Length - 2)
+					else if (i < _text.Length - 2)
 					{
 						// Return right here, so the command
 						// would be processed in the next chunk
@@ -213,13 +217,14 @@ namespace FontStashSharp.RichText
 					sz = new Point(r.X + NewLineWidth, Math.Max(r.Y, _font.LineHeight));
 
 					// Break right here
+					++r.EndIndex;
 					++i;
 					r.X = sz.X;
 					r.Y = sz.Y;
 					break;
 				}
 
-				if (remainingWidth != null && sz.X > remainingWidth.Value)
+				if (remainingWidth != null && sz.X > remainingWidth.Value && i > r.StartIndex)
 				{
 					if (lastBreakMeasure != null)
 					{
@@ -286,7 +291,7 @@ namespace FontStashSharp.RichText
 					// Shift all chunks top by lineTop
 					foreach (var lineChunk in _currentLine.Chunks)
 					{
-						lineChunk.Top -= lineTop;
+						lineChunk.VerticalOffset -= lineTop;
 					}
 				}
 
@@ -325,7 +330,7 @@ namespace FontStashSharp.RichText
 			{
 				var c = GetNextChunk(ref i, width);
 
-				if (width != null && c.Width > width.Value && _currentLine.Chunks.Count > 0)
+				if (width != null && c.Width > width.Value && _currentLineChunks > 0)
 				{
 					// New chunk doesn't fit in the line
 					// Hence move it to the second
@@ -348,6 +353,11 @@ namespace FontStashSharp.RichText
 
 				if (!_measureRun)
 				{
+					Point? startPos = null;
+					if (CalculateGlyphs)
+					{
+						startPos = new Point(_currentLine.Size.X, size.Y);
+					}
 					_currentLine.Size.X += c.Width;
 
 					BaseChunk chunk = null;
@@ -355,7 +365,7 @@ namespace FontStashSharp.RichText
 					{
 						case ChunkInfoType.Text:
 							var t = _text.Substring(c.StartIndex, c.EndIndex - c.StartIndex).Replace("//", "/");
-							chunk = new TextChunk(_currentFont, t, new Point(c.X, c.Y), CalculateGlyphs);
+							chunk = new TextChunk(_currentFont, t, new Point(c.X, c.Y), startPos);
 							break;
 						case ChunkInfoType.Space:
 							chunk = new SpaceChunk(c.X);
@@ -366,7 +376,7 @@ namespace FontStashSharp.RichText
 					}
 
 					chunk.Color = _currentColor;
-					chunk.Top = _currentVerticalOffset;
+					chunk.VerticalOffset = _currentVerticalOffset;
 
 					var asText = chunk as TextChunk;
 					if (asText != null)
@@ -414,24 +424,17 @@ namespace FontStashSharp.RichText
 			// Index lines and chunks
 			if (!_measureRun)
 			{
-				var top = 0;
 				for (i = 0; i < _lines.Count; ++i)
 				{
 					_currentLine = _lines[i];
-
 					_currentLine.LineIndex = i;
-					_currentLine.Top = top;
 
 					for (var j = 0; j < _currentLine.Chunks.Count; ++j)
 					{
 						var chunk = _currentLine.Chunks[j];
 						chunk.LineIndex = _currentLine.LineIndex;
 						chunk.ChunkIndex = j;
-						chunk.Top = top;
 					}
-
-					top += _currentLine.Size.Y;
-					top += VerticalSpacing;
 				}
 			}
 

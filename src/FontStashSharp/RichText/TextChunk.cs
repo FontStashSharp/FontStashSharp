@@ -29,7 +29,7 @@ namespace FontStashSharp.RichText
 
 		public SpriteFontBase Font => _font;
 
-		public TextChunk(SpriteFontBase font, string text, Point size, bool calculateGlyps)
+		public TextChunk(SpriteFontBase font, string text, Point size, Point? startPos)
 		{
 			if (font == null)
 			{
@@ -40,13 +40,13 @@ namespace FontStashSharp.RichText
 			_text = text;
 			_size = size;
 
-			if (calculateGlyps)
+			if (startPos != null)
 			{
-				CalculateGlyphs();
+				CalculateGlyphs(startPos.Value);
 			}
 		}
 
-		private void CalculateGlyphs()
+		private void CalculateGlyphs(Point startPos)
 		{
 			if (string.IsNullOrEmpty(_text))
 			{
@@ -58,12 +58,15 @@ namespace FontStashSharp.RichText
 			Glyphs.Clear();
 			for (var i = 0; i < rects.Count; ++i)
 			{
+				var rect = rects[i];
+				rect.Offset(startPos);
 				Glyphs.Add(new GlyphInfo
 				{
 					TextChunk = this,
 					Character = _text[i],
 					Index = i,
-					Bounds = rects[i]
+					Bounds = rect,
+					LineTop = startPos.Y
 				});
 			}
 		}

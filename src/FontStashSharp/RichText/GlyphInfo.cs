@@ -10,9 +10,10 @@ namespace FontStashSharp.RichText
 {
 	public class GlyphInfo
 	{
-		public int Index;
-		public char Character;
-		public Rectangle Bounds;
-		public TextChunk TextChunk;
+		public int Index { get; internal set; }
+		public char Character { get; internal set; }
+		public int LineTop { get; internal set; }
+		public Rectangle Bounds { get; internal set; }
+		public TextChunk TextChunk { get; internal set; }
 	}
 }

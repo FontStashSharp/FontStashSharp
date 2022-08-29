@@ -16,21 +16,10 @@ namespace FontStashSharp.RichText
 		public int Count { get; internal set; }
 
 		public Point Size;
-		
-		public int LineIndex
-		{
-			get; internal set;
-		}
 
-		public int Top
-		{
-			get; internal set;
-		}
+		public int LineIndex { get; internal set; }
 
-		public int TextStartIndex
-		{
-			get; internal set;
-		}
+		public int TextStartIndex { get; internal set; }
 
 		public List<BaseChunk> Chunks { get; } = new List<BaseChunk>();
 
@@ -62,7 +51,7 @@ namespace FontStashSharp.RichText
 			}
 
 			var x = startX;
-			for(var i = 0; i < Chunks.Count; ++i)
+			for (var i = 0; i < Chunks.Count; ++i)
 			{
 				var chunk = (TextChunk)Chunks[i];
 

@@ -161,6 +161,24 @@ namespace FontStashSharp.RichText
 
 		public bool IgnoreColorCommand { get; set; } = false;
 
+		public char CommandPrefix
+		{
+			get => _layoutBuilder.CommandPrefix;
+
+			set
+			{
+				if (value == _layoutBuilder.CommandPrefix)
+				{
+					return;
+				}
+
+				_layoutBuilder.CommandPrefix = value;
+				InvalidateLayout();
+				InvalidateMeasures();
+			}
+		}
+
+
 		private static int GetMeasureKey(int? width)
 		{
 			return width != null ? width.Value : -1;
@@ -191,7 +209,7 @@ namespace FontStashSharp.RichText
 				return result;
 			}
 
-			result = _layoutBuilder.Layout(Text, Font, Width, true);
+			result = _layoutBuilder.Layout(Text, Font, width, true);
 			_measures[key] = result;
 
 			return result;
@@ -232,14 +250,18 @@ namespace FontStashSharp.RichText
 
 			Update();
 
+			var py = 0;
 			for (var i = 0; i < Lines.Count; ++i)
 			{
 				var s = Lines[i];
 
-				if (s.Top <= y && y < s.Top + s.Size.Y)
+				if (py <= y && y < py + s.Size.Y)
 				{
 					return s;
 				}
+
+				py += s.Size.Y;
+				py += VerticalSpacing;
 			}
 
 			return null;
@@ -265,8 +287,9 @@ namespace FontStashSharp.RichText
 		}
 
 		public void Draw(IFontStashRenderer renderer, Vector2 position, Color color,
-			Vector2? sourceScale = null, float rotation = 0, Vector2 origin = default(Vector2),
-			float layerDepth = 0.0f)
+			Vector2? sourceScale = null, float rotation = 0,
+			Vector2 origin = default(Vector2), float layerDepth = 0.0f,
+			TextHorizontalAlignment textHorizontalAlignment = TextHorizontalAlignment.Left)
 		{
 			Update();
 
@@ -287,7 +310,17 @@ namespace FontStashSharp.RichText
 					}
 
 					var p = pos;
-					p.Y += chunk.Top;
+
+					if (textHorizontalAlignment == TextHorizontalAlignment.Center)
+					{
+						p.X += (_size.X - line.Size.X) / 2;
+					}
+					else if (textHorizontalAlignment == TextHorizontalAlignment.Right)
+					{
+						p.X += _size.X - line.Size.X;
+					}
+
+					p.Y += chunk.VerticalOffset;
 					p = p.Transform(ref transformation);
 					chunk.Draw(renderer, p, chunkColor, scale, rotation, layerDepth);
 
@@ -322,4 +355,4 @@ namespace FontStashSharp.RichText
 			_measures.Clear();
 		}
 	}
-}  
+}

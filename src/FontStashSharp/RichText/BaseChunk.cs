@@ -21,7 +21,7 @@ namespace FontStashSharp.RichText
 
 		public int LineIndex { get; internal set; }
 		public int ChunkIndex { get; internal set; }
-		public int Top { get; internal set; }
+		public int VerticalOffset { get; internal set; }
 		public Color? Color { get; set; }
 
 		protected BaseChunk()
