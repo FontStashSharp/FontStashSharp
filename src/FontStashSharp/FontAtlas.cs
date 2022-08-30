@@ -172,9 +172,9 @@ namespace FontStashSharp
 		}
 
 #if MONOGAME || FNA || STRIDE
-		public void RenderGlyph(GraphicsDevice graphicsDevice, DynamicFontGlyph glyph, IFontSource fontSource, int blurAmount, int strokeAmount, bool premultiplyAlpha, int kernelWidth, int kernelHeight, bool eraseTextureOnCreation)
+		public void RenderGlyph(GraphicsDevice graphicsDevice, DynamicFontGlyph glyph, IFontSource fontSource, int blurAmount, int strokeAmount, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
 #else
-		public void RenderGlyph(ITexture2DManager textureManager, DynamicFontGlyph glyph, IFontSource fontSource, int blurAmount, int strokeAmount, bool premultiplyAlpha, int kernelWidth, int kernelHeight, bool eraseTextureOnCreation)
+		public void RenderGlyph(ITexture2DManager textureManager, DynamicFontGlyph glyph, IFontSource fontSource, int blurAmount, int strokeAmount, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
 #endif
 		{
 			if (glyph.IsEmpty)
@@ -318,16 +318,10 @@ namespace FontStashSharp
 			{
 				Texture = Texture2DManager.CreateTexture(graphicsDevice, Width, Height);
 
-				if (eraseTextureOnCreation)
-				{
-					var eraseData = new byte[Width * Height * 4];
-					for (var i = 0; i < eraseData.Length; ++i)
-					{
-						eraseData[i] = 0;
-					}
-
-					Texture2DManager.SetTextureData(Texture, new Rectangle(0, 0, Width, Height), eraseData);
-				}
+				// #50: Clear texture, since it could be dirty
+				var eraseData = new byte[Width * Height * 4];
+				Array.Clear(eraseData, 0, eraseData.Length);
+				Texture2DManager.SetTextureData(Texture, new Rectangle(0, 0, Width, Height), eraseData);
 			}
 
 			Texture2DManager.SetTextureData(Texture, glyph.TextureRectangle, colorBuffer);
@@ -337,16 +331,10 @@ namespace FontStashSharp
 			{
 				Texture = textureManager.CreateTexture(Width, Height);
 
-				if (eraseTextureOnCreation)
-				{
-					var eraseData = new byte[Width * Height * 4];
-					for (var i = 0; i < eraseData.Length; ++i)
-					{
-						eraseData[i] = 0;
-					}
-
-					textureManager.SetTextureData(Texture, new Rectangle(0, 0, Width, Height), eraseData);
-				}
+				// #50: Clear texture, since it could be dirty
+				var eraseData = new byte[Width * Height * 4];
+				Array.Clear(eraseData, 0, eraseData.Length);
+				textureManager.SetTextureData(Texture, new Rectangle(0, 0, Width, Height), eraseData);
 			}
 
 			textureManager.SetTextureData(Texture, glyph.TextureRectangle, colorBuffer);
