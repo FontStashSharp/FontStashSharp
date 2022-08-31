@@ -49,7 +49,7 @@ namespace FontStashSharp
 		{
 			scale /= RenderFontSizeMultiplicator;
 
-			Utility.BuildTransform(position, ref scale, rotation, origin, out transformation);
+			Utility.BuildTransform(position, scale, rotation, origin, out transformation);
 		}
 
 		internal virtual Bounds InternalTextBounds(TextSource source, Vector2 position, float characterSpacing, float lineSpacing)

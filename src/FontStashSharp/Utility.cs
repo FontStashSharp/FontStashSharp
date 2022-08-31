@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
+using FontStashSharp.Interfaces;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
 using Stride.Core.Mathematics;
 using Texture2D = Stride.Graphics.Texture;
@@ -10,6 +12,7 @@ using Texture2D = Stride.Graphics.Texture;
 using System.Numerics;
 using System.Drawing;
 using Matrix = System.Numerics.Matrix3x2;
+using Texture2D = System.Object;
 #endif
 
 
@@ -73,7 +76,7 @@ namespace FontStashSharp
 			return s.Length;
 		}
 
-		public static void BuildTransform(Vector2 position, ref Vector2 scale, float rotation, Vector2 origin, out Matrix transformation)
+		public static void BuildTransform(Vector2 position, Vector2 scale, float rotation, Vector2 origin, out Matrix transformation)
 		{
 			// This code had been borrowed from MonoGame's SpriteBatch.DrawString
 			transformation = Matrix.Identity;
@@ -105,6 +108,44 @@ namespace FontStashSharp
 			transformation.M31 = offsetX;
 			transformation.M32 = offsetY;
 #endif
+		}
+
+		public static void DrawQuad(this IFontStashRenderer2 renderer,
+			Texture2D texture, Color color,
+			Vector2 baseOffset, ref Matrix transformation, float layerDepth,
+			Point size, Rectangle textureRectangle,
+			ref VertexPositionColorTexture topLeft, ref VertexPositionColorTexture topRight,
+			ref VertexPositionColorTexture bottomLeft, ref VertexPositionColorTexture bottomRight)
+		{
+#if MONOGAME || FNA || STRIDE
+			var textureSize = new Point(texture.Width, texture.Height);
+			var setColor = color;
+#else
+			var textureSize = renderer.TextureManager.GetTextureSize(texture);
+			var setColor = (uint)(color.A << 24 | color.B << 16 | color.G << 8 | color.R);
+#endif
+
+			topLeft.Position = baseOffset.TransformToVector3(ref transformation, layerDepth);
+			topLeft.TextureCoordinate = new Vector2((float)textureRectangle.X / textureSize.X,
+													(float)textureRectangle.Y / textureSize.Y);
+			topLeft.Color = setColor;
+
+			topRight.Position = (baseOffset + new Vector2(size.X, 0)).TransformToVector3(ref transformation, layerDepth);
+			topRight.TextureCoordinate = new Vector2((float)textureRectangle.Right / textureSize.X,
+												 (float)textureRectangle.Y / textureSize.Y);
+			topRight.Color = setColor;
+
+			bottomLeft.Position = (baseOffset + new Vector2(0, size.Y)).TransformToVector3(ref transformation, layerDepth);
+			bottomLeft.TextureCoordinate = new Vector2((float)textureRectangle.Left / textureSize.X,
+														 (float)textureRectangle.Bottom / textureSize.Y);
+			bottomLeft.Color = setColor;
+
+			bottomRight.Position = (baseOffset + new Vector2(size.X, size.Y)).TransformToVector3(ref transformation, layerDepth);
+			bottomRight.TextureCoordinate = new Vector2((float)textureRectangle.Right / textureSize.X,
+														(float)textureRectangle.Bottom / textureSize.Y);
+			bottomRight.Color = setColor;
+
+			renderer.DrawQuad(texture, ref topLeft, ref topRight, ref bottomLeft, ref bottomRight);
 		}
 	}
 }

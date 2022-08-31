@@ -12,6 +12,7 @@ using Texture2D = Stride.Graphics.Texture;
 using System.Numerics;
 using System.Drawing;
 using Texture2D = System.Object;
+using Matrix = System.Numerics.Matrix3x2;
 #endif
 
 namespace FontStashSharp.RichText
@@ -44,6 +45,20 @@ namespace FontStashSharp.RichText
 		public void Draw(IFontStashRenderer renderer, Vector2 position, Color color, Vector2 scale, float rotation, float layerDepth)
 		{
 			renderer.Draw(Texture, position, Region, color, rotation, scale, layerDepth);
+		}
+
+		public void Draw(IFontStashRenderer2 renderer, Vector2 position, Color color, Vector2 scale, float rotation, float layerDepth)
+		{
+			Matrix transformation;
+			Utility.BuildTransform(position, scale, rotation, Vector2.Zero, out transformation);
+
+			var topLeft = new VertexPositionColorTexture();
+			var topRight = new VertexPositionColorTexture();
+			var bottomLeft = new VertexPositionColorTexture();
+			var bottomRight = new VertexPositionColorTexture();
+			renderer.DrawQuad(Texture, color, Vector2.Zero, ref transformation, 
+				layerDepth, Size, Region,
+				ref topLeft, ref topRight, ref bottomLeft, ref bottomRight);
 		}
 	}
 }

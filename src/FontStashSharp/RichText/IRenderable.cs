@@ -16,5 +16,6 @@ namespace FontStashSharp.RichText
 		Point Size { get; }
 
 		void Draw(IFontStashRenderer renderer, Vector2 position, Color color, Vector2 scale, float rotation, float layerDepth);
+		void Draw(IFontStashRenderer2 renderer, Vector2 position, Color color, Vector2 scale, float rotation, float layerDepth);
 	}
 }

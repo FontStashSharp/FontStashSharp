@@ -29,6 +29,9 @@ namespace FontStashSharp.RichText
 		}
 
 		public abstract void Draw(IFontStashRenderer renderer, Vector2 position, Color color,
-			Vector2? scale, float rotation, float layerDepth);
+			Vector2 scale, float rotation, float layerDepth);
+
+		public abstract void Draw(IFontStashRenderer2 renderer, Vector2 position, Color color,
+			Vector2 scale, float rotation, float layerDepth);
 	}
 }

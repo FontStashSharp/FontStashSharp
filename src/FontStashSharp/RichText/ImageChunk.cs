@@ -19,7 +19,7 @@ namespace FontStashSharp.RichText
 	public class ImageChunk : BaseChunk
 	{
 		private readonly IRenderable _renderable;
-		
+
 		public override Point Size => _renderable.Size;
 
 		public ImageChunk(IRenderable renderable)
@@ -32,9 +32,13 @@ namespace FontStashSharp.RichText
 			_renderable = renderable;
 		}
 
-		public override void Draw(IFontStashRenderer renderer, Vector2 position, Clr color, Vector2? sourceScale, float rotation, float layerDepth)
+		public override void Draw(IFontStashRenderer renderer, Vector2 position, Clr color, Vector2 scale, float rotation, float layerDepth)
 		{
-			var scale = sourceScale ?? Vector2.One;
+			_renderable.Draw(renderer, position, Clr.White, scale, rotation, layerDepth);
+		}
+
+		public override void Draw(IFontStashRenderer2 renderer, Vector2 position, Clr color, Vector2 scale, float rotation, float layerDepth)
+		{
 			_renderable.Draw(renderer, position, Clr.White, scale, rotation, layerDepth);
 		}
 	}

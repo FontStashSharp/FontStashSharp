@@ -90,37 +90,12 @@ namespace FontStashSharp
 				if (!glyph.IsEmpty)
 				{
 					 color = source.GetNextColor();
-					
-#if MONOGAME || FNA || STRIDE
-					var textureSize = new Point(glyph.Texture.Width, glyph.Texture.Height);
-					var setColor = color;
-#else
-					var textureSize = renderer.TextureManager.GetTextureSize(glyph.Texture);
-					var setColor = (uint)(color.A << 24 | color.B << 16 | color.G << 8 | color.R);
-#endif
+
 					var baseOffset = new Vector2(glyph.RenderOffset.X, glyph.RenderOffset.Y) + pos;
 
-					topLeft.Position = baseOffset.TransformToVector3(ref transformation, layerDepth);
-					topLeft.TextureCoordinate = new Vector2((float)glyph.TextureRectangle.X / textureSize.X,
-															(float)glyph.TextureRectangle.Y / textureSize.Y);
-					topLeft.Color = setColor;
-
-					topRight.Position = (baseOffset + new Vector2(glyph.Size.X, 0)).TransformToVector3(ref transformation, layerDepth);
-					topRight.TextureCoordinate = new Vector2((float)glyph.TextureRectangle.Right / textureSize.X,
-															 (float)glyph.TextureRectangle.Y / textureSize.Y);
-					topRight.Color = setColor;
-
-					bottomLeft.Position = (baseOffset + new Vector2(0, glyph.Size.Y)).TransformToVector3(ref transformation, layerDepth);
-					bottomLeft.TextureCoordinate = new Vector2((float)glyph.TextureRectangle.Left / textureSize.X,
-																 (float)glyph.TextureRectangle.Bottom / textureSize.Y);
-					bottomLeft.Color = setColor;
-
-					bottomRight.Position = (baseOffset + new Vector2(glyph.Size.X, glyph.Size.Y)).TransformToVector3(ref transformation, layerDepth);
-					bottomRight.TextureCoordinate = new Vector2((float)glyph.TextureRectangle.Right / textureSize.X,
-																(float)glyph.TextureRectangle.Bottom / textureSize.Y);
-					bottomRight.Color = setColor;
-
-					renderer.DrawQuad(glyph.Texture, ref topLeft, ref topRight, ref bottomLeft, ref bottomRight);
+					renderer.DrawQuad(glyph.Texture, color, baseOffset, ref transformation,
+						layerDepth, glyph.Size, glyph.TextureRectangle,
+						ref topLeft, ref topRight, ref bottomLeft, ref bottomRight);
 				}
 
 				pos.X += glyph.XAdvance;

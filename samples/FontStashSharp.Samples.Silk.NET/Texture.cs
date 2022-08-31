@@ -66,6 +66,7 @@ namespace FontStashSharp
 
 		public void SetData(Rectangle bounds, byte[] data)
 		{
+			Bind();
 			fixed (byte* ptr = data)
 			{
 				Env.Gl.TexSubImage2D(

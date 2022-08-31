@@ -288,14 +288,13 @@ namespace FontStashSharp.RichText
 
 		public void Draw(IFontStashRenderer renderer, Vector2 position, Color color,
 			Vector2? sourceScale = null, float rotation = 0,
-			Vector2 origin = default(Vector2), float layerDepth = 0.0f,
-			TextHorizontalAlignment textHorizontalAlignment = TextHorizontalAlignment.Left)
+			Vector2 origin = default(Vector2), float layerDepth = 0.0f)
 		{
 			Update();
 
 			Matrix transformation;
 			var scale = sourceScale ?? Utility.DefaultScale;
-			Utility.BuildTransform(position, ref scale, rotation, origin, out transformation);
+			Utility.BuildTransform(position, scale, rotation, origin, out transformation);
 
 			var pos = Utility.Vector2Zero;
 			foreach (var line in Lines)
@@ -310,16 +309,41 @@ namespace FontStashSharp.RichText
 					}
 
 					var p = pos;
+					p.Y += chunk.VerticalOffset;
+					p = p.Transform(ref transformation);
+					chunk.Draw(renderer, p, chunkColor, scale, rotation, layerDepth);
 
-					if (textHorizontalAlignment == TextHorizontalAlignment.Center)
+					pos.X += chunk.Size.X;
+				}
+
+				pos.Y += line.Size.Y;
+				pos.Y += VerticalSpacing;
+			}
+		}
+
+		public void Draw(IFontStashRenderer2 renderer, Vector2 position, Color color,
+			Vector2? sourceScale = null, float rotation = 0,
+			Vector2 origin = default(Vector2), float layerDepth = 0.0f)
+		{
+			Update();
+
+			Matrix transformation;
+			var scale = sourceScale ?? Utility.DefaultScale;
+			Utility.BuildTransform(position, scale, rotation, origin, out transformation);
+
+			var pos = Utility.Vector2Zero;
+			foreach (var line in Lines)
+			{
+				pos.X = 0;
+				foreach (var chunk in line.Chunks)
+				{
+					var chunkColor = color;
+					if (!IgnoreColorCommand && chunk.Color != null)
 					{
-						p.X += (_size.X - line.Size.X) / 2;
-					}
-					else if (textHorizontalAlignment == TextHorizontalAlignment.Right)
-					{
-						p.X += _size.X - line.Size.X;
+						chunkColor = chunk.Color.Value;
 					}
 
+					var p = pos;
 					p.Y += chunk.VerticalOffset;
 					p = p.Transform(ref transformation);
 					chunk.Draw(renderer, p, chunkColor, scale, rotation, layerDepth);

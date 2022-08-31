@@ -117,7 +117,17 @@ namespace FontStashSharp.RichText
 			return i;
 		}
 
-		public override void Draw(IFontStashRenderer renderer, Vector2 position, Color color, Vector2? scale, float rotation, float layerDepth)
+		public override void Draw(IFontStashRenderer renderer, Vector2 position, Color color, Vector2 scale, float rotation, float layerDepth)
+		{
+			if (string.IsNullOrEmpty(Text))
+			{
+				return;
+			}
+
+			Font.DrawText(renderer, Text, position, color, scale, rotation, default(Vector2), layerDepth);
+		}
+
+		public override void Draw(IFontStashRenderer2 renderer, Vector2 position, Color color, Vector2 scale, float rotation, float layerDepth)
 		{
 			if (string.IsNullOrEmpty(Text))
 			{

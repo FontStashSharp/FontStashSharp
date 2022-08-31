@@ -26,7 +26,11 @@ namespace FontStashSharp.RichText
 			_width = width;
 		}
 
-		public override void Draw(IFontStashRenderer renderer, Vector2 position, Color color, Vector2? scale, float rotation, float layerDepth)
+		public override void Draw(IFontStashRenderer renderer, Vector2 position, Color color, Vector2 scale, float rotation, float layerDepth)
+		{
+		}
+
+		public override void Draw(IFontStashRenderer2 renderer, Vector2 position, Color color, Vector2 scale, float rotation, float layerDepth)
 		{
 		}
 	}
