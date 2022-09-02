@@ -35,7 +35,7 @@ namespace FontStashSharp.Platform
 
 		public void End() => _batch.End();
 
-		public void Draw(object texture, Vector2 pos, Rectangle? src, Color color, float rotation, Vector2 scale, float depth)
+		public void Draw(object texture, Vector2 pos, Rectangle? src, FSColor color, float rotation, Vector2 scale, float depth)
 		{
 			var tex = (Texture2D)texture;
 

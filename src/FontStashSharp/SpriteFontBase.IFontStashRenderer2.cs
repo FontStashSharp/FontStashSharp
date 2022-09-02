@@ -9,9 +9,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Stride.Core.Mathematics;
 using Stride.Graphics;
 #else
-using System.Drawing;
 using System.Numerics;
 using Matrix = System.Numerics.Matrix3x2;
+using Color = FontStashSharp.FSColor;
 #endif
 
 namespace FontStashSharp

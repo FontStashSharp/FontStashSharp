@@ -1,6 +1,5 @@
 ﻿using FontStashSharp.Interfaces;
 using System;
-using System.Text;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;

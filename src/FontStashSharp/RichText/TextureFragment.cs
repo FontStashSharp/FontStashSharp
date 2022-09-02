@@ -11,7 +11,7 @@ using Texture2D = Stride.Graphics.Texture;
 using System.Numerics;
 using System.Drawing;
 using Texture2D = System.Object;
-using Matrix = System.Numerics.Matrix3x2;
+using Color = FontStashSharp.FSColor;
 #endif
 
 namespace FontStashSharp.RichText

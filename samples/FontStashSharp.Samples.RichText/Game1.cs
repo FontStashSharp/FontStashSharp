@@ -49,7 +49,6 @@ namespace FontStashSharp.Samples
 		private SpriteBatch _spriteBatch;
 		private Texture2D _white;
 		private bool _animatedScaling = false;
-		private float _angle;
 		private RichTextLayout _richText;
 		private int _stringIndex = 0;
 		private readonly Dictionary<string, FontSystem> _fontCache = new Dictionary<string, FontSystem>();

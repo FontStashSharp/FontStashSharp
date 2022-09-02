@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -25,21 +24,21 @@ namespace FontStashSharp
 		private Texture2D _white;
 		private bool _drawBackground = false;
 
-		private static readonly System.Drawing.Color[] _colors = new System.Drawing.Color[]
+		private static readonly FSColor[] _colors = new FSColor[]
 		{
-			Color.Red.ToSystemDrawing(),
-			Color.Blue.ToSystemDrawing(),
-			Color.Green.ToSystemDrawing(),
-			Color.Aquamarine.ToSystemDrawing(),
-			Color.Azure.ToSystemDrawing(),
-			Color.Chartreuse.ToSystemDrawing(),
-			Color.Lavender.ToSystemDrawing(),
-			Color.OldLace.ToSystemDrawing(),
-			Color.PaleGreen.ToSystemDrawing(),
-			Color.SaddleBrown.ToSystemDrawing(),
-			Color.IndianRed.ToSystemDrawing(),
-			Color.ForestGreen.ToSystemDrawing(),
-			Color.Khaki.ToSystemDrawing()
+			FSColor.Red,
+			FSColor.Blue,
+			FSColor.Green,
+			FSColor.Aquamarine,
+			FSColor.Azure,
+			FSColor.Chartreuse,
+			FSColor.Lavender,
+			FSColor.OldLace,
+			FSColor.PaleGreen,
+			FSColor.SaddleBrown,
+			FSColor.IndianRed,
+			FSColor.ForestGreen,
+			FSColor.Khaki
 		};
 
 		public Game1()
@@ -140,7 +139,7 @@ namespace FontStashSharp
 
 		public Vector2 MeasureString(string text) => _font.MeasureString(text).ToXNA();
 
-		public void DrawString(string text, Vector2 position, System.Drawing.Color[] glyphColors)
+		public void DrawString(string text, Vector2 position, FSColor[] glyphColors)
 		{
 			if (_drawBackground)
 			{
@@ -172,7 +171,7 @@ namespace FontStashSharp
 				}
 			}
 
-			_font.DrawText(_renderer, text, new System.Numerics.Vector2(0, y), color.ToSystemDrawing());
+			_font.DrawText(_renderer, text, new System.Numerics.Vector2(0, y), color.ToFontStashSharp());
 		}
 
 		private void DrawString(string text, int y)

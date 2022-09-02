@@ -5,7 +5,6 @@ using Silk.NET.Maths;
 using FontStashSharp.Platform;
 using System.IO;
 using System.Numerics;
-using System.Drawing;
 
 namespace FontStashSharp
 {
@@ -69,7 +68,7 @@ namespace FontStashSharp
 			renderer.Begin();
 				
 			
-			font.DrawText(renderer, text, new Vector2(400, 400), Color.LightCoral, scale, _rads, origin);
+			font.DrawText(renderer, text, new Vector2(400, 400), FSColor.LightCoral, scale, _rads, origin);
 			renderer.End();
 
 			_rads += 0.01f;

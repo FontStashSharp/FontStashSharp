@@ -2,10 +2,9 @@
 using Microsoft.Xna.Framework;
 #elif STRIDE
 using Stride.Core.Mathematics;
-using Clr = Stride.Core.Mathematics.Color;
 #else
 using System.Drawing;
-using Clr = System.Drawing.Color;
+using Color = FontStashSharp.FSColor;
 using System.Numerics;
 #endif
 

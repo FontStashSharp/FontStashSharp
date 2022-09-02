@@ -4,7 +4,6 @@ using Silk.NET.Windowing;
 using Silk.NET.Maths;
 using FontStashSharp.Platform;
 using System.Numerics;
-using System.Drawing;
 using TrippyGL;
 
 namespace FontStashSharp
@@ -78,7 +77,7 @@ namespace FontStashSharp
 			var size = font.MeasureString(text, scale);
 			var origin = new Vector2(size.X / 2.0f, size.Y / 2.0f);
 
-			font.DrawText(renderer, text, new Vector2(400, 400), Color.LightCoral, scale, _rads, origin);
+			font.DrawText(renderer, text, new Vector2(400, 400), FSColor.LightCoral, scale, _rads, origin);
 
 			renderer.End();
 

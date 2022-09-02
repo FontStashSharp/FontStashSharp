@@ -8,6 +8,7 @@ using Texture2D = Stride.Graphics.Texture;
 #else
 using System.Drawing;
 using System.Numerics;
+using Color = FontStashSharp.FSColor;
 using Texture2D = System.Object;
 #endif
 

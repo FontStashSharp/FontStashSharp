@@ -37,6 +37,7 @@ namespace FontStashSharp
 
 		public void Run()
 		{
+
 			var options = WindowOptions.Default;
 			options.Size = new Vector2D<int>(1200, 800);
 			options.Title = "FontStashSharp.Silk.NET.RichText";
@@ -142,7 +143,7 @@ namespace FontStashSharp
 
 			renderer.Begin();
 				
-			_richText.Font.DrawText(renderer, "Press 'Space' to switch between strings.", Vector2.Zero, Color.White);
+			_richText.Font.DrawText(renderer, "Press 'Space' to switch between strings.", Vector2.Zero, FSColor.White);
 
 			Vector2 scale = Vector2.One;
 			var viewportSize = new Point(window.Size.X, window.Size.Y);
@@ -156,7 +157,7 @@ namespace FontStashSharp
 			}
 
 			var position = new Vector2(0, viewportSize.Y / 2 - _richText.Size.Y / 2);
-			_richText.Draw(renderer, position, Color.White, scale);
+			_richText.Draw(renderer, position, FSColor.White, scale);
 
 			renderer.End();
 		}

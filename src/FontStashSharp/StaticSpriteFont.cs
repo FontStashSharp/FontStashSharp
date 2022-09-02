@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
@@ -16,8 +15,8 @@ using Stride.Graphics;
 using Texture2D = Stride.Graphics.Texture;
 #else
 using System.Drawing;
-using System.Numerics;
 using Texture2D = System.Object;
+using Color = FontStashSharp.FSColor;
 #endif
 
 namespace FontStashSharp

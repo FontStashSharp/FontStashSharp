@@ -5,6 +5,7 @@ using Stride.Core.Mathematics;
 #else
 using System.Drawing;
 using System.Numerics;
+using Color = FontStashSharp.FSColor;
 #endif
 
 namespace FontStashSharp.RichText

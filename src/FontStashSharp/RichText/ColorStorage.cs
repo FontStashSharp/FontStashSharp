@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 #elif STRIDE
 using Stride.Core.Mathematics;
 #else
-using System.Drawing;
+using Color = FontStashSharp.FSColor;
 #endif
 
 namespace FontStashSharp.RichText
@@ -114,7 +114,7 @@ namespace FontStashSharp.RichText
 						}
 					}
 
-					return CreateColor(r, g, b, a);
+					return new Color(r, g, b, a);
 				}
 			}
 			else
@@ -127,15 +127,6 @@ namespace FontStashSharp.RichText
 			}
 
 			return null;
-		}
-
-		public static Color CreateColor(int r, int g, int b, int a = 255)
-		{
-#if MONOGAME || FNA || STRIDE
-			return new Color((byte)r, (byte)g, (byte)b, (byte)a);
-#else
-			return Color.FromArgb(a, r, g, b);
-#endif
 		}
 	}
 }

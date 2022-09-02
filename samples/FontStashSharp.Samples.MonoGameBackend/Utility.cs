@@ -25,14 +25,14 @@ namespace FontStashSharp
 		}
 
 
-		public static Color ToXNA(this System.Drawing.Color c)
+		public static Color ToXNA(this FSColor c)
 		{
 			return new Color(c.R, c.G, c.B, c.A);
 		}
 
-		public static System.Drawing.Color ToSystemDrawing(this Color c)
+		public static FSColor ToFontStashSharp(this Color c)
 		{
-			return System.Drawing.Color.FromArgb(c.A, c.R, c.G, c.B);
+			return new FSColor(c.R, c.G, c.B, c.A);
 		}
 	}
 }

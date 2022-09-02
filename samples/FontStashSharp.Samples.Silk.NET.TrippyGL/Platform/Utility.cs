@@ -21,7 +21,7 @@ namespace FontStashSharp.Platform
 			return new Viewport(r);
 		}
 
-		public static Color4b ToTrippy(this Color c)
+		public static Color4b ToTrippy(this FSColor c)
 		{
 			return new Color4b(c.R, c.G, c.B, c.A);
 		}

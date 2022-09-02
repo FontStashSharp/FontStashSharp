@@ -1,6 +1,4 @@
-﻿using FontStashSharp.Interfaces;
-
-#if MONOGAME || FNA
+﻿#if MONOGAME || FNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE

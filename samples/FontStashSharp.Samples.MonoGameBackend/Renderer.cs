@@ -24,7 +24,7 @@ namespace FontStashSharp
 			_textureManager = new Texture2DManager(batch.GraphicsDevice);
 		}
 
-		public void Draw(object texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 scale, float depth)
+		public void Draw(object texture, Vector2 position, Rectangle? sourceRectangle, FSColor color, float rotation, Vector2 scale, float depth)
 		{
 			var textureWrapper = (Texture2D)texture;
 

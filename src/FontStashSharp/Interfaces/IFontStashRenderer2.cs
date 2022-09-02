@@ -22,9 +22,9 @@ namespace FontStashSharp.Interfaces
 		public Vector3 Position;
 
 		/// <summary>
-		/// Color in RGBA format
+		/// Color
 		/// </summary>
-		public uint Color;
+		public FSColor Color;
 
 		/// <summary>
 		/// Texture Coordinate
