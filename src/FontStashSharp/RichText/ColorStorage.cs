@@ -128,5 +128,10 @@ namespace FontStashSharp.RichText
 
 			return null;
 		}
+
+		public static Color CreateColor(int r, int g, int b, int a = 255)
+		{
+			return new Color((byte)r, (byte)g, (byte)b, (byte)a);
+		}
 	}
 }
