@@ -27,5 +27,27 @@ namespace FontStashSharp.Tests
 			}
 			Assert.AreEqual(richTextLayout.Size, new Point(width, height));
 		}
+
+		[Test]
+		public void MeasureUtf32DoesNotThrow()
+		{
+			var fontSystem = new FontSystem();
+			fontSystem.AddFont(TestsEnvironment.Assembly.ReadResourceAsBytes("Resources.DroidSans.ttf"));
+
+			var richTextLayout = new RichTextLayout
+			{
+				Font = fontSystem.GetFont(32),
+				Text = "🙌h📦e l👏a👏zy"
+			};
+
+			var size = Point.Zero;
+			Assert.DoesNotThrow(() =>
+			{
+				size = richTextLayout.Size;
+			});
+
+			Assert.GreaterOrEqual(size.X, 0);
+			Assert.GreaterOrEqual(size.Y, 0);
+		}
 	}
 }
