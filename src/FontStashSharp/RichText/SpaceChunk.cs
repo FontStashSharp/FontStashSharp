@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using FontStashSharp.Interfaces;
-
-#if MONOGAME || FNA
+﻿#if MONOGAME || FNA
 using Microsoft.Xna.Framework;
 #elif STRIDE
 using Stride.Core.Mathematics;
-using Clr = Stride.Core.Mathematics.Color;
 #else
 using System.Drawing;
-using Clr = System.Drawing.Color;
 using System.Numerics;
 #endif
 
@@ -26,11 +20,7 @@ namespace FontStashSharp.RichText
 			_width = width;
 		}
 
-		public override void Draw(IFontStashRenderer renderer, Vector2 position, Color color, Vector2 scale, float rotation, float layerDepth)
-		{
-		}
-
-		public override void Draw(IFontStashRenderer2 renderer, Vector2 position, Color color, Vector2 scale, float rotation, float layerDepth)
+		public override void Draw(FSRenderContext context, Vector2 position, Color color)
 		{
 		}
 	}

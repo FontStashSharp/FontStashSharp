@@ -138,17 +138,39 @@ namespace FontStashSharp.Samples
 				// it is used to cache textures
 				if (!_textureCache.TryGetValue(p, out texture))
 				{
+#if MONOGAME || FNA
 					using (var stream = File.OpenRead(Path.Combine(@"D:\Temp\DCSSTiles\dngn\trees\", p)))
 					{
-#if MONOGAME || FNA
 						texture = Texture2D.FromStream(GraphicsDevice, stream);
-#else
-						var image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
-						texture = Texture2D.New2D(GraphicsDevice, image.Width, image.Height, false, PixelFormat.R8G8B8A8_UNorm, TextureFlags.ShaderResource);
-						var context = new GraphicsContext(texture.GraphicsDevice);
-						texture.SetData(context.CommandList, image.Data, 0, 0, new ResourceRegion(0, 0, 0, image.Width, image.Height, 1));
-#endif
 					}
+#else
+					ImageResult image;
+					using (var stream = File.OpenRead(Path.Combine(@"D:\Temp\DCSSTiles\dngn\trees\", p)))
+					{
+						image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
+					}
+
+					// Premultiply Alpha
+					unsafe
+					{
+						fixed (byte* b = image.Data)
+						{
+							byte* ptr = b;
+							for (var i = 0; i < image.Data.Length; i += 4, ptr += 4)
+							{
+								var falpha = ptr[3] / 255.0f;
+								ptr[0] = (byte)(ptr[0] * falpha);
+								ptr[1] = (byte)(ptr[1] * falpha);
+								ptr[2] = (byte)(ptr[2] * falpha);
+							}
+						}
+					}
+
+					// Create texture
+					texture = Texture2D.New2D(GraphicsDevice, image.Width, image.Height, false, PixelFormat.R8G8B8A8_UNorm, TextureFlags.ShaderResource);
+					var context = new GraphicsContext(texture.GraphicsDevice);
+					texture.SetData(context.CommandList, image.Data, 0, 0, new ResourceRegion(0, 0, 0, image.Width, image.Height, 1));
+#endif
 
 					_textureCache[p] = texture;
 				}

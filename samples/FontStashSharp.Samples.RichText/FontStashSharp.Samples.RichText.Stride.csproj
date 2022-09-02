@@ -5,6 +5,7 @@
     <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
     <OutputPath>bin\Stride\$(Configuration)</OutputPath>
     <DefineConstants>$(DefineConstants);STRIDE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   
   <ItemGroup>

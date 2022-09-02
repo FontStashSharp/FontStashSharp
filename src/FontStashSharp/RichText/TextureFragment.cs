@@ -1,5 +1,4 @@
 ﻿using System;
-using FontStashSharp.Interfaces;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
@@ -42,23 +41,9 @@ namespace FontStashSharp.RichText
 		}
 #endif
 
-		public void Draw(IFontStashRenderer renderer, Vector2 position, Color color, Vector2 scale, float rotation, float layerDepth)
+		public void Draw(FSRenderContext context, Vector2 position, Color color)
 		{
-			renderer.Draw(Texture, position, Region, color, rotation, scale, layerDepth);
-		}
-
-		public void Draw(IFontStashRenderer2 renderer, Vector2 position, Color color, Vector2 scale, float rotation, float layerDepth)
-		{
-			Matrix transformation;
-			Utility.BuildTransform(position, scale, rotation, Vector2.Zero, out transformation);
-
-			var topLeft = new VertexPositionColorTexture();
-			var topRight = new VertexPositionColorTexture();
-			var bottomLeft = new VertexPositionColorTexture();
-			var bottomRight = new VertexPositionColorTexture();
-			renderer.DrawQuad(Texture, color, Vector2.Zero, ref transformation, 
-				layerDepth, Size, Region,
-				ref topLeft, ref topRight, ref bottomLeft, ref bottomRight);
+			context.DrawImage(Texture, Region, position, Color.White);
 		}
 	}
 }

@@ -24,6 +24,7 @@ namespace FontStashSharp.RichText
 		private bool _dirty = true;
 		private readonly Dictionary<int, Point> _measures = new Dictionary<int, Point>();
 		private readonly LayoutBuilder _layoutBuilder = new LayoutBuilder();
+		private readonly FSRenderContext _renderContext = new FSRenderContext();
 
 		public SpriteFontBase Font
 		{
@@ -286,15 +287,13 @@ namespace FontStashSharp.RichText
 			return null;
 		}
 
-		public void Draw(IFontStashRenderer renderer, Vector2 position, Color color,
-			Vector2? sourceScale = null, float rotation = 0,
-			Vector2 origin = default(Vector2), float layerDepth = 0.0f)
+		private void Draw(Vector2 position, Color color, Vector2? sourceScale, 
+			float rotation, Vector2 origin, float layerDepth)
 		{
 			Update();
 
-			Matrix transformation;
 			var scale = sourceScale ?? Utility.DefaultScale;
-			Utility.BuildTransform(position, scale, rotation, origin, out transformation);
+			_renderContext.Prepare(position, scale, rotation, origin, layerDepth);
 
 			var pos = Utility.Vector2Zero;
 			foreach (var line in Lines)
@@ -308,11 +307,7 @@ namespace FontStashSharp.RichText
 						chunkColor = chunk.Color.Value;
 					}
 
-					var p = pos;
-					p.Y += chunk.VerticalOffset;
-					p = p.Transform(ref transformation);
-					chunk.Draw(renderer, p, chunkColor, scale, rotation, layerDepth);
-
+					chunk.Draw(_renderContext, pos + new Vector2(0, chunk.VerticalOffset), chunkColor);
 					pos.X += chunk.Size.X;
 				}
 
@@ -321,39 +316,20 @@ namespace FontStashSharp.RichText
 			}
 		}
 
+		public void Draw(IFontStashRenderer renderer, Vector2 position, Color color,
+			Vector2? sourceScale = null, float rotation = 0,
+			Vector2 origin = default(Vector2), float layerDepth = 0.0f)
+		{
+			_renderContext.SetRenderer(renderer);
+			Draw(position, color, sourceScale, rotation, origin, layerDepth);
+		}
+
 		public void Draw(IFontStashRenderer2 renderer, Vector2 position, Color color,
 			Vector2? sourceScale = null, float rotation = 0,
 			Vector2 origin = default(Vector2), float layerDepth = 0.0f)
 		{
-			Update();
-
-			Matrix transformation;
-			var scale = sourceScale ?? Utility.DefaultScale;
-			Utility.BuildTransform(position, scale, rotation, origin, out transformation);
-
-			var pos = Utility.Vector2Zero;
-			foreach (var line in Lines)
-			{
-				pos.X = 0;
-				foreach (var chunk in line.Chunks)
-				{
-					var chunkColor = color;
-					if (!IgnoreColorCommand && chunk.Color != null)
-					{
-						chunkColor = chunk.Color.Value;
-					}
-
-					var p = pos;
-					p.Y += chunk.VerticalOffset;
-					p = p.Transform(ref transformation);
-					chunk.Draw(renderer, p, chunkColor, scale, rotation, layerDepth);
-
-					pos.X += chunk.Size.X;
-				}
-
-				pos.Y += line.Size.Y;
-				pos.Y += VerticalSpacing;
-			}
+			_renderContext.SetRenderer(renderer);
+			Draw(position, color, sourceScale, rotation, origin, layerDepth);
 		}
 
 #if MONOGAME || FNA || STRIDE
