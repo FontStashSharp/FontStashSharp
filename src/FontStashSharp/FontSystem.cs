@@ -78,6 +78,9 @@ namespace FontStashSharp
 			{
 				_fontLoader = _settings.FontLoader;
 			}
+
+			UseKernings = FontSystemDefaults.UseKernings;
+			DefaultCharacter = FontSystemDefaults.DefaultCharacter;
 		}
 
 		public FontSystem() : this(new FontSystemSettings())

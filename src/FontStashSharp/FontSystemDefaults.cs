@@ -108,5 +108,8 @@ namespace FontStashSharp
 		/// Font Rasterizer. If set to null then default rasterizer(StbTrueTypeSharp) is used.
 		/// </summary>
 		public static IFontLoader FontLoader { get; set; }
+
+		public static bool UseKernings { get; set; } = true;
+		public static int? DefaultCharacter { get; set; } = ' ';
 	}
 }

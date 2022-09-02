@@ -225,7 +225,8 @@ namespace FontStashSharp.RichText
 					break;
 				}
 
-				if (remainingWidth != null && sz.X > remainingWidth.Value && i > r.StartIndex)
+				if (remainingWidth != null && sz.X > remainingWidth.Value && i > r.StartIndex &&
+					(lastBreakMeasure != null || _currentLineChunks == 0))
 				{
 					if (lastBreakMeasure != null)
 					{
@@ -337,6 +338,7 @@ namespace FontStashSharp.RichText
 					// Hence move it to the second
 					EndLine(ref size);
 					StartLine(i, rowWidth);
+					c.LineEnd = false;
 				}
 
 				width -= c.Width;
