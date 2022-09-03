@@ -268,7 +268,7 @@ namespace FontStashSharp.RichText
 			return null;
 		}
 
-		public GlyphInfo GetGlyphInfoByIndex(int charIndex)
+		public TextChunkGlyph? GetGlyphInfoByIndex(int charIndex)
 		{
 			var strings = Lines;
 

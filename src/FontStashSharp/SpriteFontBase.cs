@@ -2,6 +2,7 @@
 using System.Text;
 using System;
 using FontStashSharp.Interfaces;
+using System.Linq;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
@@ -138,10 +139,10 @@ namespace FontStashSharp
 			return bounds;
 		}
 
-		private List<Rectangle> GetGlyphRects(TextSource source, Vector2 position, Vector2 origin, Vector2? sourceScale, float characterSpacing, float lineSpacing)
+		private List<Glyph> GetGlyphs(TextSource source, Vector2 position, Vector2 origin, Vector2? sourceScale, float characterSpacing, float lineSpacing)
 		{
-			List<Rectangle> rects = new List<Rectangle>();
-			if (source.IsNull) return rects;
+			List<Glyph> result = new List<Glyph>();
+			if (source.IsNull) return result;
 
 			Matrix transformation;
 
@@ -154,6 +155,7 @@ namespace FontStashSharp
 			var pos = new Vector2(0, ascent);
 
 			FontGlyph prevGlyph = null;
+			var i = 0;
 			while (true)
 			{
 				int codepoint;
@@ -163,6 +165,7 @@ namespace FontStashSharp
 				}
 
 				var rect = new Rectangle((int)pos.X, (int)pos.Y - LineHeight, 0, LineHeight);
+				var xAdvance = 0;
 				if (codepoint == '\n')
 				{
 					pos.X = 0;
@@ -183,7 +186,8 @@ namespace FontStashSharp
 						rect = glyph.RenderRectangle;
 						rect.Offset((int)pos.X, (int)pos.Y);
 
-						pos.X += glyph.XAdvance;
+						xAdvance = glyph.XAdvance;
+						pos.X += xAdvance;
 						prevGlyph = glyph;
 					}
 				}
@@ -193,22 +197,50 @@ namespace FontStashSharp
 				p = p.Transform(ref transformation);
 				var s = new Vector2(rect.Width * scale.X, rect.Height * scale.Y);
 
+				var glyphInfo = new Glyph
+				{
+					Index = i,
+					Codepoint = codepoint,
+					Bounds = new Rectangle((int)p.X, (int)p.Y, (int)s.X, (int)s.Y),
+					XAdvance = xAdvance
+				};
+
 				// Add to the result
-				rects.Add(new Rectangle((int)p.X, (int)p.Y, (int)s.X, (int)s.Y));
+				result.Add(glyphInfo);
+				++i;
 			}
 
-			return rects;
+			return result;
 		}
 
+		public List<Glyph> GetGlyphs(string text, Vector2 position,
+			Vector2 origin = default(Vector2), Vector2? scale = null,
+			float characterSpacing = 0.0f, float lineSpacing = 0.0f) =>
+			GetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing);
+
+		public List<Glyph> GetGlyphs(StringBuilder text, Vector2 position,
+			Vector2 origin = default(Vector2), Vector2? scale = null,
+			float characterSpacing = 0.0f, float lineSpacing = 0.0f) =>
+			GetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing);
+
+
+		[Obsolete("Use GetGlyphs")]
 		public List<Rectangle> GetGlyphRects(string text, Vector2 position,
 			Vector2 origin = default(Vector2), Vector2? scale = null,
-			float characterSpacing = 0.0f, float lineSpacing = 0.0f) =>
-			GetGlyphRects(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing);
+			float characterSpacing = 0.0f, float lineSpacing = 0.0f)
+		{
+			var glyphs = GetGlyphs(text, position, origin, scale, characterSpacing, lineSpacing);
+			return (from g in glyphs select g.Bounds).ToList();
+		}
 
+		[Obsolete("Use GetGlyphs")]
 		public List<Rectangle> GetGlyphRects(StringBuilder text, Vector2 position,
 			Vector2 origin = default(Vector2), Vector2? scale = null,
-			float characterSpacing = 0.0f, float lineSpacing = 0.0f) =>
-			GetGlyphRects(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing);
+			float characterSpacing = 0.0f, float lineSpacing = 0.0f)
+		{
+			var glyphs = GetGlyphs(text, position, origin, scale, characterSpacing, lineSpacing);
+			return (from g in glyphs select g.Bounds).ToList();
+		}
 
 		public Vector2 MeasureString(string text, Vector2? scale = null, float characterSpacing = 0.0f, float lineSpacing = 0.0f)
 		{

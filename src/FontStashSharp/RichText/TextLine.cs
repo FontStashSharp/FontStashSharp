@@ -22,7 +22,7 @@ namespace FontStashSharp.RichText
 
 		public List<BaseChunk> Chunks { get; } = new List<BaseChunk>();
 
-		public GlyphInfo GetGlyphInfoByIndex(int index)
+		public TextChunkGlyph? GetGlyphInfoByIndex(int index)
 		{
 			foreach (var chunk in Chunks)
 			{
