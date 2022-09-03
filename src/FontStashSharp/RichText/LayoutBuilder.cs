@@ -51,7 +51,6 @@ namespace FontStashSharp.RichText
 				_text[i] != CommandPrefix ||
 				Commands.IndexOf(_text[i + 1]) == -1)
 			{
-				// Not a command(or newline command that is processed differently)
 				return false;
 			}
 
@@ -278,7 +277,7 @@ namespace FontStashSharp.RichText
 					if (i < _text.Length - 1 && _text[i + 1] == CommandPrefix)
 					{
 						// Two '\' means one
-						++i;
+						++i; ++r.EndIndex;
 					}
 					else if (IsCommand(i))
 					{
@@ -452,7 +451,11 @@ namespace FontStashSharp.RichText
 					switch (c.Type)
 					{
 						case ChunkInfoType.Text:
-							var t = _text.Substring(c.StartIndex, c.EndIndex - c.StartIndex).Replace("//", "/");
+							var t = _text.Substring(c.StartIndex, c.EndIndex - c.StartIndex);
+							if (SupportsCommands)
+							{
+								t = t.Replace("//", "/");
+							}
 							var textChunk = new TextChunk(_currentFont, t, new Point(c.X, c.Y), startPos)
 							{
 								Style = _currentTextStyle
