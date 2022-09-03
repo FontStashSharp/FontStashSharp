@@ -50,6 +50,5 @@ namespace FontStashSharp.RichText
 				return Y;
 			}
 		}
-
 	}
 }

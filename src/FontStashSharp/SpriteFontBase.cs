@@ -9,16 +9,20 @@ using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
 using Stride.Core.Mathematics;
 using Stride.Graphics;
+using Texture2D = Stride.Graphics.Texture;
 #else
 using System.Drawing;
 using System.Numerics;
 using Matrix = System.Numerics.Matrix3x2;
+using Texture2D = System.Object;
 #endif
 
 namespace FontStashSharp
 {
 	public abstract partial class SpriteFontBase
 	{
+		private static Texture2D _white;
+
 		/// <summary>
 		/// Font Size
 		/// </summary>
@@ -219,5 +223,27 @@ namespace FontStashSharp
 		}
 
 		internal abstract float GetKerning(FontGlyph glyph, FontGlyph prevGlyph);
+
+#if MONOGAME || FNA || STRIDE
+		public static Texture2D GetWhite(GraphicsDevice graphicsDevice)
+#else
+		public static Texture2D GetWhite(ITexture2DManager textureManager)
+#endif
+		{
+			if (_white != null)
+			{
+				return _white;
+			}
+
+#if MONOGAME || FNA || STRIDE
+			_white = Texture2DManager.CreateTexture(graphicsDevice, 1, 1);
+			Texture2DManager.SetTextureData(_white, new Rectangle(0, 0, 1, 1), new byte[] { 255, 255, 255, 255 });
+#else
+			_white = textureManager.CreateTexture(1, 1);
+			textureManager.SetTextureData(_white, new Rectangle(0, 0, 1, 1), new byte[] { 255, 255, 255, 255 });
+#endif
+
+			return _white;
+		}
 	}
 }

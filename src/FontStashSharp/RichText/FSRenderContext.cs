@@ -56,7 +56,7 @@ namespace FontStashSharp.RichText
 			_layerDepth = layerDepth;
 		}
 
-		public void DrawText(string text, SpriteFontBase font, Vector2 pos, Color color)
+		public void DrawText(string text, SpriteFontBase font, Vector2 pos, Color color, TextStyle textStyle)
 		{
 			if (string.IsNullOrEmpty(text))
 			{
@@ -66,11 +66,11 @@ namespace FontStashSharp.RichText
 			pos = pos.Transform(ref _transformation);
 			if (_renderer != null)
 			{
-				font.DrawText(_renderer, text, pos, color, _scale, _rotation, default(Vector2), _layerDepth);
+				font.DrawText(_renderer, text, pos, color, _scale, _rotation, default(Vector2), _layerDepth, textStyle: textStyle);
 			}
 			else
 			{
-				font.DrawText(_renderer2, text, pos, color, _scale, _rotation, default(Vector2), _layerDepth);
+				font.DrawText(_renderer2, text, pos, color, _scale, _rotation, default(Vector2), _layerDepth, textStyle: textStyle);
 			}
 		}
 

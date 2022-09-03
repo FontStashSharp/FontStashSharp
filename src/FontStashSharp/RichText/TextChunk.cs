@@ -26,6 +26,7 @@ namespace FontStashSharp.RichText
 		public override Point Size { get { return _size; } }
 
 		public SpriteFontBase Font => _font;
+		public TextStyle Style { get; set; }
 
 		public TextChunk(SpriteFontBase font, string text, Point size, Point? startPos)
 		{
@@ -117,7 +118,7 @@ namespace FontStashSharp.RichText
 
 		public override void Draw(FSRenderContext context, Vector2 position, Color color)
 		{
-			context.DrawText(Text, Font, position, color);
+			context.DrawText(Text, Font, position, color, Style);
 		}
 	}
 }

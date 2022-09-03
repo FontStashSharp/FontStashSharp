@@ -16,7 +16,7 @@ namespace FontStashSharp.RichText
 	internal class LayoutBuilder
 	{
 		public const int NewLineWidth = 0;
-		public const string Commands = "cfivsn";
+		public const string Commands = "cfivst";
 
 		private string _text;
 		private SpriteFontBase _font;
@@ -34,6 +34,7 @@ namespace FontStashSharp.RichText
 		private Color? _currentColor;
 		private SpriteFontBase _currentFont;
 		private int _currentVerticalOffset;
+		private TextStyle _currentTextStyle;
 
 		public List<TextLine> Lines => _lines;
 
@@ -43,15 +44,11 @@ namespace FontStashSharp.RichText
 		public bool ShiftByTop { get; set; } = true;
 		public char CommandPrefix { get; set; } = '/';
 
-		private bool ProcessCommand(ref int i, ref ChunkInfo r, out bool chunkFilled)
+		private bool IsCommand(int i)
 		{
-			chunkFilled = false;
-
 			if (!SupportsCommands ||
 				i >= _text.Length - 2 ||
-				_text[i] != CommandPrefix || 
-				_text[i + 1] == 'n' || 
-				_text[i + 1] == CommandPrefix ||
+				_text[i] != CommandPrefix ||
 				Commands.IndexOf(_text[i + 1]) == -1)
 			{
 				// Not a command(or newline command that is processed differently)
@@ -61,7 +58,94 @@ namespace FontStashSharp.RichText
 			++i;
 
 			var command = _text[i].ToString();
-			if (_text[i + 1] == 'd')
+			if (command == "t")
+			{
+				
+				switch (_text[i + 1])
+				{
+					case 's':
+					case 'u':
+					case 'd':
+						break;
+					default:
+						return false;
+				}
+			}
+			else if (_text[i + 1] == 'd')
+			{
+				switch (command)
+				{
+					case "c":
+					case "f":
+					case "v":
+						break;
+					default:
+						return false;
+				}
+			}
+			else
+			{
+				if (_text[i + 1] != '[')
+				{
+					return false;
+				}
+
+				// Find end
+				var startPos = i + 2;
+				int j;
+				var foundEnclosing = false;
+				for (j = startPos; j < _text.Length; ++j)
+				{
+					if (_text[j] == ']')
+					{
+						// Found enclosing 'j'
+						foundEnclosing = true;
+						break;
+					}
+					else if (_text[j] == '[')
+					{
+						break;
+					}
+				}
+
+				if (!foundEnclosing)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		private bool ProcessCommand(ref int i, ref ChunkInfo r, out bool chunkFilled)
+		{
+			chunkFilled = false;
+			if (!IsCommand(i))
+			{
+				return false;
+			}
+
+			++i;
+
+			var command = _text[i].ToString();
+			if (command == "t")
+			{
+				switch (_text[i + 1])
+				{
+					case 's':
+						_currentTextStyle = TextStyle.Strikethrough;
+						break;
+					case 'u':
+						_currentTextStyle = TextStyle.Underline;
+						break;
+					case 'd':
+						_currentTextStyle = TextStyle.None;
+						break;
+				}
+
+				i += 2;
+			}
+			else if (_text[i + 1] == 'd')
 			{
 				switch (command)
 				{
@@ -75,39 +159,22 @@ namespace FontStashSharp.RichText
 					case "v":
 						_currentVerticalOffset = 0;
 						break;
-					default:
-						throw new Exception($"Can't use 'd' parameter for command {command}");
 				}
 
 				i += 2;
 			}
 			else
 			{
-				if (_text[i + 1] != '[')
-				{
-					throw new Exception($"Command '{command}' at pos {i} doesnt have opening '['.");
-				}
-
 				// Find end
 				var startPos = i + 2;
 				int j;
-				var foundEnclosing = false;
-				for(j = startPos; j < _text.Length; ++j)
+				for (j = startPos; j < _text.Length; ++j)
 				{
 					if (_text[j] == ']')
 					{
 						// Found enclosing 'j'
-						foundEnclosing = true;
-						break;
-					} else if (_text[j] == '[')
-					{
 						break;
 					}
-				}
-
-				if (!foundEnclosing)
-				{
-					throw new Exception($"Command '{command}' at pos {i} doesnt have enclosing ']'.");
 				}
 
 				var parameters = _text.Substring(startPos, j - startPos);
@@ -193,10 +260,9 @@ namespace FontStashSharp.RichText
 					continue;
 				}
 
-				if (SupportsCommands && 
-					c == CommandPrefix && 
-					i < _text.Length - 1 && 
-					Commands.IndexOf(_text[i + 1]) != -1)
+				if (SupportsCommands &&
+					c == CommandPrefix &&
+					i < _text.Length - 1)
 				{
 					if (_text[i + 1] == 'n')
 					{
@@ -214,7 +280,7 @@ namespace FontStashSharp.RichText
 						// Two '\' means one
 						++i;
 					}
-					else if (i < _text.Length - 2)
+					else if (IsCommand(i))
 					{
 						// Return right here, so the command
 						// would be processed in the next chunk
@@ -274,6 +340,7 @@ namespace FontStashSharp.RichText
 			_currentColor = null;
 			_currentFont = _font;
 			_currentVerticalOffset = 0;
+			_currentTextStyle = TextStyle.None;
 		}
 
 		private void StartLine(int startIndex, int? rowWidth)
@@ -386,7 +453,11 @@ namespace FontStashSharp.RichText
 					{
 						case ChunkInfoType.Text:
 							var t = _text.Substring(c.StartIndex, c.EndIndex - c.StartIndex).Replace("//", "/");
-							chunk = new TextChunk(_currentFont, t, new Point(c.X, c.Y), startPos);
+							var textChunk = new TextChunk(_currentFont, t, new Point(c.X, c.Y), startPos)
+							{
+								Style = _currentTextStyle
+							};
+							chunk = textChunk;
 							break;
 						case ChunkInfoType.Space:
 							chunk = new SpaceChunk(c.X);
