@@ -83,13 +83,31 @@ namespace FontStashSharp.RichText
 			}
 			else
 			{
+				if (_text[i + 1] != '[')
+				{
+					throw new Exception($"Command '{command}' at pos {i} doesnt have opening '['.");
+				}
+
 				// Find end
 				var startPos = i + 2;
-				var j = _text.IndexOf(']', startPos);
-
-				if (j == -1)
+				int j;
+				var foundEnclosing = false;
+				for(j = startPos; j < _text.Length; ++j)
 				{
-					throw new Exception($"Command '{command}' doesnt have ']'.");
+					if (_text[j] == ']')
+					{
+						// Found enclosing 'j'
+						foundEnclosing = true;
+						break;
+					} else if (_text[j] == '[')
+					{
+						break;
+					}
+				}
+
+				if (!foundEnclosing)
+				{
+					throw new Exception($"Command '{command}' at pos {i} doesnt have enclosing ']'.");
 				}
 
 				var parameters = _text.Substring(startPos, j - startPos);
