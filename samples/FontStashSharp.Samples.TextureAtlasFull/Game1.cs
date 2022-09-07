@@ -77,6 +77,11 @@ namespace FontStashSharp.Samples
 			foreach (var atlas in _fontSystem.Atlases)
 			{
 				var texture = atlas.Texture;
+				if (texture == null)
+				{
+					continue;
+				}
+
 				var x = (count % AtlasesPerRow) * (texture.Width + TexturePadding);
 				var y = 50 + (count / AtlasesPerRow) * (texture.Height + TexturePadding);
 

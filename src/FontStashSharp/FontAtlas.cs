@@ -194,11 +194,44 @@ namespace FontStashSharp
 			Array.Clear(buffer, 0, bufferSize);
 
 			var colorBuffer = _colorBuffer;
-			if ((colorBuffer == null) || (colorBuffer.Length < bufferSize * 4))
+			var colorBufferSize = (glyph.Size.X + FontSystem.GlyphPad * 2) * (glyph.Size.Y + FontSystem.GlyphPad * 2) * 4;
+			if ((colorBuffer == null) || (colorBuffer.Length < colorBufferSize))
 			{
-				colorBuffer = new byte[bufferSize * 4];
+				colorBuffer = new byte[colorBufferSize * 4];
 				_colorBuffer = colorBuffer;
 			}
+
+			// Create the atlas texture if required
+			if (Texture == null)
+			{
+#if MONOGAME || FNA || STRIDE
+				Texture = Texture2DManager.CreateTexture(graphicsDevice, Width, Height);
+#else
+				Texture = textureManager.CreateTexture(Width, Height);
+#endif
+			}
+
+			// Erase an area where we are going to place a glyph
+			Array.Clear(colorBuffer, 0,colorBufferSize);
+			var eraseArea = glyph.TextureRectangle;
+			eraseArea.X = Math.Max(eraseArea.X - FontSystem.GlyphPad, 0);
+			eraseArea.Y = Math.Max(eraseArea.Y - FontSystem.GlyphPad, 0);
+			eraseArea.Width += FontSystem.GlyphPad * 2;
+			if (eraseArea.Right > Width)
+			{
+				eraseArea.Width = Width - eraseArea.X;
+			}
+			eraseArea.Height += FontSystem.GlyphPad * 2;
+			if (eraseArea.Bottom > Height)
+			{
+				eraseArea.Height = Height - eraseArea.Y;
+			}
+
+#if MONOGAME || FNA || STRIDE
+			Texture2DManager.SetTextureData(Texture, eraseArea, colorBuffer);
+#else
+			textureManager.SetTextureData(Texture, eraseArea, colorBuffer);
+#endif
 
 			var effectPad = Math.Max(blurAmount, strokeAmount);
 			fontSource.RasterizeGlyphBitmap(glyph.Id,
@@ -312,31 +345,10 @@ namespace FontStashSharp
 				}
 			}
 
+			// Render glyph to texture
 #if MONOGAME || FNA || STRIDE
-			// Write to texture
-			if (Texture == null)
-			{
-				Texture = Texture2DManager.CreateTexture(graphicsDevice, Width, Height);
-
-				// #50: Clear texture, since it could be dirty
-				var eraseData = new byte[Width * Height * 4];
-				Array.Clear(eraseData, 0, eraseData.Length);
-				Texture2DManager.SetTextureData(Texture, new Rectangle(0, 0, Width, Height), eraseData);
-			}
-
 			Texture2DManager.SetTextureData(Texture, glyph.TextureRectangle, colorBuffer);
 #else
-			// Write to texture
-			if (Texture == null)
-			{
-				Texture = textureManager.CreateTexture(Width, Height);
-
-				// #50: Clear texture, since it could be dirty
-				var eraseData = new byte[Width * Height * 4];
-				Array.Clear(eraseData, 0, eraseData.Length);
-				textureManager.SetTextureData(Texture, new Rectangle(0, 0, Width, Height), eraseData);
-			}
-
 			textureManager.SetTextureData(Texture, glyph.TextureRectangle, colorBuffer);
 #endif
 		}
