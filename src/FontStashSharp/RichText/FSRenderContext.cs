@@ -50,10 +50,10 @@ namespace FontStashSharp.RichText
 
 		public void Prepare(Vector2 position, Vector2 scale, float rotation, Vector2 origin, float layerDepth)
 		{
-			Utility.BuildTransform(position, scale, rotation, origin, out _transformation);
 			_scale = scale;
 			_rotation = rotation;
 			_layerDepth = layerDepth;
+			Utility.BuildTransform(position, _scale, _rotation, origin, out _transformation);
 		}
 
 		public void DrawText(string text, SpriteFontBase font, Vector2 pos, Color color, TextStyle textStyle)
@@ -74,7 +74,7 @@ namespace FontStashSharp.RichText
 			}
 		}
 
-		public void DrawImage(Texture2D texture, Rectangle sourceRegion, Vector2 position, Color color)
+		public void DrawImage(Texture2D texture, Rectangle sourceRegion, Vector2 position, Vector2 scale, Color color)
 		{
 			if (_renderer != null)
 			{
@@ -87,8 +87,10 @@ namespace FontStashSharp.RichText
 				var topRight = new VertexPositionColorTexture();
 				var bottomLeft = new VertexPositionColorTexture();
 				var bottomRight = new VertexPositionColorTexture();
+
+				var size = new Vector2(sourceRegion.Width, sourceRegion.Height) * _scale * scale;
 				_renderer2.DrawQuad(texture, color, position, ref _transformation,
-					_layerDepth, new Point(sourceRegion.Width, sourceRegion.Height), sourceRegion,
+					_layerDepth, size, sourceRegion,
 					ref topLeft, ref topRight, ref bottomLeft, ref bottomRight);
 			}
 		}

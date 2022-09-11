@@ -45,8 +45,7 @@ namespace FontStashSharp
 				start.Y = pos.Y + 1;
 			}
 
-			var size = new Point((int)pos.X, FontSystemDefaults.TextStyleLineHeight);
-
+			var size = new Vector2((int)pos.X, FontSystemDefaults.TextStyleLineHeight);
 			renderer.DrawQuad(white, color, start, ref transformation,
 				layerDepth, size, new Rectangle(0, 0, 1, 1),
 				ref topLeft, ref topRight, ref bottomLeft, ref bottomRight);
@@ -136,8 +135,9 @@ namespace FontStashSharp
 
 					var baseOffset = new Vector2(glyph.RenderOffset.X, glyph.RenderOffset.Y) + pos;
 
+					var size = new Vector2(glyph.Size.X, glyph.Size.Y);
 					renderer.DrawQuad(glyph.Texture, color, baseOffset, ref transformation,
-						layerDepth, glyph.Size, glyph.TextureRectangle,
+						layerDepth, size, glyph.TextureRectangle,
 						ref topLeft, ref topRight, ref bottomLeft, ref bottomRight);
 				}
 

@@ -23,7 +23,7 @@ namespace FontStashSharp
 			"Text in default font./n/f[arialbd.ttf, 24]Bold and smaller font. /f[ariali.ttf, 48]Italic and larger font./n/fdBack to the default font.",
 			"E=mc/v[-8]2/n/vdMass–energy equivalence.",
 			"A small tree: /i[mangrove1.png]",
-			"A small /c[red]tree: /v[8]/i[mangrove1.png]",
+			"A small /c[red]tree: /v[8]/i[mangrove1.png]/vd/cd/tuand some text",
 			"/tuThis is the first line. /tsThis is the second line. /tdThis is the third line.",
 		};
 

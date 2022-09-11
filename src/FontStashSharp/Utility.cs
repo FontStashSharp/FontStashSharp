@@ -205,7 +205,7 @@ namespace FontStashSharp
 		public static void DrawQuad(this IFontStashRenderer2 renderer,
 			Texture2D texture, Color color,
 			Vector2 baseOffset, ref Matrix transformation, float layerDepth,
-			Point size, Rectangle textureRectangle,
+			Vector2 size, Rectangle textureRectangle,
 			ref VertexPositionColorTexture topLeft, ref VertexPositionColorTexture topRight,
 			ref VertexPositionColorTexture bottomLeft, ref VertexPositionColorTexture bottomRight)
 		{
