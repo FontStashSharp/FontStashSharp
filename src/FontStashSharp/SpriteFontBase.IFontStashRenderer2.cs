@@ -45,7 +45,7 @@ namespace FontStashSharp
 				start.Y = pos.Y + 1;
 			}
 
-			var size = new Vector2((int)pos.X, FontSystemDefaults.TextStyleLineHeight);
+			var size = new Vector2(pos.X, FontSystemDefaults.TextStyleLineHeight);
 			renderer.DrawQuad(white, color, start, ref transformation,
 				layerDepth, size, new Rectangle(0, 0, 1, 1),
 				ref topLeft, ref topRight, ref bottomLeft, ref bottomRight);
