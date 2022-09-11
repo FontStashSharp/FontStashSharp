@@ -88,7 +88,7 @@ namespace FontStashSharp.Samples.UI
 			}
 		}
 
-		public int FontSize
+		public float FontSize
 		{
 			get => _labelText.Font.FontSize;
 			set => _labelText.Font = _fontSystem.GetFont(value);

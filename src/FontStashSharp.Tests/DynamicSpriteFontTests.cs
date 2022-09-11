@@ -114,7 +114,8 @@ namespace FontStashSharp.Tests
 
 		[TestCase("Tuesday", 45, 4, true, new int[] { 2, 9, 22, 17, 43, 18, 63, 17, 86, 10, 109, 17, 132, 18 })]
 		[TestCase("Tuesday", 45, 4, false, new int[] { 2, 9, 24, 17, 45, 18, 65, 17, 88, 10, 111, 17, 134, 18 })]
-		public void DrawText(string text, int size, int characterSpacing, bool useKernings, int[] glyphPos)
+		[TestCase("Tuesday", 45.5f, 4, true, new int[] { 2, 10, 22, 18, 43, 19, 63, 18, 87, 11, 110, 18, 133, 19 })]
+		public void DrawText(string text, float size, int characterSpacing, bool useKernings, int[] glyphPos)
 		{
 			var settings = new FontSystemSettings();
 			var fontSystem = new FontSystem(settings)

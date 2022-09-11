@@ -27,7 +27,7 @@ namespace FontStashSharp
 		/// <summary>
 		/// Font Size
 		/// </summary>
-		public int FontSize { get; private set; }
+		public float FontSize { get; private set; }
 
 		/// <summary>
 		/// Line Height in pixels
@@ -36,7 +36,7 @@ namespace FontStashSharp
 
 		protected float RenderFontSizeMultiplicator { get; set; } = 1f;
 
-		protected SpriteFontBase(int fontSize, int lineHeight)
+		protected SpriteFontBase(float fontSize, int lineHeight)
 		{
 			FontSize = fontSize;
 			LineHeight = lineHeight;

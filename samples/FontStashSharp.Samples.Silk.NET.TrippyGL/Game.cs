@@ -5,12 +5,14 @@ using Silk.NET.Maths;
 using FontStashSharp.Platform;
 using System.Numerics;
 using TrippyGL;
+using System.IO;
 
 namespace FontStashSharp
 {
 	internal class Game
 	{
 		private IWindow window;
+
 		private Renderer renderer;
 		private FontSystem fontSystem;
 		private GraphicsDevice graphicsDevice;

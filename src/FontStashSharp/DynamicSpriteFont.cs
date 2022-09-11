@@ -22,7 +22,7 @@ namespace FontStashSharp
 
 		public FontSystem FontSystem { get; private set; }
 
-		internal DynamicSpriteFont(FontSystem system, int size, int lineHeight) : base(size, lineHeight)
+		internal DynamicSpriteFont(FontSystem system, float size, int lineHeight) : base(size, lineHeight)
 		{
 			if (system == null)
 			{
@@ -49,7 +49,7 @@ namespace FontStashSharp
 				return null;
 			}
 
-			var fontSize = (int)(FontSize * FontSystem.FontResolutionFactor);
+			var fontSize = FontSize * FontSystem.FontResolutionFactor;
 
 			var font = FontSystem.FontSources[fontSourceIndex];
 
@@ -128,7 +128,7 @@ namespace FontStashSharp
 				for (var i = 0; i < IndexedMetrics.Length; ++i)
 				{
 					int ascent, descent, lineHeight;
-					FontSystem.FontSources[i].GetMetricsForSize((int)(FontSize * RenderFontSizeMultiplicator), out ascent, out descent, out lineHeight);
+					FontSystem.FontSources[i].GetMetricsForSize(FontSize * RenderFontSizeMultiplicator, out ascent, out descent, out lineHeight);
 
 					IndexedMetrics[i] = new FontMetrics(ascent, descent, lineHeight);
 				}

@@ -224,10 +224,10 @@ namespace FontStashSharp.Samples
 					(int)Math.Round(dimensions.Y * scale.Y));
 				DrawRectangle(backgroundRect, Color.Green);
 
-				var rects = _font.GetGlyphRects(text, cursor, origin, scale);
-				foreach (var r in rects)
+				var glyphs = _font.GetGlyphs(text, cursor, origin, scale);
+				foreach (var r in glyphs)
 				{
-					DrawRectangle(r, Color.Gray);
+					DrawRectangle(r.Bounds, Color.Gray);
 				}
 			}
 
@@ -248,10 +248,10 @@ namespace FontStashSharp.Samples
 					(int)Math.Round(dimensions.Y * scale.Y));
 				DrawRectangle(backgroundRect, Color.Green);
 
-				var rects = _font.GetGlyphRects(text, cursor, origin, scale, characterSpacing: CharacterSpacing, lineSpacing: LineSpacing);
-				foreach (var r in rects)
+				var glyphs = _font.GetGlyphs(text, cursor, origin, scale, characterSpacing: CharacterSpacing, lineSpacing: LineSpacing);
+				foreach (var g in glyphs)
 				{
-					DrawRectangle(r, Color.Gray);
+					DrawRectangle(g.Bounds, Color.Gray);
 				}
 			}
 

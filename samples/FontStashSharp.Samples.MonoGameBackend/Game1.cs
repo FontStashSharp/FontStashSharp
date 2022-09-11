@@ -147,10 +147,10 @@ namespace FontStashSharp
 				_spriteBatch.Draw(_white, new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y), Color.Green);
 
 
-				var rects = _font.GetGlyphRects(text, position.ToSystemNumerics());
-				foreach (var r in rects)
+				var glyphs = _font.GetGlyphs(text, position.ToSystemNumerics());
+				foreach (var g in glyphs)
 				{
-					_spriteBatch.Draw(_white, r.ToXNA(), Color.Gray);
+					_spriteBatch.Draw(_white, g.Bounds.ToXNA(), Color.Gray);
 				}
 			}
 
@@ -164,10 +164,10 @@ namespace FontStashSharp
 				var size = MeasureString(text);
 				_spriteBatch.Draw(_white, new Rectangle(0, y, (int)size.X, (int)size.Y), Color.Green);
 
-				var rects = _font.GetGlyphRects(text, new System.Numerics.Vector2(0, y));
-				foreach (var r in rects)
+				var glyphs = _font.GetGlyphs(text, new System.Numerics.Vector2(0, y));
+				foreach (var g in glyphs)
 				{
-					_spriteBatch.Draw(_white, r.ToXNA(), Color.Gray);
+					_spriteBatch.Draw(_white, g.Bounds.ToXNA(), Color.Gray);
 				}
 			}
 

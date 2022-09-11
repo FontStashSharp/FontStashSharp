@@ -35,7 +35,7 @@ namespace FontStashSharp
 
 	public class DynamicFontGlyph : FontGlyph
 	{
-		public int FontSize;
+		public float FontSize;
 		public int FontSourceIndex;
 	}
 }

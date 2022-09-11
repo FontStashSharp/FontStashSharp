@@ -2,6 +2,8 @@ using FontStashSharp.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using FontStashSharp.Rasterizers.StbTrueTypeSharp;
+using System.Runtime.InteropServices;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework.Graphics;
@@ -112,10 +114,11 @@ namespace FontStashSharp
 			AddFont(stream.ToByteArray());
 		}
 
-		public DynamicSpriteFont GetFont(int fontSize)
+		public DynamicSpriteFont GetFont(float fontSize)
 		{
+			var intSize = fontSize.FloatAsInt();
 			DynamicSpriteFont result;
-			if (_fonts.TryGetValue(fontSize, out result))
+			if (_fonts.TryGetValue(intSize, out result))
 			{
 				return result;
 			}
@@ -131,7 +134,7 @@ namespace FontStashSharp
 			fontSource.GetMetricsForSize(fontSize, out ascent, out descent, out lineHeight);
 
 			result = new DynamicSpriteFont(this, fontSize, lineHeight);
-			_fonts[fontSize] = result;
+			_fonts[intSize] = result;
 			return result;
 		}
 

@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using FontStashSharp.Interfaces;
 
 #if MONOGAME || FNA
@@ -28,6 +29,18 @@ namespace FontStashSharp
 		public static readonly Vector2 Vector2Zero = new Vector2(0, 0);
 		public static readonly Vector2 DefaultScale = new Vector2(1.0f, 1.0f);
 		public static readonly Vector2 DefaultOrigin = new Vector2(0.0f, 0.0f);
+
+		[StructLayout(LayoutKind.Explicit)]
+		private struct FloatToInt
+		{
+			[FieldOffset(0)] public float f;
+			[FieldOffset(0)] public int i;
+		}
+
+		public static int FloatAsInt(this float f)
+		{
+			return new FloatToInt { f = f }.i;
+		}
 
 		/// <summary>
 		/// Restricts a value to be within a specified range.
