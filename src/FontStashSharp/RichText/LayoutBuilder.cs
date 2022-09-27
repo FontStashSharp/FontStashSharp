@@ -46,6 +46,29 @@ namespace FontStashSharp.RichText
 		public bool ShiftByTop { get; set; } = true;
 		public char CommandPrefix { get; set; } = '/';
 
+		private bool HasIntegerParam(int i)
+		{
+			if (char.IsDigit(_text[i]) ||
+				(_text[i] == '-' && i < _text.Length - 1 && char.IsDigit(_text[i + 1])))
+			{
+				return true;
+			}
+
+			if (_text[i] == '[' && i < _text.Length - 2)
+			{
+				for (var j = i + 1; j < _text.Length; ++j)
+				{
+					if (_text[j] == ']')
+					{
+						// Found enclosing 'j'
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
 		private bool IsCommand(int i)
 		{
 			if (!SupportsCommands ||
@@ -70,7 +93,8 @@ namespace FontStashSharp.RichText
 					default:
 						return false;
 				}
-			} else if (command == 't')
+			}
+			else if (command == 't')
 			{
 				switch (_text[i + 1])
 				{
@@ -93,6 +117,10 @@ namespace FontStashSharp.RichText
 					default:
 						return false;
 				}
+			}
+			else if (command == 's' || command == 'v')
+			{
+				return HasIntegerParam(i + 1);
 			}
 			else
 			{
@@ -128,6 +156,45 @@ namespace FontStashSharp.RichText
 			return true;
 		}
 
+		private int? ProcessIntegerParam(ref int i)
+		{
+			int? startPos = null;
+			int endPos = 0;
+			if (char.IsDigit(_text[i]) || _text[i] == '-')
+			{
+				startPos = i;
+				do
+				{
+					++i;
+				}
+				while (i < _text.Length && char.IsDigit(_text[i]));
+				endPos = i;
+			}
+
+			if (_text[i] == '[' && i < _text.Length - 2)
+			{
+				for (var j = i + 1; j < _text.Length; ++j)
+				{
+					if (_text[j] == ']')
+					{
+						// Found enclosing 'j'
+						startPos = i + 1;
+						endPos = j;
+						i = j + 1;
+						break;
+					}
+				}
+			}
+
+			if (startPos == null)
+			{
+				return null;
+			}
+
+			var parameters = _text.Substring(startPos.Value, endPos - startPos.Value);
+			return int.Parse(parameters);
+		}
+
 		private bool ProcessCommand(ref int i, ref ChunkInfo r, out bool chunkFilled)
 		{
 			chunkFilled = false;
@@ -139,7 +206,38 @@ namespace FontStashSharp.RichText
 			++i;
 
 			var command = _text[i];
-			if (command == 't')
+
+			if (command == 'e')
+			{
+				switch (_text[i + 1])
+				{
+					case 'b':
+						_currentEffect = FontSystemEffect.Blurry;
+						_currentEffectAmount = 1;
+						break;
+					case 's':
+						_currentEffect = FontSystemEffect.Stroked;
+						_currentEffectAmount = 1;
+						break;
+					case 'd':
+						_currentEffect = FontSystemEffect.None;
+						_currentEffectAmount = 0;
+						break;
+				}
+
+				i += 2;
+
+				var p = ProcessIntegerParam(ref i);
+				if (p != null)
+				{
+					if (p.Value < 0)
+					{
+						throw new Exception($"Effect amount couldn't be negative {p.Value}");
+					}
+					_currentEffectAmount = p.Value;
+				}
+			}
+			else if (command == 't')
 			{
 				switch (_text[i + 1])
 				{
@@ -163,10 +261,6 @@ namespace FontStashSharp.RichText
 					case 'c':
 						_currentColor = null;
 						break;
-					case 'e':
-						_currentEffect = FontSystemEffect.None;
-						_currentEffectAmount = 0;
-						break;
 					case 'f':
 						// Switch to default font
 						_currentFont = _font;
@@ -178,33 +272,26 @@ namespace FontStashSharp.RichText
 
 				i += 2;
 			}
+			else if (command == 's')
+			{
+				++i;
+				var p = ProcessIntegerParam(ref i);
+				r.Type = ChunkInfoType.Space;
+				r.X = p.Value;
+				r.Y = 0;
+				r.LineEnd = false;
+				chunkFilled = true;
+			}
+			else if (command == 'v')
+			{
+				++i;
+				var p = ProcessIntegerParam(ref i);
+				_currentVerticalOffset = p.Value;
+			}
 			else
 			{
-				if (command == 'e')
-				{
-					switch (_text[i + 1])
-					{
-						case 'b':
-							_currentEffect = FontSystemEffect.Blurry;
-							_currentEffectAmount = 1;
-							break;
-						case 's':
-							_currentEffect = FontSystemEffect.Stroked;
-							_currentEffectAmount = 1;
-							break;
-					}
-
-					i += 2;
-					if (_text.Length <= i || _text[i] != '[')
-					{
-						return true;
-					}
-				} else {
-					++i;
-				}
-
 				// Find end
-				var startPos = i + 1;
+				var startPos = i + 2;
 				int j;
 				for (j = startPos; j < _text.Length; ++j)
 				{
@@ -221,9 +308,6 @@ namespace FontStashSharp.RichText
 					case 'c':
 						_currentColor = ColorStorage.FromName(parameters);
 						break;
-					case 'e':
-						_currentEffectAmount = int.Parse(parameters);
-						break;
 
 					case 'f':
 						if (RichTextDefaults.FontResolver == null)
@@ -232,17 +316,6 @@ namespace FontStashSharp.RichText
 						}
 
 						_currentFont = RichTextDefaults.FontResolver(parameters);
-						break;
-					case 's':
-						var size = int.Parse(parameters);
-						r.Type = ChunkInfoType.Space;
-						r.X = size;
-						r.Y = 0;
-						r.LineEnd = false;
-						chunkFilled = true;
-						break;
-					case 'v':
-						_currentVerticalOffset = int.Parse(parameters);
 						break;
 					case 'i':
 						if (RichTextDefaults.ImageResolver == null)
