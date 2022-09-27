@@ -172,9 +172,9 @@ namespace FontStashSharp
 		}
 
 #if MONOGAME || FNA || STRIDE
-		public void RenderGlyph(GraphicsDevice graphicsDevice, DynamicFontGlyph glyph, IFontSource fontSource, int blurAmount, int strokeAmount, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
+		public void RenderGlyph(GraphicsDevice graphicsDevice, DynamicFontGlyph glyph, IFontSource fontSource, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
 #else
-		public void RenderGlyph(ITexture2DManager textureManager, DynamicFontGlyph glyph, IFontSource fontSource, int blurAmount, int strokeAmount, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
+		public void RenderGlyph(ITexture2DManager textureManager, DynamicFontGlyph glyph, IFontSource fontSource, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
 #endif
 		{
 			if (glyph.IsEmpty)
@@ -233,22 +233,21 @@ namespace FontStashSharp
 			textureManager.SetTextureData(Texture, eraseArea, colorBuffer);
 #endif
 
-			var effectPad = Math.Max(blurAmount, strokeAmount);
 			fontSource.RasterizeGlyphBitmap(glyph.Id,
 				glyph.FontSize,
 				buffer,
-				effectPad + effectPad * glyph.Size.X,
-				glyph.Size.X - effectPad * 2,
-				glyph.Size.Y - effectPad * 2,
+				glyph.EffectAmount + glyph.EffectAmount * glyph.Size.X,
+				glyph.Size.X - glyph.EffectAmount * 2,
+				glyph.Size.Y - glyph.EffectAmount * 2,
 				glyph.Size.X);
 
-			if (strokeAmount > 0)
+			if (glyph.Effect == FontSystemEffect.Stroked && glyph.EffectAmount > 0)
 			{
 				var width = glyph.Size.X;
-				var top = width * strokeAmount;
-				var bottom = (glyph.Size.Y - strokeAmount) * glyph.Size.X;
-				var right = glyph.Size.X - strokeAmount;
-				var left = strokeAmount;
+				var top = width * glyph.EffectAmount;
+				var bottom = (glyph.Size.Y - glyph.EffectAmount) * glyph.Size.X;
+				var right = glyph.Size.X - glyph.EffectAmount;
+				var left = glyph.EffectAmount;
 
 				byte d;
 				for (var i = 0; i < bufferSize; ++i)
@@ -271,12 +270,12 @@ namespace FontStashSharp
 					}
 					if (i % width >= left)
 					{
-						d = buffer[i - strokeAmount];
+						d = buffer[i - glyph.EffectAmount];
 						black = ((255 - d) * black + 255 * d) / 255;
 					}
 					if (i % width < right)
 					{
-						d = buffer[i + strokeAmount];
+						d = buffer[i + glyph.EffectAmount];
 						black = ((255 - d) * black + 255 * d) / 255;
 					}
 
@@ -323,9 +322,9 @@ namespace FontStashSharp
 			}
 			else
 			{
-				if (blurAmount > 0)
+				if (glyph.Effect == FontSystemEffect.Blurry && glyph.EffectAmount > 0)
 				{
-					Blur(buffer, glyph.Size.X, glyph.Size.Y, glyph.Size.X, blurAmount);
+					Blur(buffer, glyph.Size.X, glyph.Size.Y, glyph.Size.X, glyph.EffectAmount);
 				}
 
 				for (var i = 0; i < bufferSize; ++i)

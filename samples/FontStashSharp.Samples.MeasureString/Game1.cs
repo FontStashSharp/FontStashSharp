@@ -30,12 +30,10 @@ namespace FontStashSharp
 			Window.AllowUserResizing = true;
 		}
 
-		private FontSystem LoadFont(FontSystemEffect effect, int effectAmount, float resolutionFactor)
+		private FontSystem LoadFont(float resolutionFactor)
 		{
 			var settings = new FontSystemSettings
 			{
-				Effect = effect,
-				EffectAmount = effectAmount,
 				FontResolutionFactor = resolutionFactor
 			};
 
@@ -58,8 +56,8 @@ namespace FontStashSharp
 
 			var fonts = new List<FontSystem>();
 
-			fonts.Add(LoadFont(0, 0, 1));
-			fonts.Add(LoadFont(0, 0, 3));
+			fonts.Add(LoadFont(1));
+			fonts.Add(LoadFont(3));
 
 			_fontSystems = fonts.ToArray();
 

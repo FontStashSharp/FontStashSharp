@@ -65,9 +65,9 @@ namespace FontStashSharp
 		}
 
 #if MONOGAME || FNA || STRIDE
-		protected internal override FontGlyph GetGlyph(GraphicsDevice device, int codepoint)
+		protected internal override FontGlyph GetGlyph(GraphicsDevice device, int codepoint, FontSystemEffect effect, int effectAmount)
 #else
-		protected internal override FontGlyph GetGlyph(ITexture2DManager device, int codepoint)
+		protected internal override FontGlyph GetGlyph(ITexture2DManager device, int codepoint, FontSystemEffect effect, int effectAmount)
 #endif
 		{
 			var result = InternalGetGlyph(codepoint);
@@ -78,7 +78,7 @@ namespace FontStashSharp
 			return result;
 		}
 
-		internal override void PreDraw(TextSource source, out int ascent, out int lineHeight)
+		internal override void PreDraw(TextSource source, FontSystemEffect effect, int effectAmount, out int ascent, out int lineHeight)
 		{
 			ascent = 0;
 			lineHeight = LineHeight;

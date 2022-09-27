@@ -5,7 +5,6 @@ namespace FontStashSharp
 {
 	public static class FontSystemDefaults
 	{
-		private static int _effectAmount = 0;
 		private static int _textureWidth = 1024, _textureHeight = 1024;
 		private static float _fontResolutionFactor = 1.0f;
 		private static int _kernelWidth = 0, _kernelHeight = 0;
@@ -43,22 +42,6 @@ namespace FontStashSharp
 		}
 
 		public static bool PremultiplyAlpha { get; set; } = true;
-
-		public static FontSystemEffect Effect { get; set; } = FontSystemEffect.None;
-
-		public static int EffectAmount
-		{
-			get => _effectAmount;
-			set
-			{
-				if (value < 0 || value > 20)
-				{
-					throw new ArgumentOutOfRangeException(nameof(value));
-				}
-
-				_effectAmount = value;
-			}
-		}
 
 		public static float FontResolutionFactor
 		{

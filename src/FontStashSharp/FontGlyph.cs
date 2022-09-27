@@ -37,5 +37,7 @@ namespace FontStashSharp
 	{
 		public float FontSize;
 		public int FontSourceIndex;
+		public FontSystemEffect Effect;
+		public int EffectAmount;
 	}
 }

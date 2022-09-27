@@ -27,9 +27,9 @@ namespace FontStashSharp
 		public static float DrawString(this SpriteBatch batch, SpriteFontBase font, string text, Vector2 position, Color color,
 			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
-			TextStyle textStyle = TextStyle.None)
+			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
 		{
-			return font.DrawText(batch, text, position, color, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing, textStyle);
+			return font.DrawText(batch, text, position, color, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 		}
 
 		/// <summary>
@@ -46,9 +46,9 @@ namespace FontStashSharp
 		public static float DrawString(this SpriteBatch batch, SpriteFontBase font, string text, Vector2 position, Color[] colors,
 			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
-			TextStyle textStyle = TextStyle.None)
+			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
 		{
-			return font.DrawText(batch, text, position, colors, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing, textStyle);
+			return font.DrawText(batch, text, position, colors, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 		}
 
 		/// <summary>
@@ -65,9 +65,9 @@ namespace FontStashSharp
 		public static float DrawString(this SpriteBatch batch, SpriteFontBase font, StringSegment text, Vector2 position, Color color,
 			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
-			TextStyle textStyle = TextStyle.None)
+			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
 		{
-			return font.DrawText(batch, text, position, color, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing, textStyle);
+			return font.DrawText(batch, text, position, color, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 		}
 
 		/// <summary>
@@ -84,9 +84,9 @@ namespace FontStashSharp
 		public static float DrawString(this SpriteBatch batch, SpriteFontBase font, StringSegment text, Vector2 position, Color[] colors,
 			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
-			TextStyle textStyle = TextStyle.None)
+			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
 		{
-			return font.DrawText(batch, text, position, colors, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing, textStyle);
+			return font.DrawText(batch, text, position, colors, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 		}
 
 		/// <summary>
@@ -103,9 +103,9 @@ namespace FontStashSharp
 		public static float DrawString(this SpriteBatch batch, SpriteFontBase font, StringBuilder text, Vector2 position, Color color,
 			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
-			TextStyle textStyle = TextStyle.None)
+			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
 		{
-			return font.DrawText(batch, text, position, color, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing, textStyle);
+			return font.DrawText(batch, text, position, color, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 		}
 
 		/// <summary>
@@ -122,9 +122,9 @@ namespace FontStashSharp
 		public static float DrawString(this SpriteBatch batch, SpriteFontBase font, StringBuilder text, Vector2 position, Color[] colors,
 			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
-			TextStyle textStyle = TextStyle.None)
+			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
 		{
-			return font.DrawText(batch, text, position, colors, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing, textStyle);
+			return font.DrawText(batch, text, position, colors, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 		}
 	}
 }

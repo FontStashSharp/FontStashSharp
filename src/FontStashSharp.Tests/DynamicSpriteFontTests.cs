@@ -20,13 +20,14 @@ namespace FontStashSharp.Tests
 			var codePoint = 12345678;
 
 			// Shouldn't exist
+			var glyphs = font.GetGlyphs(FontSystemEffect.None, 0);
 			DynamicFontGlyph glyph;
-			Assert.IsFalse(font.Glyphs.TryGetValue(codePoint, out glyph));
+			Assert.IsFalse(glyphs.TryGetValue(codePoint, out glyph));
 
-			glyph = (DynamicFontGlyph)font.GetGlyph(TestsEnvironment.GraphicsDevice, codePoint);
+			glyph = (DynamicFontGlyph)font.GetGlyph(TestsEnvironment.GraphicsDevice, codePoint, FontSystemEffect.None, 0);
 
 			// Now it should exist
-			Assert.IsTrue(font.Glyphs.TryGetValue(codePoint, out glyph));
+			Assert.IsTrue(glyphs.TryGetValue(codePoint, out glyph));
 
 			// And should be equal to null too
 			Assert.AreEqual(glyph, null);
@@ -58,7 +59,7 @@ namespace FontStashSharp.Tests
 				var font = fontSystem.GetFont(size);
 				for (var codePoint = (int)'a'; codePoint < 'z'; ++codePoint)
 				{
-					var glyph = (DynamicFontGlyph)font.GetGlyph(TestsEnvironment.GraphicsDevice, codePoint);
+					var glyph = (DynamicFontGlyph)font.GetGlyph(TestsEnvironment.GraphicsDevice, codePoint, FontSystemEffect.None, 0);
 
 					// Make sure glyph doesnt intersects with the used space
 					if (!atlasFull)

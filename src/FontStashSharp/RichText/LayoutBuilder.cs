@@ -16,7 +16,7 @@ namespace FontStashSharp.RichText
 	internal class LayoutBuilder
 	{
 		public const int NewLineWidth = 0;
-		public const string Commands = "cfivst";
+		public const string Commands = "cefistv";
 
 		private string _text;
 		private SpriteFontBase _font;
@@ -35,6 +35,8 @@ namespace FontStashSharp.RichText
 		private SpriteFontBase _currentFont;
 		private int _currentVerticalOffset;
 		private TextStyle _currentTextStyle;
+		private FontSystemEffect _currentEffect;
+		private int _currentEffectAmount = 0;
 
 		public List<TextLine> Lines => _lines;
 
@@ -56,10 +58,20 @@ namespace FontStashSharp.RichText
 
 			++i;
 
-			var command = _text[i].ToString();
-			if (command == "t")
+			var command = _text[i];
+			if (command == 'e')
 			{
-				
+				switch (_text[i + 1])
+				{
+					case 'b':
+					case 's':
+					case 'd':
+						break;
+					default:
+						return false;
+				}
+			} else if (command == 't')
+			{
 				switch (_text[i + 1])
 				{
 					case 's':
@@ -74,9 +86,9 @@ namespace FontStashSharp.RichText
 			{
 				switch (command)
 				{
-					case "c":
-					case "f":
-					case "v":
+					case 'c':
+					case 'f':
+					case 'v':
 						break;
 					default:
 						return false;
@@ -126,8 +138,8 @@ namespace FontStashSharp.RichText
 
 			++i;
 
-			var command = _text[i].ToString();
-			if (command == "t")
+			var command = _text[i];
+			if (command == 't')
 			{
 				switch (_text[i + 1])
 				{
@@ -148,14 +160,18 @@ namespace FontStashSharp.RichText
 			{
 				switch (command)
 				{
-					case "c":
+					case 'c':
 						_currentColor = null;
 						break;
-					case "f":
+					case 'e':
+						_currentEffect = FontSystemEffect.None;
+						_currentEffectAmount = 0;
+						break;
+					case 'f':
 						// Switch to default font
 						_currentFont = _font;
 						break;
-					case "v":
+					case 'v':
 						_currentVerticalOffset = 0;
 						break;
 				}
@@ -164,14 +180,37 @@ namespace FontStashSharp.RichText
 			}
 			else
 			{
+				if (command == 'e')
+				{
+					switch (_text[i + 1])
+					{
+						case 'b':
+							_currentEffect = FontSystemEffect.Blurry;
+							_currentEffectAmount = 1;
+							break;
+						case 's':
+							_currentEffect = FontSystemEffect.Stroked;
+							_currentEffectAmount = 1;
+							break;
+					}
+
+					i += 2;
+					if (_text.Length <= i || _text[i] != '[')
+					{
+						return true;
+					}
+				} else {
+					++i;
+				}
+
 				// Find end
-				var startPos = i + 2;
+				var startPos = i + 1;
 				int j;
 				for (j = startPos; j < _text.Length; ++j)
 				{
 					if (_text[j] == ']')
 					{
-						// Found enclosing 'j'
+						// Found enclosing ']'
 						break;
 					}
 				}
@@ -179,11 +218,14 @@ namespace FontStashSharp.RichText
 				var parameters = _text.Substring(startPos, j - startPos);
 				switch (command)
 				{
-					case "c":
+					case 'c':
 						_currentColor = ColorStorage.FromName(parameters);
 						break;
+					case 'e':
+						_currentEffectAmount = int.Parse(parameters);
+						break;
 
-					case "f":
+					case 'f':
 						if (RichTextDefaults.FontResolver == null)
 						{
 							throw new Exception($"FontResolver isnt set");
@@ -191,7 +233,7 @@ namespace FontStashSharp.RichText
 
 						_currentFont = RichTextDefaults.FontResolver(parameters);
 						break;
-					case "s":
+					case 's':
 						var size = int.Parse(parameters);
 						r.Type = ChunkInfoType.Space;
 						r.X = size;
@@ -199,10 +241,10 @@ namespace FontStashSharp.RichText
 						r.LineEnd = false;
 						chunkFilled = true;
 						break;
-					case "v":
+					case 'v':
 						_currentVerticalOffset = int.Parse(parameters);
 						break;
-					case "i":
+					case 'i':
 						if (RichTextDefaults.ImageResolver == null)
 						{
 							throw new Exception($"ImageResolver isnt set");
@@ -458,7 +500,9 @@ namespace FontStashSharp.RichText
 							}
 							var textChunk = new TextChunk(_currentFont, t, new Point(c.X, c.Y), startPos)
 							{
-								Style = _currentTextStyle
+								Style = _currentTextStyle,
+								Effect = _currentEffect,
+								EffectAmount = _currentEffectAmount,
 							};
 							chunk = textChunk;
 							break;

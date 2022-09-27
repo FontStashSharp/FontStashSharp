@@ -17,8 +17,8 @@ namespace FontStashSharp
 		GraphicsDeviceManager _graphics;
 		SpriteBatch _spriteBatch;
 		private DynamicSpriteFont _font;
-		private FontSystem[] _fontSystems;
 		private FontSystem _currentFontSystem;
+		private FontSystemEffect _currentEffect;
 		private Renderer _renderer;
 
 		private Texture2D _white;
@@ -54,24 +54,6 @@ namespace FontStashSharp
 			Window.AllowUserResizing = true;
 		}
 
-		private FontSystem LoadFont(FontSystemEffect effect, int effectAmount)
-		{
-			var textureCreator = new Texture2DManager(GraphicsDevice);
-
-			var settings = new FontSystemSettings
-			{
-				Effect = effect,
-				EffectAmount = effectAmount
-			};
-
-			var result = new FontSystem(settings);
-			result.AddFont(File.ReadAllBytes(@"Fonts/DroidSans.ttf"));
-			result.AddFont(File.ReadAllBytes(@"Fonts/DroidSansJapanese.ttf"));
-			result.AddFont(File.ReadAllBytes(@"Fonts/Symbola-Emoji.ttf"));
-
-			return result;
-		}
-
 		/// <summary>
 		/// LoadContent will be called once per game and is the place to load
 		/// all of your content.
@@ -82,14 +64,10 @@ namespace FontStashSharp
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 			_renderer = new Renderer(_spriteBatch);
 
-			var fonts = new List<FontSystem>();
-
-			fonts.Add(LoadFont(0, 0));
-			fonts.Add(LoadFont(FontSystemEffect.Blurry, EffectAmount));
-			fonts.Add(LoadFont(FontSystemEffect.Stroked, EffectAmount));
-
-			_fontSystems = fonts.ToArray();
-			_currentFontSystem = _fontSystems[0];
+			_currentFontSystem = new FontSystem();
+			_currentFontSystem.AddFont(File.ReadAllBytes(@"Fonts/DroidSans.ttf"));
+			_currentFontSystem.AddFont(File.ReadAllBytes(@"Fonts/DroidSansJapanese.ttf"));
+			_currentFontSystem.AddFont(File.ReadAllBytes(@"Fonts/Symbola-Emoji.ttf"));
 
 			_white = new Texture2D(GraphicsDevice, 1, 1);
 			_white.SetData(new[] { Color.White });
@@ -110,23 +88,15 @@ namespace FontStashSharp
 
 			if (KeyboardUtils.IsPressed(Keys.Tab))
 			{
-				var i = 0;
-
-				for (; i < _fontSystems.Length; ++i)
-				{
-					if (_currentFontSystem == _fontSystems[i])
-					{
-						break;
-					}
-				}
+				var i = (int)_currentEffect;
 
 				++i;
-				if (i >= _fontSystems.Length)
+				if (i > (int)FontSystemEffect.Stroked)
 				{
 					i = 0;
 				}
 
-				_currentFontSystem = _fontSystems[i];
+				_currentEffect = (FontSystemEffect)i;
 			}
 
 			if (KeyboardUtils.IsPressed(Keys.Enter))
@@ -137,7 +107,7 @@ namespace FontStashSharp
 			KeyboardUtils.End();
 		}
 
-		public Vector2 MeasureString(string text) => _font.MeasureString(text).ToXNA();
+		public Vector2 MeasureString(string text) => _font.MeasureString(text, effect: _currentEffect, effectAmount: EffectAmount).ToXNA();
 
 		public void DrawString(string text, Vector2 position, FSColor[] glyphColors)
 		{
@@ -147,14 +117,14 @@ namespace FontStashSharp
 				_spriteBatch.Draw(_white, new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y), Color.Green);
 
 
-				var glyphs = _font.GetGlyphs(text, position.ToSystemNumerics());
+				var glyphs = _font.GetGlyphs(text, position.ToSystemNumerics(), effect: _currentEffect, effectAmount: EffectAmount);
 				foreach (var g in glyphs)
 				{
 					_spriteBatch.Draw(_white, g.Bounds.ToXNA(), Color.Gray);
 				}
 			}
 
-			_font.DrawText(_renderer, text, position.ToSystemNumerics(), glyphColors);
+			_font.DrawText(_renderer, text, position.ToSystemNumerics(), glyphColors, effect: _currentEffect, effectAmount: EffectAmount);
 		}
 
 		private void DrawString(string text, int y, Color color)
@@ -164,14 +134,14 @@ namespace FontStashSharp
 				var size = MeasureString(text);
 				_spriteBatch.Draw(_white, new Rectangle(0, y, (int)size.X, (int)size.Y), Color.Green);
 
-				var glyphs = _font.GetGlyphs(text, new System.Numerics.Vector2(0, y));
+				var glyphs = _font.GetGlyphs(text, new System.Numerics.Vector2(0, y), effect: _currentEffect, effectAmount: EffectAmount);
 				foreach (var g in glyphs)
 				{
 					_spriteBatch.Draw(_white, g.Bounds.ToXNA(), Color.Gray);
 				}
 			}
 
-			_font.DrawText(_renderer, text, new System.Numerics.Vector2(0, y), color.ToFontStashSharp());
+			_font.DrawText(_renderer, text, new System.Numerics.Vector2(0, y), color.ToFontStashSharp(), effect: _currentEffect, effectAmount: EffectAmount);
 		}
 
 		private void DrawString(string text, int y)

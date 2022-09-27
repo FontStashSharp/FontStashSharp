@@ -24,7 +24,7 @@ namespace FontStashSharp
 			"E=mc/v[-8]2/n/vdMass–energy equivalence.",
 			"A small tree: /i[mangrove1.png]",
 			"A small /c[red]tree: /v[8]/i[mangrove1.png]/vd/cd/tuand some text",
-			"/tuThis is the first line. /tsThis is the second line. /tdThis is the third line.",
+			"/tu/ebThis /es[2]is the /edfirst line. /tsThis is the second line. /tdThis is the third line.",
 		};
 
 		private IWindow window;

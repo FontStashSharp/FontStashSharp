@@ -37,7 +37,7 @@ namespace FontStashSharp.Samples
 			"E=mc/v[-8]2/n/vdMass–energy equivalence.",
 			"A small tree: /i[mangrove1.png]",
 			"A small /c[red]tree: /v[8]/i[mangrove1.png]/vd/cd/tuand some text",
-			"This is the first line. This is the second line. This is the third line.",
+			"/ebThis /es[2]is the /edfirst line. This is the second line. This is the third line.",
 		};
 
 #if !STRIDE

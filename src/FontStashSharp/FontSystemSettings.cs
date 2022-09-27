@@ -64,6 +64,11 @@ namespace FontStashSharp
 
 		public bool PremultiplyAlpha { get; set; } = true;
 
+		[Obsolete("Use parameters of DrawText")]
+		public FontSystemEffect Effect { get; set; } = FontSystemEffect.None;
+
+
+		[Obsolete("Use parameters of DrawText")]
 		public int EffectAmount
 		{
 			get => _effectAmount;
@@ -77,8 +82,6 @@ namespace FontStashSharp
 				_effectAmount = value;
 			}
 		}
-
-		public FontSystemEffect Effect { get; set; } = FontSystemEffect.None;
 
 		public float FontResolutionFactor
 		{
@@ -145,8 +148,6 @@ namespace FontStashSharp
 			TextureWidth = FontSystemDefaults.TextureWidth;
 			TextureHeight = FontSystemDefaults.TextureHeight;
 			PremultiplyAlpha = FontSystemDefaults.PremultiplyAlpha;
-			Effect = FontSystemDefaults.Effect;
-			EffectAmount = FontSystemDefaults.EffectAmount;
 			FontResolutionFactor = FontSystemDefaults.FontResolutionFactor;
 			KernelWidth = FontSystemDefaults.KernelWidth;
 			KernelHeight = FontSystemDefaults.KernelHeight;

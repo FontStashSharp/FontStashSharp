@@ -48,9 +48,6 @@ namespace FontStashSharp
 		public bool UseKernings { get; set; } = true;
 		public int? DefaultCharacter { get; set; } = ' ';
 
-		internal int BlurAmount => Effect == FontSystemEffect.Blurry ? EffectAmount : 0;
-		internal int StrokeAmount => Effect == FontSystemEffect.Stroked ? EffectAmount : 0;
-
 		internal List<IFontSource> FontSources => _fontSources;
 
 		public List<FontAtlas> Atlases { get; } = new List<FontAtlas>();
@@ -150,7 +147,7 @@ namespace FontStashSharp
 			fontSourceIndex = 0;
 			var g = default(int?);
 
-			for(var i = 0; i < _fontSources.Count; ++i)
+			for (var i = 0; i < _fontSources.Count; ++i)
 			{
 				var f = _fontSources[i];
 				g = f.GetGlyphId(codepoint);
@@ -237,8 +234,7 @@ namespace FontStashSharp
 			glyph.TextureOffset.X = gx + GlyphPad;
 			glyph.TextureOffset.Y = gy + GlyphPad;
 
-			currentAtlas.RenderGlyph(device, glyph, FontSources[glyph.FontSourceIndex], 
-				BlurAmount, StrokeAmount, PremultiplyAlpha, KernelWidth, KernelHeight);
+			currentAtlas.RenderGlyph(device, glyph, FontSources[glyph.FontSourceIndex], PremultiplyAlpha, KernelWidth, KernelHeight);
 
 			glyph.Texture = currentAtlas.Texture;
 		}

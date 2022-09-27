@@ -56,7 +56,8 @@ namespace FontStashSharp.RichText
 			Utility.BuildTransform(position, _scale, _rotation, origin, out _transformation);
 		}
 
-		public void DrawText(string text, SpriteFontBase font, Vector2 pos, Color color, TextStyle textStyle)
+		public void DrawText(string text, SpriteFontBase font, Vector2 pos, Color color, 
+			TextStyle textStyle, FontSystemEffect effect, int effectAmount)
 		{
 			if (string.IsNullOrEmpty(text))
 			{
@@ -66,11 +67,13 @@ namespace FontStashSharp.RichText
 			pos = pos.Transform(ref _transformation);
 			if (_renderer != null)
 			{
-				font.DrawText(_renderer, text, pos, color, _scale, _rotation, default(Vector2), _layerDepth, textStyle: textStyle);
+				font.DrawText(_renderer, text, pos, color, _scale, _rotation, default(Vector2), _layerDepth, 
+					textStyle: textStyle, effect: effect, effectAmount: effectAmount);
 			}
 			else
 			{
-				font.DrawText(_renderer2, text, pos, color, _scale, _rotation, default(Vector2), _layerDepth, textStyle: textStyle);
+				font.DrawText(_renderer2, text, pos, color, _scale, _rotation, default(Vector2), _layerDepth,
+					textStyle: textStyle, effect: effect, effectAmount: effectAmount);
 			}
 		}
 

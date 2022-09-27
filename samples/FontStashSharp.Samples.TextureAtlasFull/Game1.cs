@@ -10,7 +10,7 @@ namespace FontStashSharp.Samples
 	/// </summary>
 	public class Game1 : Game
 	{
-		private const int AtlasesPerRow = 3;
+		private const int AtlasesPerRow = 6;
 		private const int AtlasSize = 256;
 		private const int TexturePadding = 16;
 
@@ -69,9 +69,11 @@ namespace FontStashSharp.Samples
 			_spriteBatch.Begin();
 
 			var c = (char)_random.Next(32, 100);
+			var effect = (FontSystemEffect)_random.Next(0, 3);
+			var effectAmount = _random.Next(1, 3);
 
 			var font = _fontSystem.GetFont(_random.Next(20, 40));
-			_spriteBatch.DrawString(font, c.ToString(), Vector2.Zero, Color.White);
+			_spriteBatch.DrawString(font, c.ToString(), Vector2.Zero, Color.White, effect: effect, effectAmount: effectAmount);
 
 			var count = 0;
 			foreach (var atlas in _fontSystem.Atlases)
