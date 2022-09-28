@@ -234,6 +234,7 @@ namespace FontStashSharp.RichText
 					{
 						throw new Exception($"Effect amount couldn't be negative {p.Value}");
 					}
+
 					_currentEffectAmount = p.Value;
 				}
 			}

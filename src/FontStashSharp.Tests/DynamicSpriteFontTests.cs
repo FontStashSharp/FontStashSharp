@@ -11,8 +11,7 @@ namespace FontStashSharp.Tests
 		[Test]
 		public void CacheNull()
 		{
-			var fontSystem = new FontSystem();
-			fontSystem.AddFont(TestsEnvironment.Assembly.ReadResourceAsBytes("Resources.DroidSans.ttf"));
+			var fontSystem = TestsEnvironment.DefaultFontSystem;
 
 			var font = fontSystem.GetFont(32);
 
@@ -48,8 +47,7 @@ namespace FontStashSharp.Tests
 				ExistingTextureUsedSpace = new Rectangle(0, 0, existingTexture.Width, 160)
 			};
 
-			var fontSystem = new FontSystem(settings);
-			fontSystem.AddFont(TestsEnvironment.Assembly.ReadResourceAsBytes("Resources.DroidSans.ttf"));
+			var fontSystem = TestsEnvironment.CreateDefaultFontSystem(settings);
 
 			var atlasFull = false;
 			fontSystem.CurrentAtlasFull += (s, a) => atlasFull = true;

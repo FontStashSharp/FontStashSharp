@@ -160,6 +160,26 @@ namespace FontStashSharp.RichText
 			}
 		}
 
+		public bool ShiftByTop
+		{
+			get
+			{
+				return _layoutBuilder.ShiftByTop;
+			}
+
+			set
+			{
+				if (value == _layoutBuilder.ShiftByTop)
+				{
+					return;
+				}
+
+				_layoutBuilder.ShiftByTop = value;
+				InvalidateLayout();
+				InvalidateMeasures();
+			}
+		}
+
 		public bool IgnoreColorCommand { get; set; } = false;
 
 		public char CommandPrefix
