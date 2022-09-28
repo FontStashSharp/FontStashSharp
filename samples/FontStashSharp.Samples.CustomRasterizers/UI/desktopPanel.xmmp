@@ -1,8 +1,0 @@
-<Project>
-  <Project.ExportOptions Namespace="FontStashSharp.Samples.UI" Class="DesktopPanel" OutputPath="C:\Projects\FontStashSharp.Samples\src\UI" />
-  <VerticalStackPanel>
-    <Label Text="StbTrueTypeSharp(default)" Id="_labelHeader" />
-    <HorizontalSeparator />
-    <Label Text="The quick brown\nfox jumps\nover the lazy dog" Id="_labelText" />
-  </VerticalStackPanel>
-</Project>

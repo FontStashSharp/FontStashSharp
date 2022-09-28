@@ -1,30 +1,23 @@
-﻿using Myra.Graphics2D.UI;
-using Microsoft.Xna.Framework;
-using FontStashSharp.Samples.UI;
-using Myra;
+﻿using Microsoft.Xna.Framework;
 using System;
 using FontStashSharp.Rasterizers.FreeType;
 using FontStashSharp.Rasterizers.SixLabors.Fonts;
+using System.Collections.Generic;
+using FontStashSharp.Interfaces;
+using System.Reflection;
+using System.IO;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace FontStashSharp.Samples
 {
 	public class TextRenderingGame : Game
 	{
 		private readonly GraphicsDeviceManager _graphics;
-		private MainPanel _mainPanel;
-		private TopWidget _topWidget;
-		private Desktop _topDesktop, _bottomDesktop;
-
-		public static TextRenderingGame Instance { get; private set; }
-
-		public static TopWidget TopWidget => Instance._topWidget;
-
-		public static Desktop TopDesktop => Instance._topDesktop;
+		private SpriteBatch _spriteBatch;
+		private readonly List<TextWidget> _widgets = new List<TextWidget>();
 
 		public TextRenderingGame()
 		{
-			Instance = this;
-
 			_graphics = new GraphicsDeviceManager(this)
 			{
 				PreferredBackBufferWidth = 1200,
@@ -34,53 +27,43 @@ namespace FontStashSharp.Samples
 			IsMouseVisible = true;
 		}
 
+		private static byte[] GetFileBytes(string fileName)
+		{
+			string assemblyLocation = Assembly.GetExecutingAssembly().Location;
+			var path = Path.Combine(Path.GetDirectoryName(assemblyLocation), fileName);
+			return File.ReadAllBytes(path);
+		}
+
+		private void AddFontSystem(string header, IFontLoader fontLoader)
+		{
+			var settings = new FontSystemSettings
+			{
+				FontLoader = fontLoader
+			};
+
+			var fontSystem = new FontSystem(settings);
+			fontSystem.AddFont(GetFileBytes(@"Fonts/DroidSans.ttf"));
+			fontSystem.AddFont(GetFileBytes(@"Fonts/DroidSansJapanese.ttf"));
+			fontSystem.AddFont(GetFileBytes(@"Fonts/Symbola-Emoji.ttf"));
+
+			var textWidget = new TextWidget(header, fontSystem);
+			_widgets.Add(textWidget);
+		}
+
 		protected override void LoadContent()
 		{
 			base.LoadContent();
 
-			MyraEnvironment.Game = this;
-			// MyraEnvironment.DrawWidgetsFrames = true;
+			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			_bottomDesktop = new Desktop
-			{
-				// Inform Myra that external text input is available
-				// So it stops translating Keys to chars
-				HasExternalTextInput = true
-			};
-
-			// Provide that text input
-			Window.TextInput += (s, a) =>
-			{
-				_bottomDesktop.OnChar(a.Character);
-			};
-
-			_mainPanel = new MainPanel();
-
-			_bottomDesktop.Root = _mainPanel;
-
-			_topWidget = new TopWidget();
-			_topWidget.AddFontSystem("StbTrueTypeSharp(default)", null);
-			// _topWidget.AddFontSystem("StbTrueType(native)", new StbTrueTypeNativeLoader());
+			AddFontSystem("StbTrueTypeSharp(default)", null);
 
 			if (Environment.OSVersion.Platform == PlatformID.Win32NT)
 			{
-				_topWidget.AddFontSystem("FreeType", new FreeTypeLoader());
+				AddFontSystem("FreeType", new FreeTypeLoader());
 			}
 
-			_topWidget.AddFontSystem("SixLabors.Fonts", new SixLaborsFontLoader());
-
-			_topWidget.SetFontSize(32);
-
-			_topDesktop = new Desktop
-			{
-				Root = _topWidget
-			};
-
-			// Top desktop occupies upper half
-			_topDesktop.BoundsFetcher = () => new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height / 2);
-
-			// Bottom desktop - bottom half
-			_bottomDesktop.BoundsFetcher = () => new Rectangle(0, GraphicsDevice.Viewport.Height / 2, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height / 2);
+			AddFontSystem("SixLabors.Fonts", new SixLaborsFontLoader());
 		}
 
 		protected override void Draw(GameTime gameTime)
@@ -89,8 +72,23 @@ namespace FontStashSharp.Samples
 
 			GraphicsDevice.Clear(Color.Black);
 
-			_bottomDesktop.Render();
-			_topDesktop.Render();
+			_spriteBatch.Begin();
+
+			var bounds = new Rectangle
+			{
+				X = 0,
+				Y = 0,
+				Width = GraphicsDevice.Viewport.Width / _widgets.Count,
+				Height = GraphicsDevice.Viewport.Height
+			};
+
+			foreach(var widget in _widgets)
+			{
+				widget.Draw(_spriteBatch, bounds, "The quick brown\nfox jumps over\nthe lazy dog");
+				bounds.X += bounds.Width;
+			}
+
+			_spriteBatch.End();
 		}
 	}
 }

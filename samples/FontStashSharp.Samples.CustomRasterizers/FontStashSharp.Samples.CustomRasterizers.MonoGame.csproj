@@ -6,13 +6,24 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="FontStashSharp.Rasterizers.FreeType" Version="1.1.6" />
-    <PackageReference Include="FontStashSharp.Rasterizers.SixLabors.Fonts" Version="1.1.6-beta1" />
+    <PackageReference Include="FontStashSharp.Rasterizers.FreeType" Version="1.1.7" />
+    <PackageReference Include="FontStashSharp.Rasterizers.SixLabors.Fonts" Version="1.1.7-beta1" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="$(MonoGameVersion)" />
-    <PackageReference Include="Myra" Version="1.4.2" />
   </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\..\src\XNA\FontStashSharp.MonoGame.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="..\Fonts\DroidSans.ttf" Link="Fonts\DroidSans.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Fonts\DroidSansJapanese.ttf" Link="Fonts\DroidSansJapanese.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Fonts\Symbola-Emoji.ttf" Link="Fonts\Symbola-Emoji.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>  
 </Project>
