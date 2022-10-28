@@ -101,10 +101,6 @@ namespace FontStashSharp
 			int advance, x0, y0, x1, y1;
 			font.GetGlyphMetrics(g.Value, fontSize, out advance, out x0, out y0, out x1, out y1);
 
-			if (effectAmount > 0)
-			{
-				var k = 5;
-			}
 			var gw = x1 - x0 + effectAmount * 2;
 			var gh = y1 - y0 + effectAmount * 2;
 

@@ -456,6 +456,8 @@ namespace FontStashSharp.RichText
 			_currentFont = _font;
 			_currentVerticalOffset = 0;
 			_currentTextStyle = TextStyle.None;
+			_currentEffect = FontSystemEffect.None;
+			_currentEffectAmount = 0;
 		}
 
 		private void StartLine(int startIndex, int? rowWidth)
