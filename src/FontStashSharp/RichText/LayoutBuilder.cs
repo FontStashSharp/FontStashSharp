@@ -15,7 +15,8 @@ namespace FontStashSharp.RichText
 {
 	internal class LayoutBuilder
 	{
-		public const int NewLineWidth = 0;
+        private readonly RichTextSettings _richTextSettings;
+        public const int NewLineWidth = 0;
 		public const string Commands = "cefistv";
 
 		private string _text;
@@ -45,8 +46,13 @@ namespace FontStashSharp.RichText
 		public bool CalculateGlyphs { get; set; }
 		public bool ShiftByTop { get; set; } = true;
 		public char CommandPrefix { get; set; } = '/';
+        
+        public LayoutBuilder(RichTextSettings richTextSettings)
+        {
+            _richTextSettings = richTextSettings;
+        }
 
-		private bool HasIntegerParam(int i)
+        private bool HasIntegerParam(int i)
 		{
 			if (char.IsDigit(_text[i]) ||
 				(_text[i] == '-' && i < _text.Length - 1 && char.IsDigit(_text[i + 1])))
@@ -311,20 +317,20 @@ namespace FontStashSharp.RichText
 						break;
 
 					case 'f':
-						if (RichTextDefaults.FontResolver == null)
+						if (_richTextSettings.FontResolver == null)
 						{
 							throw new Exception($"FontResolver isnt set");
 						}
 
-						_currentFont = RichTextDefaults.FontResolver(parameters);
+						_currentFont = _richTextSettings.FontResolver(parameters);
 						break;
 					case 'i':
-						if (RichTextDefaults.ImageResolver == null)
+						if (_richTextSettings.ImageResolver == null)
 						{
 							throw new Exception($"ImageResolver isnt set");
 						}
 
-						var renderable = RichTextDefaults.ImageResolver(parameters);
+						var renderable = _richTextSettings.ImageResolver(parameters);
 						r.Type = ChunkInfoType.Image;
 						r.Renderable = renderable;
 
