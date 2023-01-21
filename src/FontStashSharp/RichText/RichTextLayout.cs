@@ -23,7 +23,7 @@ namespace FontStashSharp.RichText
 		private Point _size;
 		private bool _dirty = true;
 		private readonly Dictionary<int, Point> _measures = new Dictionary<int, Point>();
-		private readonly LayoutBuilder _layoutBuilder = new LayoutBuilder();
+        private readonly LayoutBuilder _layoutBuilder;
 		private readonly FSRenderContext _renderContext = new FSRenderContext();
 
 		public SpriteFontBase Font
@@ -199,8 +199,17 @@ namespace FontStashSharp.RichText
 			}
 		}
 
+        public RichTextLayout()
+        {
+            _layoutBuilder = new LayoutBuilder(new RichTextSettings());
+        }
 
-		private static int GetMeasureKey(int? width)
+        public RichTextLayout(RichTextSettings richTextSettings)
+        {
+            _layoutBuilder = new LayoutBuilder(richTextSettings);
+        }
+
+        private static int GetMeasureKey(int? width)
 		{
 			return width != null ? width.Value : -1;
 		}

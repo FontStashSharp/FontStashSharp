@@ -64,74 +64,76 @@ namespace FontStashSharp
 			var fontSystem = new FontSystem();
 			fontSystem.AddFont(File.ReadAllBytes(@"C:/Windows/Fonts/arial.ttf"));
 
-			_richText = new RichTextLayout
-			{
-				Font = fontSystem.GetFont(32),
-				Text = Strings[_stringIndex],
-				VerticalSpacing = 8
-			};
+            var richTextSettings = new RichTextSettings
+            {
+                FontResolver = p =>
+                {
+                    // Parse font name and size
+                    var args = p.Split(',');
+                    var fontName = args[0].Trim();
+                    var fontSize = int.Parse(args[1].Trim());
 
-			RichTextDefaults.FontResolver = p =>
-			{
-				// Parse font name and size
-				var args = p.Split(',');
-				var fontName = args[0].Trim();
-				var fontSize = int.Parse(args[1].Trim());
+                    // _fontCache is field of type Dictionary<string, FontSystem>
+                    // It is used to cache fonts
+                    FontSystem fontSystem;
+                    if (!_fontCache.TryGetValue(fontName, out fontSystem))
+                    {
+                        // Load and cache the font system
+                        fontSystem = new FontSystem();
+                        fontSystem.AddFont(File.ReadAllBytes(Path.Combine(@"C:\Windows\Fonts", fontName)));
+                        _fontCache[fontName] = fontSystem;
+                    }
 
-				// _fontCache is field of type Dictionary<string, FontSystem>
-				// It is used to cache fonts
-				FontSystem fontSystem;
-				if (!_fontCache.TryGetValue(fontName, out fontSystem))
-				{
-					// Load and cache the font system
-					fontSystem = new FontSystem();
-					fontSystem.AddFont(File.ReadAllBytes(Path.Combine(@"C:\Windows\Fonts", fontName)));
-					_fontCache[fontName] = fontSystem;
-				}
+                    // Return the required font
+                    return fontSystem.GetFont(fontSize);
+                },
+                ImageResolver = p =>
+                {
+                    Texture texture;
 
-				// Return the required font
-				return fontSystem.GetFont(fontSize);
-			};
+                    // _textureCache is field of type Dictionary<string, Texture2D>
+                    // it is used to cache textures
+                    if (!_textureCache.TryGetValue(p, out texture))
+                    {
+                        ImageResult imageResult;
+                        using (var stream = File.OpenRead(Path.Combine(@"D:\Temp\DCSSTiles\dngn\trees\", p)))
+                        {
+                            imageResult = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
+                        }
 
-			RichTextDefaults.ImageResolver = p =>
-			{
-				Texture texture;
+                        // Premultiply Alpha
+                        unsafe
+                        {
+                            fixed (byte* b = imageResult.Data)
+                            {
+                                byte* ptr = b;
+                                for (var i = 0; i < imageResult.Data.Length; i += 4, ptr += 4)
+                                {
+                                    var falpha = ptr[3] / 255.0f;
+                                    ptr[0] = (byte)(ptr[0] * falpha);
+                                    ptr[1] = (byte)(ptr[1] * falpha);
+                                    ptr[2] = (byte)(ptr[2] * falpha);
+                                }
+                            }
+                        }
 
-				// _textureCache is field of type Dictionary<string, Texture2D>
-				// it is used to cache textures
-				if (!_textureCache.TryGetValue(p, out texture))
-				{
-					ImageResult imageResult;
-					using (var stream = File.OpenRead(Path.Combine(@"D:\Temp\DCSSTiles\dngn\trees\", p)))
-					{
-						imageResult = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
-					}
+                        // Create the texture
+                        texture = new Texture(imageResult.Width, imageResult.Height);
+                        texture.SetData(new Rectangle(0, 0, texture.Width, texture.Height), imageResult.Data);
 
-					// Premultiply Alpha
-					unsafe
-					{
-						fixed (byte* b = imageResult.Data)
-						{
-							byte* ptr = b;
-							for (var i = 0; i < imageResult.Data.Length; i += 4, ptr += 4)
-							{
-								var falpha = ptr[3] / 255.0f;
-								ptr[0] = (byte)(ptr[0] * falpha);
-								ptr[1] = (byte)(ptr[1] * falpha);
-								ptr[2] = (byte)(ptr[2] * falpha);
-							}
-						}
-					}
+                        _textureCache[p] = texture;
+                    }
 
-					// Create the texture
-					texture = new Texture(imageResult.Width, imageResult.Height);
-					texture.SetData(new Rectangle(0, 0, texture.Width, texture.Height), imageResult.Data);
+                    return new TextureFragment(texture, new Rectangle(0, 0, texture.Width, texture.Height));
+                }
+            };
 
-					_textureCache[p] = texture;
-				}
-
-				return new TextureFragment(texture, new Rectangle(0, 0, texture.Width, texture.Height));
-			};
+            _richText = new RichTextLayout(richTextSettings)
+            {
+                Font = fontSystem.GetFont(32),
+                Text = Strings[_stringIndex],
+                VerticalSpacing = 8
+            };
 
 			GC.Collect();
 		}
