@@ -161,6 +161,30 @@ namespace FontStashSharp
 			return g;
 		}
 
+		protected virtual FontAtlas CreateNewAtlas(int textureWidth, int textureHeight)
+		{
+			Texture2D existingTexture = null;
+			if (ExistingTexture != null && Atlases.Count == 0)
+			{
+				existingTexture = ExistingTexture;
+			}
+
+			FontAtlas _newAtlas = new FontAtlas(textureWidth, textureHeight, 256, existingTexture);
+		
+			// If existing texture is used, mark existing used rect as used
+			if (existingTexture != null && !ExistingTextureUsedSpace.IsEmpty)
+			{
+				if (!_newAtlas.AddSkylineLevel(0, ExistingTextureUsedSpace.X, ExistingTextureUsedSpace.Y, ExistingTextureUsedSpace.Width, ExistingTextureUsedSpace.Height))
+				{
+					throw new Exception(string.Format("Unable to specify existing texture used space: {0}", ExistingTextureUsedSpace));
+				}
+
+				// TODO: Clear remaining space
+			}
+
+			return _newAtlas;
+		}
+
 #if MONOGAME || FNA || STRIDE
 		private FontAtlas GetCurrentAtlas(GraphicsDevice device, int textureWidth, int textureHeight)
 #else
@@ -169,23 +193,11 @@ namespace FontStashSharp
 		{
 			if (_currentAtlas == null)
 			{
-				Texture2D existingTexture = null;
-				if (ExistingTexture != null && Atlases.Count == 0)
+				_currentAtlas = CreateNewAtlas(textureWidth, textureHeight);
+
+				if (_currentAtlas == null)
 				{
-					existingTexture = ExistingTexture;
-				}
-
-				_currentAtlas = new FontAtlas(textureWidth, textureHeight, 256, existingTexture);
-
-				// If existing texture is used, mark existing used rect as used
-				if (existingTexture != null && !ExistingTextureUsedSpace.IsEmpty)
-				{
-					if (!_currentAtlas.AddSkylineLevel(0, ExistingTextureUsedSpace.X, ExistingTextureUsedSpace.Y, ExistingTextureUsedSpace.Width, ExistingTextureUsedSpace.Height))
-					{
-						throw new Exception(string.Format("Unable to specify existing texture used space: {0}", ExistingTextureUsedSpace));
-					}
-
-					// TODO: Clear remaining space
+					throw new Exception("New font atlas is null.");
 				}
 
 				Atlases.Add(_currentAtlas);
