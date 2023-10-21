@@ -58,8 +58,8 @@ namespace FontStashSharp.Samples
 		public static Game1 Instance { get; private set; }
 
 		private SpriteBatch _spriteBatch;
-		private FontSystem _currentFontSystem;
-		private FontSystem[] _fontSystems;
+		private FontSystem _fontSystem;
+		private FontSystemEffect _effect = FontSystemEffect.None;
 
 		private Texture2D _white;
 		private bool _animatedScaling = false;
@@ -93,11 +93,6 @@ namespace FontStashSharp.Samples
 		}
 #endif
 
-		private void LoadFontSystem(FontSystem result)
-		{
-			result.AddFont(File.ReadAllBytes(@"Fonts/DroidSans.ttf"));
-		}
-
 		/// <summary>
 		/// LoadContent will be called once per game and is the place to load
 		/// all of your content.
@@ -111,32 +106,9 @@ namespace FontStashSharp.Samples
 			// Create a new SpriteBatch, which can be used to draw textures.
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			// TODO: use this.Content to load your game content here
-			var fontSystems = new List<FontSystem>();
-
 			// Simple
-			var fontSystem = new FontSystem();
-			LoadFontSystem(fontSystem);
-			fontSystems.Add(fontSystem);
-
-			// Blurry
-			var settings = new FontSystemSettings
-			{
-				Effect = FontSystemEffect.Blurry,
-				EffectAmount = EffectAmount
-			};
-			var blurryFontSystem = new FontSystem(settings);
-			LoadFontSystem(blurryFontSystem);
-			fontSystems.Add(blurryFontSystem);
-
-			// Stroked
-			settings.Effect = FontSystemEffect.Stroked;
-			var strokedFontSystem = new FontSystem(settings);
-			LoadFontSystem(strokedFontSystem);
-			fontSystems.Add(strokedFontSystem);
-
-			_fontSystems = fontSystems.ToArray();
-			_currentFontSystem = _fontSystems[0];
+			_fontSystem = new FontSystem();
+			_fontSystem.AddFont(File.ReadAllBytes(@"Fonts/DroidSans.ttf"));
 
 #if MONOGAME
 			var fontBakeResult = TtfFontBaker.Bake(File.ReadAllBytes(@"C:\\Windows\\Fonts\arial.ttf"),
@@ -177,28 +149,19 @@ namespace FontStashSharp.Samples
 
 			if (KeyboardUtils.IsPressed(Keys.Tab))
 			{
-				var i = 0;
-
-				for (; i < _fontSystems.Length; ++i)
-				{
-					if (_currentFontSystem == _fontSystems[i])
-					{
-						break;
-					}
-				}
-
+				var i = (int)_effect;
 				++i;
-				if (i >= _fontSystems.Length)
+				if (i > 2)
 				{
 					i = 0;
 				}
 
-				_currentFontSystem = _fontSystems[i];
+				_effect = (FontSystemEffect)i;
 			}
 
 			if (KeyboardUtils.IsPressed(Keys.Enter))
 			{
-				_currentFontSystem.UseKernings = !_currentFontSystem.UseKernings;
+				_fontSystem.UseKernings = !_fontSystem.UseKernings;
 			}
 
 			if (KeyboardUtils.IsPressed(Keys.LeftShift))
@@ -245,14 +208,15 @@ namespace FontStashSharp.Samples
 			var position = new Vector2(GraphicsDevice.Presenter.BackBuffer.Width / 2, GraphicsDevice.Presenter.BackBuffer.Height / 2);
 #endif
 
-			var font = _currentFontSystem.GetFont(32);
+			var font = _fontSystem.GetFont(32);
 			var size = font.MeasureString(Text, scale, characterSpacing: CharacterSpacing, lineSpacing: LineSpacing);
 			var rads = (float)(_angle * Math.PI / 180);
 			var normalizedOrigin = new Vector2(0.5f, 0.5f);
 
 			_spriteBatch.Draw(_white, new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y), 
 				null, Color.Green, rads, normalizedOrigin, SpriteEffects.None, 0.0f);
-			_spriteBatch.DrawString(font, Text, position, Color.White, scale, rads, size * normalizedOrigin, characterSpacing: CharacterSpacing, lineSpacing: LineSpacing);
+			_spriteBatch.DrawString(font, Text, position, Color.White, scale, rads, size * normalizedOrigin, characterSpacing: CharacterSpacing, lineSpacing: LineSpacing,
+				effect: _effect, effectAmount: EffectAmount);
 
 #if MONOGAME
 			position = new Vector2(GraphicsDevice.Viewport.Width * 3 / 4, GraphicsDevice.Viewport.Height / 2);

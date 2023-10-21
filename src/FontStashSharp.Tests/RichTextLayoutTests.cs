@@ -20,10 +20,10 @@ namespace FontStashSharp.Tests
 				Font = fontSystem.GetFont(32)
 			};
 
-			Assert.AreEqual(richTextLayout.Lines.Count, linesCount);
+			Assert.AreEqual(linesCount, richTextLayout.Lines.Count);
 			if (linesCount > 0)
 			{
-				Assert.AreEqual(richTextLayout.Lines[0].Chunks.Count, chunksInFirstLineCount);
+				Assert.AreEqual(chunksInFirstLineCount, richTextLayout.Lines[0].Chunks.Count);
 			}
 			Assert.AreEqual(richTextLayout.Size, new Point(width, height));
 		}
@@ -42,24 +42,24 @@ namespace FontStashSharp.Tests
 				ShiftByTop = false
 			};
 
-			Assert.AreEqual(richTextLayout.Lines.Count, 1);
+			Assert.AreEqual(1, richTextLayout.Lines.Count);
 			var chunks = richTextLayout.Lines[0].Chunks;
-			Assert.AreEqual(chunks.Count, 5);
-			Assert.AreEqual(chunks[0].VerticalOffset, -8);
-			Assert.AreEqual(chunks[1].VerticalOffset, 4);
+			Assert.AreEqual(5, chunks.Count);
+			Assert.AreEqual(-8, chunks[0].VerticalOffset);
+			Assert.AreEqual(4, chunks[1].VerticalOffset);
 
 			var textChunk = (TextChunk)chunks[2];
-			Assert.AreEqual(textChunk.VerticalOffset, 0);
-			Assert.AreEqual(textChunk.Effect, FontSystemEffect.Stroked);
-			Assert.AreEqual(textChunk.EffectAmount, 2);
+			Assert.AreEqual(0, textChunk.VerticalOffset);
+			Assert.AreEqual(FontSystemEffect.Stroked, textChunk.Effect);
+			Assert.AreEqual(2, textChunk.EffectAmount);
 
 			textChunk = (TextChunk)chunks[3];
-			Assert.AreEqual(textChunk.Effect, FontSystemEffect.None);
-			Assert.AreEqual(textChunk.EffectAmount, 0);
+			Assert.AreEqual(FontSystemEffect.None, textChunk.Effect);
+			Assert.AreEqual(0, textChunk.EffectAmount);
 
 			textChunk = (TextChunk)chunks[4];
-			Assert.AreEqual(textChunk.Effect, FontSystemEffect.Blurry);
-			Assert.AreEqual(textChunk.EffectAmount, 3);
+			Assert.AreEqual(FontSystemEffect.Blurry, textChunk.Effect);
+			Assert.AreEqual(3, textChunk.EffectAmount);
 		}
 
 		[Test]
@@ -76,7 +76,7 @@ namespace FontStashSharp.Tests
 				Width = 300
 			};
 
-			Assert.AreEqual(richTextLayout.Lines.Count, 3);
+			Assert.AreEqual(3, richTextLayout.Lines.Count);
 		}
 
 		[Test]
@@ -98,6 +98,30 @@ namespace FontStashSharp.Tests
 
 			Assert.GreaterOrEqual(size.X, 0);
 			Assert.GreaterOrEqual(size.Y, 0);
+		}
+
+		[Test]
+		public void EllipsisCharacter()
+		{
+			var fontSystem = TestsEnvironment.DefaultFontSystem;
+
+			var richTextLayout = new RichTextLayout
+			{
+				Font = fontSystem.GetFont(32),
+				Text = "/ebThis /es2is the /edfirst line. This /es2is the /edsecond line. This is the third line.",
+				Width = 260,
+				Height = 100,
+				VerticalSpacing = 8,
+				AutoEllipsisMethod = AutoEllipsisMethod.Character
+			};
+
+			var lines = richTextLayout.Lines;
+
+			Assert.AreEqual(2, lines.Count);
+			Assert.AreEqual(3, lines[1].Chunks.Count);
+			Assert.IsInstanceOf<TextChunk>(lines[1].Chunks[2]);
+			var textChunk = (TextChunk)lines[1].Chunks[2];
+			Assert.AreEqual("second li...", textChunk.Text);
 		}
 	}
 }

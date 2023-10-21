@@ -71,8 +71,6 @@ namespace FontStashSharp
 		{
 			if (effect == FontSystemEffect.None)
 			{
-				effect = FontSystem.Effect;
-				effectAmount = FontSystem.EffectAmount;
 			}
 			else if (effectAmount == 0)
 			{

@@ -18,8 +18,8 @@
   </ItemGroup>  
 
   <ItemGroup>
-    <None Include="..\Fonts\DroidSans.ttf" Link="Fonts\DroidSans.ttf">
+    <None Include="Assets\**\*.*" LinkBase="Assets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </None>  
   </ItemGroup>
 </Project>

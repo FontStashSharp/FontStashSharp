@@ -19,12 +19,14 @@ namespace FontStashSharp.RichText
 	{
 		private SpriteFontBase _font;
 		private string _text = string.Empty;
-		private int? _width;
+		private int? _width, _height;
 		private Point _size;
 		private bool _dirty = true;
 		private readonly Dictionary<int, Point> _measures = new Dictionary<int, Point>();
-        private readonly LayoutBuilder _layoutBuilder;
+		private readonly LayoutBuilder _layoutBuilder;
 		private readonly FSRenderContext _renderContext = new FSRenderContext();
+		private AutoEllipsisMethod _autoEllipsisMethod = AutoEllipsisMethod.None;
+		private string _autoEllipsisString = "...";
 
 		public SpriteFontBase Font
 		{
@@ -90,6 +92,7 @@ namespace FontStashSharp.RichText
 			{
 				return _width;
 			}
+
 			set
 			{
 				if (value == _width)
@@ -98,6 +101,51 @@ namespace FontStashSharp.RichText
 				}
 
 				_width = value;
+				InvalidateLayout();
+			}
+		}
+
+		public int? Height
+		{
+			get
+			{
+				return _height;
+			}
+
+			set
+			{
+				if (value == _height)
+				{
+					return;
+				}
+
+				_height = value;
+				InvalidateLayout();
+			}
+		}
+
+		/// <summary>
+		/// The method used to abbreviate overflowing text.
+		/// </summary>
+		public AutoEllipsisMethod AutoEllipsisMethod
+		{
+			get => _layoutBuilder.AutoEllipsisMethod;
+			set
+			{
+				_layoutBuilder.AutoEllipsisMethod = value;
+				InvalidateLayout();
+			}
+		}
+
+		/// <summary>
+		/// The string to use as ellipsis.
+		/// </summary>
+		public string AutoEllipsisString
+		{
+			get => _layoutBuilder.AutoEllipsisString;
+			set
+			{
+				_layoutBuilder.AutoEllipsisString = value;
 				InvalidateLayout();
 			}
 		}
@@ -199,17 +247,17 @@ namespace FontStashSharp.RichText
 			}
 		}
 
-        public RichTextLayout()
-        {
-            _layoutBuilder = new LayoutBuilder(new RichTextSettings());
-        }
+		public RichTextLayout()
+		{
+			_layoutBuilder = new LayoutBuilder(new RichTextSettings());
+		}
 
-        public RichTextLayout(RichTextSettings richTextSettings)
-        {
-            _layoutBuilder = new LayoutBuilder(richTextSettings);
-        }
+		public RichTextLayout(RichTextSettings richTextSettings)
+		{
+			_layoutBuilder = new LayoutBuilder(richTextSettings);
+		}
 
-        private static int GetMeasureKey(int? width)
+		private static int GetMeasureKey(int? width)
 		{
 			return width != null ? width.Value : -1;
 		}
@@ -221,7 +269,7 @@ namespace FontStashSharp.RichText
 				return;
 			}
 
-			_size = _layoutBuilder.Layout(Text, Font, Width);
+			_size = _layoutBuilder.Layout(Text, Font, Width, Height);
 
 			var key = GetMeasureKey(Width);
 			_measures[key] = _size;
@@ -239,7 +287,7 @@ namespace FontStashSharp.RichText
 				return result;
 			}
 
-			result = _layoutBuilder.Layout(Text, Font, width, true);
+			result = _layoutBuilder.Layout(Text, Font, width, null, true);
 			_measures[key] = result;
 
 			return result;
@@ -316,8 +364,8 @@ namespace FontStashSharp.RichText
 			return null;
 		}
 
-		private void Draw(Vector2 position, Color color, Vector2? sourceScale,
-			float rotation, Vector2 origin, float layerDepth, TextHorizontalAlignment horizontalAlignment)
+		private void Draw(Vector2 position, Color color, Vector2? sourceScale, float rotation,
+			Vector2 origin, float layerDepth, TextHorizontalAlignment horizontalAlignment)
 		{
 			Update();
 

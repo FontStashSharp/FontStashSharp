@@ -29,7 +29,7 @@ namespace FontStashSharp.Tests
 			Assert.IsTrue(glyphs.TryGetValue(codePoint, out glyph));
 
 			// And should be equal to null too
-			Assert.AreEqual(glyph, null);
+			Assert.AreEqual(null, glyph);
 		}
 
 		[Test]
@@ -128,11 +128,11 @@ namespace FontStashSharp.Tests
 
 			font.DrawText(renderer, text, Vector2.Zero, Color.White, characterSpacing: characterSpacing);
 
-			Assert.AreEqual(glyphPos.Length, renderer.Calls.Count * 2);
+			Assert.AreEqual(renderer.Calls.Count * 2, glyphPos.Length);
 			for (var i = 0; i < renderer.Calls.Count; i++)
 			{
-				Assert.AreEqual(glyphPos[i * 2], (int)renderer.Calls[i].Pos.X);
-				Assert.AreEqual(glyphPos[i * 2 + 1], (int)renderer.Calls[i].Pos.Y);
+				Assert.AreEqual((int)renderer.Calls[i].Pos.X, glyphPos[i * 2]);
+				Assert.AreEqual((int)renderer.Calls[i].Pos.Y, glyphPos[i * 2 + 1]);
 			}
 		}
 	}

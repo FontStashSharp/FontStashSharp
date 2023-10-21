@@ -29,9 +29,6 @@ namespace FontStashSharp
 
 		private FontAtlas _currentAtlas;
 
-		public FontSystemEffect Effect => _settings.Effect;
-		public int EffectAmount => _settings.EffectAmount;
-
 		public int TextureWidth => _settings.TextureWidth;
 		public int TextureHeight => _settings.TextureHeight;
 

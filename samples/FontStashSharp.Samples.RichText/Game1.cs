@@ -33,11 +33,13 @@ namespace FontStashSharp.Samples
 		{
 			"First line./nSecond line.",
 			"This is /c[red]colored /c[#00f0fa]ext, /cdcolor could be set either /c[lightGreen]by name or /c[#fa9000ff]by hex code.",
-			"Text in default font./n/f[arialbd.ttf, 24]Bold and smaller font. /f[ariali.ttf, 48]Italic and larger font./n/fdBack to the default font.",
+			"Text in default font./n/f[Roboto-Bold.ttf, 24]Bold and smaller font. /f[Roboto-Italic.ttf, 48]Italic and larger font./n/fdBack to the default font.",
 			"E=mc/v[-8]2/n/vdMass–energy equivalence.",
 			"A small tree: /i[mangrove1.png]",
 			"A small /c[red]tree: /v[8]/i[mangrove1.png]/vd/cd/tuand some text",
 			"/ebThis /es2is the /edfirst line. This is the second line. This is the third line.",
+			"/ebThis /es2is the /edfirst line. This /es2is the /edsecond line. This is the third line.",
+			"/ebThis /es2is the /edfirst line. This /es2is the /edsecond line. This is the third line.",
 		};
 
 #if !STRIDE
@@ -95,18 +97,6 @@ namespace FontStashSharp.Samples
 			// Create a new SpriteBatch, which can be used to draw textures.
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			// TODO: use this.Content to load your game content here
-
-			var fontSystem = new FontSystem();
-			fontSystem.AddFont(File.ReadAllBytes(@"C:/Windows/Fonts/arial.ttf"));
-
-			_richText = new RichTextLayout
-			{
-				Font = fontSystem.GetFont(32),
-				Text = Strings[_stringIndex],
-				VerticalSpacing = 8
-			};
-
 			RichTextDefaults.FontResolver = p =>
 			{
 				// Parse font name and size
@@ -121,7 +111,7 @@ namespace FontStashSharp.Samples
 				{
 					// Load and cache the font system
 					fontSystem = new FontSystem();
-					fontSystem.AddFont(File.ReadAllBytes(Path.Combine(@"C:\Windows\Fonts", fontName)));
+					fontSystem.AddFont(File.ReadAllBytes(Path.Combine(Utility.AssetsDirectory, fontName)));
 					_fontCache[fontName] = fontSystem;
 				}
 
@@ -138,13 +128,13 @@ namespace FontStashSharp.Samples
 				if (!_textureCache.TryGetValue(p, out texture))
 				{
 #if MONOGAME || FNA
-					using (var stream = File.OpenRead(Path.Combine(@"D:\Temp\DCSSTiles\dngn\trees\", p)))
+					using (var stream = File.OpenRead(Path.Combine(Utility.AssetsDirectory, p)))
 					{
 						texture = Texture2D.FromStream(GraphicsDevice, stream);
 					}
 #else
 					ImageResult image;
-					using (var stream = File.OpenRead(Path.Combine(@"D:\Temp\DCSSTiles\dngn\trees\", p)))
+					using (var stream = File.OpenRead(Path.Combine(Utility.AssetsDirectory, p)))
 					{
 						image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
 					}
@@ -175,6 +165,16 @@ namespace FontStashSharp.Samples
 				}
 
 				return new TextureFragment(texture);
+			};
+
+			var fontSystem = new FontSystem();
+			fontSystem.AddFont(File.ReadAllBytes(Path.Combine(Utility.AssetsDirectory, @"Roboto-Regular.ttf")));
+
+			_richText = new RichTextLayout
+			{
+				Font = fontSystem.GetFont(32),
+				Text = Strings[_stringIndex],
+				VerticalSpacing = 8,
 			};
 
 #if MONOGAME || FNA
@@ -258,17 +258,47 @@ namespace FontStashSharp.Samples
 #else
 			var viewportSize = new Point(GraphicsDevice.Presenter.BackBuffer.Width, GraphicsDevice.Presenter.BackBuffer.Height);
 #endif
-			if (_stringIndex != 6)
+
+			_richText.Width = null;
+			_richText.Height = null;
+
+			if (_stringIndex < 6)
 			{
-				_richText.Width = viewportSize.X;
 			}
-			else
+			else if (_stringIndex == 6)
 			{
 				_richText.Width = 300;
+			} else
+			{
+				_richText.Width = 260;
+
+				if (_stringIndex >= 7)
+				{
+					_richText.Height = 100;
+				}
+
+				if (_stringIndex == 7)
+				{
+					_richText.AutoEllipsisMethod = AutoEllipsisMethod.Character;
+				} else if (_stringIndex == 8)
+				{
+					_richText.AutoEllipsisMethod = AutoEllipsisMethod.Word;
+				}
 			}
 
 			var position = new Vector2(0, viewportSize.Y / 2 - _richText.Size.Y / 2);
 			var size = _richText.Size;
+
+			if (_richText.Width != null)
+			{
+				size.X = _richText.Width.Value;
+			}
+
+			if (_richText.Height != null)
+			{
+				size.Y = _richText.Height.Value;
+			}
+
 			var rect = new Rectangle((int)position.X,
 				(int)position.Y,
 				(int)(size.X * scale.X),

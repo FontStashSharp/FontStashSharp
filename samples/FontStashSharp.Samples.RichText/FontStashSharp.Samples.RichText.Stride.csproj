@@ -17,14 +17,8 @@
   </ItemGroup>  
 
   <ItemGroup>
-    <None Include="..\Fonts\DroidSans.ttf" Link="Fonts\DroidSans.ttf">
+    <None Include="Assets\**\*.*" LinkBase="Assets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Fonts\DroidSansJapanese.ttf" Link="Fonts\DroidSansJapanese.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\Fonts\Symbola-Emoji.ttf" Link="Fonts\Symbola-Emoji.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </None>  
   </ItemGroup>
 </Project>

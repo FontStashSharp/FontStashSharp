@@ -15,8 +15,8 @@ namespace FontStashSharp.RichText
 {
 	internal class LayoutBuilder
 	{
-        private readonly RichTextSettings _richTextSettings;
-        public const int NewLineWidth = 0;
+		private readonly RichTextSettings _richTextSettings;
+		public const int NewLineWidth = 0;
 		public const string Commands = "cefistv";
 
 		private string _text;
@@ -26,7 +26,7 @@ namespace FontStashSharp.RichText
 		private readonly List<TextLine> _lines = new List<TextLine>();
 		private TextLine _currentLine;
 		private int lineTop, lineBottom;
-		private int? width;
+		private int? _width, _height;
 		private int _lineCount;
 		private int _currentLineWidth;
 		private int _currentLineChunks;
@@ -46,13 +46,15 @@ namespace FontStashSharp.RichText
 		public bool CalculateGlyphs { get; set; }
 		public bool ShiftByTop { get; set; } = true;
 		public char CommandPrefix { get; set; } = '/';
-        
-        public LayoutBuilder(RichTextSettings richTextSettings)
-        {
-            _richTextSettings = richTextSettings;
-        }
+		public AutoEllipsisMethod AutoEllipsisMethod { get; set; }
+		public string AutoEllipsisString { get; set; } = "...";
 
-        private bool HasIntegerParam(int i)
+		public LayoutBuilder(RichTextSettings richTextSettings)
+		{
+			_richTextSettings = richTextSettings;
+		}
+
+		private bool HasIntegerParam(int i)
 		{
 			if (char.IsDigit(_text[i]) ||
 				(_text[i] == '-' && i < _text.Length - 1 && char.IsDigit(_text[i + 1])))
@@ -480,7 +482,7 @@ namespace FontStashSharp.RichText
 			lineBottom = 0;
 			_currentLineWidth = 0;
 			_currentLineChunks = 0;
-			width = rowWidth;
+			_width = rowWidth;
 		}
 
 		private void EndLine(ref Point size)
@@ -492,6 +494,7 @@ namespace FontStashSharp.RichText
 			{
 				size.X = _currentLineWidth;
 			}
+
 			size.Y += lineHeight;
 
 			if (!_measureRun)
@@ -512,7 +515,7 @@ namespace FontStashSharp.RichText
 			}
 		}
 
-		public Point Layout(string text, SpriteFontBase font, int? rowWidth, bool measureRun = false)
+		public Point Layout(string text, SpriteFontBase font, int? rowWidth, int? height, bool measureRun = false)
 		{
 			if (!measureRun)
 			{
@@ -530,6 +533,7 @@ namespace FontStashSharp.RichText
 			_text = text;
 			_font = font;
 			_measureRun = measureRun;
+			_height = height;
 
 			ResetCurrents();
 
@@ -538,9 +542,9 @@ namespace FontStashSharp.RichText
 			StartLine(0, rowWidth);
 			while (i < _text.Length)
 			{
-				var c = GetNextChunk(ref i, width);
+				var c = GetNextChunk(ref i, _width);
 
-				if (width != null && c.Width > width.Value && _currentLineChunks > 0)
+				if (_width != null && c.Width > _width.Value && _currentLineChunks > 0)
 				{
 					// New chunk doesn't fit in the line
 					// Hence move it to the second
@@ -549,7 +553,7 @@ namespace FontStashSharp.RichText
 					c.LineEnd = false;
 				}
 
-				width -= c.Width;
+				_width -= c.Width;
 				if (_currentVerticalOffset < lineTop)
 				{
 					lineTop = _currentVerticalOffset;
@@ -642,6 +646,107 @@ namespace FontStashSharp.RichText
 				size.Y += (int)lineSize.Y;
 			}
 
+			// Apply vertical spacing
+			size.Y += (_lineCount - 1) * VerticalSpacing;
+
+
+			// Apply height
+			if (!_measureRun && rowWidth != null && _height != null && size.Y > _height.Value)
+			{
+				// Determine lines that fit
+				var lines = new List<TextLine>();
+				var h = 0;
+				for(i = 0; i < _lines.Count; ++i)
+				{
+					if (h + _lines[i].Size.Y > _height.Value)
+					{
+						break;
+					}
+
+					lines.Add(_lines[i]);
+
+					h += _lines[i].Size.Y;
+					h += VerticalSpacing;
+				}
+
+				if (AutoEllipsisMethod != AutoEllipsisMethod.None && 
+					!string.IsNullOrEmpty(AutoEllipsisString) &&
+					lines.Count > 0 &&
+					lines[lines.Count - 1].Chunks.Count > 0)
+				{
+					var lastLine = lines[lines.Count - 1];
+					var lastChunk = lastLine.Chunks[lastLine.Chunks.Count - 1] as TextChunk;
+					if (lastChunk != null && !string.IsNullOrEmpty(lastChunk.Text))
+					{
+						var otherChunksWidth = 0;
+						for(i = 0; i < lastLine.Chunks.Count - 1; ++i)
+						{
+							otherChunksWidth += lastLine.Chunks[i].Size.X;
+						}
+
+						text = lastChunk.Text;
+						if (AutoEllipsisMethod == AutoEllipsisMethod.Word)
+						{
+							// Simply trim end and add ellipsis
+							var words = new List<string>(text.Split(' '));
+
+							while (words.Count > 0)
+							{
+								text = string.Join(" ", words).TrimEnd() + AutoEllipsisString;
+								var sz = _font.MeasureString(text);
+								
+								if (otherChunksWidth + sz.X < rowWidth.Value)
+								{
+									break;
+								}
+
+								words.RemoveAt(words.Count - 1);
+							}
+						}
+						else
+						{
+							// Try to add word from the next chunk
+							if (_lines.Count > lines.Count && _lines[lines.Count].Chunks.Count > 0)
+							{
+								var nextChunk = _lines[lines.Count].Chunks[0] as TextChunk;
+								if (nextChunk != null)
+								{
+									var words = nextChunk.Text.Split(' ');
+									if (words.Length > 0)
+									{
+										var firstWord = words[0].Trim();
+										if (!string.IsNullOrEmpty(firstWord))
+										{
+											text = text.TrimEnd();
+											text += " " + firstWord;
+										}
+									}
+								}
+							}
+
+							while(!string.IsNullOrEmpty(text))
+							{
+								var newText = text.TrimEnd() + AutoEllipsisString;
+								var sz = _font.MeasureString(newText);
+
+								if (otherChunksWidth + sz.X < rowWidth.Value)
+								{
+									text = newText;
+									break;
+								}
+
+								text = text.Substring(0, text.Length - 1);
+							}
+						}
+
+						lastChunk.Text = text;
+					}
+				}
+
+				_lines.Clear();
+				_lines.AddRange(lines);
+			}
+
 			// Index lines and chunks
 			if (!_measureRun)
 			{
@@ -658,8 +763,6 @@ namespace FontStashSharp.RichText
 					}
 				}
 			}
-
-			size.Y += (_lineCount - 1) * VerticalSpacing;
 
 			return size;
 		}

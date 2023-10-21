@@ -25,7 +25,6 @@ namespace FontStashSharp
 
 	public class FontSystemSettings
 	{
-		private int _effectAmount = 0;
 		private int _textureWidth = 1024, _textureHeight = 1024;
 		private float _fontResolutionFactor = 1.0f;
 		private int _kernelWidth = 0, _kernelHeight = 0;
@@ -63,25 +62,6 @@ namespace FontStashSharp
 		}
 
 		public bool PremultiplyAlpha { get; set; } = true;
-
-		[Obsolete("Use parameters of DrawText")]
-		public FontSystemEffect Effect { get; set; } = FontSystemEffect.None;
-
-
-		[Obsolete("Use parameters of DrawText")]
-		public int EffectAmount
-		{
-			get => _effectAmount;
-			set
-			{
-				if (value < 0 || value > 20)
-				{
-					throw new ArgumentOutOfRangeException(nameof(value));
-				}
-
-				_effectAmount = value;
-			}
-		}
 
 		public float FontResolutionFactor
 		{
@@ -158,8 +138,6 @@ namespace FontStashSharp
 		{
 			return new FontSystemSettings
 			{
-				Effect = Effect,
-				EffectAmount = EffectAmount,
 				TextureWidth = TextureWidth,
 				TextureHeight = TextureHeight,
 				PremultiplyAlpha = PremultiplyAlpha,
