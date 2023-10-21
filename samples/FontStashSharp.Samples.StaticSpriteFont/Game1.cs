@@ -173,7 +173,7 @@ namespace FontStashSharp.Samples
 				}
 			}
 
-			_spriteBatch.DrawString(_font, text, cursor, glyphColors, scale, 0, origin);
+			_spriteBatch.DrawString(_font, text, cursor, glyphColors, 0, origin, scale);
 			cursor.Y += dimensions.Y + LineSpacing;
 		}
 
@@ -197,7 +197,7 @@ namespace FontStashSharp.Samples
 				}
 			}
 
-			_spriteBatch.DrawString(_font, text, cursor, color, scale, 0, origin);
+			_spriteBatch.DrawString(_font, text, cursor, color, 0, origin, scale);
 			cursor.Y += dimensions.Y + LineSpacing;
 		}
 

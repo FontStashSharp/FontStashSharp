@@ -50,11 +50,11 @@ namespace FontStashSharp
 
 		internal abstract void PreDraw(TextSource str, FontSystemEffect effect, int effectAmount, out int ascent, out int lineHeight);
 
-		private void Prepare(Vector2 position, ref Vector2 scale, float rotation, Vector2 origin, out Matrix transformation)
+		private void Prepare(Vector2 position, float rotation, Vector2 origin, ref Vector2 scale, out Matrix transformation)
 		{
 			scale /= RenderFontSizeMultiplicator;
 
-			Utility.BuildTransform(position, scale, rotation, origin, out transformation);
+			Utility.BuildTransform(position, rotation, origin, scale, out transformation);
 		}
 
 		internal virtual Bounds InternalTextBounds(TextSource source, Vector2 position,
@@ -154,7 +154,7 @@ namespace FontStashSharp
 			Matrix transformation;
 
 			var scale = sourceScale ?? Utility.DefaultScale;
-			Prepare(position, ref scale, 0, origin, out transformation);
+			Prepare(position, 0, origin, ref scale, out transformation);
 
 			int ascent, lineHeight;
 			PreDraw(source, effect, effectAmount, out ascent, out lineHeight);

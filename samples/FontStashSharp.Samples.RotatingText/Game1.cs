@@ -215,7 +215,7 @@ namespace FontStashSharp.Samples
 
 			_spriteBatch.Draw(_white, new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y), 
 				null, Color.Green, rads, normalizedOrigin, SpriteEffects.None, 0.0f);
-			_spriteBatch.DrawString(font, Text, position, Color.White, scale, rads, size * normalizedOrigin, characterSpacing: CharacterSpacing, lineSpacing: LineSpacing,
+			_spriteBatch.DrawString(font, Text, position, Color.White, rads, size * normalizedOrigin, scale, characterSpacing: CharacterSpacing, lineSpacing: LineSpacing,
 				effect: _effect, effectAmount: EffectAmount);
 
 #if MONOGAME

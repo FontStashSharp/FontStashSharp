@@ -50,7 +50,7 @@ namespace FontStashSharp
 		}
 
 		private float DrawText(IFontStashRenderer renderer, TextColorSource source, Vector2 position,
-			Vector2? sourceScale, float rotation, Vector2 origin,
+			float rotation, Vector2 origin, Vector2? sourceScale,
 			float layerDepth, float characterSpacing, float lineSpacing,
 			TextStyle textStyle, FontSystemEffect effect, int effectAmount)
 		{
@@ -75,7 +75,7 @@ namespace FontStashSharp
 
 			Matrix transformation;
 			var scale = sourceScale ?? Utility.DefaultScale;
-			Prepare(position, ref scale, rotation, origin, out transformation);
+			Prepare(position, rotation, origin, ref scale, out transformation);
 
 			int ascent, lineHeight;
 			PreDraw(source.TextSource, effect, effectAmount, out ascent, out lineHeight);
@@ -167,11 +167,11 @@ namespace FontStashSharp
 		/// <param name="characterSpacing">A character spacing</param>
 		/// <param name="lineSpacing">A line spacing</param>
 		public float DrawText(IFontStashRenderer renderer, string text, Vector2 position, Color color,
-			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
+			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-				DrawText(renderer, new TextColorSource(text, color), position, scale, rotation, origin, layerDepth,
-					characterSpacing, lineSpacing, textStyle, effect, effectAmount);
+				DrawText(renderer, new TextColorSource(text, color), position, rotation, origin, scale,
+					layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 
 		/// <summary>
 		/// Draws a text
@@ -187,10 +187,10 @@ namespace FontStashSharp
 		/// <param name="characterSpacing">A character spacing</param>
 		/// <param name="lineSpacing">A line spacing</param>
 		public float DrawText(IFontStashRenderer renderer, string text, Vector2 position, Color[] colors,
-			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
+			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-				DrawText(renderer, new TextColorSource(text, colors), position, scale, rotation, origin, layerDepth,
+				DrawText(renderer, new TextColorSource(text, colors), position, rotation, origin, scale, layerDepth,
 					characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 
 		/// <summary>
@@ -207,10 +207,10 @@ namespace FontStashSharp
 		/// <param name="characterSpacing">A character spacing</param>
 		/// <param name="lineSpacing">A line spacing</param>
 		public float DrawText(IFontStashRenderer renderer, StringSegment text, Vector2 position, Color color,
-			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
+			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-				DrawText(renderer, new TextColorSource(text, color), position, scale, rotation, origin, layerDepth,
+				DrawText(renderer, new TextColorSource(text, color), position, rotation, origin, scale, layerDepth,
 					characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 
 		/// <summary>
@@ -227,10 +227,10 @@ namespace FontStashSharp
 		/// <param name="characterSpacing">A character spacing</param>
 		/// <param name="lineSpacing">A line spacing</param>
 		public float DrawText(IFontStashRenderer renderer, StringSegment text, Vector2 position, Color[] colors,
-			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
+			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-				DrawText(renderer, new TextColorSource(text, colors), position, scale, rotation, origin, layerDepth,
+				DrawText(renderer, new TextColorSource(text, colors), position, rotation, origin, scale, layerDepth,
 					characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 
 		/// <summary>
@@ -247,10 +247,10 @@ namespace FontStashSharp
 		/// <param name="characterSpacing">A character spacing</param>
 		/// <param name="lineSpacing">A line spacing</param>
 		public float DrawText(IFontStashRenderer renderer, StringBuilder text, Vector2 position, Color color,
-			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
+			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-				DrawText(renderer, new TextColorSource(text, color), position, scale, rotation, origin, layerDepth,
+				DrawText(renderer, new TextColorSource(text, color), position, rotation, origin, scale, layerDepth,
 					characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 
 		/// <summary>
@@ -267,10 +267,10 @@ namespace FontStashSharp
 		/// <param name="characterSpacing">A character spacing</param>
 		/// <param name="lineSpacing">A line spacing</param>
 		public float DrawText(IFontStashRenderer renderer, StringBuilder text, Vector2 position, Color[] colors,
-			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
+			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-				DrawText(renderer, new TextColorSource(text, colors), position, scale, rotation, origin, layerDepth,
+				DrawText(renderer, new TextColorSource(text, colors), position, rotation, origin, scale, layerDepth,
 					characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 	}
 }

@@ -132,7 +132,7 @@ namespace FontStashSharp.Samples
 
 			var rads = (float)(_angle * Math.PI / 180);
 			font.DrawText(_renderer, Text, position.ToSystemNumerics(), FSColor.White,
-						scale.ToSystemNumerics(), rads, new Vector2(size.X / 2, size.Y / 2).ToSystemNumerics(),
+						rads, new Vector2(size.X / 2, size.Y / 2).ToSystemNumerics(), scale.ToSystemNumerics(),
 						effect: _currentEffect, effectAmount: EffectAmount);
 
 			_spriteBatch.End();

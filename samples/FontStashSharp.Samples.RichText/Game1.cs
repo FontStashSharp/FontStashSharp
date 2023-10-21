@@ -305,7 +305,7 @@ namespace FontStashSharp.Samples
 				(int)(size.Y * scale.Y));
 			_spriteBatch.Draw(_white, rect, Color.Green);
 
-			_richText.Draw(_spriteBatch, position, Color.White, scale);
+			_richText.Draw(_spriteBatch, position, Color.White, scale: scale);
 
 			_spriteBatch.End();
 

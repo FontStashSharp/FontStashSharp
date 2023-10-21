@@ -48,12 +48,12 @@ namespace FontStashSharp.RichText
 			_renderer2 = renderer;
 		}
 
-		public void Prepare(Vector2 position, Vector2 scale, float rotation, Vector2 origin, float layerDepth)
+		public void Prepare(Vector2 position, float rotation, Vector2 origin, Vector2 scale, float layerDepth)
 		{
 			_scale = scale;
 			_rotation = rotation;
 			_layerDepth = layerDepth;
-			Utility.BuildTransform(position, _scale, _rotation, origin, out _transformation);
+			Utility.BuildTransform(position, _rotation, origin, _scale, out _transformation);
 		}
 
 		public void DrawText(string text, SpriteFontBase font, Vector2 pos, Color color, 
@@ -67,12 +67,12 @@ namespace FontStashSharp.RichText
 			pos = pos.Transform(ref _transformation);
 			if (_renderer != null)
 			{
-				font.DrawText(_renderer, text, pos, color, _scale, _rotation, default(Vector2), _layerDepth, 
+				font.DrawText(_renderer, text, pos, color, _rotation, default(Vector2), _scale, _layerDepth, 
 					textStyle: textStyle, effect: effect, effectAmount: effectAmount);
 			}
 			else
 			{
-				font.DrawText(_renderer2, text, pos, color, _scale, _rotation, default(Vector2), _layerDepth,
+				font.DrawText(_renderer2, text, pos, color, _rotation, default(Vector2), _scale, _layerDepth,
 					textStyle: textStyle, effect: effect, effectAmount: effectAmount);
 			}
 		}

@@ -168,7 +168,7 @@ namespace FontStashSharp
 			return s.Length;
 		}
 
-		public static void BuildTransform(Vector2 position, Vector2 scale, float rotation, Vector2 origin, out Matrix transformation)
+		public static void BuildTransform(Vector2 position, float rotation, Vector2 origin, Vector2 scale, out Matrix transformation)
 		{
 			// This code had been borrowed from MonoGame's SpriteBatch.DrawString
 			transformation = Matrix.Identity;

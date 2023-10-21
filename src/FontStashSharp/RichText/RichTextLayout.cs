@@ -25,8 +25,6 @@ namespace FontStashSharp.RichText
 		private readonly Dictionary<int, Point> _measures = new Dictionary<int, Point>();
 		private readonly LayoutBuilder _layoutBuilder;
 		private readonly FSRenderContext _renderContext = new FSRenderContext();
-		private AutoEllipsisMethod _autoEllipsisMethod = AutoEllipsisMethod.None;
-		private string _autoEllipsisString = "...";
 
 		public SpriteFontBase Font
 		{
@@ -364,13 +362,14 @@ namespace FontStashSharp.RichText
 			return null;
 		}
 
-		private void Draw(Vector2 position, Color color, Vector2? sourceScale, float rotation,
-			Vector2 origin, float layerDepth, TextHorizontalAlignment horizontalAlignment)
+		private void Draw(Vector2 position, Color color,
+			float rotation, Vector2 origin, Vector2? sourceScale,
+			float layerDepth, TextHorizontalAlignment horizontalAlignment)
 		{
 			Update();
 
 			var scale = sourceScale ?? Utility.DefaultScale;
-			_renderContext.Prepare(position, scale, rotation, origin, layerDepth);
+			_renderContext.Prepare(position, rotation, origin, scale, layerDepth);
 
 			var pos = Utility.Vector2Zero;
 			foreach (var line in Lines)
@@ -403,32 +402,30 @@ namespace FontStashSharp.RichText
 		}
 
 		public void Draw(IFontStashRenderer renderer, Vector2 position, Color color,
-			Vector2? sourceScale = null, float rotation = 0,
-			Vector2 origin = default(Vector2), float layerDepth = 0.0f,
-			TextHorizontalAlignment horizontalAlignment = TextHorizontalAlignment.Left)
+			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
+			float layerDepth = 0.0f, TextHorizontalAlignment horizontalAlignment = TextHorizontalAlignment.Left)
 		{
 			_renderContext.SetRenderer(renderer);
-			Draw(position, color, sourceScale, rotation, origin, layerDepth, horizontalAlignment);
+			Draw(position, color, rotation, origin, scale, layerDepth, horizontalAlignment);
 		}
 
 		public void Draw(IFontStashRenderer2 renderer, Vector2 position, Color color,
-			Vector2? sourceScale = null, float rotation = 0,
-			Vector2 origin = default(Vector2), float layerDepth = 0.0f,
-			TextHorizontalAlignment horizontalAlignment = TextHorizontalAlignment.Left)
+			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
+			float layerDepth = 0.0f, TextHorizontalAlignment horizontalAlignment = TextHorizontalAlignment.Left)
 		{
 			_renderContext.SetRenderer(renderer);
-			Draw(position, color, sourceScale, rotation, origin, layerDepth, horizontalAlignment);
+			Draw(position, color, rotation, origin, scale, layerDepth, horizontalAlignment);
 		}
 
 #if MONOGAME || FNA || STRIDE
 
 		public void Draw(SpriteBatch batch, Vector2 position, Color color,
-			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
+			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null, 
 			float layerDepth = 0.0f, TextHorizontalAlignment horizontalAlignment = TextHorizontalAlignment.Left)
 		{
 			var renderer = SpriteBatchRenderer.Instance;
 			renderer.Batch = batch;
-			Draw(renderer, position, color, scale, rotation, origin, layerDepth, horizontalAlignment);
+			Draw(renderer, position, color, rotation, origin, scale, layerDepth, horizontalAlignment);
 		}
 
 #endif

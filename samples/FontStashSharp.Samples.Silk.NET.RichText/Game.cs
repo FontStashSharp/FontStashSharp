@@ -159,7 +159,7 @@ namespace FontStashSharp
 			}
 
 			var position = new Vector2(0, viewportSize.Y / 2 - _richText.Size.Y / 2);
-			_richText.Draw(renderer, position, FSColor.White, scale);
+			_richText.Draw(renderer, position, FSColor.White, scale: scale);
 
 			renderer.End();
 		}

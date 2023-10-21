@@ -79,7 +79,7 @@ namespace FontStashSharp
 			var size = font.MeasureString(text, scale);
 			var origin = new Vector2(size.X / 2.0f, size.Y / 2.0f);
 
-			font.DrawText(renderer, text, new Vector2(400, 400), FSColor.LightCoral, scale, _rads, origin);
+			font.DrawText(renderer, text, new Vector2(400, 400), FSColor.LightCoral, _rads, origin, scale);
 
 			renderer.End();
 

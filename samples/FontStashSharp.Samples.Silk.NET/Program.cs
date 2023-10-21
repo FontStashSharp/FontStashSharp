@@ -68,7 +68,7 @@ namespace FontStashSharp
 			renderer.Begin();
 				
 			
-			font.DrawText(renderer, text, new Vector2(400, 400), FSColor.LightCoral, scale, _rads, origin);
+			font.DrawText(renderer, text, new Vector2(400, 400), FSColor.LightCoral, _rads, origin, scale);
 			renderer.End();
 
 			_rads += 0.01f;

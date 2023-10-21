@@ -79,7 +79,7 @@ namespace FontStashSharp
 							(int)size.Y),
 					boxColor);
 
-			font.DrawText(_spriteBatch, text, new Vector2(0, y), color, scale);
+			font.DrawText(_spriteBatch, text, new Vector2(0, y), color, scale: scale);
 		}
 
 		protected override void Draw(GameTime gameTime)

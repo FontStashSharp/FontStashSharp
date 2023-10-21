@@ -24,13 +24,13 @@ namespace FontStashSharp
 		/// <param name="scale">A scaling of this text. Null means the scaling is (1, 1)</param>
 		/// <param name="layerDepth">A depth of the layer of this string</param>
 		public float DrawText(SpriteBatch batch, StringSegment text, Vector2 position, Color color,
-			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
+			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null, 
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
 		{
 			var renderer = SpriteBatchRenderer.Instance;
 			renderer.Batch = batch;
-			return DrawText(renderer, text, position, color, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
+			return DrawText(renderer, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 		}
 
 		/// <summary>
@@ -45,14 +45,14 @@ namespace FontStashSharp
 		/// <param name="scale">A scaling of this text. Null means the scaling is (1, 1)</param>
 		/// <param name="layerDepth">A depth of the layer of this string</param>
 		public float DrawText(SpriteBatch batch, StringSegment text, Vector2 position, Color[] colors,
-			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
+			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null, 
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
 		{
 			var renderer = SpriteBatchRenderer.Instance;
 			renderer.Batch = batch;
 
-			return DrawText(renderer, text, position, colors, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
+			return DrawText(renderer, text, position, colors, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 		}
 
 		/// <summary>
@@ -67,13 +67,13 @@ namespace FontStashSharp
 		/// <param name="scale">A scaling of this text. Null means the scaling is (1, 1)</param>
 		/// <param name="layerDepth">A depth of the layer of this string</param>
 		public float DrawText(SpriteBatch batch, string text, Vector2 position, Color color,
-			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
+			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null, 
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
 		{
 			var renderer = SpriteBatchRenderer.Instance;
 			renderer.Batch = batch;
-			return DrawText(renderer, text, position, color, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
+			return DrawText(renderer, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 		}
 
 		/// <summary>
@@ -88,14 +88,14 @@ namespace FontStashSharp
 		/// <param name="scale">A scaling of this text. Null means the scaling is (1, 1)</param>
 		/// <param name="layerDepth">A depth of the layer of this string</param>
 		public float DrawText(SpriteBatch batch, string text, Vector2 position, Color[] colors,
-			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
+			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null, 
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
 		{
 			var renderer = SpriteBatchRenderer.Instance;
 			renderer.Batch = batch;
 
-			return DrawText(renderer, text, position, colors, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
+			return DrawText(renderer, text, position, colors, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 		}
 
 		/// <summary>
@@ -110,14 +110,14 @@ namespace FontStashSharp
 		/// <param name="scale">A scaling of this text. Null means the scaling is (1, 1)</param>
 		/// <param name="layerDepth">A depth of the layer of this string</param>
 		public float DrawText(SpriteBatch batch, StringBuilder text, Vector2 position, Color color,
-			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
+			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null, 
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
 		{
 			var renderer = SpriteBatchRenderer.Instance;
 			renderer.Batch = batch;
 
-			return DrawText(renderer, text, position, color, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
+			return DrawText(renderer, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 		}
 
 		/// <summary>
@@ -132,14 +132,14 @@ namespace FontStashSharp
 		/// <param name="scale">A scaling of this text. Null means the scaling is (1, 1)</param>
 		/// <param name="layerDepth">A depth of the layer of this string</param>
 		public float DrawText(SpriteBatch batch, StringBuilder text, Vector2 position, Color[] colors,
-			Vector2? scale = null, float rotation = 0, Vector2 origin = default(Vector2),
+			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null, 
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
 		{
 			var renderer = SpriteBatchRenderer.Instance;
 			renderer.Batch = batch;
 
-			return DrawText(renderer, text, position, colors, scale, rotation, origin, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
+			return DrawText(renderer, text, position, colors, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 		}
 	}
 }
