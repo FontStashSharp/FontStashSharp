@@ -20,7 +20,7 @@ namespace FontStashSharp
 		{
 			"First line./nSecond line.",
 			"This is /c[red]colored /c[#00f0fa]ext, /cdcolor could be set either /c[lightGreen]by name or /c[#fa9000ff]by hex code.",
-			"Text in default font./n/f[arialbd.ttf, 24]Bold and smaller font. /f[ariali.ttf, 48]Italic and larger font./n/fdBack to the default font.",
+			"Text in default font./n/f[Roboto-Bold.ttf, 24]Bold and smaller font. /f[Roboto-Italic.ttf, 48]Italic and larger font./n/fdBack to the default font.",
 			"E=mc/v[-8]2/n/vdMass–energy equivalence.",
 			"A small tree: /i[mangrove1.png]",
 			"A small /c[red]tree: /v[8]/i[mangrove1.png]/vd/cd/tuand some text",
@@ -62,78 +62,78 @@ namespace FontStashSharp
 			renderer = new Renderer();
 
 			var fontSystem = new FontSystem();
-			fontSystem.AddFont(File.ReadAllBytes(@"C:/Windows/Fonts/arial.ttf"));
+			fontSystem.AddFont(File.ReadAllBytes(Path.Combine(Utility.AssetsDirectory, @"Roboto-Regular.ttf")));
 
-            var richTextSettings = new RichTextSettings
-            {
-                FontResolver = p =>
-                {
-                    // Parse font name and size
-                    var args = p.Split(',');
-                    var fontName = args[0].Trim();
-                    var fontSize = int.Parse(args[1].Trim());
+			var richTextSettings = new RichTextSettings
+			{
+				FontResolver = p =>
+				{
+					// Parse font name and size
+					var args = p.Split(',');
+					var fontName = args[0].Trim();
+					var fontSize = int.Parse(args[1].Trim());
 
-                    // _fontCache is field of type Dictionary<string, FontSystem>
-                    // It is used to cache fonts
-                    FontSystem fontSystem;
-                    if (!_fontCache.TryGetValue(fontName, out fontSystem))
-                    {
-                        // Load and cache the font system
-                        fontSystem = new FontSystem();
-                        fontSystem.AddFont(File.ReadAllBytes(Path.Combine(@"C:\Windows\Fonts", fontName)));
-                        _fontCache[fontName] = fontSystem;
-                    }
+					// _fontCache is field of type Dictionary<string, FontSystem>
+					// It is used to cache fonts
+					FontSystem fontSystem;
+					if (!_fontCache.TryGetValue(fontName, out fontSystem))
+					{
+						// Load and cache the font system
+						fontSystem = new FontSystem();
+						fontSystem.AddFont(File.ReadAllBytes(Path.Combine(Utility.AssetsDirectory, fontName)));
+						_fontCache[fontName] = fontSystem;
+					}
 
-                    // Return the required font
-                    return fontSystem.GetFont(fontSize);
-                },
-                ImageResolver = p =>
-                {
-                    Texture texture;
+					// Return the required font
+					return fontSystem.GetFont(fontSize);
+				},
+				ImageResolver = p =>
+				{
+					Texture texture;
 
-                    // _textureCache is field of type Dictionary<string, Texture2D>
-                    // it is used to cache textures
-                    if (!_textureCache.TryGetValue(p, out texture))
-                    {
-                        ImageResult imageResult;
-                        using (var stream = File.OpenRead(Path.Combine(@"D:\Temp\DCSSTiles\dngn\trees\", p)))
-                        {
-                            imageResult = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
-                        }
+					// _textureCache is field of type Dictionary<string, Texture2D>
+					// it is used to cache textures
+					if (!_textureCache.TryGetValue(p, out texture))
+					{
+						ImageResult imageResult;
+						using (var stream = File.OpenRead(Path.Combine(Utility.AssetsDirectory, p)))
+						{
+							imageResult = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
+						}
 
-                        // Premultiply Alpha
-                        unsafe
-                        {
-                            fixed (byte* b = imageResult.Data)
-                            {
-                                byte* ptr = b;
-                                for (var i = 0; i < imageResult.Data.Length; i += 4, ptr += 4)
-                                {
-                                    var falpha = ptr[3] / 255.0f;
-                                    ptr[0] = (byte)(ptr[0] * falpha);
-                                    ptr[1] = (byte)(ptr[1] * falpha);
-                                    ptr[2] = (byte)(ptr[2] * falpha);
-                                }
-                            }
-                        }
+						// Premultiply Alpha
+						unsafe
+						{
+							fixed (byte* b = imageResult.Data)
+							{
+								byte* ptr = b;
+								for (var i = 0; i < imageResult.Data.Length; i += 4, ptr += 4)
+								{
+									var falpha = ptr[3] / 255.0f;
+									ptr[0] = (byte)(ptr[0] * falpha);
+									ptr[1] = (byte)(ptr[1] * falpha);
+									ptr[2] = (byte)(ptr[2] * falpha);
+								}
+							}
+						}
 
-                        // Create the texture
-                        texture = new Texture(imageResult.Width, imageResult.Height);
-                        texture.SetData(new Rectangle(0, 0, texture.Width, texture.Height), imageResult.Data);
+						// Create the texture
+						texture = new Texture(imageResult.Width, imageResult.Height);
+						texture.SetData(new Rectangle(0, 0, texture.Width, texture.Height), imageResult.Data);
 
-                        _textureCache[p] = texture;
-                    }
+						_textureCache[p] = texture;
+					}
 
-                    return new TextureFragment(texture, new Rectangle(0, 0, texture.Width, texture.Height));
-                }
-            };
+					return new TextureFragment(texture, new Rectangle(0, 0, texture.Width, texture.Height));
+				}
+			};
 
-            _richText = new RichTextLayout(richTextSettings)
-            {
-                Font = fontSystem.GetFont(32),
-                Text = Strings[_stringIndex],
-                VerticalSpacing = 8
-            };
+			_richText = new RichTextLayout(richTextSettings)
+			{
+				Font = fontSystem.GetFont(32),
+				Text = Strings[_stringIndex],
+				VerticalSpacing = 8
+			};
 
 			GC.Collect();
 		}
@@ -144,7 +144,7 @@ namespace FontStashSharp
 			Env.Gl.Clear((uint)ClearBufferMask.ColorBufferBit);
 
 			renderer.Begin();
-				
+
 			_richText.Font.DrawText(renderer, "Press 'Space' to switch between strings.", Vector2.Zero, FSColor.White);
 
 			Vector2 scale = Vector2.One;
@@ -171,7 +171,7 @@ namespace FontStashSharp
 
 		private void KeyDown(IKeyboard arg1, Key arg2, int arg3)
 		{
-			switch(arg2)
+			switch (arg2)
 			{
 				case Key.Escape:
 					window.Close();
@@ -183,7 +183,7 @@ namespace FontStashSharp
 						_stringIndex = 0;
 					}
 
-					_richText.Text = Strings[_stringIndex]; 
+					_richText.Text = Strings[_stringIndex];
 					break;
 			}
 		}

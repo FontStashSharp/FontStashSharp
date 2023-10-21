@@ -28,10 +28,10 @@ namespace FontStashSharp.Samples
 		private readonly GraphicsDeviceManager _graphics;
 
 		public static Game1 Instance { get; private set; }
-		
+
 		private SpriteBatch _spriteBatch;
-		private FontSystem _currentFontSystem;
-		private FontSystem[] _fontSystems;
+		private FontSystem _fontSystem;
+		private FontSystemEffect _currentEffect;
 
 		private Texture2D _white;
 		private bool _animatedScaling = false;
@@ -53,13 +53,6 @@ namespace FontStashSharp.Samples
 			IsMouseVisible = true;
 		}
 
-		private void LoadFontSystem(FontSystem result)
-		{
-			result.AddFont(File.ReadAllBytes(@"Fonts/DroidSans.ttf"));
-			result.AddFont(File.ReadAllBytes(@"Fonts/DroidSansJapanese.ttf"));
-			result.AddFont(File.ReadAllBytes(@"Fonts/Symbola-Emoji.ttf"));
-		}
-
 		/// <summary>
 		/// LoadContent will be called once per game and is the place to load
 		/// all of your content.
@@ -69,33 +62,13 @@ namespace FontStashSharp.Samples
 			// Create a new SpriteBatch, which can be used to draw textures.
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			// TODO: use this.Content to load your game content here
-			var fontSystems = new List<FontSystem>();
 			_renderer = new Renderer(_spriteBatch);
 
 			// Simple
-			var fontSystem = new FontSystem();
-			LoadFontSystem(fontSystem);
-			fontSystems.Add(fontSystem);
-
-			// Blurry
-			var settings = new FontSystemSettings
-			{
-				Effect = FontSystemEffect.Blurry,
-				EffectAmount = EffectAmount
-			};
-			var blurryFontSystem = new FontSystem(settings);
-			LoadFontSystem(blurryFontSystem);
-			fontSystems.Add(blurryFontSystem);
-
-			// Stroked
-			settings.Effect = FontSystemEffect.Stroked;
-			var strokedFontSystem = new FontSystem(settings);
-			LoadFontSystem(strokedFontSystem);
-			fontSystems.Add(strokedFontSystem);
-
-			_fontSystems = fontSystems.ToArray();
-			_currentFontSystem = _fontSystems[0];
+			_fontSystem = new FontSystem();
+			_fontSystem.AddFont(File.ReadAllBytes(@"Fonts/DroidSans.ttf"));
+			_fontSystem.AddFont(File.ReadAllBytes(@"Fonts/DroidSansJapanese.ttf"));
+			_fontSystem.AddFont(File.ReadAllBytes(@"Fonts/Symbola-Emoji.ttf"));
 
 			_white = new Texture2D(GraphicsDevice, 1, 1);
 			_white.SetData(new[] { Color.White });
@@ -111,28 +84,20 @@ namespace FontStashSharp.Samples
 
 			if (KeyboardUtils.IsPressed(Keys.Tab))
 			{
-				var i = 0;
-
-				for(; i < _fontSystems.Length; ++i)
-				{
-					if (_currentFontSystem == _fontSystems[i])
-					{
-						break;
-					}
-				}
-
+				var i = (int)_currentEffect;
 				++i;
-				if (i >= _fontSystems.Length)
+
+				if (i > 2)
 				{
 					i = 0;
 				}
 
-				_currentFontSystem = _fontSystems[i];
+				_currentEffect = (FontSystemEffect)i;
 			}
 
 			if (KeyboardUtils.IsPressed(Keys.Enter))
 			{
-				_currentFontSystem.UseKernings = !_currentFontSystem.UseKernings;
+				_fontSystem.UseKernings = !_fontSystem.UseKernings;
 			}
 
 			if (KeyboardUtils.IsPressed(Keys.LeftShift))
@@ -161,22 +126,23 @@ namespace FontStashSharp.Samples
 
 			var position = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
 
-			var font = _currentFontSystem.GetFont(32);
+			var font = _fontSystem.GetFont(32);
 
 			var size = font.MeasureString(Text, scale.ToSystemNumerics());
 
 			var rads = (float)(_angle * Math.PI / 180);
-			font.DrawText(_renderer, Text, position.ToSystemNumerics(), FSColor.White, 
-						scale.ToSystemNumerics(), rads, new Vector2(size.X / 2, size.Y / 2).ToSystemNumerics());
+			font.DrawText(_renderer, Text, position.ToSystemNumerics(), FSColor.White,
+						scale.ToSystemNumerics(), rads, new Vector2(size.X / 2, size.Y / 2).ToSystemNumerics(),
+						effect: _currentEffect, effectAmount: EffectAmount);
 
 			_spriteBatch.End();
 
 			_angle += 0.4f;
 
 			if (_angle >= 360.0f)
-	  {
+			{
 				_angle -= 360.0f;
-	  }
+			}
 
 			base.Draw(gameTime);
 		}

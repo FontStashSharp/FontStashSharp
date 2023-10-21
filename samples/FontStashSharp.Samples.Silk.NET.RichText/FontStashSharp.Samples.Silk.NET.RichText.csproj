@@ -34,15 +34,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Platform\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <None Include="..\FontStashSharp.Samples.Silk.NET\shader.frag" Link="shader.frag">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	  <None Include="..\FontStashSharp.Samples.Silk.NET\shader.vert" Link="shader.vert">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	</ItemGroup>
+	
+	<ItemGroup>
+		<None Include="Assets\**\*.*" LinkBase="Assets">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>  
 	</ItemGroup>
 </Project>
