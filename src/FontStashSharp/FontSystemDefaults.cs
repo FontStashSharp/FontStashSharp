@@ -92,6 +92,8 @@ namespace FontStashSharp
 		/// </summary>
 		public static IFontLoader FontLoader { get; set; }
 
+		public static FontAtlasProvider FontAtlasProvider { get; set; }
+
 		public static bool UseKernings { get; set; } = true;
 		public static int? DefaultCharacter { get; set; } = ' ';
 

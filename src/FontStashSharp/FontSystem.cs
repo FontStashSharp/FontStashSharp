@@ -26,11 +26,11 @@ namespace FontStashSharp
 		private readonly List<IFontSource> _fontSources = new List<IFontSource>();
 		private readonly Int32Map<DynamicSpriteFont> _fonts = new Int32Map<DynamicSpriteFont>();
 		private readonly FontSystemSettings _settings;
+		private FontAtlasProvider _fontAtlas;
 
-		private FontAtlas _currentAtlas;
 
-		public int TextureWidth => _settings.TextureWidth;
-		public int TextureHeight => _settings.TextureHeight;
+		public int TextureWidth => _fontAtlas.TextureWidth;
+		public int TextureHeight => _fontAtlas.TextureHeight;
 
 		public bool PremultiplyAlpha => _settings.PremultiplyAlpha;
 
@@ -39,15 +39,16 @@ namespace FontStashSharp
 		public int KernelWidth => _settings.KernelWidth;
 		public int KernelHeight => _settings.KernelHeight;
 
-		public Texture2D ExistingTexture => _settings.ExistingTexture;
-		public Rectangle ExistingTextureUsedSpace => _settings.ExistingTextureUsedSpace;
+		public Texture2D ExistingTexture => _fontAtlas.ExistingTexture;
+		public Rectangle ExistingTextureUsedSpace => _fontAtlas.ExistingTextureUsedSpace;
 
 		public bool UseKernings { get; set; } = true;
 		public int? DefaultCharacter { get; set; } = ' ';
 
 		internal List<IFontSource> FontSources => _fontSources;
 
-		public List<FontAtlas> Atlases { get; } = new List<FontAtlas>();
+		public List<FontAtlas> Atlases => _fontAtlas.Atlases;
+		public FontAtlasProvider FontAtlasProvider => _fontAtlas;
 
 		public event EventHandler CurrentAtlasFull;
 		private readonly IFontLoader _fontLoader;
@@ -60,6 +61,8 @@ namespace FontStashSharp
 			}
 
 			_settings = settings.Clone();
+
+			_fontAtlas = settings.FontAtlasProvider ?? new FontAtlasProvider(_settings);
 
 			if (_settings.FontLoader == null)
 			{
@@ -92,8 +95,7 @@ namespace FontStashSharp
 				_fontSources.Clear();
 			}
 
-			Atlases?.Clear();
-			_currentAtlas = null;
+			_fontAtlas.Clear();
 			_fonts.Clear();
 		}
 
@@ -134,9 +136,8 @@ namespace FontStashSharp
 
 		public void Reset()
 		{
-			Atlases.Clear();
+			_fontAtlas.Clear();
 			_fonts.Clear();
-			_currentAtlas = null;
 		}
 
 		internal int? GetCodepointIndex(int codepoint, out int fontSourceIndex)
@@ -159,67 +160,22 @@ namespace FontStashSharp
 		}
 
 #if MONOGAME || FNA || STRIDE
-		private FontAtlas GetCurrentAtlas(GraphicsDevice device, int textureWidth, int textureHeight)
-#else
-		private FontAtlas GetCurrentAtlas(ITexture2DManager device, int textureWidth, int textureHeight)
-#endif
-		{
-			if (_currentAtlas == null)
-			{
-				Texture2D existingTexture = null;
-				if (ExistingTexture != null && Atlases.Count == 0)
-				{
-					existingTexture = ExistingTexture;
-				}
-
-				_currentAtlas = new FontAtlas(textureWidth, textureHeight, 256, existingTexture);
-
-				// If existing texture is used, mark existing used rect as used
-				if (existingTexture != null && !ExistingTextureUsedSpace.IsEmpty)
-				{
-					if (!_currentAtlas.AddSkylineLevel(0, ExistingTextureUsedSpace.X, ExistingTextureUsedSpace.Y, ExistingTextureUsedSpace.Width, ExistingTextureUsedSpace.Height))
-					{
-						throw new Exception(string.Format("Unable to specify existing texture used space: {0}", ExistingTextureUsedSpace));
-					}
-
-					// TODO: Clear remaining space
-				}
-
-				Atlases.Add(_currentAtlas);
-			}
-
-			return _currentAtlas;
-		}
-
-#if MONOGAME || FNA || STRIDE
 		internal void RenderGlyphOnAtlas(GraphicsDevice device, DynamicFontGlyph glyph)
 #else
 		internal void RenderGlyphOnAtlas(ITexture2DManager device, DynamicFontGlyph glyph)
 #endif
 		{
-			var textureSize = new Point(TextureWidth, TextureHeight);
-
-			if (ExistingTexture != null)
-			{
-#if MONOGAME || FNA || STRIDE
-				textureSize = new Point(ExistingTexture.Width, ExistingTexture.Height);
-#else
-				textureSize = device.GetTextureSize(ExistingTexture);
-#endif
-			}
-
 			int gx = 0, gy = 0;
 			var gw = glyph.Size.X + GlyphPad * 2;
 			var gh = glyph.Size.Y + GlyphPad * 2;
 
-			var currentAtlas = GetCurrentAtlas(device, textureSize.X, textureSize.Y);
+			var currentAtlas = _fontAtlas.GetCurrentAtlas(device);
 			if (!currentAtlas.AddRect(gw, gh, ref gx, ref gy))
 			{
 				CurrentAtlasFull?.Invoke(this, EventArgs.Empty);
 
 				// This code will force creation of new atlas
-				_currentAtlas = null;
-				currentAtlas = GetCurrentAtlas(device, textureSize.X, textureSize.Y);
+				currentAtlas = _fontAtlas.CreateNewAtlas(device);
 
 				// Try to add again
 				if (!currentAtlas.AddRect(gw, gh, ref gx, ref gy))
