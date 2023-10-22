@@ -161,22 +161,22 @@ namespace FontStashSharp
 			return g;
 		}
 
-		protected virtual FontAtlas CreateNewAtlas(int textureWidth, int textureHeight)
+		public static FontAtlas CreateNewAtlas(FontSystem fontSystem, int textureWidth, int textureHeight)
 		{
 			Texture2D existingTexture = null;
-			if (ExistingTexture != null && Atlases.Count == 0)
+			if (fontSystem.ExistingTexture != null && fontSystem.Atlases.Count == 0)
 			{
-				existingTexture = ExistingTexture;
+				existingTexture = fontSystem.ExistingTexture;
 			}
 
 			FontAtlas _newAtlas = new FontAtlas(textureWidth, textureHeight, 256, existingTexture);
 		
 			// If existing texture is used, mark existing used rect as used
-			if (existingTexture != null && !ExistingTextureUsedSpace.IsEmpty)
+			if (existingTexture != null && !fontSystem.ExistingTextureUsedSpace.IsEmpty)
 			{
-				if (!_newAtlas.AddSkylineLevel(0, ExistingTextureUsedSpace.X, ExistingTextureUsedSpace.Y, ExistingTextureUsedSpace.Width, ExistingTextureUsedSpace.Height))
+				if (!_newAtlas.AddSkylineLevel(0, fontSystem.ExistingTextureUsedSpace.X, fontSystem.ExistingTextureUsedSpace.Y, fontSystem.ExistingTextureUsedSpace.Width, fontSystem.ExistingTextureUsedSpace.Height))
 				{
-					throw new Exception(string.Format("Unable to specify existing texture used space: {0}", ExistingTextureUsedSpace));
+					throw new Exception(string.Format("Unable to specify existing texture used space: {0}", fontSystem.ExistingTextureUsedSpace));
 				}
 
 				// TODO: Clear remaining space
@@ -193,7 +193,8 @@ namespace FontStashSharp
 		{
 			if (_currentAtlas == null)
 			{
-				_currentAtlas = CreateNewAtlas(textureWidth, textureHeight);
+				Func<FontSystem, int, int, FontAtlas> createNewAtlas = _settings.CreateNewAtlas ?? CreateNewAtlas;
+				_currentAtlas = createNewAtlas(this, textureWidth, textureHeight);
 
 				if (_currentAtlas == null)
 				{

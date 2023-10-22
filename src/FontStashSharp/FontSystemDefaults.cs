@@ -96,5 +96,7 @@ namespace FontStashSharp
 		public static int? DefaultCharacter { get; set; } = ' ';
 
 		public static int TextStyleLineHeight { get; set; } = 2;
+
+		public static Func<FontSystem, int, int, FontAtlas> CreateNewAtlas { get; set; }
 	}
 }

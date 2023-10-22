@@ -143,6 +143,8 @@ namespace FontStashSharp
 		/// </summary>
 		public IFontLoader FontLoader { get; set; }
 
+		public Func<FontSystem, int, int, FontAtlas> CreateNewAtlas { get; set; }
+
 		public FontSystemSettings()
 		{
 			TextureWidth = FontSystemDefaults.TextureWidth;
@@ -152,6 +154,7 @@ namespace FontStashSharp
 			KernelWidth = FontSystemDefaults.KernelWidth;
 			KernelHeight = FontSystemDefaults.KernelHeight;
 			FontLoader = FontSystemDefaults.FontLoader;
+			CreateNewAtlas = FontSystemDefaults.CreateNewAtlas;
 		}
 
 		public FontSystemSettings Clone()
@@ -168,7 +171,8 @@ namespace FontStashSharp
 				KernelHeight = KernelHeight,
 				ExistingTexture = ExistingTexture,
 				ExistingTextureUsedSpace = ExistingTextureUsedSpace,
-				FontLoader = FontLoader
+				FontLoader = FontLoader,
+				CreateNewAtlas = CreateNewAtlas
 			};
 		}
 	}
