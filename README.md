@@ -1,6 +1,6 @@
 # FontStashSharp
 [![NuGet](https://img.shields.io/nuget/v/FontStashSharp.svg)](https://www.nuget.org/packages/FontStashSharp/)
-![Build & Publish](https://github.com/rds1983/FontStashSharp/workflows/Build%20&%20Publish/badge.svg)
+[![Build & Publish](https://github.com/FontStashSharp/FontStashSharp/workflows/Build%20&%20Publish/badge.svg)
 [![Chat](https://img.shields.io/discord/628186029488340992.svg)](https://discord.gg/ZeHxhCY)
 
 FontStashSharp is the text rendering library.
