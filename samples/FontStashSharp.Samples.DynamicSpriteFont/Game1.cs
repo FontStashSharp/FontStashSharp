@@ -19,7 +19,6 @@ using Stride.Graphics;
 using Stride.Core.Mathematics;
 using Stride.Input;
 using Texture2D = Stride.Graphics.Texture;
-using SharpDX.Direct3D11;
 #endif
 
 namespace FontStashSharp.Samples

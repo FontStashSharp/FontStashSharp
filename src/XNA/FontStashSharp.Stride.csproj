@@ -15,8 +15,7 @@
   <ItemGroup>
     <PackageReference Include="FontStashSharp.Base" Version="$(FontStashSharpBaseVersion)" />
     <PackageReference Include="FontStashSharp.Rasterizers.StbTrueTypeSharp" Version="$(FontStashSharpBaseVersion)" />
-    <PackageReference Include="Stride.Engine" Version="4.1.0.1734" />
-    <PackageReference Include="Stride.Core" Version="4.1.0.1734" />
+    <PackageReference Include="Stride.Graphics" Version="$(StrideVersion)" />
     <PackageReference Include="Cyotek.Drawing.BitmapFont" Version="$(CyotekDrawingBitmapFontVersion)" />
     <PackageReference Include="StbImageSharp" Version="$(StbImageSharpVersion)" />
   </ItemGroup>  

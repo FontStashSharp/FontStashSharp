@@ -9,6 +9,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\XNA\FontStashSharp.Stride.csproj" />
   </ItemGroup>  
+  
+  <ItemGroup>
+    <PackageReference Include="Stride.Engine" Version="$(StrideVersion)" />
+  </ItemGroup>   
 
   <ItemGroup>
     <None Include="..\Fonts\DroidSans.ttf" Link="Fonts\DroidSans.ttf">

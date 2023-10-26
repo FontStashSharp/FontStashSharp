@@ -11,7 +11,11 @@
   <ItemGroup>
     <Compile Include="..\FontStashSharp.Samples.DynamicSpriteFont\KeyboardUtils.cs" Link="KeyboardUtils.cs" />
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <PackageReference Include="Stride.Engine" Version="$(StrideVersion)" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\XNA\FontStashSharp.Stride.csproj" />
   </ItemGroup>  
