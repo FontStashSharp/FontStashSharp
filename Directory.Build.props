@@ -10,6 +10,6 @@
     <StbImageSharpVersion>2.27.13</StbImageSharpVersion>
     <CyotekDrawingBitmapFontVersion>2.0.4</CyotekDrawingBitmapFontVersion>
     <MonoGameVersion>3.8.1.303</MonoGameVersion>
-    <StrideVersion>4.1.0.1734</StrideVersion>
+    <StrideVersion>4.0.1.1400</StrideVersion>
   </PropertyGroup>
 </Project>
