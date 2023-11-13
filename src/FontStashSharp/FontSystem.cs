@@ -135,9 +135,9 @@ namespace FontStashSharp
 
 		public void SetFontAtlas(FontAtlas fontAtlas)
 		{
-			if (_currentAtlas != null && !Atlases.Contains(fontAtlas))
+			if (fontAtlas != null && !Atlases.Contains(fontAtlas))
 			{
-				Atlases.Add(_currentAtlas);
+				Atlases.Add(fontAtlas);
 			}
 			_currentAtlas = fontAtlas;
 		}
