@@ -48,6 +48,7 @@ namespace FontStashSharp
 		internal List<IFontSource> FontSources => _fontSources;
 
 		public List<FontAtlas> Atlases { get; } = new List<FontAtlas>();
+		public FontAtlas CurrentAtlas => _currentAtlas;
 
 		public event EventHandler CurrentAtlasFull;
 		private readonly IFontLoader _fontLoader;
@@ -93,7 +94,7 @@ namespace FontStashSharp
 			}
 
 			Atlases?.Clear();
-			_currentAtlas = null;
+			SetFontAtlas(null);
 			_fonts.Clear();
 		}
 
@@ -132,11 +133,20 @@ namespace FontStashSharp
 			return result;
 		}
 
+		public void SetFontAtlas(FontAtlas fontAtlas)
+		{
+			if (fontAtlas != null && !Atlases.Contains(fontAtlas))
+			{
+				Atlases.Add(fontAtlas);
+			}
+			_currentAtlas = fontAtlas;
+		}
+
 		public void Reset()
 		{
 			Atlases.Clear();
 			_fonts.Clear();
-			_currentAtlas = null;
+			SetFontAtlas(null);
 		}
 
 		internal int? GetCodepointIndex(int codepoint, out int fontSourceIndex)
@@ -159,36 +169,31 @@ namespace FontStashSharp
 		}
 
 #if MONOGAME || FNA || STRIDE
-		private FontAtlas GetCurrentAtlas(GraphicsDevice device, int textureWidth, int textureHeight)
+		private FontAtlas CreateFontAtlas(GraphicsDevice device, int textureWidth, int textureHeight)
 #else
-		private FontAtlas GetCurrentAtlas(ITexture2DManager device, int textureWidth, int textureHeight)
+		private FontAtlas CreateFontAtlas(ITexture2DManager device, int textureWidth, int textureHeight)
 #endif
 		{
-			if (_currentAtlas == null)
+			Texture2D existingTexture = null;
+			if (ExistingTexture != null && Atlases.Count == 0)
 			{
-				Texture2D existingTexture = null;
-				if (ExistingTexture != null && Atlases.Count == 0)
-				{
-					existingTexture = ExistingTexture;
-				}
-
-				_currentAtlas = new FontAtlas(textureWidth, textureHeight, 256, existingTexture);
-
-				// If existing texture is used, mark existing used rect as used
-				if (existingTexture != null && !ExistingTextureUsedSpace.IsEmpty)
-				{
-					if (!_currentAtlas.AddSkylineLevel(0, ExistingTextureUsedSpace.X, ExistingTextureUsedSpace.Y, ExistingTextureUsedSpace.Width, ExistingTextureUsedSpace.Height))
-					{
-						throw new Exception(string.Format("Unable to specify existing texture used space: {0}", ExistingTextureUsedSpace));
-					}
-
-					// TODO: Clear remaining space
-				}
-
-				Atlases.Add(_currentAtlas);
+				existingTexture = ExistingTexture;
 			}
 
-			return _currentAtlas;
+			FontAtlas fontAtlas = new FontAtlas(textureWidth, textureHeight, 256, existingTexture);
+
+			// If existing texture is used, mark existing used rect as used
+			if (existingTexture != null && !ExistingTextureUsedSpace.IsEmpty)
+			{
+				if (!fontAtlas.AddSkylineLevel(0, ExistingTextureUsedSpace.X, ExistingTextureUsedSpace.Y, ExistingTextureUsedSpace.Width, ExistingTextureUsedSpace.Height))
+				{
+					throw new Exception(string.Format("Unable to specify existing texture used space: {0}", ExistingTextureUsedSpace));
+				}
+
+				// TODO: Clear remaining space
+			}
+
+			return fontAtlas;
 		}
 
 #if MONOGAME || FNA || STRIDE
@@ -212,17 +217,25 @@ namespace FontStashSharp
 			var gw = glyph.Size.X + GlyphPad * 2;
 			var gh = glyph.Size.Y + GlyphPad * 2;
 
-			var currentAtlas = GetCurrentAtlas(device, textureSize.X, textureSize.Y);
-			if (!currentAtlas.AddRect(gw, gh, ref gx, ref gy))
+			// If CurrentAtlas is null create a new one
+			if (CurrentAtlas == null)
+			{
+				SetFontAtlas(CreateFontAtlas(device, textureSize.X, textureSize.Y));
+			}
+			var atlas = CurrentAtlas;
+			if (!atlas.AddRect(gw, gh, ref gx, ref gy))
 			{
 				CurrentAtlasFull?.Invoke(this, EventArgs.Empty);
 
-				// This code will force creation of new atlas
-				_currentAtlas = null;
-				currentAtlas = GetCurrentAtlas(device, textureSize.X, textureSize.Y);
+				// Create a new atlas if it was not set during the CurrentAtlasFull event
+				if (CurrentAtlas == atlas)
+				{
+					SetFontAtlas(CreateFontAtlas(device, textureSize.X, textureSize.Y));
+				}
+				atlas = CurrentAtlas;
 
 				// Try to add again
-				if (!currentAtlas.AddRect(gw, gh, ref gx, ref gy))
+				if (!atlas.AddRect(gw, gh, ref gx, ref gy))
 				{
 					throw new Exception(string.Format("Could not add rect to the newly created atlas. gw={0}, gh={1}", gw, gh));
 				}
@@ -231,9 +244,9 @@ namespace FontStashSharp
 			glyph.TextureOffset.X = gx + GlyphPad;
 			glyph.TextureOffset.Y = gy + GlyphPad;
 
-			currentAtlas.RenderGlyph(device, glyph, FontSources[glyph.FontSourceIndex], PremultiplyAlpha, KernelWidth, KernelHeight);
+			atlas.RenderGlyph(device, glyph, FontSources[glyph.FontSourceIndex], PremultiplyAlpha, KernelWidth, KernelHeight);
 
-			glyph.Texture = currentAtlas.Texture;
+			glyph.Texture = atlas.Texture;
 		}
 	}
 }
