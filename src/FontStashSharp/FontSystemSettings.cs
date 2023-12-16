@@ -61,7 +61,10 @@ namespace FontStashSharp
 			}
 		}
 
+		[Obsolete("Use GlyphRenderer")]
 		public bool PremultiplyAlpha { get; set; } = true;
+
+		public GlyphRenderer GlyphRenderer { get; set; } = GlyphRenderers.Default;
 
 		public float FontResolutionFactor
 		{
@@ -141,6 +144,7 @@ namespace FontStashSharp
 				TextureWidth = TextureWidth,
 				TextureHeight = TextureHeight,
 				PremultiplyAlpha = PremultiplyAlpha,
+				GlyphRenderer = GlyphRenderer,
 				FontResolutionFactor = FontResolutionFactor,
 				KernelWidth = KernelWidth,
 				KernelHeight = KernelHeight,

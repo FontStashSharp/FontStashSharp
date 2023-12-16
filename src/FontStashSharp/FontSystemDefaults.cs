@@ -41,7 +41,9 @@ namespace FontStashSharp
 			}
 		}
 
+		[Obsolete("Use FontSystemSettings.GlyphRenderer")]
 		public static bool PremultiplyAlpha { get; set; } = true;
+		public static bool DisableAntialiasing { get; set; } = false;
 
 		public static float FontResolutionFactor
 		{

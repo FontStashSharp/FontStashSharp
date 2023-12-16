@@ -172,9 +172,9 @@ namespace FontStashSharp
 		}
 
 #if MONOGAME || FNA || STRIDE
-		public void RenderGlyph(GraphicsDevice graphicsDevice, DynamicFontGlyph glyph, IFontSource fontSource, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
+		public void RenderGlyph(GraphicsDevice graphicsDevice, DynamicFontGlyph glyph, IFontSource fontSource, GlyphRenderer glyphRenderer, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
 #else
-		public void RenderGlyph(ITexture2DManager textureManager, DynamicFontGlyph glyph, IFontSource fontSource, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
+		public void RenderGlyph(ITexture2DManager textureManager, DynamicFontGlyph glyph, IFontSource fontSource, GlyphRenderer glyphRenderer, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
 #endif
 		{
 			if (glyph.IsEmpty)
@@ -197,7 +197,7 @@ namespace FontStashSharp
 			var colorBufferSize = (glyph.Size.X + FontSystem.GlyphPad * 2) * (glyph.Size.Y + FontSystem.GlyphPad * 2) * 4;
 			if ((colorBuffer == null) || (colorBuffer.Length < colorBufferSize))
 			{
-				colorBuffer = new byte[colorBufferSize * 4];
+				colorBuffer = new byte[colorBufferSize];
 				_colorBuffer = colorBuffer;
 			}
 
@@ -212,7 +212,7 @@ namespace FontStashSharp
 			}
 
 			// Erase an area where we are going to place a glyph
-			Array.Clear(colorBuffer, 0,colorBufferSize);
+			Array.Clear(colorBuffer, 0, colorBufferSize);
 			var eraseArea = glyph.TextureRectangle;
 			eraseArea.X = Math.Max(eraseArea.X - FontSystem.GlyphPad, 0);
 			eraseArea.Y = Math.Max(eraseArea.Y - FontSystem.GlyphPad, 0);
@@ -241,108 +241,15 @@ namespace FontStashSharp
 				glyph.Size.Y - glyph.EffectAmount * 2,
 				glyph.Size.X);
 
-			if (glyph.Effect == FontSystemEffect.Stroked && glyph.EffectAmount > 0)
+			var glyphRenderOptions = new GlyphRenderOptions
 			{
-				var width = glyph.Size.X;
-				var top = width * glyph.EffectAmount;
-				var bottom = (glyph.Size.Y - glyph.EffectAmount) * glyph.Size.X;
-				var right = glyph.Size.X - glyph.EffectAmount;
-				var left = glyph.EffectAmount;
+				Effect = glyph.Effect,
+				EffectAmount = glyph.EffectAmount,
+				Size = glyph.Size,
+				PremultiplyAlpha = premultiplyAlpha
+			};
 
-				byte d;
-				for (var i = 0; i < bufferSize; ++i)
-				{
-					var ci = i * 4;
-					var col = buffer[i];
-					var black = 0;
-					if (col == 255)
-					{
-						colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = colorBuffer[ci + 3] = 255;
-						continue;
-					}
-
-					if (i >= top)
-						black = buffer[i - top];
-					if (i < bottom)
-					{
-						d = buffer[i + top];
-						black = ((255 - d) * black + 255 * d) / 255;
-					}
-					if (i % width >= left)
-					{
-						d = buffer[i - glyph.EffectAmount];
-						black = ((255 - d) * black + 255 * d) / 255;
-					}
-					if (i % width < right)
-					{
-						d = buffer[i + glyph.EffectAmount];
-						black = ((255 - d) * black + 255 * d) / 255;
-					}
-
-					if (black == 0)
-					{
-						if (col == 0)
-						{
-							colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = colorBuffer[ci + 3] = 0; //black transparency to suit stroke
-							continue;
-						}
-
-						if (premultiplyAlpha)
-						{
-							colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = colorBuffer[ci + 3] = col;
-						}
-						else
-						{
-							colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = 255;
-							colorBuffer[ci + 3] = col;
-						}
-					}
-					else
-					{
-						if (col == 0)
-						{
-							colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = 0;
-							colorBuffer[ci + 3] = (byte)black;
-							continue;
-						}
-
-						if (premultiplyAlpha)
-						{
-							var alpha = ((255 - col) * black + 255 * col) / 255;
-							colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = (byte)((alpha * col) / 255);
-							colorBuffer[ci + 3] = (byte)alpha;
-						}
-						else
-						{
-							colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = col;
-							colorBuffer[ci + 3] = (byte)(((255 - col) * black + 255 * col) / 255);
-						}
-					}
-				}
-			}
-			else
-			{
-				if (glyph.Effect == FontSystemEffect.Blurry && glyph.EffectAmount > 0)
-				{
-					Blur(buffer, glyph.Size.X, glyph.Size.Y, glyph.Size.X, glyph.EffectAmount);
-				}
-
-				for (var i = 0; i < bufferSize; ++i)
-				{
-					var ci = i * 4;
-					var c = buffer[i];
-
-					if (premultiplyAlpha)
-					{
-						colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = colorBuffer[ci + 3] = c;
-					}
-					else
-					{
-						colorBuffer[ci] = colorBuffer[ci + 1] = colorBuffer[ci + 2] = 255;
-						colorBuffer[ci + 3] = c;
-					}
-				}
-			}
+			glyphRenderer(buffer, colorBuffer, glyphRenderOptions);
 
 			// Render glyph to texture
 #if MONOGAME || FNA || STRIDE
@@ -350,75 +257,6 @@ namespace FontStashSharp
 #else
 			textureManager.SetTextureData(Texture, glyph.TextureRectangle, colorBuffer);
 #endif
-		}
-
-		void Blur(byte[] dst, int w, int h, int dstStride, int blur)
-		{
-			int alpha;
-			float sigma;
-			if (blur < 1)
-				return;
-			sigma = blur * 0.57735f;
-			alpha = (int)((1 << 16) * (1.0f - Math.Exp(-2.3f / (sigma + 1.0f))));
-			BlurRows(dst, w, h, dstStride, alpha);
-			BlurCols(dst, w, h, dstStride, alpha);
-			BlurRows(dst, w, h, dstStride, alpha);
-			BlurCols(dst, w, h, dstStride, alpha);
-		}
-
-		static void BlurCols(byte[] dst, int w, int h, int dstStride, int alpha)
-		{
-			int x;
-			int y;
-
-			int index = 0;
-			for (y = 0; y < h; y++)
-			{
-				var z = 0;
-				for (x = 1; x < w; x++)
-				{
-					z += (alpha * ((dst[index + x] << 7) - z)) >> 16;
-					dst[index + x] = (byte)(z >> 7);
-				}
-
-				dst[index + w - 1] = 0;
-				z = 0;
-				for (x = w - 2; x >= 0; x--)
-				{
-					z += (alpha * ((dst[index + x] << 7) - z)) >> 16;
-					dst[index + x] = (byte)(z >> 7);
-				}
-
-				dst[index] = 0;
-				index += dstStride;
-			}
-		}
-
-		static void BlurRows(byte[] dst, int w, int h, int dstStride, int alpha)
-		{
-			int x;
-			int y;
-			int index = 0;
-			for (x = 0; x < w; x++)
-			{
-				var z = 0;
-				for (y = dstStride; y < h * dstStride; y += dstStride)
-				{
-					z += (alpha * ((dst[index + y] << 7) - z)) >> 16;
-					dst[index +y] = (byte)(z >> 7);
-				}
-
-				dst[index +(h - 1) * dstStride] = 0;
-				z = 0;
-				for (y = (h - 2) * dstStride; y >= 0; y -= dstStride)
-				{
-					z += (alpha * ((dst[index +y] << 7) - z)) >> 16;
-					dst[index +y] = (byte)(z >> 7);
-				}
-
-				dst[index] = 0;
-				++index;
-			}
 		}
 	}
 }
