@@ -33,6 +33,7 @@ namespace FontStashSharp
 		public int TextureHeight => _settings.TextureHeight;
 
 		public bool PremultiplyAlpha => _settings.PremultiplyAlpha;
+		public GlyphRenderer GlyphRenderer => _settings.GlyphRenderer;
 
 		public float FontResolutionFactor => _settings.FontResolutionFactor;
 
@@ -244,7 +245,7 @@ namespace FontStashSharp
 			glyph.TextureOffset.X = gx + GlyphPad;
 			glyph.TextureOffset.Y = gy + GlyphPad;
 
-			atlas.RenderGlyph(device, glyph, FontSources[glyph.FontSourceIndex], PremultiplyAlpha, KernelWidth, KernelHeight);
+			atlas.RenderGlyph(device, glyph, FontSources[glyph.FontSourceIndex], GlyphRenderer, PremultiplyAlpha, KernelWidth, KernelHeight);
 
 			glyph.Texture = atlas.Texture;
 		}
