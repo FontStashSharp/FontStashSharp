@@ -123,5 +123,27 @@ namespace FontStashSharp.Tests
 			var textChunk = (TextChunk)lines[1].Chunks[2];
 			Assert.AreEqual("second li...", textChunk.Text);
 		}
+
+		[Test]
+		public void UnicodeCharactersCount()
+		{
+			var fontSystem = TestsEnvironment.DefaultFontSystem;
+
+			var richTextLayout = new RichTextLayout
+			{
+				Font = fontSystem.GetFont(32),
+				Text = "💁👌🎍😍",
+				CalculateGlyphs = true,
+			};
+
+			var lines = richTextLayout.Lines;
+
+			Assert.AreEqual(1, lines.Count);
+			Assert.AreEqual(1, lines[0].Chunks.Count);
+			Assert.IsInstanceOf<TextChunk>(lines[0].Chunks[0]);
+			var textChunk = (TextChunk)lines[0].Chunks[0];
+			Assert.AreEqual(4, textChunk.Glyphs.Count);
+			Assert.AreEqual(4, textChunk.Count);
+		}
 	}
 }

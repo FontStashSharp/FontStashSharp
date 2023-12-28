@@ -158,16 +158,6 @@ namespace FontStashSharp
 			return new Vector3(result.X, result.Y, z);
 		}
 
-		public static int Length(this string s)
-		{
-			if (string.IsNullOrEmpty(s))
-			{
-				return 0;
-			}
-
-			return s.Length;
-		}
-
 		public static void BuildTransform(Vector2 position, float rotation, Vector2 origin, Vector2 scale, out Matrix transformation)
 		{
 			// This code had been borrowed from MonoGame's SpriteBatch.DrawString

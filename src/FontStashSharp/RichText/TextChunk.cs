@@ -15,16 +15,15 @@ namespace FontStashSharp.RichText
 {
 	public class TextChunk : BaseChunk
 	{
-		protected readonly SpriteFontBase _font;
-		protected Point _size;
+		private readonly Point _size;
 
 		public List<TextChunkGlyph> Glyphs { get; } = new List<TextChunkGlyph>();
 
-		public int Count { get { return Text.Length(); } }
+		public int Count { get; }
 		public string Text { get; internal set; }
-		public override Point Size { get { return _size; } }
+		public override Point Size => _size;
 
-		public SpriteFontBase Font => _font;
+		public SpriteFontBase Font { get; }
 		public TextStyle Style { get; set; }
 		public FontSystemEffect Effect { get; set; }
 		public int EffectAmount { get; set; }
@@ -36,9 +35,10 @@ namespace FontStashSharp.RichText
 				throw new ArgumentNullException("font");
 			}
 
-			_font = font;
+			Font = font;
 			Text = text;
 			_size = size;
+			Count = TextSource.CalculateLength(text);
 
 			if (startPos != null)
 			{
@@ -53,7 +53,7 @@ namespace FontStashSharp.RichText
 				return;
 			}
 
-			var glyphs = _font.GetGlyphs(Text, Vector2.Zero);
+			var glyphs = Font.GetGlyphs(Text, Vector2.Zero);
 
 			Glyphs.Clear();
 			for (var i = 0; i < glyphs.Count; ++i)

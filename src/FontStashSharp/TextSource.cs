@@ -81,5 +81,23 @@ namespace FontStashSharp
 
 			return char.ConvertToUtf32(sb[index], sb[index + 1]);
 		}
+
+		public static int CalculateLength(string text)
+		{
+			if (string.IsNullOrEmpty(text))
+			{
+				return 0;
+			}
+
+			var pos = 0;
+			var result = 0;
+			while(pos < text.Length)
+			{
+				pos += char.IsSurrogatePair(text, pos) ? 2 : 1;
+				++result;
+			}
+
+			return result;
+		}
 	}
 }
