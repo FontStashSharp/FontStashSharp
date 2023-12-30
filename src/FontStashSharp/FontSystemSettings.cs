@@ -110,6 +110,8 @@ namespace FontStashSharp
 			}
 		}
 
+		public bool StbTrueTypeUseOldRasterizer { get; set; }
+
 		/// <summary>
 		/// Use existing texture for storing glyphs
 		/// If this is set, then TextureWidth & TextureHeight are ignored
@@ -134,6 +136,7 @@ namespace FontStashSharp
 			FontResolutionFactor = FontSystemDefaults.FontResolutionFactor;
 			KernelWidth = FontSystemDefaults.KernelWidth;
 			KernelHeight = FontSystemDefaults.KernelHeight;
+			StbTrueTypeUseOldRasterizer = FontSystemDefaults.StbTrueTypeUseOldRasterizer;
 			FontLoader = FontSystemDefaults.FontLoader;
 		}
 
@@ -148,6 +151,7 @@ namespace FontStashSharp
 				FontResolutionFactor = FontResolutionFactor,
 				KernelWidth = KernelWidth,
 				KernelHeight = KernelHeight,
+				StbTrueTypeUseOldRasterizer = StbTrueTypeUseOldRasterizer,
 				ExistingTexture = ExistingTexture,
 				ExistingTextureUsedSpace = ExistingTextureUsedSpace,
 				FontLoader = FontLoader

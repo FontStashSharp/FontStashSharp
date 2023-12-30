@@ -167,6 +167,7 @@ namespace FontStashSharp.Samples
 				return new TextureFragment(texture);
 			};
 
+			FontSystemDefaults.StbTrueTypeUseOldRasterizer = true;
 			var fontSystem = new FontSystem();
 			fontSystem.AddFont(File.ReadAllBytes(Path.Combine(Utility.AssetsDirectory, @"Roboto-Regular.ttf")));
 

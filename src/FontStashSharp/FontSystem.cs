@@ -68,7 +68,8 @@ namespace FontStashSharp
 				var loaderSettings = new StbTrueTypeSharpSettings
 				{
 					KernelWidth = _settings.KernelWidth,
-					KernelHeight = _settings.KernelHeight
+					KernelHeight = _settings.KernelHeight,
+					UseOldRasterizer = _settings.StbTrueTypeUseOldRasterizer
 				};
 				_fontLoader = new StbTrueTypeSharpLoader(loaderSettings);
 			}
