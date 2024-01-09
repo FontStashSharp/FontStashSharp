@@ -742,7 +742,8 @@ namespace FontStashSharp.RichText
 						lastChunk.Text = text;
 
 						// Update chunk size
-						lastChunk._size = lastChunk.Font.MeasureString(text).ToPoint();
+						var measure = lastChunk.Font.MeasureString(text);
+						lastChunk._size = new Point((int)measure.X, (int)measure.Y);
 
 						// Update line size
 						lastLine.Size.X = 0;
