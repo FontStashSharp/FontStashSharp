@@ -656,7 +656,7 @@ namespace FontStashSharp.RichText
 				// Determine lines that fit
 				var lines = new List<TextLine>();
 				var h = 0;
-				for(i = 0; i < _lines.Count; ++i)
+				for (i = 0; i < _lines.Count; ++i)
 				{
 					if (h + _lines[i].Size.Y > _height.Value)
 					{
@@ -669,7 +669,7 @@ namespace FontStashSharp.RichText
 					h += VerticalSpacing;
 				}
 
-				if (AutoEllipsisMethod != AutoEllipsisMethod.None && 
+				if (AutoEllipsisMethod != AutoEllipsisMethod.None &&
 					!string.IsNullOrEmpty(AutoEllipsisString) &&
 					lines.Count > 0 &&
 					lines[lines.Count - 1].Chunks.Count > 0)
@@ -679,7 +679,7 @@ namespace FontStashSharp.RichText
 					if (lastChunk != null && !string.IsNullOrEmpty(lastChunk.Text))
 					{
 						var otherChunksWidth = 0;
-						for(i = 0; i < lastLine.Chunks.Count - 1; ++i)
+						for (i = 0; i < lastLine.Chunks.Count - 1; ++i)
 						{
 							otherChunksWidth += lastLine.Chunks[i].Size.X;
 						}
@@ -693,8 +693,8 @@ namespace FontStashSharp.RichText
 							while (words.Count > 0)
 							{
 								text = string.Join(" ", words).TrimEnd() + AutoEllipsisString;
-								var sz = _font.MeasureString(text);
-								
+								var sz = lastChunk.Font.MeasureString(text);
+
 								if (otherChunksWidth + sz.X < rowWidth.Value)
 								{
 									break;
@@ -724,10 +724,10 @@ namespace FontStashSharp.RichText
 								}
 							}
 
-							while(!string.IsNullOrEmpty(text))
+							while (!string.IsNullOrEmpty(text))
 							{
 								var newText = text.TrimEnd() + AutoEllipsisString;
-								var sz = _font.MeasureString(newText);
+								var sz = lastChunk.Font.MeasureString(newText);
 
 								if (otherChunksWidth + sz.X < rowWidth.Value)
 								{
@@ -740,6 +740,35 @@ namespace FontStashSharp.RichText
 						}
 
 						lastChunk.Text = text;
+
+						// Update chunk size
+						lastChunk._size = lastChunk.Font.MeasureString(text).ToPoint();
+
+						// Update line size
+						lastLine.Size.X = 0;
+						for (var j = 0; j < lastLine.Chunks.Count; j++)
+						{
+							lastLine.Size.X += lastLine.Chunks[j].Size.X;
+						}
+
+						// Recalculate size
+						size.X = 0;
+						size.Y = 0;
+
+						for (i = 0; i < lines.Count; ++i)
+						{
+							var line = lines[i];
+							if (line.Size.X > size.X)
+							{
+								size.X = line.Size.X;
+							}
+
+							size.Y += line.Size.Y;
+							if (i < lines.Count - 1)
+							{
+								size.Y += VerticalSpacing;
+							}
+						}
 					}
 				}
 

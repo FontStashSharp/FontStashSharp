@@ -15,7 +15,7 @@ namespace FontStashSharp.RichText
 {
 	public class TextChunk : BaseChunk
 	{
-		private readonly Point _size;
+		internal Point _size;
 
 		public List<TextChunkGlyph> Glyphs { get; } = new List<TextChunkGlyph>();
 
