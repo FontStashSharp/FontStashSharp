@@ -2,7 +2,7 @@
 
 namespace FontStashSharp
 {
-	public readonly ref struct StringSegment
+	public readonly struct StringSegment
 	{
 		public readonly string String;
 		public readonly int Offset;
