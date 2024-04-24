@@ -670,7 +670,6 @@ namespace FontStashSharp.RichText
 				}
 
 				if (AutoEllipsisMethod != AutoEllipsisMethod.None &&
-					!string.IsNullOrEmpty(AutoEllipsisString) &&
 					lines.Count > 0 &&
 					lines[lines.Count - 1].Chunks.Count > 0)
 				{
@@ -692,7 +691,12 @@ namespace FontStashSharp.RichText
 
 							while (words.Count > 0)
 							{
-								text = string.Join(" ", words).TrimEnd() + AutoEllipsisString;
+								text = string.Join(" ", words).TrimEnd();
+								if (!string.IsNullOrEmpty(AutoEllipsisString))
+								{
+									text += AutoEllipsisString;
+								}
+
 								var sz = lastChunk.Font.MeasureString(text);
 
 								if (otherChunksWidth + sz.X < rowWidth.Value)
@@ -726,7 +730,12 @@ namespace FontStashSharp.RichText
 
 							while (!string.IsNullOrEmpty(text))
 							{
-								var newText = text.TrimEnd() + AutoEllipsisString;
+								var newText = text.TrimEnd();
+								if (!string.IsNullOrEmpty(AutoEllipsisString))
+								{
+									newText += AutoEllipsisString;
+								}
+
 								var sz = lastChunk.Font.MeasureString(newText);
 
 								if (otherChunksWidth + sz.X < rowWidth.Value)
