@@ -34,11 +34,12 @@ namespace FontStashSharp.Samples
 			return File.ReadAllBytes(path);
 		}
 
-		private void AddFontSystem(string header, IFontLoader fontLoader)
+		private void AddFontSystem(string header, IFontLoader fontLoader, bool stbTrueTypeUseOldRasterizer = false)
 		{
 			var settings = new FontSystemSettings
 			{
-				FontLoader = fontLoader
+				FontLoader = fontLoader,
+				StbTrueTypeUseOldRasterizer = stbTrueTypeUseOldRasterizer
 			};
 
 			var fontSystem = new FontSystem(settings);
@@ -57,6 +58,7 @@ namespace FontStashSharp.Samples
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
 			AddFontSystem("StbTrueTypeSharp(default)", null);
+			AddFontSystem("StbTrueTypeSharp(old)", null, true);
 
 			if (Environment.OSVersion.Platform == PlatformID.Win32NT)
 			{
