@@ -14,14 +14,14 @@ namespace FontStashSharp.Tests
 
 			var font = StaticSpriteFont.FromBMFont(data, fileName => assembly.OpenResourceStream("Resources." + fileName), TestsEnvironment.GraphicsDevice);
 
-			Assert.AreEqual(63, font.FontSize);
-			Assert.AreEqual(191, font.Glyphs.Count);
+			Assert.That(font.FontSize, Is.EqualTo(63));
+			Assert.That(font.Glyphs.Count, Is.EqualTo(191));
 
 			var texture = font.Glyphs.First().Value.Texture;
 
-			Assert.NotNull(texture);
-			Assert.AreEqual(512, texture.Width);
-			Assert.AreEqual(512, texture.Height);
+			Assert.That(texture, Is.Not.Null);
+			Assert.That(texture.Width, Is.EqualTo(512));
+			Assert.That(texture.Height, Is.EqualTo(512));
 		}
 	}
 }

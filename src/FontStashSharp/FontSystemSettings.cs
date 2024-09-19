@@ -61,7 +61,6 @@ namespace FontStashSharp
 			}
 		}
 
-		[Obsolete("Use GlyphRenderer")]
 		public bool PremultiplyAlpha { get; set; } = true;
 
 		public GlyphRenderer GlyphRenderer { get; set; } = GlyphRenderers.Default;

@@ -21,15 +21,15 @@ namespace FontStashSharp.Tests
 			// Shouldn't exist
 			var glyphs = font.GetGlyphs(FontSystemEffect.None, 0);
 			DynamicFontGlyph glyph;
-			Assert.IsFalse(glyphs.TryGetValue(codePoint, out glyph));
+			Assert.That(glyphs.TryGetValue(codePoint, out glyph), Is.False);
 
 			glyph = (DynamicFontGlyph)font.GetGlyph(TestsEnvironment.GraphicsDevice, codePoint, FontSystemEffect.None, 0);
 
 			// Now it should exist
-			Assert.IsTrue(glyphs.TryGetValue(codePoint, out glyph));
+			Assert.That(glyphs.TryGetValue(codePoint, out glyph), Is.True);
 
 			// And should be equal to null too
-			Assert.AreEqual(null, glyph);
+			Assert.That(glyph, Is.EqualTo(null));
 		}
 
 		[Test]
@@ -62,13 +62,13 @@ namespace FontStashSharp.Tests
 					// Make sure glyph doesnt intersects with the used space
 					if (!atlasFull)
 					{
-						Assert.IsFalse(settings.ExistingTextureUsedSpace.Intersects(glyph.TextureRectangle));
+						Assert.That(settings.ExistingTextureUsedSpace.Intersects(glyph.TextureRectangle), Is.False);
 					}
 					else
 					{
 						// If we've moved to the next atlas
 						// The new glyph should override old existing texture used space
-						Assert.IsTrue(settings.ExistingTextureUsedSpace.Intersects(glyph.TextureRectangle));
+						Assert.That(settings.ExistingTextureUsedSpace.Intersects(glyph.TextureRectangle), Is.True);
 
 						// This concludes the testing
 						goto finish;
@@ -128,11 +128,11 @@ namespace FontStashSharp.Tests
 
 			font.DrawText(renderer, text, Vector2.Zero, Color.White, characterSpacing: characterSpacing);
 
-			Assert.AreEqual(renderer.Calls.Count * 2, glyphPos.Length);
+			Assert.That(glyphPos.Length, Is.EqualTo(renderer.Calls.Count * 2));
 			for (var i = 0; i < renderer.Calls.Count; i++)
 			{
-				Assert.AreEqual((int)renderer.Calls[i].Pos.X, glyphPos[i * 2]);
-				Assert.AreEqual((int)renderer.Calls[i].Pos.Y, glyphPos[i * 2 + 1]);
+				Assert.That(glyphPos[i * 2], Is.EqualTo((int)renderer.Calls[i].Pos.X));
+				Assert.That(glyphPos[i * 2 + 1], Is.EqualTo((int)renderer.Calls[i].Pos.Y));
 			}
 		}
 	}
