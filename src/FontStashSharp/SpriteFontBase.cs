@@ -209,7 +209,7 @@ namespace FontStashSharp
 					Index = i,
 					Codepoint = codepoint,
 					Bounds = new Rectangle((int)p.X, (int)p.Y, (int)s.X, (int)s.Y),
-					XAdvance = xAdvance
+					XAdvance = (int)(xAdvance * scale.X)
 				};
 
 				// Add to the result

@@ -5,12 +5,13 @@
     <PackageLicenseExpression>Zlib</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/rds1983/FontStashSharp</PackageProjectUrl>
     <RootNamespace>FontStashSharp</RootNamespace>
-    <Version>1.3.8</Version>
+    <Version>1.3.9</Version>
     <FontStashSharpBaseVersion>1.1.9</FontStashSharpBaseVersion>
     <StbImageSharpVersion>2.30.15</StbImageSharpVersion>
     <CyotekDrawingBitmapFontVersion>2.0.4</CyotekDrawingBitmapFontVersion>
     <MonoGameVersion>3.8.0.1641</MonoGameVersion>
     <AppMonoGameVersion>3.8.2.1105</AppMonoGameVersion>
-    <StrideVersion>4.1.0.1728</StrideVersion>
+    <StrideVersion>4.2.0.2067</StrideVersion>
+    <AppTargetFramework>net8.0</AppTargetFramework>
   </PropertyGroup>
 </Project>

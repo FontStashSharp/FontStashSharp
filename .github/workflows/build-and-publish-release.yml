@@ -23,7 +23,7 @@ jobs:
     - name: Test
       run: dotnet test build\FontStashSharp.MonoGame.sln
     - name: Install NuGet
-      uses: NuGet/setup-nuget@v1
+      uses: NuGet/setup-nuget@v2
     - name: Publish FontStashSharp to NuGet
       run: nuget.exe push src\FontStashSharp\bin\Release\FontStashSharp.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
       continue-on-error: true

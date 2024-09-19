@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>$(AppTargetFramework)</TargetFramework>
     <PackageId>FontStashSharp.Stride</PackageId>
     <AssemblyName>FontStashSharp.Stride</AssemblyName>
     <Description>FontStashSharp for Stride</Description>
