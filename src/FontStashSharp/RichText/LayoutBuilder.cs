@@ -200,7 +200,7 @@ namespace FontStashSharp.RichText
 			}
 
 			var parameters = _text.Substring(startPos.Value, endPos - startPos.Value);
-			return int.Parse(parameters);
+			return int.Parse(parameters, CultureInfo.InvariantCulture);
 		}
 
 		private bool ProcessCommand(ref int i, ref ChunkInfo r, out bool chunkFilled)
