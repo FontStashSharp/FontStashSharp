@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
@@ -122,9 +123,18 @@ namespace FontStashSharp
 				// xml
 				bmFont.LoadXml(data);
 			}
+			else if (data.StartsWith("info"))
+			{
+				// text
+				bmFont.LoadText(data);
+			}
 			else
 			{
-				bmFont.LoadText(data);
+				// binary (expects base64-encoded string)
+				using (var stream = new MemoryStream(Convert.FromBase64String(data)))
+				{
+					bmFont.LoadBinary(stream);
+				}
 			}
 
 			return bmFont;
