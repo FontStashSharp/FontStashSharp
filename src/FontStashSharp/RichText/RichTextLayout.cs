@@ -389,7 +389,7 @@ namespace FontStashSharp.RichText
 					var chunkColor = color;
 					if (!IgnoreColorCommand && chunk.Color != null)
 					{
-						chunkColor = chunk.Color.Value;
+						chunkColor = chunk.Color.Value * (color.A / 255f);
 					}
 
 					chunk.Draw(_renderContext, pos + new Vector2(0, chunk.VerticalOffset), chunkColor);
