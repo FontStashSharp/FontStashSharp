@@ -95,6 +95,9 @@ namespace FontStashSharp
 				_fontSources.Clear();
 			}
 
+			foreach (var atlas in Atlases)
+				atlas.Texture?.Dispose();
+
 			Atlases?.Clear();
 			SetFontAtlas(null);
 			_fonts.Clear();
