@@ -98,7 +98,13 @@ namespace FontStashSharp
 			if (Atlases != null)
 			{
 				foreach (var atlas in Atlases)
-					atlas.Texture?.Dispose();
+				{
+					if (atlas.Texture is IDisposable)
+					{
+						atlas.Texture.Dispose();
+					}
+				}
+
 				Atlases.Clear();
 			}
 
