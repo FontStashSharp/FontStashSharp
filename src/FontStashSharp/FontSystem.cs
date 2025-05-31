@@ -97,15 +97,9 @@ namespace FontStashSharp
 
 			if (Atlases != null)
 			{
-				#if MONOGAME || FNA || STRIDE
 				foreach (var atlas in Atlases)
-				{
-					if (atlas.Texture is IDisposable)
-					{
-						atlas.Texture.Dispose();
-					}
-				}
-				#endif
+					if (atlas.Texture is IDisposable dispTexture)
+						dispTexture.Dispose();
 
 				Atlases.Clear();
 			}
