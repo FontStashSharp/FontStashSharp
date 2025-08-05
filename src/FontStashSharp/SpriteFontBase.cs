@@ -123,7 +123,7 @@ namespace FontStashSharp
 			return new Bounds(minx, miny, maxx, maxy);
 		}
 
-		public Bounds TextBounds(string text, Vector2 position, Vector2? scale = null, 
+		public Bounds TextBounds(string text, Vector2 position, Vector2? scale = null,
 			float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
 		{
@@ -134,7 +134,7 @@ namespace FontStashSharp
 			return bounds;
 		}
 
-		public Bounds TextBounds(StringBuilder text, Vector2 position, Vector2? scale = null, 
+		public Bounds TextBounds(StringBuilder text, Vector2 position, Vector2? scale = null,
 			float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
 		{
@@ -145,10 +145,10 @@ namespace FontStashSharp
 			return bounds;
 		}
 
-		private List<Glyph> GetGlyphs(TextSource source, Vector2 position, Vector2 origin, Vector2? sourceScale, 
-			float characterSpacing, float lineSpacing, FontSystemEffect effect, int effectAmount)
+		private List<Glyph> GetGlyphs(TextSource source, Vector2 position, Vector2 origin, Vector2? sourceScale,
+			float characterSpacing, float lineSpacing, FontSystemEffect effect, int effectAmount,
+			List<Glyph> result)
 		{
-			List<Glyph> result = new List<Glyph>();
 			if (source.IsNull) return result;
 
 			Matrix transformation;
@@ -223,14 +223,38 @@ namespace FontStashSharp
 		public List<Glyph> GetGlyphs(string text, Vector2 position,
 			Vector2 origin = default(Vector2), Vector2? scale = null,
 			float characterSpacing = 0.0f, float lineSpacing = 0.0f,
-			FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-			GetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount);
+			FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
+		{
+			List<Glyph> result = new List<Glyph>();
+
+			GetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount, result);
+
+			return result;
+		}
 
 		public List<Glyph> GetGlyphs(StringBuilder text, Vector2 position,
 			Vector2 origin = default(Vector2), Vector2? scale = null,
 			float characterSpacing = 0.0f, float lineSpacing = 0.0f,
+			FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
+		{
+			List<Glyph> result = new List<Glyph>();
+
+			GetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount, result);
+
+			return result;
+		}
+
+		public void GetGlyphs(string text, Vector2 position, List<Glyph> result,
+			Vector2 origin = default(Vector2), Vector2? scale = null,
+			float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-			GetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount);
+			GetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount, result);
+
+		public void GetGlyphs(StringBuilder text, Vector2 position, List<Glyph> result,
+			Vector2 origin = default(Vector2), Vector2? scale = null,
+			float characterSpacing = 0.0f, float lineSpacing = 0.0f,
+			FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
+			GetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount, result);
 
 
 		[Obsolete("Use GetGlyphs")]
@@ -251,7 +275,7 @@ namespace FontStashSharp
 			return (from g in glyphs select g.Bounds).ToList();
 		}
 
-		public Vector2 MeasureString(string text, Vector2? scale = null, 
+		public Vector2 MeasureString(string text, Vector2? scale = null,
 			float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
 		{
@@ -259,7 +283,7 @@ namespace FontStashSharp
 			return new Vector2(bounds.X2, bounds.Y2);
 		}
 
-		public Vector2 MeasureString(StringBuilder text, Vector2? scale = null, 
+		public Vector2 MeasureString(StringBuilder text, Vector2? scale = null,
 			float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
 		{
