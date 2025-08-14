@@ -233,13 +233,23 @@ namespace FontStashSharp
 			textureManager.SetTextureData(Texture, eraseArea, colorBuffer);
 #endif
 
-			fontSource.RasterizeGlyphBitmap(glyph.Id,
-				glyph.FontSize,
-				buffer,
-				glyph.EffectAmount + glyph.EffectAmount * glyph.Size.X,
-				glyph.Size.X - glyph.EffectAmount * 2,
-				glyph.Size.Y - glyph.EffectAmount * 2,
-				glyph.Size.X);
+			/*			fontSource.RasterizeGlyphBitmap(glyph.Id,
+							glyph.FontSize,
+							buffer,
+							glyph.EffectAmount + glyph.EffectAmount * glyph.Size.X,
+							glyph.Size.X - glyph.EffectAmount * 2,
+							glyph.Size.Y - glyph.EffectAmount * 2,
+							glyph.Size.X);*/
+
+			fontSource.RasterizeGlyphSDF(glyph.Id,
+							glyph.FontSize,
+							62,
+							127,
+							buffer,
+							glyph.EffectAmount + glyph.EffectAmount * glyph.Size.X,
+							glyph.Size.X - glyph.EffectAmount * 2,
+							glyph.Size.Y - glyph.EffectAmount * 2,
+							glyph.Size.X);
 
 			var glyphRenderOptions = new GlyphRenderOptions
 			{

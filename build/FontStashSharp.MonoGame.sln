@@ -25,6 +25,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.Rich
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.DisableAntialiasing.MonoGame", "..\samples\FontStashSharp.Samples.DisableAntialiasing\FontStashSharp.Samples.DisableAntialiasing.MonoGame.csproj", "{F66E04AC-AD4A-4983-9977-CDFF907C2090}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Rasterizers.StbTrueTypeSharp", "..\..\FontStashSharp.Base\src\FontStashSharp.Rasterizers.StbTrueTypeSharp\FontStashSharp.Rasterizers.StbTrueTypeSharp.csproj", "{801B177C-418C-4712-B2AC-CFBD2E44C2E4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Base", "..\..\FontStashSharp.Base\src\FontStashSharp.Base\FontStashSharp.Base.csproj", "{084DCBC1-594C-4BD3-9F88-C897849D66A9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StbTrueTypeSharp", "..\..\StbSharp\StbTrueTypeSharp\src\StbTrueTypeSharp.csproj", "{AF46369C-C938-4DCC-8ECB-444C167C5D76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FontStashSharp.Samples.SDF.MonoGame", "..\samples\FontStashSharp.Samples.SDF\FontStashSharp.Samples.SDF.MonoGame.csproj", "{05678601-E4C9-8AF5-03BF-DAB770FE7622}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +79,22 @@ Global
 		{F66E04AC-AD4A-4983-9977-CDFF907C2090}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F66E04AC-AD4A-4983-9977-CDFF907C2090}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F66E04AC-AD4A-4983-9977-CDFF907C2090}.Release|Any CPU.Build.0 = Release|Any CPU
+		{801B177C-418C-4712-B2AC-CFBD2E44C2E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{801B177C-418C-4712-B2AC-CFBD2E44C2E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{801B177C-418C-4712-B2AC-CFBD2E44C2E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{801B177C-418C-4712-B2AC-CFBD2E44C2E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{084DCBC1-594C-4BD3-9F88-C897849D66A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{084DCBC1-594C-4BD3-9F88-C897849D66A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{084DCBC1-594C-4BD3-9F88-C897849D66A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{084DCBC1-594C-4BD3-9F88-C897849D66A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF46369C-C938-4DCC-8ECB-444C167C5D76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF46369C-C938-4DCC-8ECB-444C167C5D76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF46369C-C938-4DCC-8ECB-444C167C5D76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF46369C-C938-4DCC-8ECB-444C167C5D76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05678601-E4C9-8AF5-03BF-DAB770FE7622}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05678601-E4C9-8AF5-03BF-DAB770FE7622}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05678601-E4C9-8AF5-03BF-DAB770FE7622}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05678601-E4C9-8AF5-03BF-DAB770FE7622}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +108,7 @@ Global
 		{42F0AA0C-44F4-44E8-BDFD-097E95F90E66} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
 		{DF94ABCC-D7A4-478F-AA1A-CDCA906A7250} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
 		{F66E04AC-AD4A-4983-9977-CDFF907C2090} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
+		{05678601-E4C9-8AF5-03BF-DAB770FE7622} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {35ACDF4E-2CE2-46B1-A19F-35DC131069A1}

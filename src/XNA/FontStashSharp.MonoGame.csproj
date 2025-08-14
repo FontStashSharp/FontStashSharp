@@ -24,4 +24,15 @@
     <Compile Include="..\FontStashSharp\**\*.cs" LinkBase="FontStashSharp" />
     <Compile Remove="..\FontStashSharp\obj\**\*.cs" LinkBase="FontStashSharp" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Effects\MonoGameOGL\bin\**\*.*" />
+    <EmbeddedResource Include="Resources\Effects\MonoGameDX11\bin\**\*.*" />
+  </ItemGroup>
+  
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\FontStashSharp.Base\src\FontStashSharp.Base\FontStashSharp.Base.csproj" />
+    <ProjectReference Include="..\..\..\FontStashSharp.Base\src\FontStashSharp.Rasterizers.StbTrueTypeSharp\FontStashSharp.Rasterizers.StbTrueTypeSharp.csproj" />
+  </ItemGroup>
 </Project>
