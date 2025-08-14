@@ -12,10 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\FontStashSharp\FontStashSharp.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\Fonts\DroidSans.ttf" Link="Fonts\DroidSans.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
@@ -25,5 +21,9 @@
 	<None Include="..\Fonts\Symbola-Emoji.ttf" Link="Fonts\Symbola-Emoji.ttf">
 	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\FontStashSharp\FontStashSharp.PlatformAgnostic.csproj" />
   </ItemGroup>  
 </Project>

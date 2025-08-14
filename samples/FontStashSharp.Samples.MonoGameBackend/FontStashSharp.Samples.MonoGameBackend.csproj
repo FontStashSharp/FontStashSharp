@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>$(AppTargetFramework)</TargetFramework>
@@ -6,10 +6,6 @@
 
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="$(AppMonoGameVersion)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\FontStashSharp\FontStashSharp.csproj" />
   </ItemGroup>  
 
   <ItemGroup>
@@ -22,5 +18,9 @@
     <None Include="..\Fonts\Symbola-Emoji.ttf" Link="Fonts\Symbola-Emoji.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>  
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\FontStashSharp\FontStashSharp.PlatformAgnostic.csproj" />
   </ItemGroup>
 </Project>

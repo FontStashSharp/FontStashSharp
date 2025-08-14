@@ -6,10 +6,6 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\src\FontStashSharp\FontStashSharp.csproj" />
-    </ItemGroup>
-
 	<ItemGroup>
 		<None Include="..\Fonts\DroidSans.ttf" Link="Fonts\DroidSans.ttf">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -21,6 +17,7 @@
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 		<PackageReference Include="OpenTK" Version="4.7.2" />
+		<ProjectReference Include="..\..\src\FontStashSharp\FontStashSharp.PlatformAgnostic.csproj" />
 		<None Update="Shader.frag">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>

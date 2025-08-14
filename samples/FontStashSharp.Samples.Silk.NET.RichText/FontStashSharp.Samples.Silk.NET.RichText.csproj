@@ -23,10 +23,6 @@
       <PackageReference Include="Silk.NET.Windowing" Version="2.15.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\src\FontStashSharp\FontStashSharp.csproj" />
-    </ItemGroup>
-
 	<ItemGroup>
 		<None Update="Shader.frag">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -46,5 +42,9 @@
 		<None Include="Assets\**\*.*" LinkBase="Assets">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>  
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <ProjectReference Include="..\..\src\FontStashSharp\FontStashSharp.PlatformAgnostic.csproj" />
 	</ItemGroup>
 </Project>

@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp", "..\src\FontStashSharp\FontStashSharp.csproj", "{9EAEB3FB-6808-478F-B643-57B9280E4896}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{B239F30F-0011-45CD-8862-62A0BC2ED694}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.MonoGameBackend", "..\samples\FontStashSharp.Samples.MonoGameBackend\FontStashSharp.Samples.MonoGameBackend.csproj", "{CC6EF4B2-EE55-4EE5-AB0A-8E38DD3DC7F4}"
@@ -19,16 +17,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.Silk
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.Silk.NET.RichText", "..\samples\FontStashSharp.Samples.Silk.NET.RichText\FontStashSharp.Samples.Silk.NET.RichText.csproj", "{F915F824-D222-4CE4-AE3B-C131B28BB16A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FontStashSharp.PlatformAgnostic", "..\src\FontStashSharp\FontStashSharp.PlatformAgnostic.csproj", "{9C165C0E-D931-6A63-28AF-151059391DAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9EAEB3FB-6808-478F-B643-57B9280E4896}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9EAEB3FB-6808-478F-B643-57B9280E4896}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9EAEB3FB-6808-478F-B643-57B9280E4896}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9EAEB3FB-6808-478F-B643-57B9280E4896}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CC6EF4B2-EE55-4EE5-AB0A-8E38DD3DC7F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CC6EF4B2-EE55-4EE5-AB0A-8E38DD3DC7F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC6EF4B2-EE55-4EE5-AB0A-8E38DD3DC7F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -53,6 +49,10 @@ Global
 		{F915F824-D222-4CE4-AE3B-C131B28BB16A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F915F824-D222-4CE4-AE3B-C131B28BB16A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F915F824-D222-4CE4-AE3B-C131B28BB16A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C165C0E-D931-6A63-28AF-151059391DAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C165C0E-D931-6A63-28AF-151059391DAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C165C0E-D931-6A63-28AF-151059391DAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C165C0E-D931-6A63-28AF-151059391DAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
