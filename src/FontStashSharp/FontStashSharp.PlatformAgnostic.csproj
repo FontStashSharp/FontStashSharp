@@ -1,8 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageId>FontStashSharp</PackageId>
-    <AssemblyName>FontStashSharp</AssemblyName>
     <Description>Platform-Agnostic Version of FontStashSharp</Description>
     <DefineConstants>$(DefineConstants);PLATFORM_AGNOSTIC</DefineConstants>
   </PropertyGroup>
