@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using FontStashSharp.Rasterizers.FreeType;
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
