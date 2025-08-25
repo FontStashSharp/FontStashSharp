@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Android.Content.Res;
+using FontStashSharp.Rasterizers.FreeType;
+
 
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-#if ANDROID
-using System;
-using Microsoft.Xna.Framework.GamerServices;
-#endif
 #elif STRIDE
 using System.Threading.Tasks;
 using Stride.Engine;
@@ -102,6 +101,15 @@ namespace FontStashSharp.Samples
 		}
 #endif
 
+#if ANDROID
+		private static byte[] LoadFontResource(string name)
+		{
+			var assembly = typeof(Game1).Assembly;
+
+			return assembly.ReadResourceAsBytes($"FontStashSharp.Resources.Fonts.{name}");
+		}
+#endif
+
 		/// <summary>
 		/// LoadContent will be called once per game and is the place to load
 		/// all of your content.
@@ -116,12 +124,23 @@ namespace FontStashSharp.Samples
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
 			// TODO: use this.Content to load your game content here
+			//FontSystemDefaults.FontLoader = new FreeTypeLoader();
 
 			// Simple
 			_fontSystem = new FontSystem();
+
+#if !ANDROID
 			_fontSystem.AddFont(File.ReadAllBytes(@"Fonts/DroidSans.ttf"));
 			_fontSystem.AddFont(File.ReadAllBytes(@"Fonts/DroidSansJapanese.ttf"));
 			_fontSystem.AddFont(File.ReadAllBytes(@"Fonts/Symbola-Emoji.ttf"));
+#else
+			_fontSystem.AddFont(LoadFontResource(@"DroidSans.ttf"));
+			_fontSystem.AddFont(LoadFontResource(@"DroidSansJapanese.ttf"));
+			_fontSystem.AddFont(LoadFontResource(@"Symbola-Emoji.ttf"));
+
+			/*			var assets = ApplicationContext.Assets;
+						Stream stream = assets.Open(ConfigurationFilePath);*/
+#endif
 
 #if MONOGAME || FNA
 			_white = new Texture2D(GraphicsDevice, 1, 1);
