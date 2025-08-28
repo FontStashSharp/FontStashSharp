@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.Rich
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.DisableAntialiasing.MonoGame", "..\samples\FontStashSharp.Samples.DisableAntialiasing\FontStashSharp.Samples.DisableAntialiasing.MonoGame.csproj", "{F66E04AC-AD4A-4983-9977-CDFF907C2090}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FontStashSharp.Samples.DynamicSpriteFont.Android", "..\samples\FontStashSharp.Samples.DynamicSpriteFont.Android\FontStashSharp.Samples.DynamicSpriteFont.Android.csproj", "{2DD4A558-070C-158B-2A75-B394E43A40C5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,12 @@ Global
 		{F66E04AC-AD4A-4983-9977-CDFF907C2090}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F66E04AC-AD4A-4983-9977-CDFF907C2090}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F66E04AC-AD4A-4983-9977-CDFF907C2090}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DD4A558-070C-158B-2A75-B394E43A40C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DD4A558-070C-158B-2A75-B394E43A40C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DD4A558-070C-158B-2A75-B394E43A40C5}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{2DD4A558-070C-158B-2A75-B394E43A40C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DD4A558-070C-158B-2A75-B394E43A40C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DD4A558-070C-158B-2A75-B394E43A40C5}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +92,7 @@ Global
 		{42F0AA0C-44F4-44E8-BDFD-097E95F90E66} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
 		{DF94ABCC-D7A4-478F-AA1A-CDCA906A7250} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
 		{F66E04AC-AD4A-4983-9977-CDFF907C2090} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
+		{2DD4A558-070C-158B-2A75-B394E43A40C5} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {35ACDF4E-2CE2-46B1-A19F-35DC131069A1}
