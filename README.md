@@ -1,5 +1,5 @@
 # FontStashSharp
-[![NuGet](https://img.shields.io/nuget/v/FontStashSharp.MonoGame.svg)](https://www.nuget.org/packages/FontStashSharp.MonoGame/)
+[![Nuget](https://img.shields.io/nuget/dt/FontStashSharp.MonoGame)](https://www.nuget.org/packages/FontStashSharp.MonoGame/)
 [![Build & Publish Beta](https://github.com/FontStashSharp/FontStashSharp/actions/workflows/build-and-publish-beta.yml/badge.svg)](https://github.com/FontStashSharp/FontStashSharp/actions/workflows/build-and-publish-beta.yml)
 [![Chat](https://img.shields.io/discord/628186029488340992.svg)](https://discord.gg/ZeHxhCY)
 
