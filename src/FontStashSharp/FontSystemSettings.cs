@@ -28,6 +28,9 @@ namespace FontStashSharp
 		private int _textureWidth = 1024, _textureHeight = 1024;
 		private float _fontResolutionFactor = 1.0f;
 		private int _kernelWidth = 0, _kernelHeight = 0;
+		private bool _useTextShaping = false;
+		private int _shapedTextCacheSize = 100;
+		private bool _enableBiDi = true;
 
 		public int TextureWidth
 		{
@@ -112,6 +115,17 @@ namespace FontStashSharp
 		public bool StbTrueTypeUseOldRasterizer { get; set; }
 
 		/// <summary>
+		/// Enable HarfBuzz text shaping for complex scripts (Arabic, Indic, emoji sequences, etc.)
+		/// When false, uses simple codepoint-to-glyph rendering
+		/// Default: false
+		/// </summary>
+		public bool UseTextShaping
+		{
+			get => _useTextShaping;
+			set => _useTextShaping = value;
+		}
+
+		/// <summary>
 		/// Use existing texture for storing glyphs
 		/// If this is set, then TextureWidth & TextureHeight are ignored
 		/// </summary>
@@ -127,6 +141,37 @@ namespace FontStashSharp
 		/// </summary>
 		public IFontLoader FontLoader { get; set; }
 
+		/// <summary>
+		/// Maximum number of entries in the shaped text cache (for HarfBuzz text shaping)
+		/// Higher values use more memory but reduce shaping overhead for repeated text
+		/// Default: 100
+		/// </summary>
+		public int ShapedTextCacheSize
+		{
+			get => _shapedTextCacheSize;
+			set
+			{
+				if (value < 1)
+				{
+					throw new ArgumentOutOfRangeException(nameof(value), value, "Cache size must be at least 1");
+				}
+
+				_shapedTextCacheSize = value;
+			}
+		}
+
+		/// <summary>
+		/// Enable bidirectional (BiDi) text support for mixed LTR/RTL text
+		/// When enabled, text with mixed Latin and RTL scripts (Arabic, Hebrew, etc.) will be displayed in correct order
+		/// Only applies when UseTextShaping is true
+		/// Default: true
+		/// </summary>
+		public bool EnableBiDi
+		{
+			get => _enableBiDi;
+			set => _enableBiDi = value;
+		}
+
 		public FontSystemSettings()
 		{
 			TextureWidth = FontSystemDefaults.TextureWidth;
@@ -137,6 +182,8 @@ namespace FontStashSharp
 			KernelHeight = FontSystemDefaults.KernelHeight;
 			StbTrueTypeUseOldRasterizer = FontSystemDefaults.StbTrueTypeUseOldRasterizer;
 			FontLoader = FontSystemDefaults.FontLoader;
+			ShapedTextCacheSize = FontSystemDefaults.ShapedTextCacheSize;
+			EnableBiDi = true;
 		}
 
 		public FontSystemSettings Clone()
@@ -151,9 +198,12 @@ namespace FontStashSharp
 				KernelWidth = KernelWidth,
 				KernelHeight = KernelHeight,
 				StbTrueTypeUseOldRasterizer = StbTrueTypeUseOldRasterizer,
+				UseTextShaping = UseTextShaping,
 				ExistingTexture = ExistingTexture,
 				ExistingTextureUsedSpace = ExistingTextureUsedSpace,
-				FontLoader = FontLoader
+				FontLoader = FontLoader,
+				ShapedTextCacheSize = ShapedTextCacheSize,
+				EnableBiDi = EnableBiDi
 			};
 		}
 	}
