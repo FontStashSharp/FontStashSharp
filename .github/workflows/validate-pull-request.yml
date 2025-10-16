@@ -15,7 +15,7 @@ jobs:
       with:
         dotnet-version: '8.0.x'
     - name: Build FontStashSharp
-      run: dotnet build build\FontStashSharp.sln --configuration Release
+      run: dotnet build build\FontStashSharp.PlatformAgnostic.sln --configuration Release
     - name: Build FontStashSharp.MonoGame
       run: dotnet build build\FontStashSharp.MonoGame.sln --configuration Release
     - name: Build FontStashSharp.Stride
