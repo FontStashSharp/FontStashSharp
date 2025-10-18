@@ -101,6 +101,8 @@ namespace FontStashSharp
 
 		public static int TextStyleLineHeight { get; set; } = 2;
 
+		public static bool UseTextShaping { get; set; } = false;
+
 		/// <summary>
 		/// Maximum number of entries in the shaped text cache (for HarfBuzz text shaping)
 		/// Higher values use more memory but reduce shaping overhead for repeated text

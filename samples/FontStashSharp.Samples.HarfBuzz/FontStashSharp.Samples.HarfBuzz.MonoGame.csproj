@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>$(AppTargetFramework)</TargetFramework>
+    <OutputPath>bin\MonoGame\$(Configuration)</OutputPath>
+    <DefineConstants>$(DefineConstants);MONOGAME</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="$(AppMonoGameVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\XNA\FontStashSharp.MonoGame.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Fonts\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>  
+
+</Project>

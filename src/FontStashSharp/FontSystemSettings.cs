@@ -182,6 +182,7 @@ namespace FontStashSharp
 			KernelHeight = FontSystemDefaults.KernelHeight;
 			StbTrueTypeUseOldRasterizer = FontSystemDefaults.StbTrueTypeUseOldRasterizer;
 			FontLoader = FontSystemDefaults.FontLoader;
+			UseTextShaping = FontSystemDefaults.UseTextShaping;
 			ShapedTextCacheSize = FontSystemDefaults.ShapedTextCacheSize;
 			EnableBiDi = true;
 		}
