@@ -15,6 +15,7 @@
   <ItemGroup>
     <PackageReference Include="FontStashSharp.Base" Version="$(FontStashSharpBaseVersion)" />
     <PackageReference Include="FontStashSharp.Rasterizers.StbTrueTypeSharp" Version="$(FontStashSharpBaseVersion)" />
+    <PackageReference Include="HarfBuzzSharp" Version="8.3.1.2" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" PrivateAssets="All" Version="$(MonoGameVersion)" />
     <PackageReference Include="Cyotek.Drawing.BitmapFont" Version="$(CyotekDrawingBitmapFontVersion)" />
     <PackageReference Include="StbImageSharp" Version="$(StbImageSharpVersion)" />

@@ -57,3 +57,4 @@ Stroked Text:
 * [FreeTypeSharp](https://github.com/ryancheung/FreeTypeSharp)
 * [SixLabors.Fonts](https://github.com/SixLabors/Fonts)
 * [TrippyGL](https://github.com/SilkCommunity/TrippyGL)
+* [HarfBuzzSharp](https://www.nuget.org/packages/HarfBuzzSharp/)

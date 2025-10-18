@@ -8,6 +8,7 @@ namespace FontStashSharp
 		private static int _textureWidth = 1024, _textureHeight = 1024;
 		private static float _fontResolutionFactor = 1.0f;
 		private static int _kernelWidth = 0, _kernelHeight = 0;
+		private static int _shapedTextCacheSize = 100;
 
 		public static int TextureWidth
 		{
@@ -99,5 +100,24 @@ namespace FontStashSharp
 		public static int? DefaultCharacter { get; set; } = ' ';
 
 		public static int TextStyleLineHeight { get; set; } = 2;
+
+		/// <summary>
+		/// Maximum number of entries in the shaped text cache (for HarfBuzz text shaping)
+		/// Higher values use more memory but reduce shaping overhead for repeated text
+		/// Default: 100
+		/// </summary>
+		public static int ShapedTextCacheSize
+		{
+			get => _shapedTextCacheSize;
+			set
+			{
+				if (value < 1)
+				{
+					throw new ArgumentOutOfRangeException(nameof(value), value, "Cache size must be at least 1");
+				}
+
+				_shapedTextCacheSize = value;
+			}
+		}
 	}
 }
