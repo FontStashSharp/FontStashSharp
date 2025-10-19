@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -49,71 +48,50 @@ namespace FontStashSharp.Samples
 
 		private class LineInfo
 		{
-			public string FontFile { get; }
+			public string[] FontFiles { get; }
 			public float Size { get; }
+			public string Header { get; }
 			public string Text { get; }
 			public Color Color { get; set; } = Color.White;
-			public FontSystem FontSystem { get; }
-			public FontSystem FontSystemShaped { get; }
-			public SpriteFontBase Font { get; }
-			public SpriteFontBase ShapedFont { get; }
 
-			public bool UseKernings
+			public LineInfo(string[] fontFiles, float size, string header, string text)
 			{
-				get => FontSystem.UseKernings;
-
-				set
-				{
-					FontSystem.UseKernings = value;
-					FontSystemShaped.UseKernings = value;
-				}
+				FontFiles = fontFiles;
+				Size = size;
+				Header = header;
+				Text = text;
 			}
 
-			public LineInfo(string fontFile, float size, string text)
+			public LineInfo(string fontFile, float size, string header, string text)
 			{
-				FontFile = fontFile;
+				FontFiles = new string[] { fontFile };
 				Size = size;
+				Header = header;
 				Text = text;
-
-				var fontBase = Path.Combine(ExecutingAssemblyDirectory, "Fonts");
-				var fontPath = Path.Combine(fontBase, FontFile);
-				var fontBytes = File.ReadAllBytes(fontPath);
-
-				FontSystem = new FontSystem();
-				FontSystem.AddFont(fontBytes);
-				Font = FontSystem.GetFont(size);
-
-				FontSystemShaped = new FontSystem(new FontSystemSettings
-				{
-					UseTextShaping = true,
-					EnableBiDi = true
-				});
-				FontSystemShaped.AddFont(fontBytes);
-				ShapedFont = FontSystemShaped.GetFont(size);
 			}
 		}
 
 		private const int EffectAmount = 1;
-		private const int CharacterSpacing = 2;
-		private const int LineSpacing = 4;
+		public const int CharacterSpacing = 0;
+		public const int LineSpacing = 4;
 
 		private static readonly LineInfo[] _lines = new LineInfo[]
 		{
-			new LineInfo("MozillaText-Bold.ttf", 16, "English: Some text to baseline."),
-			new LineInfo("NotoSansDevanagari-Regular.ttf", 25, "Hindi: हिंदी परीक्षण — यह एक जटिल लिपि है जिसमें संयुक्ताक्षर होते हैं।"),
-			new LineInfo("segoeui.ttf", 25, "Arabic RTL: العربية لغة جميلة وغنية بالتعبيرات والمعاني HarfBuzzSharp."),
-			new LineInfo("MozillaText-Bold.ttf", 16, "Hebrew RTL: עברית שפה יפה מאוד, עשירה בביטויים ומשמעות."),
-			new LineInfo("NotoSansJP-Regular.ttf", 25, "Japanese: 日本語の文章をここに書きます。漢字とひらがなとカタカナ。"),
-			new LineInfo("MozillaText-Bold.ttf", 16, "Mixed scripts: Hello! नमस्ते! مرحباً! こんにちは! שלום!"),
-			new LineInfo("MozillaText-Bold.ttf", 16, "Mixed LTR/RTL: Start LTR ثم نص عربي inside LTR again סוף."),
-			new LineInfo("seguiemj.ttf", 25, "Emojis 1: 😀 😁 😂 🤣 😜 😎 ❤️ 💙 💜 💔 💕"),
-			new LineInfo("seguiemj.ttf", 25, "Emojis 2: 🏳️‍🌈 🏴‍☠️ 🏳️‍⚧️  🇺🇸 🇳🇿 🇯🇵 🇫🇮 🇪🇬 🇨🇳"),
-			new LineInfo("seguiemj.ttf", 25, "Emoji ZWJ 1: 🏴 + ☠️ = 🏴‍☠️   👨 + 👩 + 👧 + 👦 = 👨‍👩‍👧‍👦"),
-			new LineInfo("seguiemj.ttf", 25, "Emoji ZWJ 2: 👩 + 🦰 = 👩‍🦰   👨 + 🦱 = 👨‍🦱   👩 + 🦳 = 👩‍🦳"),
-			new LineInfo("MozillaText-Bold.ttf", 16, "Combining accents: A\u0301 E\u0301 I\u0301 O\u0301 U\u0301 à è ì ò ù ñ ã õ"),
-			new LineInfo("MozillaText-Bold.ttf", 16, "Ligatures: office → offering → efficient → affine → coffee."),
-			new LineInfo("MozillaText-Bold.ttf", 16, "BiDi mix: Price ₪250 ثم discount 10% valid until יום רביעי."),
-			new LineInfo("MozillaText-Bold.ttf", 16, "Complex mix: हिंदी text inside العربية with 日本語 characters.")
+			new LineInfo("NotoSans-Regular.ttf", 32, "English", "English: Some text to baseline."),
+			new LineInfo("NotoSansDevanagari-Regular.ttf", 32, "Hindi", "हिंदी परीक्षण — यह एक जटिल लिपि है जिसमें संयुक्ताक्षर होते हैं।"),
+			new LineInfo("NotoSansArabic-Regular.ttf", 32, "Arabic RTL", "العربية لغة جميلة وغنية بالتعبيرات والمعاني HarfBuzzSharp."),
+			new LineInfo("NotoSansHebrew-Regular.ttf", 25, "Hebrew RTL", "עברית שפה יפה מאוד, עשירה בביטויים ומשמעות."),
+			new LineInfo("NotoSansJP-Regular.ttf", 32, "Japanese", "日本語の文章をここに書きます。漢字とひらがなとカタカナ。"),
+			new LineInfo(["NotoSansDevanagari-Regular.ttf", "NotoSansArabic-Regular.ttf", "NotoSansJP-Regular.ttf", "NotoSansHebrew-Regular.ttf"], 32, "Mixed scripts", "Hello! नमस्ते! مرحباً! こんにちは! שלום!"),
+			new LineInfo(["NotoSansArabic-Regular.ttf", "NotoSansHebrew-Regular.ttf"], 25, "Mixed LTR/RTL", "Start LTR ثم نص عربي inside LTR again סוף."),
+			new LineInfo("seguiemj.ttf", 32, "Emojis 1", "😀 😁 😂 🤣 😜 😎 ❤️ 💙 💜 💔 💕"),
+			new LineInfo("seguiemj.ttf", 32, "Emojis 2", "🏴‍☠️ 🇺🇸 🇳🇿 🇯🇵 🇫🇮 🇪🇬 🇨🇳"),
+			new LineInfo("seguiemj.ttf", 32, "Emoji ZWJ 1", "🏴 + ☠️ = 🏴‍☠️   👨 + 👩 + 👧 + 👦 = 👨‍👩‍👧‍👦"),
+			new LineInfo("seguiemj.ttf", 32, "Emoji ZWJ 2", "👩 + 🦰 = 👩‍🦰   👨 + 🦱 = 👨‍🦱   👩 + 🦳 = 👩‍🦳"),
+			new LineInfo("NotoSans-Regular.ttf", 25, "Combining accents", "A\u0301 E\u0301 I\u0301 O\u0301 U\u0301 à è ì ò ù ñ ã õ"),
+			new LineInfo("NotoSansJP-Regular.ttf", 25, "Ligatures", "office → offering → efficient → affine → coffee."),
+			new LineInfo(["NotoSansHebrew-Regular.ttf", "NotoSansArabic-Regular.ttf", "NotoSansJP-Regular.ttf"], 25, "BiDi mix", "Price ₪250 ثم discount 10% valid until יום רביעי."),
+			new LineInfo(["NotoSansDevanagari-Regular.ttf", "NotoSansArabic-Regular.ttf", "NotoSansJP-Regular.ttf"], 25, "Complex mix", "हिंदी text inside العربية with 日本語 characters.")
 		};
 
 #if !STRIDE
@@ -124,10 +102,16 @@ namespace FontStashSharp.Samples
 
 		private SpriteBatch _spriteBatch;
 		private FontSystemEffect _currentEffect = FontSystemEffect.None;
+		private readonly Dictionary<string, FontSystem> _fontSystemCache = new Dictionary<string, FontSystem>();
 
 		private Texture2D _white;
 		private bool _drawBackground = false;
 		private bool _animatedScaling = false;
+		private readonly TextGrid _grid = new TextGrid
+		{
+			XSpacing = 25,
+			YSpacing = 8,
+		};
 
 		public Game1()
 		{
@@ -136,8 +120,8 @@ namespace FontStashSharp.Samples
 #if MONOGAME || FNA
 			_graphics = new GraphicsDeviceManager(this)
 			{
-				PreferredBackBufferWidth = 1200,
-				PreferredBackBufferHeight = 800
+				PreferredBackBufferWidth = 2100,
+				PreferredBackBufferHeight = 900
 			};
 
 			Window.AllowUserResizing = true;
@@ -166,6 +150,47 @@ namespace FontStashSharp.Samples
 		}
 #endif
 
+		private FontSystem GetFontSystem(string[] fontNames, bool shaped)
+		{
+			var sortedNames = (from f in fontNames orderby f select f).ToList();
+			var key = $"{string.Join(',', sortedNames)}|{shaped}";
+
+			FontSystem fontSystem;
+			if (_fontSystemCache.TryGetValue(key, out fontSystem))
+			{
+				return fontSystem;
+			}
+
+			var settings = new FontSystemSettings();
+			if (shaped)
+			{
+				settings.TextShaper = new HarfBuzzTextShaper();
+			}
+
+			fontSystem = new FontSystem(settings);
+
+			var fontBase = Path.Combine(ExecutingAssemblyDirectory, "Fonts");
+			foreach (var fontName in fontNames)
+			{
+				var fontPath = Path.Combine(fontBase, fontName);
+				var fontBytes = File.ReadAllBytes(fontPath);
+
+				fontSystem.AddFont(fontBytes);
+			}
+
+			_fontSystemCache[key] = fontSystem;
+
+			return fontSystem;
+		}
+
+		private FontSystem GetFontSystem(string fontName, bool shaped)
+		{
+			return GetFontSystem(new string[] { fontName }, shaped);
+		}
+
+
+		private FontSystem GetDefaultFontSystem() => GetFontSystem("NotoSans-Regular.ttf", false);
+
 		/// <summary>
 		/// LoadContent will be called once per game and is the place to load
 		/// all of your content.
@@ -179,9 +204,6 @@ namespace FontStashSharp.Samples
 			// Create a new SpriteBatch, which can be used to draw textures.
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			// TODO: use this.Content to load your game content here
-			FontSystemDefaults.UseTextShaping = true;
-
 #if MONOGAME || FNA
 			_white = new Texture2D(GraphicsDevice, 1, 1);
 			_white.SetData(new[] { Color.White });
@@ -189,6 +211,28 @@ namespace FontStashSharp.Samples
 			_white = Texture2D.New2D(GraphicsDevice, 1, 1, false, PixelFormat.R8G8B8A8_UNorm_SRgb, TextureFlags.ShaderResource);
 			_white.SetData(GraphicsContext.CommandList, new[] { Color.White } );
 #endif
+
+			// FontSystemDefaults.FontLoader = new FreeTypeLoader();
+
+			var defaultFontSystem = GetDefaultFontSystem();
+			var defaultFont = defaultFontSystem.GetFont(32);
+			_grid.SetCell(1, 0, defaultFont, "Ordinary");
+			_grid.SetCell(2, 0, defaultFont, "Shaped");
+
+			for (var i = 0; i < _lines.Length; ++i)
+			{
+				var line = _lines[i];
+
+				var fontSystem = GetFontSystem(line.FontFiles, false);
+				var font = fontSystem.GetFont(line.Size);
+
+				_grid.SetCell(0, i + 1, font, line.Header);
+				_grid.SetCell(1, i + 1, font, line.Text);
+
+				var fontSystemShaped = GetFontSystem(line.FontFiles, true);
+				var fontShaped = fontSystemShaped.GetFont(line.Size);
+				_grid.SetCell(2, i + 1, fontShaped, line.Text);
+			}
 
 			GC.Collect();
 
@@ -223,9 +267,9 @@ namespace FontStashSharp.Samples
 
 			if (KeyboardUtils.IsPressed(Keys.Enter))
 			{
-				foreach (var line in _lines)
+				foreach (var pair in _fontSystemCache)
 				{
-					line.UseKernings = !line.UseKernings;
+					pair.Value.UseKernings = !pair.Value.UseKernings;
 				}
 			}
 
@@ -237,13 +281,14 @@ namespace FontStashSharp.Samples
 			KeyboardUtils.End();
 		}
 
-		private Vector2 DrawString(SpriteFontBase _font, string text, Vector2 pos, Alignment alignment, Color color, Vector2 scale)
+		private Vector2 DrawString(TextGrid.GridCell cell, Alignment alignment, Color color, Vector2 scale)
 		{
-			Vector2 dimensions = _font.MeasureString(text,
+			Vector2 dimensions = cell.Font.MeasureString(cell.Text,
 				characterSpacing: CharacterSpacing, lineSpacing: LineSpacing,
 				effect: _currentEffect, effectAmount: EffectAmount);
 			Vector2 origin = AlignmentOrigin(alignment, dimensions);
 
+			var pos = new Vector2(cell.ScreenX, cell.ScreenY);
 			if (_drawBackground)
 			{
 				var backgroundRect = new Rectangle((int)Math.Round(pos.X - origin.X * scale.X),
@@ -252,7 +297,7 @@ namespace FontStashSharp.Samples
 					(int)Math.Round(dimensions.Y * scale.Y));
 				DrawRectangle(backgroundRect, Color.Green);
 
-				var glyphs = _font.GetGlyphs(text, pos, origin, scale,
+				var glyphs = cell.Font.GetGlyphs(cell.Text, pos, origin, scale,
 					characterSpacing: CharacterSpacing, lineSpacing: LineSpacing,
 					effect: _currentEffect, effectAmount: EffectAmount);
 				foreach (var g in glyphs)
@@ -261,23 +306,11 @@ namespace FontStashSharp.Samples
 				}
 			}
 
-			_spriteBatch.DrawString(_font, text, pos, color, scale: scale, origin: origin,
+			_spriteBatch.DrawString(cell.Font, cell.Text, pos, color, scale: scale, origin: origin,
 				characterSpacing: CharacterSpacing, lineSpacing: LineSpacing,
 				effect: _currentEffect, effectAmount: EffectAmount);
 
 			return dimensions;
-		}
-
-		private void DrawString2(LineInfo line, ref Vector2 pos, Alignment alignment, Vector2 scale)
-		{
-			// Ordinary font
-			DrawString(line.Font, line.Text, pos, alignment, line.Color, scale);
-
-			// Shaped font
-			var shapedOffset = GraphicsDevice.Viewport.Width / 2;
-			var dimensions = DrawString(line.ShapedFont, line.Text, pos + new Vector2(shapedOffset, 0), alignment, line.Color, scale);
-
-			pos.Y += dimensions.Y + LineSpacing;
 		}
 
 		private void DrawRectangle(Rectangle rectangle, Color color)
@@ -321,7 +354,7 @@ namespace FontStashSharp.Samples
 
 
 			Vector2 scale = _animatedScaling
-				? new Vector2(1 + .25f * (float)Math.Sin(total.TotalSeconds * .5f))
+				? new Vector2(1 + .32f * (float)Math.Sin(total.TotalSeconds * .5f))
 				: Vector2.One;
 
 			// TODO: Add your drawing code here
@@ -334,17 +367,17 @@ namespace FontStashSharp.Samples
 			Vector2 cursor = Vector2.Zero;
 
 			// Render some text
-			for(var i = 0; i < _lines.Length; ++i)
+			foreach (var cell in _grid.Cells)
 			{
-				DrawString2(_lines[i], ref cursor, Alignment.Left, scale);
+				DrawString(cell, Alignment.Left, Color.White, scale);
 			}
 
-/*			// Render the atlas texture
-			_font = _fontSystem.GetFont(26);
-			DrawString("Texture:", ref cursor, Alignment.Left, Vector2.One);
+			/*			// Render the atlas texture
+						_font = _fontSystem.GetFont(26);
+						DrawString("Texture:", ref cursor, Alignment.Left, Vector2.One);
 
-			var texture = _fontSystem.Atlases[0].Texture;
-			_spriteBatch.Draw(texture, cursor, Color.White);*/
+						var texture = _fontSystem.Atlases[0].Texture;
+						_spriteBatch.Draw(texture, cursor, Color.White);*/
 
 			_spriteBatch.End();
 

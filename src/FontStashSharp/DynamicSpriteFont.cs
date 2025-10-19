@@ -57,10 +57,10 @@ namespace FontStashSharp
 
 		private class ShapedTextCache
 		{
-			private readonly Dictionary<ShapedTextCacheKey, LinkedListNode<(ShapedTextCacheKey Key, HarfBuzz.ShapedText Value)>> _cache =
-				new Dictionary<ShapedTextCacheKey, LinkedListNode<(ShapedTextCacheKey Key, HarfBuzz.ShapedText Value)>>();
-			private readonly LinkedList<(ShapedTextCacheKey Key, HarfBuzz.ShapedText Value)> _lruList =
-				new LinkedList<(ShapedTextCacheKey Key, HarfBuzz.ShapedText Value)>();
+			private readonly Dictionary<ShapedTextCacheKey, LinkedListNode<(ShapedTextCacheKey Key, ShapedText Value)>> _cache =
+				new Dictionary<ShapedTextCacheKey, LinkedListNode<(ShapedTextCacheKey Key, ShapedText Value)>>();
+			private readonly LinkedList<(ShapedTextCacheKey Key, ShapedText Value)> _lruList =
+				new LinkedList<(ShapedTextCacheKey Key, ShapedText Value)>();
 			private readonly int _maxCacheEntries;
 
 			public ShapedTextCache(int maxCacheEntries)
@@ -68,7 +68,7 @@ namespace FontStashSharp
 				_maxCacheEntries = maxCacheEntries;
 			}
 
-			public bool TryGet(ShapedTextCacheKey key, out HarfBuzz.ShapedText shapedText)
+			public bool TryGet(ShapedTextCacheKey key, out ShapedText shapedText)
 			{
 				if (_cache.TryGetValue(key, out var node))
 				{
@@ -83,7 +83,7 @@ namespace FontStashSharp
 				return false;
 			}
 
-			public void Add(ShapedTextCacheKey key, HarfBuzz.ShapedText shapedText)
+			public void Add(ShapedTextCacheKey key, ShapedText shapedText)
 			{
 				// Check if already exists
 				if (_cache.ContainsKey(key))
@@ -519,13 +519,13 @@ namespace FontStashSharp
 		/// <summary>
 		/// Shape text using HarfBuzz with caching
 		/// </summary>
-		internal HarfBuzz.ShapedText GetShapedText(string text, float fontSize)
+		internal ShapedText GetShapedText(string text, float fontSize)
 		{
 			if (string.IsNullOrEmpty(text))
 			{
-				return new HarfBuzz.ShapedText
+				return new ShapedText
 				{
-					Glyphs = new HarfBuzz.ShapedGlyph[0],
+					Glyphs = new ShapedGlyph[0],
 					OriginalText = text ?? string.Empty,
 					FontSize = fontSize
 				};

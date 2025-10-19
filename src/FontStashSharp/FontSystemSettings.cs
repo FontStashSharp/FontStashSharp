@@ -28,9 +28,7 @@ namespace FontStashSharp
 		private int _textureWidth = 1024, _textureHeight = 1024;
 		private float _fontResolutionFactor = 1.0f;
 		private int _kernelWidth = 0, _kernelHeight = 0;
-		private bool _useTextShaping = false;
 		private int _shapedTextCacheSize = 100;
-		private bool _enableBiDi = true;
 
 		public int TextureWidth
 		{
@@ -119,11 +117,9 @@ namespace FontStashSharp
 		/// When false, uses simple codepoint-to-glyph rendering
 		/// Default: false
 		/// </summary>
-		public bool UseTextShaping
-		{
-			get => _useTextShaping;
-			set => _useTextShaping = value;
-		}
+		public bool UseTextShaping => TextShaper != null;
+
+		public ITextShaper TextShaper { get; set; }
 
 		/// <summary>
 		/// Use existing texture for storing glyphs
@@ -160,18 +156,6 @@ namespace FontStashSharp
 			}
 		}
 
-		/// <summary>
-		/// Enable bidirectional (BiDi) text support for mixed LTR/RTL text
-		/// When enabled, text with mixed Latin and RTL scripts (Arabic, Hebrew, etc.) will be displayed in correct order
-		/// Only applies when UseTextShaping is true
-		/// Default: true
-		/// </summary>
-		public bool EnableBiDi
-		{
-			get => _enableBiDi;
-			set => _enableBiDi = value;
-		}
-
 		public FontSystemSettings()
 		{
 			TextureWidth = FontSystemDefaults.TextureWidth;
@@ -182,9 +166,7 @@ namespace FontStashSharp
 			KernelHeight = FontSystemDefaults.KernelHeight;
 			StbTrueTypeUseOldRasterizer = FontSystemDefaults.StbTrueTypeUseOldRasterizer;
 			FontLoader = FontSystemDefaults.FontLoader;
-			UseTextShaping = FontSystemDefaults.UseTextShaping;
 			ShapedTextCacheSize = FontSystemDefaults.ShapedTextCacheSize;
-			EnableBiDi = true;
 		}
 
 		public FontSystemSettings Clone()
@@ -199,12 +181,11 @@ namespace FontStashSharp
 				KernelWidth = KernelWidth,
 				KernelHeight = KernelHeight,
 				StbTrueTypeUseOldRasterizer = StbTrueTypeUseOldRasterizer,
-				UseTextShaping = UseTextShaping,
 				ExistingTexture = ExistingTexture,
 				ExistingTextureUsedSpace = ExistingTextureUsedSpace,
 				FontLoader = FontLoader,
-				ShapedTextCacheSize = ShapedTextCacheSize,
-				EnableBiDi = EnableBiDi
+				TextShaper = TextShaper,
+				ShapedTextCacheSize = ShapedTextCacheSize
 			};
 		}
 	}

@@ -2,6 +2,7 @@
 using System.Text;
 using System;
 
+
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
 #elif STRIDE
@@ -243,8 +244,8 @@ namespace FontStashSharp
 
 						// Apply HarfBuzz positioning
 						var glyphPos = pos + new Vector2(
-							glyph.RenderOffset.X + (shapedGlyph.XOffset / 64.0f),
-							glyph.RenderOffset.Y + (shapedGlyph.YOffset / 64.0f)
+							glyph.RenderOffset.X + shapedGlyph.XOffset,
+							glyph.RenderOffset.Y + shapedGlyph.YOffset
 						);
 
 						glyphPos = glyphPos.Transform(ref transformation);
@@ -258,17 +259,8 @@ namespace FontStashSharp
 							layerDepth);
 					}
 
-					if (glyph != null)
-					{
-						pos.X += glyph.XAdvance;
-						pos.Y += (shapedGlyph.YAdvance / 64.0f);
-					}
-					else
-					{
-						// Fallback
-						pos.X += (shapedGlyph.XAdvance / 64.0f);
-						pos.Y += (shapedGlyph.YAdvance / 64.0f);
-					}
+					pos.X += shapedGlyph.XAdvance;
+					pos.Y += shapedGlyph.YAdvance;
 				}
 
 				if (pos.X > maxX)
