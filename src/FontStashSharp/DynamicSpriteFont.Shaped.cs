@@ -505,8 +505,7 @@ namespace FontStashSharp
 					}
 
 					var glyph = GetGlyphByGlyphId(null, shapedGlyph.GlyphId, shapedGlyph.FontSourceIndex, effect, effectAmount);
-
-					if (glyph != null)
+					if (glyph != null && !glyph.IsEmpty)
 					{
 						var glyphX = x + glyph.RenderOffset.X + shapedGlyph.XOffset;
 						var glyphY = y + glyph.RenderOffset.Y + shapedGlyph.YOffset;

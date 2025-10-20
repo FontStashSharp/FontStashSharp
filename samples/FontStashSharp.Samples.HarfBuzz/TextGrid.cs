@@ -108,7 +108,8 @@ namespace FontStashSharp.Samples
 			{
 				var cell = pair.Value;
 				var size = cell.Font.MeasureString(cell.Text,
-					characterSpacing: Game1.CharacterSpacing, lineSpacing: Game1.LineSpacing);
+					characterSpacing: Game1.CharacterSpacing, lineSpacing: Game1.LineSpacing,
+					effect: Game1.Instance.CurrentEffect, effectAmount: Game1.EffectAmount);
 
 				widths[cell.X] = Math.Max(widths[cell.X], (int)size.X);
 				heights[cell.Y] = Math.Max(heights[cell.Y], (int)size.Y);
