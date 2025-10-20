@@ -42,7 +42,7 @@ namespace FontStashSharp
 			}
 		}
 
-		private const int EffectAmount = 1;
+		public const int EffectAmount = 1;
 		public const int CharacterSpacing = 0;
 		public const int LineSpacing = 4;
 
@@ -65,6 +65,7 @@ namespace FontStashSharp
 			new LineInfo(["NotoSansDevanagari-Regular.ttf", "NotoSansArabic-Regular.ttf", "NotoSansJP-Regular.ttf"], 25, "Complex mix", "हिंदी text inside العربية with 日本語 characters.")
 		};
 
+		private static Game _instance;
 		private IWindow window;
 		private Renderer renderer;
 
@@ -80,6 +81,15 @@ namespace FontStashSharp
 		};
 		private Texture _white;
 		private DateTime _started;
+
+		public static Game Instance => _instance;
+
+		public FontSystemEffect CurrentEffect => _currentEffect;
+
+		public Game()
+		{
+			_instance = this;
+		}
 
 		public void Run()
 		{
