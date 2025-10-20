@@ -50,7 +50,7 @@ namespace FontStashSharp
 
 		internal abstract void PreDraw(TextSource str, FontSystemEffect effect, int effectAmount, out int ascent, out int lineHeight);
 
-		private void Prepare(Vector2 position, float rotation, Vector2 origin, ref Vector2 scale, out Matrix transformation)
+		protected void Prepare(Vector2 position, float rotation, Vector2 origin, ref Vector2 scale, out Matrix transformation)
 		{
 			scale /= RenderFontSizeMultiplicator;
 
@@ -145,14 +145,16 @@ namespace FontStashSharp
 			return bounds;
 		}
 
-		private List<Glyph> GetGlyphs(TextSource source, Vector2 position, Vector2 origin, Vector2? sourceScale,
+		internal virtual void InternalGetGlyphs(TextSource source, Vector2 position, Vector2 origin, Vector2? sourceScale,
 			float characterSpacing, float lineSpacing, FontSystemEffect effect, int effectAmount,
 			List<Glyph> result)
 		{
-			if (source.IsNull) return result;
+			if (source.IsNull)
+			{
+				return;
+			}
 
 			Matrix transformation;
-
 			var scale = sourceScale ?? Utility.DefaultScale;
 			Prepare(position, 0, origin, ref scale, out transformation);
 
@@ -216,8 +218,6 @@ namespace FontStashSharp
 				result.Add(glyphInfo);
 				++i;
 			}
-
-			return result;
 		}
 
 		public List<Glyph> GetGlyphs(string text, Vector2 position,
@@ -227,7 +227,7 @@ namespace FontStashSharp
 		{
 			List<Glyph> result = new List<Glyph>();
 
-			GetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount, result);
+			InternalGetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount, result);
 
 			return result;
 		}
@@ -239,7 +239,7 @@ namespace FontStashSharp
 		{
 			List<Glyph> result = new List<Glyph>();
 
-			GetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount, result);
+			InternalGetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount, result);
 
 			return result;
 		}
@@ -248,32 +248,14 @@ namespace FontStashSharp
 			Vector2 origin = default(Vector2), Vector2? scale = null,
 			float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-			GetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount, result);
+			InternalGetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount, result);
 
 		public void GetGlyphs(StringBuilder text, Vector2 position, List<Glyph> result,
 			Vector2 origin = default(Vector2), Vector2? scale = null,
 			float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-			GetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount, result);
+			InternalGetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount, result);
 
-
-		[Obsolete("Use GetGlyphs")]
-		public List<Rectangle> GetGlyphRects(string text, Vector2 position,
-			Vector2 origin = default(Vector2), Vector2? scale = null,
-			float characterSpacing = 0.0f, float lineSpacing = 0.0f)
-		{
-			var glyphs = GetGlyphs(text, position, origin, scale, characterSpacing, lineSpacing);
-			return (from g in glyphs select g.Bounds).ToList();
-		}
-
-		[Obsolete("Use GetGlyphs")]
-		public List<Rectangle> GetGlyphRects(StringBuilder text, Vector2 position,
-			Vector2 origin = default(Vector2), Vector2? scale = null,
-			float characterSpacing = 0.0f, float lineSpacing = 0.0f)
-		{
-			var glyphs = GetGlyphs(text, position, origin, scale, characterSpacing, lineSpacing);
-			return (from g in glyphs select g.Bounds).ToList();
-		}
 
 		public Vector2 MeasureString(string text, Vector2? scale = null,
 			float characterSpacing = 0.0f, float lineSpacing = 0.0f,

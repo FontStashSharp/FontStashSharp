@@ -448,8 +448,8 @@ namespace FontStashSharp
 
 					if (glyph != null)
 					{
-						var glyphX = x + glyph.RenderOffset.X + (shapedGlyph.XOffset / 64.0f);
-						var glyphY = y + glyph.RenderOffset.Y + (shapedGlyph.YOffset / 64.0f);
+						var glyphX = x + glyph.RenderOffset.X + shapedGlyph.XOffset;
+						var glyphY = y + glyph.RenderOffset.Y + shapedGlyph.YOffset;
 						var glyphX2 = glyphX + glyph.Size.X;
 						var glyphY2 = glyphY + glyph.Size.Y;
 
@@ -459,17 +459,8 @@ namespace FontStashSharp
 						if (glyphY2 > maxy) maxy = glyphY2;
 					}
 
-					if (glyph != null)
-					{
-						x += glyph.XAdvance;
-						y += (shapedGlyph.YAdvance / 64.0f);
-					}
-					else
-					{
-						// Fallback
-						x += (shapedGlyph.XAdvance / 64.0f);
-						y += (shapedGlyph.YAdvance / 64.0f);
-					}
+					x += shapedGlyph.XAdvance;
+					y += shapedGlyph.YAdvance;
 				}
 
 				if (x > maxx) maxx = x;
@@ -549,6 +540,96 @@ namespace FontStashSharp
 		internal void ClearShapedTextCache()
 		{
 			_shapedTextCache.Clear();
+		}
+
+		internal override void InternalGetGlyphs(TextSource source, Vector2 position, Vector2 origin, Vector2? sourceScale, float characterSpacing, float lineSpacing, FontSystemEffect effect, int effectAmount, List<Glyph> result)
+		{
+			if (FontSystem.UseTextShaping)
+			{
+				InternalShapedGetGlyphs(source, position, origin, sourceScale, characterSpacing, lineSpacing, effect, effectAmount, result);
+				return;
+			}
+
+			base.InternalGetGlyphs(source, position, origin, sourceScale, characterSpacing, lineSpacing, effect, effectAmount, result);
+		}
+
+		private void InternalShapedGetGlyphs(TextSource source, Vector2 position, Vector2 origin, Vector2? sourceScale, float characterSpacing, float lineSpacing, FontSystemEffect effect, int effectAmount, List<Glyph> result)
+		{
+			var text = source.StringText.String ?? source.StringBuilderText?.ToString();
+			if (string.IsNullOrEmpty(text))
+			{
+				return;
+			}
+
+			Matrix transformation;
+			var scale = sourceScale ?? Utility.DefaultScale;
+			Prepare(position, 0, origin, ref scale, out transformation);
+
+			var lines = text.Split('\n');
+
+			int ascent = 0, lineHeight = 0;
+			if (FontSystem.FontSources.Count > 0)
+			{
+				int descent, lh;
+				FontSystem.FontSources[0].GetMetricsForSize(FontSize * FontSystem.FontResolutionFactor, out ascent, out descent, out lh);
+				lineHeight = lh;
+			}
+
+			var pos = new Vector2(0, ascent);
+			for (int lineIndex = 0; lineIndex < lines.Length; lineIndex++)
+			{
+				var line = lines[lineIndex];
+				if (lineIndex > 0)
+				{
+					pos.X = 0.0f;
+					pos.Y += lineHeight + lineSpacing;
+				}
+
+				if (string.IsNullOrEmpty(line))
+				{
+					continue;
+				}
+
+				var shapedText = GetShapedText(line, FontSize * FontSystem.FontResolutionFactor);
+
+				float lineStartX = pos.X;
+				for (int i = 0; i < shapedText.Glyphs.Length; i++)
+				{
+					var shapedGlyph = shapedText.Glyphs[i];
+
+					if (i > 0 && characterSpacing > 0)
+					{
+						pos.X += characterSpacing;
+					}
+
+					var glyphPos = pos + new Vector2(shapedGlyph.XOffset, shapedGlyph.YOffset);
+					var s = Vector2.Zero;
+					var glyph = GetGlyphByGlyphId(null, shapedGlyph.GlyphId, shapedGlyph.FontSourceIndex, effect, effectAmount);
+					if (glyph != null && !glyph.IsEmpty)
+					{
+						// Apply HarfBuzz positioning
+						glyphPos += new Vector2(glyph.RenderOffset.X, glyph.RenderOffset.Y);
+
+						var rect = glyph.RenderRectangle;
+						s = new Vector2(rect.Width * scale.X, rect.Height * scale.Y);
+					}
+
+					glyphPos = glyphPos.Transform(ref transformation);
+					var glyphInfo = new Glyph
+					{
+						Index = i,
+						Codepoint = shapedGlyph.GlyphId,
+						Bounds = new Rectangle((int)glyphPos.X, (int)glyphPos.Y, (int)s.X, (int)s.Y),
+						XAdvance = (int)(shapedGlyph.XAdvance * scale.X)
+					};
+
+					// Add to the result
+					result.Add(glyphInfo);
+
+					pos.X += shapedGlyph.XAdvance;
+					pos.Y += shapedGlyph.YAdvance;
+				}
+			}
 		}
 	}
 }
