@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.Rota
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.RichText.Stride", "..\samples\FontStashSharp.Samples.RichText\FontStashSharp.Samples.RichText.Stride.csproj", "{623ECDCE-A4D3-4CF8-98D5-83BF09DC1CDC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FontStashSharp.Samples.HarfBuzz.Stride", "..\samples\FontStashSharp.Samples.HarfBuzz\FontStashSharp.Samples.HarfBuzz.Stride.csproj", "{9BD8A428-8528-3571-CDAB-3BD96036A372}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{623ECDCE-A4D3-4CF8-98D5-83BF09DC1CDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{623ECDCE-A4D3-4CF8-98D5-83BF09DC1CDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{623ECDCE-A4D3-4CF8-98D5-83BF09DC1CDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BD8A428-8528-3571-CDAB-3BD96036A372}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BD8A428-8528-3571-CDAB-3BD96036A372}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BD8A428-8528-3571-CDAB-3BD96036A372}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BD8A428-8528-3571-CDAB-3BD96036A372}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +56,7 @@ Global
 		{AAFF95FE-BB0F-4333-B663-6C7588A21B49} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
 		{E8B2F7BE-292B-4069-BEE8-211EB592D050} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
 		{623ECDCE-A4D3-4CF8-98D5-83BF09DC1CDC} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
+		{9BD8A428-8528-3571-CDAB-3BD96036A372} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {35ACDF4E-2CE2-46B1-A19F-35DC131069A1}

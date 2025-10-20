@@ -135,8 +135,8 @@ namespace FontStashSharp.Samples
 		{
 			base.ConfirmRenderingSettings(gameCreation);
 
-			GraphicsDeviceManager.PreferredBackBufferWidth = 1200;
-			GraphicsDeviceManager.PreferredBackBufferHeight = 800;
+			GraphicsDeviceManager.PreferredBackBufferWidth = 2100;
+			GraphicsDeviceManager.PreferredBackBufferHeight = 900;
 			GraphicsDeviceManager.PreferredColorSpace = ColorSpace.Gamma;
 		}
 #endif

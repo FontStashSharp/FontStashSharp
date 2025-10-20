@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>$(AppTargetFramework)</TargetFramework>
+    <OutputPath>bin\Stride\$(Configuration)</OutputPath>
+    <DefineConstants>$(DefineConstants);STRIDE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\XNA\FontStashSharp.Stride.csproj" />
+  </ItemGroup>  
+  
+  <ItemGroup>
+    <PackageReference Include="Stride.Engine" Version="$(StrideVersion)" />
+    <PackageReference Include="FontStashSharp.TextShapers.HarfBuzz" Version="$(FontStashSharpBaseVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Fonts\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup> 
+</Project>
