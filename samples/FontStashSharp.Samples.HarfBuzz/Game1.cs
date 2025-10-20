@@ -71,7 +71,7 @@ namespace FontStashSharp.Samples
 			}
 		}
 
-		private const int EffectAmount = 1;
+		public const int EffectAmount = 1;
 		public const int CharacterSpacing = 0;
 		public const int LineSpacing = 4;
 
@@ -112,6 +112,8 @@ namespace FontStashSharp.Samples
 			XSpacing = 25,
 			YSpacing = 8,
 		};
+
+		public FontSystemEffect CurrentEffect => _currentEffect;
 
 		public Game1()
 		{
