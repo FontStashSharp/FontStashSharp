@@ -11,6 +11,8 @@ using Stride.Graphics;
 #else
 using System.Drawing;
 using System.Numerics;
+using Matrix = System.Numerics.Matrix3x2;
+using Color = FontStashSharp.FSColor;
 #endif
 
 namespace FontStashSharp
@@ -421,8 +423,8 @@ namespace FontStashSharp
 
 						// Apply HarfBuzz positioning
 						var glyphPos = pos + new Vector2(
-							glyph.RenderOffset.X + (shapedGlyph.XOffset / 64.0f),
-							glyph.RenderOffset.Y + (shapedGlyph.YOffset / 64.0f)
+							glyph.RenderOffset.X + shapedGlyph.XOffset,
+							glyph.RenderOffset.Y + shapedGlyph.YOffset
 						);
 
 						var size = new Vector2(glyph.Size.X, glyph.Size.Y);
@@ -431,17 +433,8 @@ namespace FontStashSharp
 							ref topLeft, ref topRight, ref bottomLeft, ref bottomRight);
 					}
 
-					if (glyph != null)
-					{
-						pos.X += glyph.XAdvance;
-						pos.Y += (shapedGlyph.YAdvance / 64.0f);
-					}
-					else
-					{
-						// Fallback
-						pos.X += (shapedGlyph.XAdvance / 64.0f);
-						pos.Y += (shapedGlyph.YAdvance / 64.0f);
-					}
+					pos.X += shapedGlyph.XAdvance;
+					pos.Y += shapedGlyph.YAdvance;
 				}
 
 				if (pos.X > maxX)

@@ -30,6 +30,13 @@ namespace FontStashSharp.Interfaces
 		/// Texture Coordinate
 		/// </summary>
 		public Vector2 TextureCoordinate;
+
+		public VertexPositionColorTexture(Vector3 position, FSColor color, Vector2 texCoord)
+		{
+			Position = position;
+			Color = color;
+			TextureCoordinate = texCoord;
+		}
 	}
 #endif
 

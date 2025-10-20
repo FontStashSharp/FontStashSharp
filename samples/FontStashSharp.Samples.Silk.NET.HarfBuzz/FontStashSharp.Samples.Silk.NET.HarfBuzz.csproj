@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>$(AppTargetFramework)</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Compile Include="..\FontStashSharp.Samples.Silk.NET\BufferObject.cs" Link="BufferObject.cs" />
+    <Compile Include="..\FontStashSharp.Samples.Silk.NET\Env.cs" Link="Env.cs" />
+    <Compile Include="..\FontStashSharp.Samples.Silk.NET\GLUtility.cs" Link="GLUtility.cs" />
+    <Compile Include="..\FontStashSharp.Samples.Silk.NET\Platform\Renderer.cs" Link="Platform\Renderer.cs" />
+    <Compile Include="..\FontStashSharp.Samples.Silk.NET\Platform\Texture2DManager.cs" Link="Platform\Texture2DManager.cs" />
+    <Compile Include="..\FontStashSharp.Samples.Silk.NET\Shader.cs" Link="Shader.cs" />
+    <Compile Include="..\FontStashSharp.Samples.Silk.NET\Texture.cs" Link="Texture.cs" />
+    <Compile Include="..\FontStashSharp.Samples.Silk.NET\VertexArrayObject.cs" Link="VertexArrayObject.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Silk.NET.Input" Version="2.15.0" />
+    <PackageReference Include="Silk.NET.OpenGL" Version="2.15.0" />
+    <PackageReference Include="Silk.NET.Windowing" Version="2.15.0" />
+    <PackageReference Include="FontStashSharp.TextShapers.HarfBuzz" Version="$(FontStashSharpBaseVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\FontStashSharp\FontStashSharp.PlatformAgnostic.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="..\FontStashSharp.Samples.Silk.NET\shader.frag" Link="shader.frag">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FontStashSharp.Samples.Silk.NET\shader.vert" Link="shader.vert">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Fonts\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>  
+</Project>

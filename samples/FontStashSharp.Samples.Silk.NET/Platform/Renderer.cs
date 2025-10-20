@@ -1,4 +1,5 @@
 ﻿using FontStashSharp.Interfaces;
+using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using System;
 using System.Numerics;
@@ -24,6 +25,8 @@ namespace FontStashSharp.Platform
 		public ITexture2DManager TextureManager => _textureManager;
 
 		private static readonly short[] indexData = GenerateIndexArray();
+
+		public Rectangle<int> Viewport { get; set; } = new Rectangle<int>(0, 0, 1200, 800);
 
 		public unsafe Renderer()
 		{
@@ -77,7 +80,10 @@ namespace FontStashSharp.Platform
 			_shader.Use();
 			_shader.SetUniform("TextureSampler", 0);
 
-			var transform = Matrix4x4.CreateOrthographicOffCenter(0, 1200, 800, 0, 0, -1);
+			var transform = Matrix4x4.CreateOrthographicOffCenter(
+				Viewport.Origin.X, Viewport.Origin.X + Viewport.Size.X,
+				Viewport.Origin.Y + Viewport.Size.Y, Viewport.Origin.Y,
+				0, -1);
 			_shader.SetUniform("MatrixTransform", transform);
 
 			_vao.Bind();
@@ -98,6 +104,16 @@ namespace FontStashSharp.Platform
 			_vertexData[_vertexIndex++] = bottomRight;
 
 			_lastTexture = texture;
+		}
+
+		public void Draw(object texture, Vector2 position, Vector2 size, FSColor color)
+		{
+			var topLeft = new VertexPositionColorTexture(new Vector3(position.X, position.Y, 0), color, new Vector2(0, 0));
+			var topRight = new VertexPositionColorTexture(new Vector3(position.X + size.X, position.Y, 0), color, new Vector2(1, 0));
+			var bottomLeft = new VertexPositionColorTexture(new Vector3(position.X, position.Y + size.Y, 0), color, new Vector2(0, 1));
+			var bottomRight = new VertexPositionColorTexture(new Vector3(position.X + size.X, position.Y + size.Y, 0), color, new Vector2(1, 1));
+
+			DrawQuad(texture, ref topLeft, ref topRight, ref bottomLeft, ref bottomRight);
 		}
 
 		public void End()
