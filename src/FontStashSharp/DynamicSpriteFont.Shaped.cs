@@ -343,7 +343,7 @@ namespace FontStashSharp
 #if MONOGAME || FNA || STRIDE
 					var glyph = GetGlyphById(renderer.GraphicsDevice, shapedGlyph.GlyphId, shapedGlyph.FontSourceId, effect, effectAmount);
 #else
-					var glyph = GetGlyphByGlyphId(renderer.TextureManager, shapedGlyph.GlyphId, shapedGlyph.FontSourceIndex, effect, effectAmount);
+					var glyph = GetGlyphById(renderer.TextureManager, shapedGlyph.GlyphId, shapedGlyph.FontSourceId, effect, effectAmount);
 #endif
 
 					if (glyph != null && !glyph.IsEmpty)
@@ -476,7 +476,7 @@ namespace FontStashSharp
 #if MONOGAME || FNA || STRIDE
 					var glyph = GetGlyphById(renderer.GraphicsDevice, shapedGlyph.GlyphId, shapedGlyph.FontSourceId, effect, effectAmount);
 #else
-					var glyph = GetGlyphByGlyphId(renderer.TextureManager, shapedGlyph.GlyphId, shapedGlyph.FontSourceIndex, effect, effectAmount);
+					var glyph = GetGlyphById(renderer.TextureManager, shapedGlyph.GlyphId, shapedGlyph.FontSourceId, effect, effectAmount);
 #endif
 
 					if (glyph != null && !glyph.IsEmpty)

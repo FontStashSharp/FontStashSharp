@@ -159,6 +159,7 @@ namespace FontStashSharp
 			renderer = new Renderer();
 
 			// FontSystemDefaults.FontLoader = new FreeTypeLoader();
+			// FontSystemDefaults.TextShaper = new HarfBuzzTextShaper();
 
 			var defaultFontSystem = GetDefaultFontSystem();
 			var defaultFont = defaultFontSystem.GetFont(32);

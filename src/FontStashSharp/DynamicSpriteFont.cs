@@ -131,7 +131,7 @@ namespace FontStashSharp
 #if MONOGAME || FNA || STRIDE
 		private DynamicFontGlyph GetGlyphByCodepointInternal(GraphicsDevice device, int codepoint, FontSystemEffect effect, int effectAmount)
 #else
-		private DynamicFontGlyph GGetGlyphByCodepointInternal(ITexture2DManager device, int codepoint, FontSystemEffect effect, int effectAmount)
+		private DynamicFontGlyph GetGlyphByCodepointInternal(ITexture2DManager device, int codepoint, FontSystemEffect effect, int effectAmount)
 #endif
 		{
 			var glyph = GetGlyphByCodepointWithoutBitmap(codepoint, effect, effectAmount);
