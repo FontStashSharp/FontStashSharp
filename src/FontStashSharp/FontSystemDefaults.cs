@@ -91,6 +91,8 @@ namespace FontStashSharp
 
 		public static bool StbTrueTypeUseOldRasterizer { get; set; }
 
+		public static ITextShaper TextShaper { get; set; }
+
 		/// <summary>
 		/// Font Rasterizer. If set to null then default rasterizer(StbTrueTypeSharp) is used.
 		/// </summary>

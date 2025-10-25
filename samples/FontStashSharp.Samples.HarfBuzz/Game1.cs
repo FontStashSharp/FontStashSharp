@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
+
 #if MONOGAME || FNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -215,6 +216,7 @@ namespace FontStashSharp.Samples
 #endif
 
 			// FontSystemDefaults.FontLoader = new FreeTypeLoader();
+			// FontSystemDefaults.TextShaper = new HarfBuzzTextShaper();
 
 			var defaultFontSystem = GetDefaultFontSystem();
 			var defaultFont = defaultFontSystem.GetFont(32);

@@ -19,7 +19,7 @@ using Texture2D = System.Object;
 
 namespace FontStashSharp
 {
-	public class FontSystem : IDisposable
+	public class FontSystem : ITextShapingInfoProvider, IDisposable
 	{
 		public const int GlyphPad = 2;
 
@@ -30,7 +30,6 @@ namespace FontStashSharp
 		private FontAtlas _currentAtlas;
 
 		private readonly List<int> _textShaperFonts = new List<int>();
-		private readonly Func<int, TextShaperCodePointInfo> _codepointInfoGetter;
 
 		public int TextureWidth => _settings.TextureWidth;
 		public int TextureHeight => _settings.TextureHeight;
@@ -86,13 +85,6 @@ namespace FontStashSharp
 
 			UseKernings = FontSystemDefaults.UseKernings;
 			DefaultCharacter = FontSystemDefaults.DefaultCharacter;
-
-			_codepointInfoGetter = codepoint =>
-			{
-				var glyphId = GetCodepointIndex(codepoint, out int fontSourceIndex);
-
-				return new TextShaperCodePointInfo(_textShaperFonts[fontSourceIndex], _fontSources[fontSourceIndex]);
-			};
 		}
 
 		public FontSystem() : this(new FontSystemSettings())
@@ -117,7 +109,7 @@ namespace FontStashSharp
 				Atlases.Clear();
 			}
 
-			if (_textShaperFonts != null)
+			if (_settings.TextShaper != null)
 			{
 				foreach (var hbFont in _textShaperFonts)
 				{
@@ -221,7 +213,7 @@ namespace FontStashSharp
 				throw new InvalidOperationException("Text shaping is not enabled. Set UseTextShaping = true in FontSystemSettings.");
 			}
 
-			return _settings.TextShaper.Shape(text, fontSize, _codepointInfoGetter);
+			return _settings.TextShaper.Shape(text, fontSize, this);
 		}
 
 #if MONOGAME || FNA || STRIDE
@@ -304,5 +296,16 @@ namespace FontStashSharp
 
 			glyph.Texture = atlas.Texture;
 		}
+
+		int? ITextShapingInfoProvider.GetFontSourceId(int codepoint)
+		{
+			var glyphId = GetCodepointIndex(codepoint, out int fontSourceIndex);
+
+			return glyphId != null ? fontSourceIndex : (int?)null;
+		}
+
+		int ITextShapingInfoProvider.GetTextShaperFontId(int fontSourceId) => _textShaperFonts[fontSourceId];
+
+		float ITextShapingInfoProvider.CalculateScale(int fontSourceId, float fontSize) => _fontSources[fontSourceId].CalculateScaleForTextShaper(fontSize);
 	}
 }

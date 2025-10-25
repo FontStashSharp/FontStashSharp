@@ -145,6 +145,69 @@ namespace FontStashSharp
 			_shapedTextCache.Clear();
 		}
 
+		/// <summary>
+		/// Get a glyph by its glyph ID
+		/// </summary>
+#if MONOGAME || FNA || STRIDE
+		internal DynamicFontGlyph GetGlyphById(GraphicsDevice device, int glyphId, int fontSourceIndex, FontSystemEffect effect, int effectAmount)
+#else
+		internal DynamicFontGlyph GetGlyphById(ITexture2DManager device, int glyphId, int fontSourceIndex, FontSystemEffect effect, int effectAmount)
+#endif
+		{
+			if (effect == FontSystemEffect.None)
+			{
+			}
+			else if (effectAmount == 0)
+			{
+				effect = FontSystemEffect.None;
+			}
+
+			var storage = GetGlyphStorage(effect, effectAmount);
+
+			var key = (fontSourceIndex << 24) | glyphId;
+
+			DynamicFontGlyph glyph;
+			if (storage.GlyphsByIds.TryGetValue(key, out glyph))
+			{
+				if (device != null && glyph.Texture == null)
+				{
+					FontSystem.RenderGlyphOnAtlas(device, glyph);
+				}
+				return glyph;
+			}
+
+			var fontSize = FontSize * FontSystem.FontResolutionFactor;
+			var font = FontSystem.FontSources[fontSourceIndex];
+
+			int advance, x0, y0, x1, y1;
+			font.GetGlyphMetrics(glyphId, fontSize, out advance, out x0, out y0, out x1, out y1);
+
+			var gw = x1 - x0 + effectAmount * 2;
+			var gh = y1 - y0 + effectAmount * 2;
+
+			glyph = new DynamicFontGlyph
+			{
+				Codepoint = 0, // Not applicable for shaped glyphs
+				Id = glyphId,
+				FontSize = fontSize,
+				FontSourceIndex = fontSourceIndex,
+				RenderOffset = new Point(x0, y0),
+				Size = new Point(gw, gh),
+				XAdvance = advance,
+				Effect = effect,
+				EffectAmount = effectAmount
+			};
+
+			storage.GlyphsByIds[key] = glyph;
+
+			if (device != null && glyph.Texture == null)
+			{
+				FontSystem.RenderGlyphOnAtlas(device, glyph);
+			}
+
+			return glyph;
+		}
+
 		internal override float InternalDrawText(IFontStashRenderer renderer, TextColorSource source, Vector2 position, float rotation, Vector2 origin, Vector2? sourceScale, float layerDepth, float characterSpacing, float lineSpacing, TextStyle textStyle, FontSystemEffect effect, int effectAmount)
 		{
 			if (FontSystem.UseTextShaping)
@@ -278,7 +341,7 @@ namespace FontStashSharp
 					}
 
 #if MONOGAME || FNA || STRIDE
-					var glyph = GetGlyphByGlyphId(renderer.GraphicsDevice, shapedGlyph.GlyphId, shapedGlyph.FontSourceIndex, effect, effectAmount);
+					var glyph = GetGlyphById(renderer.GraphicsDevice, shapedGlyph.GlyphId, shapedGlyph.FontSourceId, effect, effectAmount);
 #else
 					var glyph = GetGlyphByGlyphId(renderer.TextureManager, shapedGlyph.GlyphId, shapedGlyph.FontSourceIndex, effect, effectAmount);
 #endif
@@ -411,7 +474,7 @@ namespace FontStashSharp
 					}
 
 #if MONOGAME || FNA || STRIDE
-					var glyph = GetGlyphByGlyphId(renderer.GraphicsDevice, shapedGlyph.GlyphId, shapedGlyph.FontSourceIndex, effect, effectAmount);
+					var glyph = GetGlyphById(renderer.GraphicsDevice, shapedGlyph.GlyphId, shapedGlyph.FontSourceId, effect, effectAmount);
 #else
 					var glyph = GetGlyphByGlyphId(renderer.TextureManager, shapedGlyph.GlyphId, shapedGlyph.FontSourceIndex, effect, effectAmount);
 #endif
@@ -504,7 +567,7 @@ namespace FontStashSharp
 						x += characterSpacing;
 					}
 
-					var glyph = GetGlyphByGlyphId(null, shapedGlyph.GlyphId, shapedGlyph.FontSourceIndex, effect, effectAmount);
+					var glyph = GetGlyphById(null, shapedGlyph.GlyphId, shapedGlyph.FontSourceId, effect, effectAmount);
 					if (glyph != null && !glyph.IsEmpty)
 					{
 						var glyphX = x + glyph.RenderOffset.X + shapedGlyph.XOffset;
@@ -584,7 +647,7 @@ namespace FontStashSharp
 
 					var glyphPos = pos + new Vector2(shapedGlyph.XOffset, shapedGlyph.YOffset);
 					var s = Vector2.Zero;
-					var glyph = GetGlyphByGlyphId(null, shapedGlyph.GlyphId, shapedGlyph.FontSourceIndex, effect, effectAmount);
+					var glyph = GetGlyphById(null, shapedGlyph.GlyphId, shapedGlyph.FontSourceId, effect, effectAmount);
 					if (glyph != null && !glyph.IsEmpty)
 					{
 						// Apply HarfBuzz positioning
