@@ -20,6 +20,8 @@ jobs:
       run: dotnet build build\FontStashSharp.MonoGame.sln --configuration Release
     - name: Build FontStashSharp.Stride
       run: dotnet build build\FontStashSharp.Stride.sln --configuration Release
+    - name: Build FontStashSharp.Kni
+      run: dotnet build build\FontStashSharp.Kni.sln --configuration Release
     - name: Test
       run: dotnet test build\FontStashSharp.MonoGame.sln
     - name: Install NuGet
@@ -32,4 +34,7 @@ jobs:
       continue-on-error: true
     - name: Publish FontStashSharp.Stride to NuGet
       run: nuget.exe push src\XNA\bin\Stride\Release\FontStashSharp.Stride.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
+      continue-on-error: true
+    - name: Publish FontStashSharp.Kni to NuGet
+      run: nuget.exe push src\XNA\bin\Kni\Release\FontStashSharp.Kni.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
       continue-on-error: true      

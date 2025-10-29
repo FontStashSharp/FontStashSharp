@@ -20,5 +20,7 @@ jobs:
       run: dotnet build build\FontStashSharp.MonoGame.sln --configuration Release
     - name: Build FontStashSharp.Stride
       run: dotnet build build\FontStashSharp.Stride.sln --configuration Release
+    - name: Build FontStashSharp.Kni
+      run: dotnet build build\FontStashSharp.Kni.sln --configuration Release
     - name: Test
       run: dotnet test build\FontStashSharp.MonoGame.sln
