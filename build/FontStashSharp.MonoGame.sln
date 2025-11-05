@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.Disa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FontStashSharp.Samples.HarfBuzz.MonoGame", "..\samples\FontStashSharp.Samples.HarfBuzz\FontStashSharp.Samples.HarfBuzz.MonoGame.csproj", "{8BA5AB87-84D3-A550-9974-7FFFE0916C18}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FontStashSharp.Samples.Performance.MonoGame", "..\samples\FontStashSharp.Samples.Performance\FontStashSharp.Samples.Performance.MonoGame.csproj", "{F6E1705F-869D-4665-EB6E-8CFF6094C5A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{8BA5AB87-84D3-A550-9974-7FFFE0916C18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BA5AB87-84D3-A550-9974-7FFFE0916C18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BA5AB87-84D3-A550-9974-7FFFE0916C18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6E1705F-869D-4665-EB6E-8CFF6094C5A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6E1705F-869D-4665-EB6E-8CFF6094C5A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6E1705F-869D-4665-EB6E-8CFF6094C5A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6E1705F-869D-4665-EB6E-8CFF6094C5A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -91,6 +97,7 @@ Global
 		{DF94ABCC-D7A4-478F-AA1A-CDCA906A7250} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
 		{F66E04AC-AD4A-4983-9977-CDFF907C2090} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
 		{8BA5AB87-84D3-A550-9974-7FFFE0916C18} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
+		{F6E1705F-869D-4665-EB6E-8CFF6094C5A4} = {99076AAC-3723-4B2E-A74B-4772FAE8DD6A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {35ACDF4E-2CE2-46B1-A19F-35DC131069A1}
