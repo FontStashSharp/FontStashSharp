@@ -78,7 +78,6 @@ namespace FontStashSharp.Samples
 					return new MemoryStream(bytes);
 				},
 				GraphicsDevice);
-			// _fssStaticFont.UseKernings = false;
 
 			// Simple
 			var fontSystem = new FontSystem();
@@ -131,7 +130,7 @@ namespace FontStashSharp.Samples
 			}
 
 			_fssStaticCounter += (float)_watch.Elapsed.TotalMilliseconds;
-			_spriteBatch.DrawString(_fssStaticFont, $"Static FontStashSharp: {_watch.Elapsed.TotalMilliseconds} ms/{_fssStaticCounter / _oldCounter}x", new Vector2(0, 96), Color.White);
+			_spriteBatch.DrawString(_oldFont, $"Static FontStashSharp: {_watch.Elapsed.TotalMilliseconds} ms/{_fssStaticCounter / _oldCounter}x", new Vector2(0, 96), Color.White);
 
 			// FSS
 			_watch.Restart();
@@ -141,7 +140,7 @@ namespace FontStashSharp.Samples
 			}
 
 			_fssFontCounter += (float)_watch.Elapsed.TotalMilliseconds;
-			_spriteBatch.DrawString(_fssFont, $"Dynamic FontStashSharp: {_watch.Elapsed.TotalMilliseconds} ms/{_fssFontCounter / _oldCounter}x", new Vector2(0, 160), Color.White);
+			_spriteBatch.DrawString(_oldFont, $"Dynamic FontStashSharp: {_watch.Elapsed.TotalMilliseconds} ms/{_fssFontCounter / _oldCounter}x", new Vector2(0, 160), Color.White);
 
 			// FSS Shaped
 			_watch.Restart();
@@ -151,7 +150,7 @@ namespace FontStashSharp.Samples
 			}
 
 			_fssShapedCounter += (float)_watch.Elapsed.TotalMilliseconds;
-			_spriteBatch.DrawString(_fssShapedFont, $"Shaped FontStashSharp: {_watch.Elapsed.TotalMilliseconds} ms/{_fssShapedCounter / _oldCounter}x", new Vector2(0, 224), Color.White);
+			_spriteBatch.DrawString(_oldFont, $"Shaped FontStashSharp: {_watch.Elapsed.TotalMilliseconds} ms/{_fssShapedCounter / _oldCounter}x", new Vector2(0, 224), Color.White);
 
 
 			_spriteBatch.End();
