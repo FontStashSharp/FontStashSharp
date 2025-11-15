@@ -231,7 +231,6 @@ namespace FontStashSharp
 				return 0.0f;
 			}
 
-
 			var dynamicGlyph = (DynamicFontGlyph)glyph;
 			var dynamicPrevGlyph = (DynamicFontGlyph)prevGlyph;
 			if (dynamicGlyph.FontSourceIndex != dynamicPrevGlyph.FontSourceIndex)
