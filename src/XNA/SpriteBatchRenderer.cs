@@ -76,15 +76,27 @@ namespace FontStashSharp
 		public void Draw(Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 scale, float depth)
 		{
 #if MONOGAME || FNA
-			_batch.Draw(texture,
-				position,
-				sourceRectangle,
-				color,
-				rotation,
-				Vector2.Zero,
-				scale,
-				SpriteEffects.None,
-				depth);
+			if (rotation.IsZero() && scale.EpsilonEquals(Vector2.One) && depth.IsZero())
+			{
+				// When rotation/scale/depth use default values,
+				// use simpler version of Draw for the performance reasons
+				_batch.Draw(texture,
+					position,
+					sourceRectangle,
+					color);
+			}
+			else
+			{
+				_batch.Draw(texture,
+					position,
+					sourceRectangle,
+					color,
+					rotation,
+					Vector2.Zero,
+					scale,
+					SpriteEffects.None,
+					depth);
+			}
 #elif STRIDE
 			_batch.Draw(texture,
 				position,
