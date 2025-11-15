@@ -21,11 +21,10 @@ namespace FontStashSharp.Samples
 		private StaticSpriteFont _fssStaticFont;
 		private DynamicSpriteFont _fssFont;
 		private DynamicSpriteFont _fssShapedFont;
-		private readonly Stopwatch _watch = new Stopwatch();
-		private float _oldCounter = 0;
-		private float _fssStaticCounter = 0;
-		private float _fssFontCounter = 0;
-		private float _fssShapedCounter = 0;
+		private readonly Counter _oldCounter = new Counter();
+		private readonly Counter _fssStaticCounter = new Counter();
+		private readonly Counter _fssFontCounter = new Counter();
+		private readonly Counter _fssShapedCounter = new Counter();
 
 		public static Game1 Instance { get; private set; }
 
@@ -63,6 +62,8 @@ namespace FontStashSharp.Samples
 		/// </summary>
 		protected override void LoadContent()
 		{
+			// FontSystemDefaults.UseKernings = false;
+
 			// Create a new SpriteBatch, which can be used to draw textures.
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -78,6 +79,8 @@ namespace FontStashSharp.Samples
 					return new MemoryStream(bytes);
 				},
 				GraphicsDevice);
+
+			// _fssStaticFont.UseKernings = false;
 
 			// Simple
 			var fontSystem = new FontSystem();
@@ -113,45 +116,44 @@ namespace FontStashSharp.Samples
 			_spriteBatch.Begin();
 
 			// MG Font
-			_watch.Restart();
+			_oldCounter.Start();
 			for (var i = 0; i < Count; ++i)
 			{
 				_spriteBatch.DrawString(_oldFont, Text, new Vector2(0, 0), Color.White);
 			}
+			_oldCounter.Stop();
 
-			_spriteBatch.DrawString(_oldFont, $"Ordinary SpriteFont: {_watch.Elapsed.TotalMilliseconds} ms", new Vector2(0, 32), Color.White);
-			_oldCounter += (float)_watch.Elapsed.TotalMilliseconds;
+			_spriteBatch.DrawString(_oldFont, $"Ordinary SpriteFont: {_oldCounter.Last} ms", new Vector2(0, 32), Color.White);
 
 			// FSS
-			_watch.Restart();
+			_fssStaticCounter.Start();
 			for (var i = 0; i < Count; ++i)
 			{
 				_spriteBatch.DrawString(_fssStaticFont, Text, new Vector2(0, 64), Color.White);
 			}
+			_fssStaticCounter.Stop();
 
-			_fssStaticCounter += (float)_watch.Elapsed.TotalMilliseconds;
-			_spriteBatch.DrawString(_oldFont, $"Static FontStashSharp: {_watch.Elapsed.TotalMilliseconds} ms/{_fssStaticCounter / _oldCounter}x", new Vector2(0, 96), Color.White);
+			_spriteBatch.DrawString(_oldFont, $"Static FontStashSharp: {_fssStaticCounter.Last} ms/{_fssStaticCounter.Total / _oldCounter.Total}x", new Vector2(0, 96), Color.White);
 
 			// FSS
-			_watch.Restart();
+			_fssFontCounter.Start();
 			for (var i = 0; i < Count; ++i)
 			{
 				_spriteBatch.DrawString(_fssFont, Text, new Vector2(0, 128), Color.White);
 			}
+			_fssFontCounter.Stop();
 
-			_fssFontCounter += (float)_watch.Elapsed.TotalMilliseconds;
-			_spriteBatch.DrawString(_oldFont, $"Dynamic FontStashSharp: {_watch.Elapsed.TotalMilliseconds} ms/{_fssFontCounter / _oldCounter}x", new Vector2(0, 160), Color.White);
+			_spriteBatch.DrawString(_oldFont, $"Dynamic FontStashSharp: {_fssFontCounter.Last} ms/{_fssFontCounter.Total / _oldCounter.Total}x", new Vector2(0, 160), Color.White);
 
 			// FSS Shaped
-			_watch.Restart();
+			_fssShapedCounter.Start();
 			for (var i = 0; i < Count; ++i)
 			{
 				_spriteBatch.DrawString(_fssShapedFont, Text, new Vector2(0, 192), Color.White);
 			}
+			_fssShapedCounter.Stop();
 
-			_fssShapedCounter += (float)_watch.Elapsed.TotalMilliseconds;
-			_spriteBatch.DrawString(_oldFont, $"Shaped FontStashSharp: {_watch.Elapsed.TotalMilliseconds} ms/{_fssShapedCounter / _oldCounter}x", new Vector2(0, 224), Color.White);
-
+			_spriteBatch.DrawString(_oldFont, $"Shaped FontStashSharp: {_fssShapedCounter.Last} ms/{_fssShapedCounter.Total / _oldCounter.Total}x", new Vector2(0, 224), Color.White);
 
 			_spriteBatch.End();
 
