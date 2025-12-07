@@ -4,7 +4,7 @@ using System;
 using FontStashSharp.Interfaces;
 using System.Linq;
 
-#if MONOGAME || FNA
+#if MONOGAME || FNA || XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
@@ -42,7 +42,7 @@ namespace FontStashSharp
 			LineHeight = lineHeight;
 		}
 
-#if MONOGAME || FNA || STRIDE
+#if MONOGAME || FNA || XNA || STRIDE
 		protected internal abstract FontGlyph GetGlyph(GraphicsDevice device, int codepoint, FontSystemEffect effect, int effectAmount);
 #else
 		protected internal abstract FontGlyph GetGlyph(ITexture2DManager device, int codepoint, FontSystemEffect effect, int effectAmount);
@@ -275,7 +275,7 @@ namespace FontStashSharp
 
 		internal abstract float GetKerning(FontGlyph glyph, FontGlyph prevGlyph);
 
-#if MONOGAME || FNA || STRIDE
+#if MONOGAME || FNA || XNA || STRIDE
 		public static Texture2D GetWhite(GraphicsDevice graphicsDevice)
 #else
 		public static Texture2D GetWhite(ITexture2DManager textureManager)
@@ -286,7 +286,7 @@ namespace FontStashSharp
 				return _white;
 			}
 
-#if MONOGAME || FNA || STRIDE
+#if MONOGAME || FNA || XNA || STRIDE
 			_white = Texture2DManager.CreateTexture(graphicsDevice, 1, 1);
 			Texture2DManager.SetTextureData(_white, new Rectangle(0, 0, 1, 1), new byte[] { 255, 255, 255, 255 });
 #else

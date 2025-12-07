@@ -1,4 +1,4 @@
-﻿#if MONOGAME || FNA
+﻿#if MONOGAME || FNA || XNA
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
 using Stride.Core.Mathematics;
@@ -42,7 +42,7 @@ namespace FontStashSharp.Interfaces
 
 	public interface IFontStashRenderer2
 	{
-#if MONOGAME || FNA || STRIDE
+#if MONOGAME || FNA || XNA || STRIDE
 		GraphicsDevice GraphicsDevice { get; }
 #else
 		ITexture2DManager TextureManager { get; }

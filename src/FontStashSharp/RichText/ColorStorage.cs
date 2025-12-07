@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Reflection;
 
-#if MONOGAME || FNA
+#if MONOGAME || FNA || XNA
 using Microsoft.Xna.Framework;
 #elif STRIDE
 using Stride.Core.Mathematics;

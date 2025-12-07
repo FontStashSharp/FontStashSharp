@@ -3,7 +3,7 @@ using System.Text;
 using System;
 
 
-#if MONOGAME || FNA
+#if MONOGAME || FNA || XNA
 using Microsoft.Xna.Framework;
 #elif STRIDE
 using Stride.Core.Mathematics;
@@ -26,7 +26,7 @@ namespace FontStashSharp
 				return;
 			}
 
-#if MONOGAME || FNA || STRIDE
+#if MONOGAME || FNA || XNA || STRIDE
 			var white = GetWhite(renderer.GraphicsDevice);
 #else
 			var white = GetWhite(renderer.TextureManager);
@@ -60,7 +60,7 @@ namespace FontStashSharp
 				throw new ArgumentNullException(nameof(renderer));
 			}
 
-#if MONOGAME || FNA || STRIDE
+#if MONOGAME || FNA || XNA || STRIDE
 			if (renderer.GraphicsDevice == null)
 			{
 				throw new ArgumentNullException("renderer.GraphicsDevice can't be null.");
@@ -106,7 +106,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-#if MONOGAME || FNA || STRIDE
+#if MONOGAME || FNA || XNA || STRIDE
 				var glyph = GetGlyph(renderer.GraphicsDevice, codepoint, effect, effectAmount);
 #else
 				var glyph = GetGlyph(renderer.TextureManager, codepoint, effect, effectAmount);

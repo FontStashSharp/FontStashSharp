@@ -1,6 +1,6 @@
 ﻿using System;
 
-#if MONOGAME || FNA
+#if MONOGAME || FNA || XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
@@ -42,7 +42,7 @@ namespace FontStashSharp.RichText
 			Region = region;
 		}
 
-#if MONOGAME || FNA || STRIDE
+#if MONOGAME || FNA || XNA || STRIDE
 		public TextureFragment(Texture2D texture) :
 			this(texture, new Rectangle(0, 0, texture.Width, texture.Height))
 		{
