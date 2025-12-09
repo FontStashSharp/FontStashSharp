@@ -1,6 +1,6 @@
 ﻿using System;
 
-#if MONOGAME || FNA
+#if MONOGAME || FNA || XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using static Microsoft.Xna.Framework.Graphics.SpriteFont;

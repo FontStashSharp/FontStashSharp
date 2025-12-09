@@ -5,7 +5,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using FontStashSharp.Interfaces;
 
-#if MONOGAME || FNA
+#if MONOGAME || FNA || XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
@@ -172,7 +172,7 @@ namespace FontStashSharp
 
 		public static Vector2 Transform(this Vector2 v, ref Matrix matrix)
 		{
-#if MONOGAME || FNA
+#if MONOGAME || FNA || XNA
 			Vector2 result;
 			Vector2.Transform(ref v, ref matrix, out result);
 			return result;
@@ -216,7 +216,7 @@ namespace FontStashSharp
 				offsetY = position.Y - (origin.X * transformation.M12) - (origin.Y * transformation.M22);
 			}
 
-#if MONOGAME || FNA || STRIDE
+#if MONOGAME || FNA || XNA || STRIDE
 			transformation.M41 = offsetX;
 			transformation.M42 = offsetY;
 #else
@@ -232,7 +232,7 @@ namespace FontStashSharp
 			ref VertexPositionColorTexture topLeft, ref VertexPositionColorTexture topRight,
 			ref VertexPositionColorTexture bottomLeft, ref VertexPositionColorTexture bottomRight)
 		{
-#if MONOGAME || FNA || STRIDE
+#if MONOGAME || FNA || XNA || STRIDE
 			var textureSize = new Point(texture.Width, texture.Height);
 #else
 			var textureSize = renderer.TextureManager.GetTextureSize(texture);

@@ -1,7 +1,7 @@
 ﻿using FontStashSharp.Interfaces;
 using System;
 
-#if MONOGAME || FNA
+#if MONOGAME || FNA || XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
@@ -19,7 +19,7 @@ namespace FontStashSharp
 
 		private SpriteBatch _batch;
 
-#if MONOGAME || FNA
+#if MONOGAME || FNA || XNA
 		public GraphicsDevice GraphicsDevice => _batch.GraphicsDevice;
 #elif STRIDE
 		private GraphicsDevice _graphicsDevice;
@@ -75,7 +75,7 @@ namespace FontStashSharp
 
 		public void Draw(Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 scale, float depth)
 		{
-#if MONOGAME || FNA
+#if MONOGAME || FNA || XNA
 			if (rotation.IsZero() && scale.EpsilonEquals(Vector2.One) && depth.IsZero())
 			{
 				// When rotation/scale/depth use default values,

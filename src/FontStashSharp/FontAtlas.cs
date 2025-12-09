@@ -1,7 +1,7 @@
 ﻿using FontStashSharp.Interfaces;
 using System;
 
-#if MONOGAME || FNA
+#if MONOGAME || FNA || XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
@@ -171,7 +171,7 @@ namespace FontStashSharp
 			return true;
 		}
 
-#if MONOGAME || FNA || STRIDE
+#if MONOGAME || FNA || XNA || STRIDE
 		public void RenderGlyph(GraphicsDevice graphicsDevice, DynamicFontGlyph glyph, IFontSource fontSource, GlyphRenderer glyphRenderer, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
 #else
 		public void RenderGlyph(ITexture2DManager textureManager, DynamicFontGlyph glyph, IFontSource fontSource, GlyphRenderer glyphRenderer, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
@@ -204,7 +204,7 @@ namespace FontStashSharp
 			// Create the atlas texture if required
 			if (Texture == null)
 			{
-#if MONOGAME || FNA || STRIDE
+#if MONOGAME || FNA || XNA || STRIDE
 				Texture = Texture2DManager.CreateTexture(graphicsDevice, Width, Height);
 #else
 				Texture = textureManager.CreateTexture(Width, Height);
@@ -227,7 +227,7 @@ namespace FontStashSharp
 				eraseArea.Height = Height - eraseArea.Y;
 			}
 
-#if MONOGAME || FNA || STRIDE
+#if MONOGAME || FNA || XNA || STRIDE
 			Texture2DManager.SetTextureData(Texture, eraseArea, colorBuffer);
 #else
 			textureManager.SetTextureData(Texture, eraseArea, colorBuffer);
@@ -252,7 +252,7 @@ namespace FontStashSharp
 			glyphRenderer(buffer, colorBuffer, glyphRenderOptions);
 
 			// Render glyph to texture
-#if MONOGAME || FNA || STRIDE
+#if MONOGAME || FNA || XNA || STRIDE
 			Texture2DManager.SetTextureData(Texture, glyph.TextureRectangle, colorBuffer);
 #else
 			textureManager.SetTextureData(Texture, glyph.TextureRectangle, colorBuffer);

@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-#if MONOGAME || FNA
+#if MONOGAME || FNA || XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
@@ -15,7 +15,7 @@ namespace FontStashSharp
 	{
 		public static Texture2D CreateTexture(GraphicsDevice device, int width, int height)
 		{
-#if MONOGAME || FNA
+#if MONOGAME || FNA || XNA
 			var texture2d = new Texture2D(device, width, height);
 #elif STRIDE
 			var texture2d = Texture2D.New2D(device, width, height, false, PixelFormat.R8G8B8A8_UNorm, TextureFlags.ShaderResource);
@@ -26,7 +26,33 @@ namespace FontStashSharp
 
 		public static void SetTextureData(Texture2D texture, Rectangle bounds, byte[] data)
 		{
-#if MONOGAME || FNA
+#if XNA
+			// XNA Framework requires textures to be unbound before SetData
+			// Save current textures and unbind them
+			var device = texture.GraphicsDevice;
+			const int maxTextureSlots = 16;
+			var currentTextures = new Texture2D[maxTextureSlots];
+			for (int i = 0; i < maxTextureSlots; i++)
+			{
+				currentTextures[i] = device.Textures[i] as Texture2D;
+				if (currentTextures[i] == texture)
+				{
+					device.Textures[i] = null;
+				}
+			}
+
+			// Now safe to call SetData
+			texture.SetData(0, bounds, data, 0, bounds.Width * bounds.Height * 4);
+
+			// Restore textures
+			for (int i = 0; i < maxTextureSlots; i++)
+			{
+				if (currentTextures[i] != null)
+				{
+					device.Textures[i] = currentTextures[i];
+				}
+			}
+#elif MONOGAME || FNA
 			texture.SetData(0, bounds, data, 0, bounds.Width * bounds.Height * 4);
 #elif STRIDE
 			var size = bounds.Width * bounds.Height * 4;

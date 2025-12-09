@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using FontStashSharp.Interfaces;
 
-#if MONOGAME || FNA
+#if MONOGAME || FNA || XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
@@ -148,7 +148,7 @@ namespace FontStashSharp
 		/// <summary>
 		/// Get a glyph by its glyph ID
 		/// </summary>
-#if MONOGAME || FNA || STRIDE
+#if MONOGAME || FNA || XNA || STRIDE
 		internal DynamicFontGlyph GetGlyphById(GraphicsDevice device, int glyphId, int fontSourceIndex, FontSystemEffect effect, int effectAmount)
 #else
 		internal DynamicFontGlyph GetGlyphById(ITexture2DManager device, int glyphId, int fontSourceIndex, FontSystemEffect effect, int effectAmount)
@@ -269,7 +269,7 @@ namespace FontStashSharp
 				throw new ArgumentNullException(nameof(renderer));
 			}
 
-#if MONOGAME || FNA || STRIDE
+#if MONOGAME || FNA || XNA || STRIDE
 			if (renderer.GraphicsDevice == null)
 			{
 				throw new ArgumentNullException("renderer.GraphicsDevice can't be null.");
@@ -340,7 +340,7 @@ namespace FontStashSharp
 						pos.X += characterSpacing;
 					}
 
-#if MONOGAME || FNA || STRIDE
+#if MONOGAME || FNA || XNA || STRIDE
 					var glyph = GetGlyphById(renderer.GraphicsDevice, shapedGlyph.GlyphId, shapedGlyph.FontSourceId, effect, effectAmount);
 #else
 					var glyph = GetGlyphById(renderer.TextureManager, shapedGlyph.GlyphId, shapedGlyph.FontSourceId, effect, effectAmount);
@@ -398,7 +398,7 @@ namespace FontStashSharp
 				throw new ArgumentNullException(nameof(renderer));
 			}
 
-#if MONOGAME || FNA || STRIDE
+#if MONOGAME || FNA || XNA || STRIDE
 			if (renderer.GraphicsDevice == null)
 			{
 				throw new ArgumentNullException("renderer.GraphicsDevice can't be null.");
@@ -473,7 +473,7 @@ namespace FontStashSharp
 						pos.X += characterSpacing;
 					}
 
-#if MONOGAME || FNA || STRIDE
+#if MONOGAME || FNA || XNA || STRIDE
 					var glyph = GetGlyphById(renderer.GraphicsDevice, shapedGlyph.GlyphId, shapedGlyph.FontSourceId, effect, effectAmount);
 #else
 					var glyph = GetGlyphById(renderer.TextureManager, shapedGlyph.GlyphId, shapedGlyph.FontSourceId, effect, effectAmount);
