@@ -28,7 +28,19 @@ jobs:
       run: dotnet build build\FontStashSharp.Stride.sln --configuration Release
     - name: Build FontStashSharp.Kni
       run: dotnet build build\FontStashSharp.Kni.sln --configuration Release
+    - name: Build FontStashSharp.XNA
+      run: dotnet build build\FontStashSharp.XNA.sln --configuration Release
     - name: Test
       run: dotnet test build\FontStashSharp.MonoGame.sln
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: BuildArtifacts
+        path: |
+          src/FontStashSharp/bin/Release/
+          src/XNA/bin/MonoGame/Release/
+          src/XNA/bin/Stride/Release/
+          src/XNA/bin/Kni/Release/
+          src/XNA/bin/XNA/Release/
     - name: Install NuGet
       uses: NuGet/setup-nuget@v1
