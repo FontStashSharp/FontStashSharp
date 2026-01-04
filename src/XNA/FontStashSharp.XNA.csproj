@@ -19,24 +19,31 @@
     <PackageReference Include="StbImageSharp" Version="$(StbImageSharpVersion)" />
   </ItemGroup>
 
-  <!-- XNA Framework 4.0 References -->
-  <!-- Note: XNA Framework must be installed or provided manually. -->
-  <!-- Set XNAFrameworkDir environment variable or override in Directory.Build.props -->
   <PropertyGroup>
-    <XNAFrameworkDir Condition="'$(XNAFrameworkDir)' == ''">$(MSBuildProgramFiles32)\Microsoft XNA\XNA Game Studio\v4.0\References\Windows\x86\</XNAFrameworkDir>
+    <XNAFrameworkDir Condition="'$(XNAFrameworkDir)' == ''">References</XNAFrameworkDir>
   </PropertyGroup>
 
   <ItemGroup>
     <Reference Include="Microsoft.Xna.Framework">
-      <HintPath>$(XNAFrameworkDir)Microsoft.Xna.Framework.dll</HintPath>
+      <HintPath>$(XNAFrameworkDir)\Microsoft.Xna.Framework.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xna.Framework.Game">
-      <HintPath>$(XNAFrameworkDir)Microsoft.Xna.Framework.Game.dll</HintPath>
+      <HintPath>$(XNAFrameworkDir)\Microsoft.Xna.Framework.Game.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xna.Framework.Graphics">
-      <HintPath>$(XNAFrameworkDir)Microsoft.Xna.Framework.Graphics.dll</HintPath>
+      <HintPath>$(XNAFrameworkDir)\Microsoft.Xna.Framework.Graphics.dll</HintPath>
     </Reference>
   </ItemGroup>
+  
+  <PropertyGroup>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);IncludeXNAAssembliesForNuGet</TargetsForTfmSpecificBuildOutput>
+  </PropertyGroup>
+
+  <Target Name="IncludeXNAAssembliesForNuGet">
+    <ItemGroup>
+      <BuildOutputInPackage Include="$(XNAFrameworkDir)\*" />
+    </ItemGroup>
+  </Target>
 
   <ItemGroup>
     <Compile Include="..\FontStashSharp\**\*.cs" LinkBase="FontStashSharp" />
