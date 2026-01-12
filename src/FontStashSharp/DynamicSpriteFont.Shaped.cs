@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using FontStashSharp.Interfaces;
 
@@ -56,6 +56,7 @@ namespace FontStashSharp
 			private readonly LinkedList<(ShapedTextCacheKey Key, ShapedText Value)> _lruList =
 				new LinkedList<(ShapedTextCacheKey Key, ShapedText Value)>();
 			private readonly int _maxCacheEntries;
+			private readonly object _lock = new object();
 
 			public ShapedTextCache(int maxCacheEntries)
 			{
@@ -64,47 +65,56 @@ namespace FontStashSharp
 
 			public bool TryGet(ShapedTextCacheKey key, out ShapedText shapedText)
 			{
-				if (_cache.TryGetValue(key, out var node))
+				lock (_lock)
 				{
-					// Move to front (most recently used)
-					_lruList.Remove(node);
-					_lruList.AddFirst(node);
-					shapedText = node.Value.Value;
-					return true;
-				}
+					if (_cache.TryGetValue(key, out var node))
+					{
+						// Move to front (most recently used)
+						_lruList.Remove(node);
+						_lruList.AddFirst(node);
+						shapedText = node.Value.Value;
+						return true;
+					}
 
-				shapedText = null;
-				return false;
+					shapedText = null;
+					return false;
+				}
 			}
 
 			public void Add(ShapedTextCacheKey key, ShapedText shapedText)
 			{
-				// Check if already exists
-				if (_cache.ContainsKey(key))
+				lock (_lock)
 				{
-					return;
-				}
-
-				// Evict oldest entry if cache is full
-				if (_cache.Count >= _maxCacheEntries)
-				{
-					var oldest = _lruList.Last;
-					if (oldest != null)
+					// Check if already exists
+					if (_cache.ContainsKey(key))
 					{
-						_cache.Remove(oldest.Value.Key);
-						_lruList.RemoveLast();
+						return;
 					}
-				}
 
-				// Add new entry
-				var node = _lruList.AddFirst((key, shapedText));
-				_cache[key] = node;
+					// Evict oldest entry if cache is full
+					if (_cache.Count >= _maxCacheEntries)
+					{
+						var oldest = _lruList.Last;
+						if (oldest != null)
+						{
+							_cache.Remove(oldest.Value.Key);
+							_lruList.RemoveLast();
+						}
+					}
+
+					// Add new entry
+					var node = _lruList.AddFirst((key, shapedText));
+					_cache[key] = node;
+				}
 			}
 
 			public void Clear()
 			{
-				_cache.Clear();
-				_lruList.Clear();
+				lock (_lock)
+				{
+					_cache.Clear();
+					_lruList.Clear();
+				}
 			}
 		}
 
