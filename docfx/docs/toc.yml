@@ -14,8 +14,6 @@
   href: custom-font-rasterizer.md
 - name: StaticSpriteFont
   href: StaticSpriteFont.md
-- name: Rich Text
-  href: rich-text.md
 - name: Using FontStashSharp In Generic Game Engine
   href: using-fontstashsharp-in-generic-game-engine.md
 - name: Rich Text
