@@ -39,8 +39,7 @@
     "globalMetadata": {
       "_appName": "FontStashSharp",
       "_appTitle": "FontStashSharp",
-      "_enableSearch": true,
-      "pdf": true
+      "_enableSearch": true
     }
   }
 }
