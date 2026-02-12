@@ -3,10 +3,10 @@ Following platforms have their own versions of FontStashSharp that are available
 
 Platform|Link
 --------|----
-[MonoGame](https://monogame.net/)|https://www.nuget.org/packages/FontStashSharp.MonoGame
-[Stride](https://www.stride3d.net/)|https://www.nuget.org/packages/FontStashSharp.Stride
-[Kni](https://github.com/kniEngine/kni)|https://www.nuget.org/packages/FontStashSharp.Kni
-XNA|https://www.nuget.org/packages/FontStashSharp.XNA
+[MonoGame](https://monogame.net/)|[FontStashSharp.MonoGame](https://www.nuget.org/packages/FontStashSharp.MonoGame)
+[Stride](https://www.stride3d.net/)|[FontStashSharp.Stride](https://www.nuget.org/packages/FontStashSharp.Stride)
+[Kni](https://github.com/kniEngine/kni)|[FontStashSharp.Kni](https://www.nuget.org/packages/FontStashSharp.Kni)
+XNA|[FontStashSharp.XNA](https://www.nuget.org/packages/FontStashSharp.XNA)
 
 See [this](docs/adding-reference-to-fna.md) on how to add the reference to FNA
 
