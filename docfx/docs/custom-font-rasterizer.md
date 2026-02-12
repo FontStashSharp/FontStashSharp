@@ -26,4 +26,5 @@ FontSystemDefaults.FontLoader = new MyFontLoader();
 ```
 
 The [FontStashSharp.Samples.CustomRasterizers sample](https://github.com/rds1983/FontStashSharp/tree/main/samples/FontStashSharp.Samples.CustomRasterizers) demonstrates usage of 3 font rasterizers: StbTrueTypeSharp(default), FreeType and SixLabors.Fonts.
-![alt text](/images/custom-font-rasterizer.png)
+
+![alt text](~/images/custom-font-rasterizer.png)

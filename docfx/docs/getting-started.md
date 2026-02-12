@@ -52,7 +52,7 @@ Now the text could be drawn using following code:
 ```
 
 It would render following:
-![alt text](/images/getting-started-1.png)
+![alt text](~/images/getting-started-1.png)
 
 ## FontSystem from multiple ttfs
 
@@ -74,7 +74,7 @@ So, if the render code is
 ```
 
 It would render following:
-![alt text](/images/getting-started-2.png)
+![alt text](~/images/getting-started-2.png)
 
 ## Colored Text
 
@@ -118,7 +118,7 @@ If you want to draw a colored text, then pass array of colors(a color for every 
 ```
 
 It would render following:
-![alt text](/images/getting-started-3.png)
+![alt text](~/images/getting-started-3.png)
 
 ## Blurry and Stroked Text
 
@@ -131,7 +131,7 @@ _spriteBatch.DrawString(_font,
 ```
 
 It would render following:
-![alt text](/images/getting-started-4.png)
+![alt text](~/images/getting-started-4.png)
 
 The stroke effect could be renderered similar way:
 ```c#
@@ -142,4 +142,4 @@ _spriteBatch.DrawString(_font,
   ```
 
 It would render following:
-![alt text](/images/getting-started-5.png)
+![alt text](~/images/getting-started-5.png)

@@ -15,7 +15,7 @@ rtl.Draw(_spriteBatch, position, Color.White);
 ```
 Which would result in this:
 
-![alt text](/images/rich-text-1.png)
+![alt text](~/images/rich-text-1.png)
 
 Use property RichTextLayout.Size to find out the size in pixels of the rendered rich text.
 
@@ -53,7 +53,7 @@ This is /c[red]colored /c[#00f0fa]ext, /cdcolor could be set either /c[lightGree
 
 It would render this(if the default color passed to RichTextLayout.Draw is white):
 
-![alt text](/images/rich-text-2.png)
+![alt text](~/images/rich-text-2.png)
 
 ### Commands '/f' and '/fd'
 Command '/f[_fontString_]' changes the current font. The '_fontString_' argument should be parsed by the developer. That is archieved by implementing a handler function that accepts string argument and returns value of type SpriteFontBase. The function should be assigned to static property RichTextDefaults.FontResolver.
@@ -90,7 +90,7 @@ Text in default font./n/f[arialbd.ttf, 24]Bold and smaller font. /f[ariali.ttf, 
 
 It would render following:
 
-![alt text](/images/rich-text-3.png)
+![alt text](~/images/rich-text-3.png)
 
 ### Commands '/v' and '/vd'
 Command '/v[_offset_]' sets the vertical offset in pixels. Command '/vd' sets it back to zero.
@@ -102,7 +102,7 @@ E=mc/v[-8]2/n/vdMass–energy equivalence.
 
 It would render following:
 
-![alt text](/images/rich-text-4.png)
+![alt text](~/images/rich-text-4.png)
 
 ### Command '/i'
 Command '/i[_imageString_]' inserts an image. Similarly to handling fonts, it's the developer responsibility to implement the image resolver function, which accepts string and returns object of type [IRenderable](https://github.com/FontStashSharp/FontStashSharp/blob/main/src/FontStashSharp/RichText/IRenderable.cs). The function should be assigned to the static property RichTextDefaults.ImageResolver.
@@ -138,7 +138,7 @@ A small tree: /i[mangrove1.png]
 
 It would render following:
 
-![alt text](/images/rich-text-5.png)
+![alt text](~/images/rich-text-5.png)
 
 Images take into account '/v' command, but ignore '/c' command. Hence if pass following text:
 ```
@@ -147,7 +147,7 @@ A small /c[red]tree: /v8/i[mangrove1.png]
 
 It would render this:
 
-![alt text](/images/rich-text-6.png)
+![alt text](~/images/rich-text-6.png)
 
 ### Word Wrapping
 If you set RichTextLayout.Width to some value, then the text would be word-wrapped accordingly.
@@ -161,7 +161,7 @@ And set RichTextLayout.Width to 300.
 
 Following would be rendered:
 
-![alt text](/images/rich-text-7.png)
+![alt text](~/images/rich-text-7.png)
 
 ### Auto Ellipsis
 The ellipsis could be added to the end of the text, if it doesnt fit the specified dimensions.
@@ -169,11 +169,11 @@ This feature is used when both RichTextLayout.Width and RichTextLayout.Height ar
 
 If in the above example we set Width to 250 and Height to 100. And AutoEllipsisMethod is set to Character, then the following would be rendered:
 
-![alt text](/images/rich-text-8.png)
+![alt text](~/images/rich-text-8.png)
 
 If AutoEllipsisMethod is set to Word, then following:
 
-![alt text](/images/rich-text-9.png)
+![alt text](~/images/rich-text-9.png)
 
 ### Sample
 https://github.com/FontStashSharp/FontStashSharp/tree/main/samples/FontStashSharp.Samples.RichText
