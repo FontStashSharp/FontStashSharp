@@ -3,28 +3,15 @@
 [![Build & Publish Beta](https://github.com/FontStashSharp/FontStashSharp/actions/workflows/build-and-publish-beta.yml/badge.svg)](https://github.com/FontStashSharp/FontStashSharp/actions/workflows/build-and-publish-beta.yml)
 [![Chat](https://img.shields.io/discord/628186029488340992.svg)](https://discord.gg/ZeHxhCY)
 
-FontStashSharp is the text rendering library.
+FontStashSharp is the text rendering library. It has following features:
+* Support of frameworks: MonoGame, FNA, Stride, Kni, Xna and generic C# engines
+* Runtime font loading from ttfs and AngelCode BMFonts
+* Text effects: blurry text, stroked text, underline and strikethrough
+* Integrated rich text engine
+* Optional HarfBuzz text shaping support
 
-# Usage
-[Using FontStashSharp in MonoGame or FNA](https://github.com/FontStashSharp/FontStashSharp/wiki/Using-FontStashSharp-in-MonoGame-or-FNA)
-
-[Custom Render Interfaces](https://github.com/FontStashSharp/FontStashSharp/wiki/Custom-Render-Interfaces)
-
-[Dealing With Texture Atlas Overflow](https://github.com/FontStashSharp/FontStashSharp/wiki/Dealing-With-Texture-Atlas-Overflow)
-
-[Making Fonts Sharper And Better At Scaling](https://github.com/FontStashSharp/FontStashSharp/wiki/Making-Fonts-Sharper-And-Better-At-Scaling)
-
-[Using Existing Texture As Font Glyphs Atlas](https://github.com/FontStashSharp/FontStashSharp/wiki/Using-Existing-Texture-As-Font-Glyphs-Atlas)
-
-[Custom Font Rasterizer](https://github.com/FontStashSharp/FontStashSharp/wiki/Custom-Font-Rasterizer)
-
-[StaticSpriteFont](https://github.com/FontStashSharp/FontStashSharp/wiki/StaticSpriteFont)
-
-[Rich Text](https://github.com/FontStashSharp/FontStashSharp/wiki/Rich-Text)
-
-[Using FontStashSharp in any C# engine](https://github.com/rds1983/FontStashSharp/wiki/Using-FontStashSharp-in-generic-game-engine)
-
-[HarfBuzz Text Shaping](https://github.com/FontStashSharp/FontStashSharp/wiki/HarfBuzz-Text-Shaping)
+## Documentation
+https://fontstashsharp.github.io/FontStashSharp/index.html
 
 ## Support
 [Discord](https://discord.gg/ZeHxhCY)
@@ -55,7 +42,9 @@ Stroked Text:
 * [stb](https://github.com/nothings/stb)
 * [bartwe's fork of SpriteFontPlus](https://github.com/bartwe/SpriteFontPlus)
 * [MonoGame](http://www.monogame.net/)
-* [SharpFont](https://github.com/Robmaister/SharpFont)
+* [FNA](https://fna-xna.github.io/)
+* [Stride](https://www.stride3d.net/)
+* [Kni](https://github.com/kniEngine/kni)
 * [FreeTypeSharp](https://github.com/ryancheung/FreeTypeSharp)
 * [SixLabors.Fonts](https://github.com/SixLabors/Fonts)
 * [TrippyGL](https://github.com/SilkCommunity/TrippyGL)
