@@ -4,7 +4,7 @@
 [![Chat](https://img.shields.io/discord/628186029488340992.svg)](https://discord.gg/ZeHxhCY)
 
 FontStashSharp is the text rendering library. It has following features:
-* Support of frameworks: MonoGame, FNA, Stride, Kni, Xna and generic C# engines
+* Many supported frameworks: MonoGame, FNA, Stride, Kni, Xna and generic C# engines
 * Runtime font loading from ttfs and AngelCode BMFonts
 * Text effects: blurry text, stroked text, underline and strikethrough
 * Integrated rich text engine
