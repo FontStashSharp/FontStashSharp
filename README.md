@@ -11,7 +11,7 @@ FontStashSharp is the text rendering library. It has following features:
 * Optional HarfBuzz text shaping support
 
 ## Documentation
-https://fontstashsharp.github.io/FontStashSharp/index.html
+https://fontstashsharp.github.io/FontStashSharp
 
 ## Support
 [Discord](https://discord.gg/ZeHxhCY)
