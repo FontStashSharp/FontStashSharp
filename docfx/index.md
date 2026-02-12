@@ -8,7 +8,7 @@ Platform|Link
 [Kni](https://github.com/kniEngine/kni)|https://www.nuget.org/packages/FontStashSharp.Kni
 XNA|https://www.nuget.org/packages/FontStashSharp.XNA
 
-See [this](adding-reference-to-fna.md) on how to add the reference to FNA
+See [this](docs/adding-reference-to-fna.md) on how to add the reference to FNA
 
 ## Basic Usage
 Following code creates FontSystem from a ttfs:
