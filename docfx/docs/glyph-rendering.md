@@ -40,6 +40,8 @@ Top line is default glyph rendering, bottom is using above code:
 
 ![alt text](~/images/glyph-rendering.png)
 
+That is screenshot from this sample: https://github.com/FontStashSharp/FontStashSharp/tree/main/samples/FontStashSharp.Samples.DisableAntialiasing
+
 ### FontSystemSettings.GlyphRenderer
 This is delegate with following definition:
 ```c#
