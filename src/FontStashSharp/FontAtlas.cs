@@ -172,9 +172,9 @@ namespace FontStashSharp
 		}
 
 #if MONOGAME || FNA || XNA || STRIDE
-		public void RenderGlyph(GraphicsDevice graphicsDevice, DynamicFontGlyph glyph, IFontSource fontSource, GlyphRenderer glyphRenderer, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
+		public void RenderGlyph(GraphicsDevice graphicsDevice, DynamicFontGlyph glyph, IFontSource fontSource, GlyphRenderer glyphRenderer, GlyphRenderResult glyphRenderResult, int kernelWidth, int kernelHeight)
 #else
-		public void RenderGlyph(ITexture2DManager textureManager, DynamicFontGlyph glyph, IFontSource fontSource, GlyphRenderer glyphRenderer, bool premultiplyAlpha, int kernelWidth, int kernelHeight)
+		public void RenderGlyph(ITexture2DManager textureManager, DynamicFontGlyph glyph, IFontSource fontSource, GlyphRenderer glyphRenderer, GlyphRenderResult glyphRenderResult, int kernelWidth, int kernelHeight)
 #endif
 		{
 			if (glyph.IsEmpty)
@@ -246,7 +246,7 @@ namespace FontStashSharp
 				Effect = glyph.Effect,
 				EffectAmount = glyph.EffectAmount,
 				Size = glyph.Size,
-				PremultiplyAlpha = premultiplyAlpha
+				GlyphRenderResult = glyphRenderResult
 			};
 
 			glyphRenderer(buffer, colorBuffer, glyphRenderOptions);

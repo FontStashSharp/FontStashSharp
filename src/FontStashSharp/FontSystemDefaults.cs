@@ -42,8 +42,27 @@ namespace FontStashSharp
 			}
 		}
 
-		public static bool PremultiplyAlpha { get; set; } = true;
-		public static bool DisableAntialiasing { get; set; } = false;
+		/// <summary>
+		/// Determines how to produce final image(RGBA) from the rasterizer 8-bit source value
+		/// </summary>
+		public static GlyphRenderResult GlyphRenderResult { get; set; } = GlyphRenderResult.Premultiplied;
+
+		[Obsolete("Use GlyphRenderResult instead")]
+		public static bool PremultiplyAlpha
+		{
+			get => GlyphRenderResult == GlyphRenderResult.Premultiplied;
+
+			set
+			{
+				if (value)
+				{
+					GlyphRenderResult = GlyphRenderResult.Premultiplied;
+				} else
+				{
+					GlyphRenderResult = GlyphRenderResult.NonPremultiplied;
+				}
+			}
+		}
 
 		public static float FontResolutionFactor
 		{

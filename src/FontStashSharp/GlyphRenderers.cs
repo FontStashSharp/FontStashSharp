@@ -21,7 +21,29 @@ namespace FontStashSharp
 		public FontSystemEffect Effect;
 		public int EffectAmount;
 		public Point Size;
-		public bool PremultiplyAlpha;
+
+		/// <summary>
+		/// Determines how to produce final image(RGBA) from the rasterizer 8-bit source value
+		/// </summary>
+		public GlyphRenderResult GlyphRenderResult;
+
+		[Obsolete("Use GlyphRenderResult instead")]
+		public bool PremultiplyAlpha
+		{
+			get => GlyphRenderResult == GlyphRenderResult.Premultiplied;
+
+			set
+			{
+				if (value)
+				{
+					GlyphRenderResult = GlyphRenderResult.Premultiplied;
+				}
+				else
+				{
+					GlyphRenderResult = GlyphRenderResult.NonPremultiplied;
+				}
+			}
+		}
 	}
 
 	public delegate void GlyphRenderer(byte[] input, byte[] output, GlyphRenderOptions options);
@@ -97,6 +119,31 @@ namespace FontStashSharp
 			}
 		}
 
+		private static void SetColor(GlyphRenderResult renderResult, byte[] output, int ci, byte col)
+		{
+			switch (renderResult)
+			{
+				case GlyphRenderResult.Premultiplied:
+					output[ci] = output[ci + 1] = output[ci + 2] = output[ci + 3] = col;
+					break;
+				case GlyphRenderResult.NonPremultiplied:
+					output[ci] = output[ci + 1] = output[ci + 2] = 255;
+					output[ci + 3] = col;
+					break;
+				case GlyphRenderResult.NoAntialiasing:
+					if (col != 0)
+					{
+						output[ci] = output[ci + 1] = output[ci + 2] = output[ci + 3] = 255;
+					}
+					else
+					{
+						output[ci] = output[ci + 1] = output[ci + 2] = output[ci + 3] = 0;
+					}
+
+					break;
+			}
+		}
+
 		public static GlyphRenderer Default = (input, output, options) =>
 		{
 			var bufferSize = options.Size.X * options.Size.Y;
@@ -146,15 +193,7 @@ namespace FontStashSharp
 							continue;
 						}
 
-						if (options.PremultiplyAlpha)
-						{
-							output[ci] = output[ci + 1] = output[ci + 2] = output[ci + 3] = col;
-						}
-						else
-						{
-							output[ci] = output[ci + 1] = output[ci + 2] = 255;
-							output[ci + 3] = col;
-						}
+						SetColor(options.GlyphRenderResult, output, ci, col);
 					}
 					else
 					{
@@ -165,16 +204,28 @@ namespace FontStashSharp
 							continue;
 						}
 
-						if (options.PremultiplyAlpha)
+						switch (options.GlyphRenderResult)
 						{
-							var alpha = ((255 - col) * black + 255 * col) / 255;
-							output[ci] = output[ci + 1] = output[ci + 2] = (byte)((alpha * col) / 255);
-							output[ci + 3] = (byte)alpha;
-						}
-						else
-						{
-							output[ci] = output[ci + 1] = output[ci + 2] = col;
-							output[ci + 3] = (byte)(((255 - col) * black + 255 * col) / 255);
+							case GlyphRenderResult.Premultiplied:
+								var alpha = ((255 - col) * black + 255 * col) / 255;
+								output[ci] = output[ci + 1] = output[ci + 2] = (byte)((alpha * col) / 255);
+								output[ci + 3] = (byte)alpha;
+								break;
+							case GlyphRenderResult.NonPremultiplied:
+								output[ci] = output[ci + 1] = output[ci + 2] = col;
+								output[ci + 3] = (byte)(((255 - col) * black + 255 * col) / 255);
+								break;
+							case GlyphRenderResult.NoAntialiasing:
+								if (col != 0)
+								{
+									output[ci] = output[ci + 1] = output[ci + 2] = output[ci + 3] = 255;
+								}
+								else
+								{
+									output[ci] = output[ci + 1] = output[ci + 2] = output[ci + 3] = 0;
+								}
+
+								break;
 						}
 					}
 				}
@@ -185,19 +236,13 @@ namespace FontStashSharp
 				{
 					Blur(input, options.Size.X, options.Size.Y, options.Size.X, options.EffectAmount);
 				}
+
 				for (var i = 0; i < bufferSize; ++i)
 				{
 					var ci = i * 4;
 					var c = input[i];
-					if (options.PremultiplyAlpha)
-					{
-						output[ci] = output[ci + 1] = output[ci + 2] = output[ci + 3] = c;
-					}
-					else
-					{
-						output[ci] = output[ci + 1] = output[ci + 2] = 255;
-						output[ci + 3] = c;
-					}
+
+					SetColor(options.GlyphRenderResult, output, ci, c);
 				}
 			}
 		};
