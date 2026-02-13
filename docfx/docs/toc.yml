@@ -6,6 +6,8 @@
   href: custom-render-interfaces.md
 - name: Dealing With Texture Atlas Overflow
   href: dealing-with-texture-atlas-overflow.md
+- name: Glyph Rendering
+  href: glyph-rendering.md
 - name: Making Fonts Sharper And Better At Scaling
   href: making-fonts-sharper-and-better-at-scaling.md
 - name: Using Existing Texture As Font Glyphs Atlas

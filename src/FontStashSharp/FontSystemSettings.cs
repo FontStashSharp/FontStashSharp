@@ -41,7 +41,7 @@ namespace FontStashSharp
 		/// <summary>
 		/// RGBA set to 255 if the source value is non-zero. Otherwise RGBA set to 0
 		/// </summary>
-		NoAntialiasing,
+		NoAntialiasing
 	}
 
 	public class FontSystemSettings
