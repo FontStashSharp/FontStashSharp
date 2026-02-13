@@ -35,6 +35,9 @@ I.e. following code would create FontSystem with disabled antialiasing(which is 
   FontSystem fontSystem = new FontSystem(settings);
 ```
 
+The difference between default glyph rendering and disabled antialiasing is demonstrated on this image.
+Top line is default glyph rendering, bottom is using above code:
+
 ![alt text](~/images/glyph-rendering.png)
 
 ### FontSystemSettings.GlyphRenderer
