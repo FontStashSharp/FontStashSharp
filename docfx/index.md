@@ -11,7 +11,7 @@ XNA|[FontStashSharp.XNA](https://www.nuget.org/packages/FontStashSharp.XNA)
 See [this](docs/adding-reference-to-fna.md) on how to add the FontStashSharp reference to a FNA project.
 
 ## Basic Usage
-Following code creates FontSystem from a ttfs:
+Following code creates FontSystem from a ttf:
 ```c#
 	private SpriteBatch _spriteBatch; 
 	private FontSystem _fontSystem;
