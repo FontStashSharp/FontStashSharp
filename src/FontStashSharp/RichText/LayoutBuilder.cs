@@ -442,6 +442,11 @@ namespace FontStashSharp.RichText
 						r.Y = lastBreakMeasure.Value.Y;
 						r.EndIndex = i = lastBreakIndex;
 					}
+					else if (_stringBuilder.Length > 1 && char.IsHighSurrogate(_stringBuilder[_stringBuilder.Length - 2]))
+					{
+						r.EndIndex--;
+						i--;
+					}
 
 					break;
 				}
