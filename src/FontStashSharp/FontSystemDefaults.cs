@@ -110,6 +110,8 @@ namespace FontStashSharp
 
 		public static bool StbTrueTypeUseOldRasterizer { get; set; }
 
+		public static bool UseEmToPixelsScale { get; set; }
+
 		public static ITextShaper TextShaper { get; set; }
 
 		/// <summary>

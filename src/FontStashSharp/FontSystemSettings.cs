@@ -155,6 +155,8 @@ namespace FontStashSharp
 
 		public bool StbTrueTypeUseOldRasterizer { get; set; }
 
+		public bool UseEmToPixelsScale { get; set; }
+
 		/// <summary>
 		/// Enable HarfBuzz text shaping for complex scripts (Arabic, Indic, emoji sequences, etc.)
 		/// When false, uses simple codepoint-to-glyph rendering
@@ -208,6 +210,7 @@ namespace FontStashSharp
 			KernelWidth = FontSystemDefaults.KernelWidth;
 			KernelHeight = FontSystemDefaults.KernelHeight;
 			StbTrueTypeUseOldRasterizer = FontSystemDefaults.StbTrueTypeUseOldRasterizer;
+			UseEmToPixelsScale = FontSystemDefaults.UseEmToPixelsScale;
 			TextShaper = FontSystemDefaults.TextShaper;
 			FontLoader = FontSystemDefaults.FontLoader;
 			ShapedTextCacheSize = FontSystemDefaults.ShapedTextCacheSize;
@@ -225,6 +228,7 @@ namespace FontStashSharp
 				KernelWidth = KernelWidth,
 				KernelHeight = KernelHeight,
 				StbTrueTypeUseOldRasterizer = StbTrueTypeUseOldRasterizer,
+				UseEmToPixelsScale = UseEmToPixelsScale,
 				ExistingTexture = ExistingTexture,
 				ExistingTextureUsedSpace = ExistingTextureUsedSpace,
 				FontLoader = FontLoader,
