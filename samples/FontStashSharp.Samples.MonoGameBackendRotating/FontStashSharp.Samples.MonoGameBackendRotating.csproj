@@ -2,7 +2,9 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>$(AppTargetFramework)</TargetFramework>
+    <PublishAot>true</PublishAot>
   </PropertyGroup>
+
   <ItemGroup>
     <Compile Include="..\FontStashSharp.Samples.MonoGameBackend\KeyboardUtils.cs" Link="KeyboardUtils.cs" />
     <Compile Include="..\FontStashSharp.Samples.MonoGameBackend\Renderer.cs" Link="Renderer.cs" />

@@ -1,28 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>$(AppTargetFramework)</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
 
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>$(AppTargetFramework)</TargetFramework>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    </PropertyGroup>
-
-	<ItemGroup>
-		<None Include="..\Fonts\DroidSans.ttf" Link="Fonts\DroidSans.ttf">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Include="..\Fonts\DroidSansJapanese.ttf" Link="Fonts\DroidSansJapanese.ttf">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Include="..\Fonts\Symbola-Emoji.ttf" Link="Fonts\Symbola-Emoji.ttf">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<PackageReference Include="OpenTK" Version="4.7.2" />
-		<ProjectReference Include="..\..\src\FontStashSharp\FontStashSharp.PlatformAgnostic.csproj" />
-		<None Update="Shader.frag">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="Shader.vert">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
+  <ItemGroup>
+    <None Include="..\Fonts\DroidSans.ttf" Link="Fonts\DroidSans.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Fonts\DroidSansJapanese.ttf" Link="Fonts\DroidSansJapanese.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Fonts\Symbola-Emoji.ttf" Link="Fonts\Symbola-Emoji.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <PackageReference Include="OpenTK" Version="4.7.2" />
+    <ProjectReference Include="..\..\src\FontStashSharp\FontStashSharp.PlatformAgnostic.csproj" />
+    <None Update="Shader.frag">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Shader.vert">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

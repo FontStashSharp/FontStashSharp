@@ -2,6 +2,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>$(AppTargetFramework)</TargetFramework>
+    <PublishAot>true</PublishAot>
   </PropertyGroup>
 
   <ItemGroup>
