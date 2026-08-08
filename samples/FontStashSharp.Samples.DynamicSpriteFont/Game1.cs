@@ -316,10 +316,8 @@ namespace FontStashSharp.Samples
 			DrawString("Colored Text", ref cursor, Alignment.Left, ColoredTextColors, scale);
 
 			// Render some scaled text with alignment using origin.
-
 			Vector2 columnCursor = cursor;
 			DrawString("Left-Justified", ref columnCursor, Alignment.Left, new Vector2(.75f) * scale);
-
 
 #if !STRIDE
 			var width = GraphicsDevice.Viewport.Width;

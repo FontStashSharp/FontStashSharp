@@ -30,17 +30,6 @@ namespace FontStashSharp.Samples
 
 		private SpriteBatch _spriteBatch;
 
-		public static string ExecutingAssemblyDirectory
-		{
-			get
-			{
-				string codeBase = Assembly.GetExecutingAssembly().Location;
-				UriBuilder uri = new UriBuilder(codeBase);
-				string path = Uri.UnescapeDataString(uri.Path);
-				return Path.GetDirectoryName(path);
-			}
-		}
-
 		public Game1()
 		{
 			Instance = this;
@@ -67,15 +56,17 @@ namespace FontStashSharp.Samples
 			// Create a new SpriteBatch, which can be used to draw textures.
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
+			var folder = AppDomain.CurrentDomain.BaseDirectory;
+
 			// MG
-			var assetManager = AssetManager.CreateFileAssetManager(Path.Combine(ExecutingAssemblyDirectory));
+			var assetManager = AssetManager.CreateFileAssetManager(folder);
 			_oldFont = assetManager.LoadSpriteFont(GraphicsDevice, "Fonts/debugFont.fnt");
 
 			// Static
-			_fssStaticFont = StaticSpriteFont.FromBMFont(File.ReadAllText(Path.Combine(ExecutingAssemblyDirectory, @"Fonts/debugFont.fnt")),
+			_fssStaticFont = StaticSpriteFont.FromBMFont(File.ReadAllText(Path.Combine(folder, @"Fonts/debugFont.fnt")),
 				s =>
 				{
-					var bytes = File.ReadAllBytes(Path.Combine(ExecutingAssemblyDirectory, $"Fonts/{s}"));
+					var bytes = File.ReadAllBytes(Path.Combine(folder, $"Fonts/{s}"));
 					return new MemoryStream(bytes);
 				},
 				GraphicsDevice);
@@ -84,7 +75,7 @@ namespace FontStashSharp.Samples
 
 			// Simple
 			var fontSystem = new FontSystem();
-			fontSystem.AddFont(File.ReadAllBytes(Path.Combine(ExecutingAssemblyDirectory, @"Fonts/DroidSans.ttf")));
+			fontSystem.AddFont(File.ReadAllBytes(Path.Combine(folder, @"Fonts/DroidSans.ttf")));
 
 			_fssFont = fontSystem.GetFont(24);
 
@@ -93,7 +84,7 @@ namespace FontStashSharp.Samples
 				TextShaper = new HarfBuzzTextShaper()
 			};
 			var fontSystemShaped = new FontSystem(shapedSettings);
-			fontSystemShaped.AddFont(File.ReadAllBytes(Path.Combine(ExecutingAssemblyDirectory, @"Fonts/DroidSans.ttf")));
+			fontSystemShaped.AddFont(File.ReadAllBytes(Path.Combine(folder, @"Fonts/DroidSans.ttf")));
 
 			_fssShapedFont = fontSystemShaped.GetFont(24);
 

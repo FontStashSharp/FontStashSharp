@@ -28,8 +28,7 @@ namespace FontStashSharp.Samples
 
 		private static byte[] GetFileBytes(string fileName)
 		{
-			string assemblyLocation = Assembly.GetExecutingAssembly().Location;
-			var path = Path.Combine(Path.GetDirectoryName(assemblyLocation), fileName);
+			var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
 			return File.ReadAllBytes(path);
 		}
 

@@ -5,6 +5,7 @@
     <OutputPath>bin\MonoGame\$(Configuration)</OutputPath>
     <DefineConstants>$(DefineConstants);MONOGAME</DefineConstants>
     <RootNamespace>FontStashSharp.Samples.StaticSpriteFont</RootNamespace>
+    <PublishAot>true</PublishAot>
   </PropertyGroup>
   
   <ItemGroup>

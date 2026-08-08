@@ -3,6 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>$(AppTargetFramework)</TargetFramework>
     <OutputPath>bin\MonoGame\$(Configuration)</OutputPath>
+    <PublishAot>true</PublishAot>
   </PropertyGroup>
   
   <ItemGroup>

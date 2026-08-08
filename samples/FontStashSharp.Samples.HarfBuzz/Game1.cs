@@ -36,17 +36,6 @@ namespace FontStashSharp.Samples
 	/// </summary>
 	public class Game1 : Game
 	{
-		public static string ExecutingAssemblyDirectory
-		{
-			get
-			{
-				string codeBase = Assembly.GetExecutingAssembly().Location;
-				UriBuilder uri = new UriBuilder(codeBase);
-				string path = Uri.UnescapeDataString(uri.Path);
-				return Path.GetDirectoryName(path);
-			}
-		}
-
 		private class LineInfo
 		{
 			public string[] FontFiles { get; }
@@ -172,7 +161,7 @@ namespace FontStashSharp.Samples
 
 			fontSystem = new FontSystem(settings);
 
-			var fontBase = Path.Combine(ExecutingAssemblyDirectory, "Fonts");
+			var fontBase = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Fonts");
 			foreach (var fontName in fontNames)
 			{
 				var fontPath = Path.Combine(fontBase, fontName);

@@ -4,6 +4,7 @@
     <TargetFramework>$(AppTargetFramework)</TargetFramework>
     <OutputPath>bin\MonoGame\$(Configuration)</OutputPath>
     <DefineConstants>$(DefineConstants);MONOGAME</DefineConstants>
+    <PublishAot>true</PublishAot>
   </PropertyGroup>
 
   <ItemGroup>

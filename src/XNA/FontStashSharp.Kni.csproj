@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.0;net8.0</TargetFramework>
     <PackageId>FontStashSharp.Kni</PackageId>
     <AssemblyName>FontStashSharp.Kni</AssemblyName>
     <Description>FontStashSharp for Kni</Description>
@@ -8,7 +8,11 @@
     <OutputPath>bin\Kni\$(Configuration)</OutputPath>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
-  
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>

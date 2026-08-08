@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>$(AppTargetFramework)</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <PackageId>FontStashSharp.Stride</PackageId>
     <AssemblyName>FontStashSharp.Stride</AssemblyName>
     <Description>FontStashSharp for Stride</Description>
     <DefineConstants>STBSHARP_INTERNAL;STRIDE</DefineConstants>
     <OutputPath>bin\Stride\$(Configuration)</OutputPath>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(Configuration)'=='Release'">

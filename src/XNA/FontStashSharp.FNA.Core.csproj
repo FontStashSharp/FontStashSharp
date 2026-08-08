@@ -1,11 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>$(AppTargetFramework)</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <PackageId>FontStashSharp.FNA</PackageId>
     <AssemblyName>FontStashSharp.FNA</AssemblyName>
     <Description>FontStashSharp for FNA.Core</Description>
     <DefineConstants>$(DefineConstants);FNA</DefineConstants>
     <OutputPath>bin\FNA.Core\$(Configuration)</OutputPath>
+    <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 
   <ItemGroup>
