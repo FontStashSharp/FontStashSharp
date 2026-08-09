@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0;net8.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <PackageId>FontStashSharp.Kni</PackageId>
     <AssemblyName>FontStashSharp.Kni</AssemblyName>
     <Description>FontStashSharp for Kni</Description>
