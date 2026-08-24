@@ -8,6 +8,7 @@
   
   <ItemGroup>
     <PackageReference Include="FontStashSharp.Rasterizers.FreeType" Version="$(FontStashSharpBaseVersion)" />
+    <PackageReference Include="FontStashSharp.Rasterizers.SharpAstro" Version="1.2.7" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="$(AppMonoGameVersion)" />
   </ItemGroup>
   

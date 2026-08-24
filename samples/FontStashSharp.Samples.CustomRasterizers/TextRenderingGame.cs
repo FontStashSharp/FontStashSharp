@@ -6,6 +6,7 @@ using FontStashSharp.Interfaces;
 using System.Reflection;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
+using FontStashSharp.Rasterizers.SharpAstro;
 
 namespace FontStashSharp.Samples
 {
@@ -19,8 +20,8 @@ namespace FontStashSharp.Samples
 		{
 			_graphics = new GraphicsDeviceManager(this)
 			{
-				PreferredBackBufferWidth = 1200,
-				PreferredBackBufferHeight = 800
+				PreferredBackBufferWidth = 1400,
+				PreferredBackBufferHeight = 900
 			};
 			Window.AllowUserResizing = true;
 			IsMouseVisible = true;
@@ -57,11 +58,8 @@ namespace FontStashSharp.Samples
 
 			AddFontSystem("StbTrueTypeSharp(default)", null);
 			AddFontSystem("StbTrueTypeSharp(old)", null, true);
-
-			if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-			{
-				AddFontSystem("FreeType", new FreeTypeLoader());
-			}
+			AddFontSystem("SharpAstro.Fonts", new SharpAstroLoader());
+			AddFontSystem("FreeTypeSharp", new FreeTypeLoader());
 		}
 
 		protected override void Draw(GameTime gameTime)
