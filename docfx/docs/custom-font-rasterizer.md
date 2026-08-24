@@ -7,7 +7,7 @@ Additional rasterizers are available in separate assemblies:
 
 ### Available Rasterizers
 - **StbTrueTypeSharp** (default) - fully managed port of stb_truetype. Requires no native dependencies and works everywhere .NET does. Does not perform TrueType hinting.
-- **FreeType** - wrapper over the [FreeType](https://freetype.org/) library through [FreeTypeSharp](https://github.com/ryancheung/FreeTypeSharp) native bindings. Produces hinted output, but requires shipping the native lib and specifying the platform bitness.
+- **FreeType** - wrapper over the [FreeType](https://freetype.org/) library through [FreeTypeSharp](https://github.com/ryancheung/FreeTypeSharp) native bindings. Produces hinted output.
 - **SharpAstro** - based on [SharpAstro.Fonts](https://www.nuget.org/packages/SharpAstro.Fonts/), a pure-managed MIT licensed OpenType/TrueType font loader & rasterizer. Fully managed, AOT compatible, requires no native dependencies. Targets .NET 10 or higher.
 
 ### Using FontStashSharp.Rasterizers.FreeType
@@ -16,7 +16,6 @@ Additional rasterizers are available in separate assemblies:
 ```c#
 FontSystemDefaults.FontLoader = new FreeTypeLoader();
 ```
-3. You might also need to explicitly specify the platform bitness, since the rasterizer uses the native lib.
 
 ### Using FontStashSharp.Rasterizers.SharpAstro
 1. Add reference to [FontStashSharp.Rasterizers.SharpAstro](https://www.nuget.org/packages/FontStashSharp.Rasterizers.SharpAstro/)
