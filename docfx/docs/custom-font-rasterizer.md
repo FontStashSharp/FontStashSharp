@@ -1,7 +1,14 @@
 ### Overview
 By default, FontStashSharp uses [StbTrueTypeSharp](https://github.com/StbSharp/StbTrueTypeSharp) for the font loading & rasterization.
 
-An additional rasterizer is available in a separate assembly: [FontStashSharp.Rasterizers.FreeType](https://www.nuget.org/packages/FontStashSharp.Rasterizers.FreeType/).
+Additional rasterizers are available in separate assemblies:
+- [FontStashSharp.Rasterizers.FreeType](https://www.nuget.org/packages/FontStashSharp.Rasterizers.FreeType/)
+- [FontStashSharp.Rasterizers.SharpAstro](https://www.nuget.org/packages/FontStashSharp.Rasterizers.SharpAstro/)
+
+### Available Rasterizers
+- **StbTrueTypeSharp** (default) - fully managed port of stb_truetype. Requires no native dependencies and works everywhere .NET does. Does not perform TrueType hinting.
+- **FreeType** - wrapper over the [FreeType](https://freetype.org/) library through [FreeTypeSharp](https://github.com/ryancheung/FreeTypeSharp) native bindings. Produces hinted output, but requires shipping the native lib and specifying the platform bitness.
+- **SharpAstro** - based on [SharpAstro.Fonts](https://www.nuget.org/packages/SharpAstro.Fonts/), a pure-managed MIT licensed OpenType/TrueType font loader & rasterizer. Fully managed, AOT compatible, requires no native dependencies. Targets .NET 10 or higher.
 
 ### Using FontStashSharp.Rasterizers.FreeType
 1. Add reference to [FontStashSharp.Rasterizers.FreeType](https://www.nuget.org/packages/FontStashSharp.Rasterizers.FreeType/)
@@ -10,6 +17,13 @@ An additional rasterizer is available in a separate assembly: [FontStashSharp.Ra
 FontSystemDefaults.FontLoader = new FreeTypeLoader();
 ```
 3. You might also need to explicitly specify the platform bitness, since the rasterizer uses the native lib.
+
+### Using FontStashSharp.Rasterizers.SharpAstro
+1. Add reference to [FontStashSharp.Rasterizers.SharpAstro](https://www.nuget.org/packages/FontStashSharp.Rasterizers.SharpAstro/)
+2. Add following code before the creation of FontSystems:
+```c#
+FontSystemDefaults.FontLoader = new SharpAstroLoader();
+```
 
 ### Using Custom Font Rasterizers
 It's possible to use custom rasterizer instead by implementing [IFontLoader](https://github.com/FontStashSharp/FontStashSharp.Base/blob/main/src/FontStashSharp.Base/IFontLoader.cs) interface.
