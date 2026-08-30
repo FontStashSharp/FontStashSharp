@@ -1,6 +1,7 @@
 ﻿#if MONOGAME || FNA
 
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Framework.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,13 +20,28 @@ namespace FontStashSharp
 
 	internal static class Resources
 	{
+		private static readonly Effect[] _cache = new Effect[8];
+
 #if FNA
 		private const string EffectsResourcePath = "FontStashSharp.Effects.FNA.bin";
 #elif MONOGAME
-		private const string EffectsResourcePath = "FontStashSharp.Effects.MonoGameOGL.bin";
+		private static string EffectsResourcePath
+		{
+			get
+			{
+				switch (PlatformInfo.GraphicsBackend)
+				{
+					case GraphicsBackend.OpenGL:
+						return "FontStashSharp.Effects.MonoGameOGL.bin";
+					case GraphicsBackend.DirectX:
+						return "FontStashSharp.Effects.MonoGameDX11.bin";
+				}
+
+				throw new NotFiniteNumberException($"Graphics Backend {PlatformInfo.GraphicsBackend} is not supported.");
+			}
+		}
 #endif
 
-		private static readonly Effect[] _cache = new Effect[8];
 
 		/// <summary>
 		/// Open assembly resource stream by relative name
