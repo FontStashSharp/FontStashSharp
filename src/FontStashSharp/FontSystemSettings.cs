@@ -1,7 +1,7 @@
 ﻿using System;
 using FontStashSharp.Interfaces;
 
-#if MONOGAME || FNA || XNA
+#if MONOGAME || FNA || KNI || XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
@@ -248,6 +248,13 @@ namespace FontStashSharp
 			}
 		}
 
+#if MONOGAME || FNA
+		/// <summary>
+		/// Gets or sets the mode used to rasterize glyph bitmaps.
+		/// </summary>
+		public FontRasterizationMode FontRasterizationMode { get; set; }
+#endif
+
 		/// <summary>
 		/// Initializes a new instance of the FontSystemSettings class with default values.
 		/// </summary>
@@ -264,6 +271,9 @@ namespace FontStashSharp
 			TextShaper = FontSystemDefaults.TextShaper;
 			FontLoader = FontSystemDefaults.FontLoader;
 			ShapedTextCacheSize = FontSystemDefaults.ShapedTextCacheSize;
+#if MONOGAME || FNA
+			FontRasterizationMode = FontSystemDefaults.FontRasterizationMode;
+#endif
 		}
 
 		/// <summary>
@@ -287,7 +297,10 @@ namespace FontStashSharp
 				ExistingTextureUsedSpace = ExistingTextureUsedSpace,
 				FontLoader = FontLoader,
 				TextShaper = TextShaper,
-				ShapedTextCacheSize = ShapedTextCacheSize
+				ShapedTextCacheSize = ShapedTextCacheSize,
+#if MONOGAME || FNA
+				FontRasterizationMode = FontRasterizationMode
+#endif
 			};
 		}
 	}

@@ -185,5 +185,12 @@ namespace FontStashSharp
 				_shapedTextCacheSize = value;
 			}
 		}
+
+#if MONOGAME || FNA
+		/// <summary>
+		/// Gets or sets the mode used to rasterize glyph bitmaps.
+		/// </summary>
+		public static FontRasterizationMode FontRasterizationMode { get; set; }
+#endif
 	}
 }

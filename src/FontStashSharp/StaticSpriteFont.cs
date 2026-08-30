@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-#if MONOGAME || FNA || XNA
+#if MONOGAME || FNA || KNI || XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
@@ -100,7 +100,7 @@ namespace FontStashSharp
 			return result;
 		}
 
-#if MONOGAME || FNA || XNA || STRIDE
+#if MONOGAME || FNA || KNI || XNA || STRIDE
 		/// <summary>
 		/// Gets a glyph for the specified codepoint with optional effects applied.
 		/// </summary>
@@ -247,7 +247,7 @@ namespace FontStashSharp
 			return FromBMFont(bmFont, textureGetter);
 		}
 
-#if MONOGAME || FNA || XNA || STRIDE
+#if MONOGAME || FNA || KNI || XNA || STRIDE
 		/// <summary>
 		/// Creates a static sprite font from bitmap font data with texture loading from streams.
 		/// </summary>
@@ -299,7 +299,7 @@ namespace FontStashSharp
 						}
 					}
 
-#if MONOGAME || FNA || XNA || STRIDE
+#if MONOGAME || FNA || KNI || XNA || STRIDE
 					var texture = Texture2DManager.CreateTexture(device, image.Width, image.Height);
 					Texture2DManager.SetTextureData(texture, new Rectangle(0, 0, image.Width, image.Height), image.Data);
 #else

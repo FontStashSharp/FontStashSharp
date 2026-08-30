@@ -22,6 +22,10 @@
   </ItemGroup>  
 
   <ItemGroup>
+    <EmbeddedResource Include="Effects\FNA\bin\*.*" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\FNA\FNA.Core.csproj" />
   </ItemGroup>
 </Project>

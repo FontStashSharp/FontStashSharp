@@ -1,6 +1,6 @@
 ﻿using System;
 
-#if MONOGAME || FNA || XNA
+#if MONOGAME || FNA || KNI || XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
@@ -63,7 +63,7 @@ namespace FontStashSharp.RichText
 			Region = region;
 		}
 
-#if MONOGAME || FNA || XNA || STRIDE
+#if MONOGAME || FNA || KNI || XNA || STRIDE
 		/// <summary>
 		/// Initializes a new instance of the TextureFragment class with an entire texture.
 		/// </summary>

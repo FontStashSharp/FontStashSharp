@@ -1,0 +1,69 @@
+### Purpose
+
+Signed Distance Field (SDF) is a technique for rendering fonts at a consistent quality regardless of scale.
+
+With the default (sprite) rendering path, every glyph is rasterized once into the texture atlas as a bitmap that stores the *coverage* of the glyph outline (the alpha value of every pixel). When such a bitmap is drawn at a size other than the one it was rasterized for, the edges are simply stretched by the GPU and quickly become blurry or pixelated.
+
+SDF rendering changes what is stored in the atlas. Instead of per-pixel alpha coverage, each texel stores the **signed distance** to the glyph outline — a value that is negative inside the glyph, positive outside it, and close to zero near the outline. At draw time, a fragment shader converts this distance back into alpha (by thresholding it against the pixel's location relative to the outline). Because the inside/outside transition is recomputed per-pixel as the text is scaled, the edges of the glyph stay crisp at any scale, and effects such as shadows are computed from the same distance data.
+
+### When It's Better Than Sprite Rendering
+
+Use SDF rendering when:
+
+- **Text is scaled significantly or dynamically.** Titles, HUD labels, camera-zoomed text, or any text whose size changes at runtime benefits the most. Sprite-rendered text looks fine only near the size it was rasterized at.
+- **You don't know the final size in advance.** With SDF, a single glyph can be drawn at many sizes from one atlas entry. With sprite rendering, every distinct size requires re-rasterizing a new glyph into the atlas.
+- **Reducing atlas memory and re-rasterization is a priority.** One SDF glyph replaces the multi-size glyphs the sprite path has to produce, so the texture atlas fills up more slowly.
+- **You want sharp, vector-like edges.** SDF edges stay smooth and uniform because the outline is evaluated in the shader rather than baked into the bitmap.
+
+Sprite rendering is usually the better choice when:
+
+- **The text is small.** With font sizes below roughly 16px, the 8-bit distance values become quantized and the outline detail is lost. Hierarchical rasterization with hinting looks crisper at exact small sizes.
+- **The text is always rendered at (or close to) its rasterized size.** If scale never changes, sprite rendering produces an equal or better result with less GPU work.
+- **Color/emoji glyphs are involved.** SDF works on monochrome vector outlines. Color bitmaps and emoji glyphs are not suitable and may render as empty or flat silhouettes.
+- **The rasterizer you use doesn't support SDF.** Only the default StbTrueTypeSharp rasterizer implements SDF. The FreeType and SharpAstro rasterizers throw `NotImplementedException` when SDF mode is requested.
+
+### Enabling SDF Rasterization
+
+SDF is enabled per `FontSystem` by setting `FontSystemSettings.FontRasterizationMode` to `FontRasterizationMode.SDF`:
+
+```c#
+var settings = new FontSystemSettings
+{
+	FontRasterizationMode = FontRasterizationMode.SDF
+};
+var fontSystem = new FontSystem(settings);
+```
+
+### Enabling SDF For All FontSystems
+
+To enable SDF for every `FontSystem` created afterwards, set the default once before creating any `FontSystem`:
+
+```c#
+FontSystemDefaults.FontRasterizationMode = FontRasterizationMode.SDF;
+```
+
+### Rendering With SDFTextBatch
+
+Because the atlas now contains distance data instead of colors, the regular `SpriteBatch.DrawString` extension methods would render it incorrectly. The `SDFTextBatch` class (available in the MonoGame and FNA packages) applies the SDF effect and draws the text:
+
+```c#
+// Create once (typically in LoadContent)
+_sdfTextBatch = new SDFTextBatch(GraphicsDevice);
+
+// Create a font from the SDF-enabled FontSystem
+SpriteFontBase font = _fontSystem.GetFont(64);
+
+// Draw as many strings as needed between Begin/End
+_sdfTextBatch.Begin();
+_sdfTextBatch.DrawString(font, "Hello, SDF!", new Vector2(10, 10), Color.White);
+_sdfTextBatch.DrawString(font, "Scaled up", new Vector2(10, 80), Color.Yellow, scale: new Vector2(4.0f));
+_sdfTextBatch.End();
+```
+
+The `scale` parameter of `DrawString` is the primary way to resize SDF text — even large scale factors keep the edges sharp. Call `Dispose()` when the batch is no longer needed.
+
+### Sample
+
+The [FontStashSharp.Samples.SDF](https://github.com/FontStashSharp/FontStashSharp/tree/main/samples/FontStashSharp.Samples.SDF) sample renders the same text side by side using SDF and a super-sampled standard `FontSystem`, and lets you resize both live to compare the quality difference. The **top** text is rendered with SDF, the **bottom** text with standard rasterization:
+
+![alt text](~/images/sdf.png)

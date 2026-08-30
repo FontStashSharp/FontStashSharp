@@ -24,3 +24,5 @@
   href: rich-text.md
 - name: HarfBuzz Text Shaping
   href: harfbuzz-text-shaping.md
+- name: Signed Distance Field (SDF) Text Rendering
+  href: signed-distance-field-rendering.md

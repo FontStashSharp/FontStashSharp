@@ -2,7 +2,7 @@
 using System.Text;
 using System;
 
-#if MONOGAME || FNA || XNA
+#if MONOGAME || FNA || KNI || XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
@@ -44,7 +44,7 @@ namespace FontStashSharp
 				return;
 			}
 
-#if MONOGAME || FNA || XNA || STRIDE
+#if MONOGAME || FNA || KNI || XNA || STRIDE
 			var white = GetWhite(renderer.GraphicsDevice);
 #else
 			var white = GetWhite(renderer.TextureManager);
@@ -76,7 +76,7 @@ namespace FontStashSharp
 				throw new ArgumentNullException(nameof(renderer));
 			}
 
-#if MONOGAME || FNA || XNA || STRIDE
+#if MONOGAME || FNA || KNI || XNA || STRIDE
 			if (renderer.GraphicsDevice == null)
 			{
 				throw new ArgumentNullException("renderer.GraphicsDevice can't be null.");
@@ -128,7 +128,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-#if MONOGAME || FNA || XNA || STRIDE
+#if MONOGAME || FNA || KNI || XNA || STRIDE
 				var glyph = GetGlyph(renderer.GraphicsDevice, codepoint, effect, effectAmount);
 #else
 				var glyph = GetGlyph(renderer.TextureManager, codepoint, effect, effectAmount);

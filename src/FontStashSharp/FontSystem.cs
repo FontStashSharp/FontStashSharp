@@ -3,9 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using FontStashSharp.Rasterizers.StbTrueTypeSharp;
-using System.Runtime.InteropServices;
 
-#if MONOGAME || FNA || XNA
+#if MONOGAME || FNA || KNI || XNA
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 #elif STRIDE
@@ -108,6 +107,13 @@ namespace FontStashSharp
 		/// Gets the maximum size of the shaped text cache.
 		/// </summary>
 		public int ShapedTextCacheSize => _settings.ShapedTextCacheSize;
+
+#if MONOGAME || FNA
+		/// <summary>
+		/// Gets the mode used to rasterize glyph bitmaps.
+		/// </summary>
+		public FontRasterizationMode FontRasterizationMode => _settings.FontRasterizationMode;
+#endif
 
 		/// <summary>
 		/// Gets the list of font sources loaded in this system.
@@ -318,7 +324,7 @@ namespace FontStashSharp
 			return _settings.TextShaper.Shape(text, fontSize, this);
 		}
 
-#if MONOGAME || FNA || XNA || STRIDE
+#if MONOGAME || FNA || KNI || XNA || STRIDE
 		private FontAtlas CreateFontAtlas(GraphicsDevice device, int textureWidth, int textureHeight)
 #else
 		private FontAtlas CreateFontAtlas(ITexture2DManager device, int textureWidth, int textureHeight)
@@ -346,7 +352,7 @@ namespace FontStashSharp
 			return fontAtlas;
 		}
 
-#if MONOGAME || FNA || XNA || STRIDE
+#if MONOGAME || FNA || KNI || XNA || STRIDE
 		internal void RenderGlyphOnAtlas(GraphicsDevice device, DynamicFontGlyph glyph)
 #else
 		internal void RenderGlyphOnAtlas(ITexture2DManager device, DynamicFontGlyph glyph)
@@ -356,7 +362,7 @@ namespace FontStashSharp
 
 			if (ExistingTexture != null)
 			{
-#if MONOGAME || FNA || XNA || STRIDE
+#if MONOGAME || FNA || KNI || XNA || STRIDE
 				textureSize = new Point(ExistingTexture.Width, ExistingTexture.Height);
 #else
 				textureSize = device.GetTextureSize(ExistingTexture);
@@ -394,7 +400,11 @@ namespace FontStashSharp
 			glyph.TextureOffset.X = gx + GlyphPad;
 			glyph.TextureOffset.Y = gy + GlyphPad;
 
+#if MONOGAME || FNA
+			atlas.RenderGlyph(device, glyph, FontSources[glyph.FontSourceIndex], GlyphRenderer, GlyphRenderResult, KernelWidth, KernelHeight, FontRasterizationMode);
+#else
 			atlas.RenderGlyph(device, glyph, FontSources[glyph.FontSourceIndex], GlyphRenderer, GlyphRenderResult, KernelWidth, KernelHeight);
+#endif
 
 			glyph.Texture = atlas.Texture;
 		}

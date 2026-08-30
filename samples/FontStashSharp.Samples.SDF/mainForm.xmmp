@@ -1,0 +1,23 @@
+<Project>
+  <Project.ExportOptions Namespace="FontStashSharp.Samples" Class="MainForm" OutputPath="D:\Projects\FontStashSharp\samples\FontStashSharp.Samples.SDF" FieldsVisibility="Private" />
+  <VerticalStackPanel>
+    <Panel Id="_panelTextContainer" StackPanel.ProportionType="Fill" />
+    <HorizontalSeparator />
+    <Grid ColumnSpacing="8" RowSpacing="8">
+      <Grid.DefaultRowProportion Type="Auto" />
+      <Grid.ColumnsProportions>
+        <Proportion Type="Auto" />
+        <Proportion Type="Fill" />
+      </Grid.ColumnsProportions>
+      <Label Text="Font Size" />
+      <SpinButton Maximum="128" Minimum="4" Value="32" Integer="True" Width="50" Id="_textFontSize" Grid.Column="1" />
+      <Label Text="Scale" VerticalAlignment="Center" Grid.Row="1" />
+      <HorizontalStackPanel Spacing="8" Grid.Column="1" Grid.Row="1">
+        <HorizontalSlider Minimum="1" Maximum="8" Value="3" Width="200" Id="_sliderScale" />
+        <Label Text="3" Id="_labelScale" />
+      </HorizontalStackPanel>
+      <Label Text="Text" Grid.Row="2" />
+      <TextBox Text="Hello, World!" Multiline="True" Height="100" Id="_text" Grid.Column="1" Grid.Row="2" />
+    </Grid>
+  </VerticalStackPanel>
+</Project>

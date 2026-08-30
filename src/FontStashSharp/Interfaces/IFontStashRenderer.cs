@@ -1,4 +1,4 @@
-﻿#if MONOGAME || FNA || XNA
+﻿#if MONOGAME || FNA || KNI || XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
@@ -19,7 +19,7 @@ namespace FontStashSharp.Interfaces
 	/// </summary>
 	public interface IFontStashRenderer
 	{
-#if MONOGAME || FNA || XNA || STRIDE
+#if MONOGAME || FNA || KNI || XNA || STRIDE
 		/// <summary>
 		/// Gets the graphics device used for rendering.
 		/// </summary>

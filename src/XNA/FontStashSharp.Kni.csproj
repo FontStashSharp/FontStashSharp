@@ -4,7 +4,7 @@
     <PackageId>FontStashSharp.Kni</PackageId>
     <AssemblyName>FontStashSharp.Kni</AssemblyName>
     <Description>FontStashSharp for Kni</Description>
-    <DefineConstants>$(DefineConstants);MONOGAME</DefineConstants>
+    <DefineConstants>$(DefineConstants);KNI</DefineConstants>
     <OutputPath>bin\Kni\$(Configuration)</OutputPath>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
