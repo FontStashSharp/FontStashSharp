@@ -263,3 +263,8 @@ __pycache__/
 docfx/api
 !docfx/api/index.md
 docfx/_site
+
+# Compiled effects
+src/XNA/Effects/FNA/
+src/XNA/Effects/MonoGameDX11/
+src/XNA/Effects/MonoGameOGL/
