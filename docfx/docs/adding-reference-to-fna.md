@@ -14,12 +14,17 @@ dotnet tool install --global efscriptgen
 dotnet tool update --global efscriptgen
 ```
 
-2. **Make sure `fxc` is available in PATH** - the FNA compile scripts invoke `fxc` (the DirectX shader compiler). It ships with the Windows SDK under `C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64\`. The simplest way to have it in PATH is to run the commands from a Developer Command Prompt / Visual Studio environment.
+2. **Generate the compile scripts** - navigate to the `src/XNA/Effects` folder and execute:
+```bash
+efscriptgen .
+```
+This scans the folder for `.fx` files (here `Text.fx`) together with the variant definitions in `Text.xml` and generates the `compile_*.bat` scripts under `FNA`, `MonoGameDX11` and `MonoGameOGL` subfolders.
 
-3. **Run the FNA compile script** - this compiles all SDF effect variants into `src/XNA/Effects/FNA/bin/*.efb`:
+3. **Make sure `fxc` is available in PATH** - the FNA compile scripts invoke `fxc` (the DirectX shader compiler). It ships with the Windows SDK under `C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64\`. The simplest way to have it in PATH is to run the commands from a Developer Command Prompt / Visual Studio environment.
+
+4. **Run the FNA compile script** - this compiles all SDF effect variants into `src/XNA/Effects/FNA/bin/*.efb`:
 ```bash
 src/XNA/Effects/FNA/compile_all.bat
 ```
-If the compile scripts were changed or are missing, regenerate them first with `efscriptgen.exe src/XNA/Effects` and then run `src/XNA/Effects/FNA/compile_all.bat`.
 
-4. **Rebuild the project** - the generated `Effects\FNA\bin\*.efb` files are picked up automatically by the `EmbeddedResource` item on the next build. 	
+5. **Rebuild the project** - the generated `Effects\FNA\bin\*.efb` files are picked up automatically by the `EmbeddedResource` item on the next build.
