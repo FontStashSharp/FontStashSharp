@@ -5,7 +5,7 @@
 
 ### SDF Support
 
-In FNA, SDF text rendering requires the SDF effect shaders to be compiled into precompiled `.efb` blobs:
+SDF text rendering requires the SDF effect shaders to be compiled into precompiled `.efb` blobs:
 
 1. **Install or update efscriptgen** - [efscriptgen](https://github.com/rds1983/efscriptgen) is the tool that generates the `compile_*.bat` scripts for every effect variant declared in `src/XNA/Effects/Text.xml`:
 ```bash
@@ -22,6 +22,4 @@ src/XNA/Effects/FNA/compile_all.bat
 ```
 If the compile scripts were changed or are missing, regenerate them first with `efscriptgen.exe src/XNA/Effects` and then run `src/XNA/Effects/FNA/compile_all.bat`.
 
-4. **Rebuild the project** - the generated `Effects\FNA\bin\*.efb` files are picked up automatically by the `EmbeddedResource` item on the next build. Without them, SDF rendering falls back to the base variant only.
-
-For more details on how the whole pipeline works, see the [efscriptgen documentation](https://github.com/rds1983/efscriptgen) and the Git workflow files in this repository (e.g. `.github/workflows/build-and-publish-release.yml`), which build the MonoGame effect variants the same way in CI.
+4. **Rebuild the project** - the generated `Effects\FNA\bin\*.efb` files are picked up automatically by the `EmbeddedResource` item on the next build.
