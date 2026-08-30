@@ -42,7 +42,7 @@ namespace FontStashSharp
 						return "FontStashSharp.Effects.MonoGameDX11.bin";
 				}
 
-				throw new NotFiniteNumberException($"Graphics Backend {PlatformInfo.GraphicsBackend} is not supported.");
+				throw new NotImplementedException($"Graphics Backend {PlatformInfo.GraphicsBackend} is not supported.");
 			}
 		}
 #endif
