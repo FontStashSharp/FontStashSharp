@@ -269,6 +269,7 @@ namespace FontStashSharp
 			TextShaper = FontSystemDefaults.TextShaper;
 			FontLoader = FontSystemDefaults.FontLoader;
 			ShapedTextCacheSize = FontSystemDefaults.ShapedTextCacheSize;
+			FontRasterizationMode = FontSystemDefaults.FontRasterizationMode;
 		}
 
 		/// <summary>
