@@ -108,12 +108,10 @@ namespace FontStashSharp
 		/// </summary>
 		public int ShapedTextCacheSize => _settings.ShapedTextCacheSize;
 
-#if MONOGAME || FNA
 		/// <summary>
 		/// Gets the mode used to rasterize glyph bitmaps.
 		/// </summary>
 		public FontRasterizationMode FontRasterizationMode => _settings.FontRasterizationMode;
-#endif
 
 		/// <summary>
 		/// Gets the list of font sources loaded in this system.
@@ -400,11 +398,7 @@ namespace FontStashSharp
 			glyph.TextureOffset.X = gx + GlyphPad;
 			glyph.TextureOffset.Y = gy + GlyphPad;
 
-#if MONOGAME || FNA
 			atlas.RenderGlyph(device, glyph, FontSources[glyph.FontSourceIndex], GlyphRenderer, GlyphRenderResult, KernelWidth, KernelHeight, FontRasterizationMode);
-#else
-			atlas.RenderGlyph(device, glyph, FontSources[glyph.FontSourceIndex], GlyphRenderer, GlyphRenderResult, KernelWidth, KernelHeight);
-#endif
 
 			glyph.Texture = atlas.Texture;
 		}
