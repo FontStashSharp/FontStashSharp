@@ -51,3 +51,4 @@ Stroked Text:
 * [FreeTypeSharp](https://github.com/ryancheung/FreeTypeSharp)
 * [TrippyGL](https://github.com/SilkCommunity/TrippyGL)
 * [HarfBuzzSharp](https://www.nuget.org/packages/HarfBuzzSharp/)
+* [U3D](https://u3d.io/)
