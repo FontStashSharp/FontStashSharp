@@ -1,9 +1,7 @@
 1. Clone this repo.
-2. Add src/XNA/FontStashSharp.FNA.csproj or src/XNA/FontStashSharp.FNA.Core.csproj to the solution.
-3. The overall folder structure is expected to be following:
-![alt text](~/images/adding-reference-to-fna.png)
+2. Open a solution from the "build" folder.
 
-### SDF Support
+### SDF Support(works only for MonoGame and FNA backends)
 
 SDF text rendering requires the SDF effect shaders to be compiled into precompiled `.efb` blobs:
 
@@ -20,6 +18,5 @@ dotnet tool update --global efscriptgen
 ```bash
 src/XNA/Effects/FNA/compile_all.bat
 ```
-If the compile scripts were changed or are missing, regenerate them first with `efscriptgen.exe src/XNA/Effects` and then run `src/XNA/Effects/FNA/compile_all.bat`.
 
 4. **Rebuild the project** - the generated `Effects\FNA\bin\*.efb` files are picked up automatically by the `EmbeddedResource` item on the next build. 	
