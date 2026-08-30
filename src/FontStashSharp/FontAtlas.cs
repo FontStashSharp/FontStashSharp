@@ -237,6 +237,17 @@ namespace FontStashSharp
 		}
 
 #if MONOGAME || FNA || XNA || STRIDE
+		/// <summary>
+		/// Renders a glyph and stores it in the atlas texture.
+		/// </summary>
+		/// <param name="graphicsDevice">The graphics device.</param>
+		/// <param name="glyph">The glyph to render.</param>
+		/// <param name="fontSource">The font source for rasterization.</param>
+		/// <param name="glyphRenderer">The glyph rendering function.</param>
+		/// <param name="glyphRenderResult">The glyph render result format.</param>
+		/// <param name="kernelWidth">The kernel width for rendering.</param>
+		/// <param name="kernelHeight">The kernel height for rendering.</param>
+		/// <param name="mode">The rasterization mode.</param>
 		public void RenderGlyph(GraphicsDevice graphicsDevice, DynamicFontGlyph glyph, IFontSource fontSource, GlyphRenderer glyphRenderer, GlyphRenderResult glyphRenderResult, int kernelWidth, int kernelHeight, FontRasterizationMode mode)
 #else
 		/// <summary>

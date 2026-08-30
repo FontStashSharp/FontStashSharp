@@ -108,6 +108,9 @@ namespace FontStashSharp
 		/// </summary>
 		public int ShapedTextCacheSize => _settings.ShapedTextCacheSize;
 
+		/// <summary>
+		/// Gets the mode used to rasterize glyph bitmaps.
+		/// </summary>
 		public FontRasterizationMode FontRasterizationMode => _settings.FontRasterizationMode;
 
 		/// <summary>

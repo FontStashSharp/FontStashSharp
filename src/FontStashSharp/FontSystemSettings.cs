@@ -248,6 +248,9 @@ namespace FontStashSharp
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the mode used to rasterize glyph bitmaps.
+		/// </summary>
 		public FontRasterizationMode FontRasterizationMode { get; set; }
 
 		/// <summary>
