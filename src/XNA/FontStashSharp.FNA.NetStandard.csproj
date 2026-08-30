@@ -20,6 +20,10 @@
   </ItemGroup>  
 
   <ItemGroup>
+    <EmbeddedResource Include="Effects\FNA\bin\*.*" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="..\FontStashSharp\**\*.cs" LinkBase="FontStashSharp" />
     <Compile Remove="..\FontStashSharp\obj\**\*.cs" LinkBase="FontStashSharp" />
   </ItemGroup>

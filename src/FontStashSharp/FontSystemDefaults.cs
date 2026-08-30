@@ -137,11 +137,6 @@ namespace FontStashSharp
 		public static bool StbTrueTypeUseOldRasterizer { get; set; }
 
 		/// <summary>
-		/// Gets or sets the mode used to rasterize glyph bitmaps.
-		/// </summary>
-		public static FontRasterizationMode FontRasterizationMode { get; set; }
-
-		/// <summary>
 		/// Gets or sets a value indicating whether to use EM to pixels scale conversion by default.
 		/// </summary>
 		public static bool UseEmToPixelsScale { get; set; }
@@ -190,5 +185,12 @@ namespace FontStashSharp
 				_shapedTextCacheSize = value;
 			}
 		}
+
+#if MONOGAME || FNA
+		/// <summary>
+		/// Gets or sets the mode used to rasterize glyph bitmaps.
+		/// </summary>
+		public static FontRasterizationMode FontRasterizationMode { get; set; }
+#endif
 	}
 }

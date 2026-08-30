@@ -1,6 +1,6 @@
 using System;
 
-#if MONOGAME || FNA || XNA
+#if MONOGAME || FNA || KNI || XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
@@ -15,7 +15,7 @@ namespace FontStashSharp
 	{
 		public static Texture2D CreateTexture(GraphicsDevice device, int width, int height)
 		{
-#if MONOGAME || FNA || XNA
+#if MONOGAME || FNA || KNI || XNA
 			var texture2d = new Texture2D(device, width, height);
 #elif STRIDE
 			var texture2d = Texture2D.New2D(device, width, height, false, PixelFormat.R8G8B8A8_UNorm, TextureFlags.ShaderResource);

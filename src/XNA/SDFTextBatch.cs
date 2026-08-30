@@ -56,7 +56,12 @@ namespace FontStashSharp
 					effect.Parameters["cStrokeColor"].SetValue(settings.StrokeColor.ToVector4());
 				}
 
-				_spriteBatch.Begin(effect: effect, blendState: BlendState.NonPremultiplied);
+				_spriteBatch.Begin(SpriteSortMode.Deferred,
+					BlendState.NonPremultiplied,
+					SamplerState.LinearClamp,
+					DepthStencilState.None,
+					RasterizerState.CullCounterClockwise,
+					effect);
 			}
 
 			public void End()

@@ -1,7 +1,7 @@
 ﻿using FontStashSharp.Interfaces;
 using System;
 
-#if MONOGAME || FNA || XNA
+#if MONOGAME || FNA || KNI || XNA
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #elif STRIDE
@@ -141,7 +141,7 @@ namespace FontStashSharp
 			return glyph;
 		}
 
-#if MONOGAME || FNA || XNA || STRIDE
+#if MONOGAME || FNA || KNI || XNA || STRIDE
 		private DynamicFontGlyph GetGlyphByCodepointInternal(GraphicsDevice device, int codepoint, FontSystemEffect effect, int effectAmount)
 #else
 		private DynamicFontGlyph GetGlyphByCodepointInternal(ITexture2DManager device, int codepoint, FontSystemEffect effect, int effectAmount)
@@ -161,7 +161,7 @@ namespace FontStashSharp
 			return glyph;
 		}
 
-#if MONOGAME || FNA || XNA || STRIDE
+#if MONOGAME || FNA || KNI || XNA || STRIDE
 		private DynamicFontGlyph GetGlyphByCodepoint(GraphicsDevice device, int codepoint, FontSystemEffect effect, int effectAmount)
 #else
 		private DynamicFontGlyph GetGlyphByCodepoint(ITexture2DManager device, int codepoint, FontSystemEffect effect, int effectAmount)
@@ -176,7 +176,7 @@ namespace FontStashSharp
 			return result;
 		}
 
-#if MONOGAME || FNA || XNA || STRIDE
+#if MONOGAME || FNA || KNI || XNA || STRIDE
 		/// <summary>
 		/// Gets a glyph for the specified codepoint with optional effects applied.
 		/// </summary>
