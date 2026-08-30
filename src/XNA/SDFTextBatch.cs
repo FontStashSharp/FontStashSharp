@@ -7,7 +7,7 @@ using System;
 
 namespace FontStashSharp
 {
-	public struct SDFTextSettings
+	internal struct SDFTextSettings
 	{
 		public bool EnableSuperSampling;
 		public bool EnableShadow;
@@ -36,7 +36,7 @@ namespace FontStashSharp
 			GC.SuppressFinalize(this);
 		}
 
-		public void Begin(SDFTextSettings settings)
+		internal void Begin(SDFTextSettings settings)
 		{
 			var effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, settings.EnableSuperSampling, settings.EnableShadow, settings.EnableStroke);
 
