@@ -13,7 +13,9 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '10.0.x'
+        dotnet-version: | 
+          8.0.x
+          10.0.x
     - name: Install efscriptgen
       run: dotnet tool install --global efscriptgen
     - name: Install mgfxc
@@ -21,9 +23,9 @@ jobs:
     - name: Generate effects build scripts
       run: efscriptgen.exe src/XNA/Effects
     - name: Build DirectX effects
-      run: src/XNA/Resources/MonoGameDX11/compile_all.bat
+      run: src/XNA/Effects/MonoGameDX11/compile_all.bat
     - name: Build OpenGL effects
-      run: src/XNA/Resources/MonoGameOGL/compile_all.bat
+      run: src/XNA/Effects/MonoGameOGL/compile_all.bat
     - name: Build FontStashSharp.PlatformAgnostic
       run: dotnet build build\FontStashSharp.PlatformAgnostic.sln --configuration Release
     - name: Build FontStashSharp.MonoGame

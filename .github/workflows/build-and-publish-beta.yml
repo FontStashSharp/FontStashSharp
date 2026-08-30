@@ -30,9 +30,9 @@ jobs:
     - name: Generate effects build scripts
       run: efscriptgen.exe src/XNA/Effects
     - name: Build DirectX effects
-      run: src/XNA/Resources/MonoGameDX11/compile_all.bat
+      run: src/XNA/Effects/MonoGameDX11/compile_all.bat
     - name: Build OpenGL effects
-      run: src/XNA/Resources/MonoGameOGL/compile_all.bat
+      run: src/XNA/Effects/MonoGameOGL/compile_all.bat
     - name: Build FontStashSharp.PlatformAgnostic
       run: dotnet build build\FontStashSharp.PlatformAgnostic.sln --configuration Release
     - name: Build FontStashSharp.MonoGame
