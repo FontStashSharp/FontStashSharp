@@ -16,10 +16,6 @@ https://fontstashsharp.github.io/FontStashSharp
 ## Support
 [Discord](https://discord.gg/ZeHxhCY)
 
-## Building From Source Code
-1. Clone this repo.
-2. Open a solution from the "build" folder.
-
 ## Sponsor
 If this project is useful for you, you can support development:
 - Boosty: https://boosty.to/rds1983
