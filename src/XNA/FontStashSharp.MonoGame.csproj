@@ -29,4 +29,8 @@
     <Compile Include="..\FontStashSharp\**\*.cs" LinkBase="FontStashSharp" />
     <Compile Remove="..\FontStashSharp\obj\**\*.cs" LinkBase="FontStashSharp" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Include="Effects\MonoGameOGL\bin\*.*" />
+  </ItemGroup>
 </Project>
