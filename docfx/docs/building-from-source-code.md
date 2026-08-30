@@ -5,7 +5,7 @@
 
 SDF text rendering requires the SDF effect shaders to be compiled into precompiled `.efb` blobs:
 
-1. **Install or update efscriptgen** - [efscriptgen](https://github.com/rds1983/efscriptgen) is the tool that generates the `compile_*.bat` scripts for every effect variant declared in `src/XNA/Effects/Text.xml`:
+1. **Install or update efscriptgen** - [efscriptgen](https://github.com/rds1983/efscriptgen):
 ```bash
 dotnet tool install --global efscriptgen
 # or, to update an existing installation:
@@ -16,7 +16,6 @@ dotnet tool update --global efscriptgen
 ```bash
 efscriptgen .
 ```
-This scans the folder for `.fx` files (here `Text.fx`) together with the variant definitions in `Text.xml` and generates the `compile_*.bat` scripts under `FNA`, `MonoGameDX11` and `MonoGameOGL` subfolders.
 
 Then compile the effects for the backend(s) you use:
 
