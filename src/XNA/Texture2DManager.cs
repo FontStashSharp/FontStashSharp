@@ -52,7 +52,7 @@ namespace FontStashSharp
 					device.Textures[i] = currentTextures[i];
 				}
 			}
-#elif MONOGAME || FNA
+#elif MONOGAME || FNA || KNI
 			texture.SetData(0, bounds, data, 0, bounds.Width * bounds.Height * 4);
 #elif STRIDE
 			var size = bounds.Width * bounds.Height * 4;
