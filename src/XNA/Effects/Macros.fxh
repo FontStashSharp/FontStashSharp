@@ -9,7 +9,7 @@
 #if defined(SM6) || defined(VULKAN)
 
 #define TECHNIQUE(name, psname) \
-	technique name { pass P0 { PixelShader = compile ps_6_0 psname(); } }
+	technique name { pass { PixelShader = compile ps_6_0 psname(); } }
 
 #define BEGIN_CONSTANTS     cbuffer _MG_Globals : register(b0) {
 #define MATRIX_CONSTANTS
@@ -37,7 +37,7 @@
 // Macros for targetting shader model 4.0 (DX11)
 
 #define TECHNIQUE(name, psname) \
-	technique name { pass P0 { PixelShader = compile ps_4_0 psname(); } }
+	technique name { pass { PixelShader = compile ps_4_0 psname(); } }
 
 #define BEGIN_CONSTANTS     cbuffer Parameters : register(b0) {
 #define MATRIX_CONSTANTS
@@ -63,7 +63,7 @@
 #else
 
 
-// Macros for targetting shader model 2.0 (DX9)
+// Macros for targetting shader model 3.0
 
 #define TECHNIQUE(name, psname) \
 	technique name { pass { PixelShader = compile ps_3_0 psname(); } }

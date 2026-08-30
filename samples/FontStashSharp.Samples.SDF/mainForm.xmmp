@@ -17,7 +17,7 @@
         <Label Text="3" Id="_labelScale" />
       </HorizontalStackPanel>
       <Label Text="Text" Grid.Row="2" />
-      <TextBox Text="Hello, World!" Height="100" Id="_text" Grid.Column="1" Grid.Row="2" />
+      <TextBox Text="Hello, World!" Multiline="True" Height="100" Id="_text" Grid.Column="1" Grid.Row="2" />
     </Grid>
   </VerticalStackPanel>
 </Project>

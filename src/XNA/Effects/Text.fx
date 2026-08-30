@@ -11,21 +11,36 @@
 
 DECLARE_TEXTURE(SpriteTexture, 0);
 
+BEGIN_CONSTANTS
+MATRIX_CONSTANTS
+
+    float4x4 MatrixTransform    _vs(c0) _cb(c0);
+
+END_CONSTANTS
+
+
+struct VSOutput
+{
+	float4 position		: SV_Position;
+	float4 color		: COLOR0;
+    float2 texCoord		: TEXCOORD0;
+};
+
 float GetAlpha(float distance, float width)
 {
 	return smoothstep(0.5 - width, 0.5 + width, distance);
 }
 
-float4 PS(float2 iTexCoord : TEXCOORD0, float4 iColor : COLOR0) : SV_Target0
+float4 PS(VSOutput input) : SV_Target0
 {
 	float4 oColor;
-	oColor.rgb = iColor.rgb;
-	float distance = SAMPLE_TEXTURE(SpriteTexture, iTexCoord).a;
+	oColor.rgb = input.color.rgb;
+	float distance = SAMPLE_TEXTURE(SpriteTexture, input.texCoord).a;
 
 	#ifdef EFFECTSTROKE
 		#ifdef SUPERSAMPLING
 			float outlineFactor = smoothstep(0.5, 0.525, distance); // Border of glyph
-			oColor.rgb = lerp(cStrokeColor.rgb, iColor.rgb, outlineFactor);
+			oColor.rgb = lerp(cStrokeColor.rgb, input.color.rgb, outlineFactor);
 		#else
 			if (distance < 0.525)
 				oColor.rgb = cStrokeColor.rgb;
@@ -33,7 +48,7 @@ float4 PS(float2 iTexCoord : TEXCOORD0, float4 iColor : COLOR0) : SV_Target0
 	#endif
 
 	#ifdef EFFECTSHADOW
-	if (SAMPLE_TEXTURE(SpriteTexture, iTexCoord - cShadowOffset).a > 0.5 && distance <= 0.5)
+	if (SAMPLE_TEXTURE(SpriteTexture, input.texCoord - cShadowOffset).a > 0.5 && distance <= 0.5)
 		oColor = cShadowColor;
 	#ifndef SUPERSAMPLING
 	else if (distance <= 0.5)
@@ -46,8 +61,8 @@ float4 PS(float2 iTexCoord : TEXCOORD0, float4 iColor : COLOR0) : SV_Target0
 		float alpha = GetAlpha(distance, width);
 
 		#ifdef SUPERSAMPLING
-			float2 deltaUV = 0.354 * fwidth(iTexCoord); // (1.0 / sqrt(2.0)) / 2.0 = 0.354
-			float4 square = float4(iTexCoord - deltaUV, iTexCoord + deltaUV);
+			float2 deltaUV = 0.354 * fwidth(input.texCoord); // (1.0 / sqrt(2.0)) / 2.0 = 0.354
+			float4 square = float4(input.texCoord - deltaUV, input.texCoord + deltaUV);
 
 			float distance2 = SAMPLE_TEXTURE(SpriteTexture, square.xy).a;
 			float distance3 = SAMPLE_TEXTURE(SpriteTexture, square.zw).a;

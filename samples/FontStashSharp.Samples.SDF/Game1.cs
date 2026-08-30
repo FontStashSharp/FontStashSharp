@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra;
-using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
 
 namespace FontStashSharp.Samples;
