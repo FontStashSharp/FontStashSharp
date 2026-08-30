@@ -24,9 +24,9 @@ namespace FontStashSharp
 			GC.SuppressFinalize(this);
 		}
 
-		public void Begin()
+		public void Begin(bool superSampling = false)
 		{
-			var effect = Resources.GetEffect(_spriteBatch.GraphicsDevice);
+			var effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, superSampling: superSampling);
 			_spriteBatch.Begin(effect: effect, blendState: BlendState.NonPremultiplied);
 		}
 

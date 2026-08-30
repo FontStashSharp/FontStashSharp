@@ -99,7 +99,7 @@ namespace FontStashSharp
 			return new Effect(graphicsDevice, bytes);
 		}
 
-		public static Effect GetEffect(GraphicsDevice graphicsDevice, EffectType effectType = EffectType.None, bool superSamling = false)
+		public static Effect GetEffect(GraphicsDevice graphicsDevice, EffectType effectType = EffectType.None, bool superSampling = false)
 		{
 			var defines = new Dictionary<string, string>();
 
@@ -113,7 +113,7 @@ namespace FontStashSharp
 					break;
 			}
 
-			if (superSamling)
+			if (superSampling)
 			{
 				defines["SUPERSAMPLING"] = "1";
 			}

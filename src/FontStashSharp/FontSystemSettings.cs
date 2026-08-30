@@ -248,6 +248,8 @@ namespace FontStashSharp
 			}
 		}
 
+		public FontRasterizationMode FontRasterizationMode { get; set; }
+
 		/// <summary>
 		/// Initializes a new instance of the FontSystemSettings class with default values.
 		/// </summary>
@@ -287,7 +289,8 @@ namespace FontStashSharp
 				ExistingTextureUsedSpace = ExistingTextureUsedSpace,
 				FontLoader = FontLoader,
 				TextShaper = TextShaper,
-				ShapedTextCacheSize = ShapedTextCacheSize
+				ShapedTextCacheSize = ShapedTextCacheSize,
+				FontRasterizationMode = FontRasterizationMode
 			};
 		}
 	}

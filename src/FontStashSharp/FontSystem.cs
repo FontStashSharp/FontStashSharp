@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using FontStashSharp.Rasterizers.StbTrueTypeSharp;
-using System.Runtime.InteropServices;
 
 #if MONOGAME || FNA || XNA
 using Microsoft.Xna.Framework.Graphics;
@@ -108,6 +107,8 @@ namespace FontStashSharp
 		/// Gets the maximum size of the shaped text cache.
 		/// </summary>
 		public int ShapedTextCacheSize => _settings.ShapedTextCacheSize;
+
+		public FontRasterizationMode FontRasterizationMode => _settings.FontRasterizationMode;
 
 		/// <summary>
 		/// Gets the list of font sources loaded in this system.
@@ -394,7 +395,7 @@ namespace FontStashSharp
 			glyph.TextureOffset.X = gx + GlyphPad;
 			glyph.TextureOffset.Y = gy + GlyphPad;
 
-			atlas.RenderGlyph(device, glyph, FontSources[glyph.FontSourceIndex], GlyphRenderer, GlyphRenderResult, KernelWidth, KernelHeight);
+			atlas.RenderGlyph(device, glyph, FontSources[glyph.FontSourceIndex], GlyphRenderer, GlyphRenderResult, KernelWidth, KernelHeight, FontRasterizationMode);
 
 			glyph.Texture = atlas.Texture;
 		}
