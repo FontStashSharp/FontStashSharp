@@ -25,6 +25,8 @@ namespace FontStashSharp
 		private const string EffectsResourcePath = "FontStashSharp.Effects.MonoGameOGL.bin";
 #endif
 
+		private static readonly Effect[] _cache = new Effect[8];
+
 		/// <summary>
 		/// Open assembly resource stream by relative name
 		/// </summary>
@@ -60,7 +62,7 @@ namespace FontStashSharp
 			}
 		}
 
-		private static Effect GetEffect(GraphicsDevice graphicsDevice, string name, Dictionary<string, string> defines)
+		private static Effect LoadEffect(GraphicsDevice graphicsDevice, string name, Dictionary<string, string> defines)
 		{
 			var key = new StringBuilder();
 
@@ -99,26 +101,49 @@ namespace FontStashSharp
 			return new Effect(graphicsDevice, bytes);
 		}
 
-		public static Effect GetEffect(GraphicsDevice graphicsDevice, EffectType effectType = EffectType.None, bool superSampling = false)
+		public static Effect GetEffect(GraphicsDevice graphicsDevice, bool superSampling, bool shadow, bool stroke)
 		{
-			var defines = new Dictionary<string, string>();
-
-			switch (effectType)
+			var key = 0;
+			if (superSampling)
 			{
-				case EffectType.Stroke:
-					defines["EFFECTSTROKE"] = "1";
-					break;
-				case EffectType.Shadow:
-					defines["EFFECTSHADOW"] = "1";
-					break;
+				key |= 1;
 			}
+
+			if (shadow)
+			{
+				key |= 2;
+			}
+
+			if (stroke)
+			{
+				key |= 4;
+			}
+
+			if (_cache[key] != null)
+			{
+				return _cache[key];
+			}
+
+			var defines = new Dictionary<string, string>();
 
 			if (superSampling)
 			{
 				defines["SUPERSAMPLING"] = "1";
 			}
 
-			return GetEffect(graphicsDevice, "Text", defines);
+			if (shadow)
+			{
+				defines["EFFECTSHADOW"] = "1";
+			}
+
+			if (stroke)
+			{
+				defines["EFFECTSTROKE"] = "1";
+			}
+
+			_cache[key] = LoadEffect(graphicsDevice, "Text", defines);
+
+			return _cache[key];
 		}
 	}
 }

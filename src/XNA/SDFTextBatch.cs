@@ -7,6 +7,18 @@ using System;
 
 namespace FontStashSharp
 {
+	public struct SDFTextSettings
+	{
+		public bool EnableSuperSampling;
+		public bool EnableShadow;
+		public Vector2 ShadowOffset;
+		public Color ShadowColor;
+		public bool EnableStroke;
+		public Color StrokeColor;
+
+		public static readonly SDFTextSettings Default = new SDFTextSettings();
+	}
+
 	public class SDFTextBatch : IFontStashRenderer, IDisposable
 	{
 		private readonly SpriteBatch _spriteBatch;
@@ -24,11 +36,25 @@ namespace FontStashSharp
 			GC.SuppressFinalize(this);
 		}
 
-		public void Begin(bool superSampling = false)
+		public void Begin(SDFTextSettings settings)
 		{
-			var effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, superSampling: superSampling);
+			var effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, settings.EnableSuperSampling, settings.EnableShadow, settings.EnableStroke);
+
+			if (settings.EnableShadow)
+			{
+				effect.Parameters["cShadowOffset"].SetValue(settings.ShadowOffset);
+				effect.Parameters["cShadowColor"].SetValue(settings.ShadowColor.ToVector4());
+			}
+
+			if (settings.EnableStroke)
+			{
+				effect.Parameters["cStrokeColor"].SetValue(settings.StrokeColor.ToVector4());
+			}
+
 			_spriteBatch.Begin(effect: effect, blendState: BlendState.NonPremultiplied);
 		}
+
+		public void Begin() => Begin(SDFTextSettings.Default);
 
 		public void End()
 		{
