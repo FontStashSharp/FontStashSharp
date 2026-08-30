@@ -6,22 +6,6 @@ With the default (sprite) rendering path, every glyph is rasterized once into th
 
 SDF rendering changes what is stored in the atlas. Instead of per-pixel alpha coverage, each texel stores the **signed distance** to the glyph outline — a value that is negative inside the glyph, positive outside it, and close to zero near the outline. At draw time, a fragment shader converts this distance back into alpha (by thresholding it against the pixel's location relative to the outline). Because the inside/outside transition is recomputed per-pixel as the text is scaled, the edges of the glyph stay crisp at any scale, and effects such as shadows are computed from the same distance data.
 
-### When It's Better Than Sprite Rendering
-
-Use SDF rendering when:
-
-- **Text is scaled significantly or dynamically.** Titles, HUD labels, camera-zoomed text, or any text whose size changes at runtime benefits the most. Sprite-rendered text looks fine only near the size it was rasterized at.
-- **You don't know the final size in advance.** With SDF, a single glyph can be drawn at many sizes from one atlas entry. With sprite rendering, every distinct size requires re-rasterizing a new glyph into the atlas.
-- **Reducing atlas memory and re-rasterization is a priority.** One SDF glyph replaces the multi-size glyphs the sprite path has to produce, so the texture atlas fills up more slowly.
-- **You want sharp, vector-like edges.** SDF edges stay smooth and uniform because the outline is evaluated in the shader rather than baked into the bitmap.
-
-Sprite rendering is usually the better choice when:
-
-- **The text is small.** With font sizes below roughly 16px, the 8-bit distance values become quantized and the outline detail is lost. Hierarchical rasterization with hinting looks crisper at exact small sizes.
-- **The text is always rendered at (or close to) its rasterized size.** If scale never changes, sprite rendering produces an equal or better result with less GPU work.
-- **Color/emoji glyphs are involved.** SDF works on monochrome vector outlines. Color bitmaps and emoji glyphs are not suitable and may render as empty or flat silhouettes.
-- **The rasterizer you use doesn't support SDF.** Only the default StbTrueTypeSharp rasterizer implements SDF. The FreeType and SharpAstro rasterizers throw `NotImplementedException` when SDF mode is requested.
-
 ### Enabling SDF Rasterization
 
 SDF is enabled per `FontSystem` by setting `FontSystemSettings.FontRasterizationMode` to `FontRasterizationMode.SDF`:
