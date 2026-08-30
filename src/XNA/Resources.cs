@@ -1,13 +1,18 @@
 ﻿#if MONOGAME || FNA
 
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Framework.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+
+#if MONOGAME
+
+using MonoGame.Framework.Utilities;
+
+#endif
 
 namespace FontStashSharp
 {
