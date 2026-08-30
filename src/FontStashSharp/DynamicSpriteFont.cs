@@ -38,6 +38,9 @@ namespace FontStashSharp
 		/// </summary>
 		public FontSystem FontSystem { get; private set; }
 
+		/// <inheritdoc/>
+		public override FontRasterizationMode FontRasterizationMode => FontSystem.FontRasterizationMode;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DynamicSpriteFont"/> class.
 		/// </summary>

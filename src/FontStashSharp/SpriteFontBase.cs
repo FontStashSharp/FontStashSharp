@@ -48,6 +48,11 @@ namespace FontStashSharp
 		protected float RenderFontSizeMultiplicator { get; set; } = 1f;
 
 		/// <summary>
+		/// Gets the font rasterization mode used to render this font.
+		/// </summary>
+		public abstract FontRasterizationMode FontRasterizationMode { get; }
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="SpriteFontBase"/> class.
 		/// </summary>
 		/// <param name="fontSize">The font size in points.</param>

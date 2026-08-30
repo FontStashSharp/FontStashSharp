@@ -83,6 +83,9 @@ namespace FontStashSharp
 		/// </summary>
 		public bool UseKernings { get; set; } = true;
 
+		/// <inheritdoc/>
+		public override FontRasterizationMode FontRasterizationMode => FontRasterizationMode.Standard;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="StaticSpriteFont"/> class.
 		/// </summary>
