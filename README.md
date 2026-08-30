@@ -9,6 +9,7 @@ FontStashSharp is a text rendering library. It has the following features:
 * Text effects: blurry text, stroked text, underline and strikethrough
 * Integrated rich text engine
 * Optional HarfBuzz text shaping support
+* Optional SDF
 
 ## Documentation
 https://fontstashsharp.github.io/FontStashSharp
