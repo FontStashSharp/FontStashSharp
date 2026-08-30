@@ -1,3 +1,5 @@
+// This shader was borrowed from https://u3d.io/
+
 #include "Macros.fxh"
 
 #ifdef EFFECTSHADOW
