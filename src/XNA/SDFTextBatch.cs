@@ -7,16 +7,78 @@ using System;
 
 namespace FontStashSharp
 {
-	internal struct SDFTextSettings
+	/// <summary>
+	/// Specifies the signed distance field (SDF) effects to apply when rendering text
+	/// </summary>
+	public enum SDFFontEffect
 	{
+		/// <summary>
+		/// Text is rendered without any special effect
+		/// </summary>
+		None,
+
+		/// <summary>
+		/// Text is rendered with a shadow
+		/// </summary>
+		Shadow,
+
+		/// <summary>
+		/// Text is rendered with an outline
+		/// </summary>
+		Stroked
+	}
+
+	/// <summary>
+	/// Settings that control how text is rendered with signed distance field (SDF) effects
+	/// </summary>
+	public struct SDFTextSettings
+	{
+		/// <summary>
+		/// Gets or sets whether supersampling is enabled for the SDF effect
+		/// </summary>
 		public bool EnableSuperSampling;
-		public bool EnableShadow;
-		public Vector2 ShadowOffset;
+
+		/// <summary>
+		/// Gets or sets the SDF effect to apply
+		/// </summary>
+		public SDFFontEffect Effect;
+
+		/// <summary>
+		/// Gets or sets the color of the shadow
+		/// </summary>
 		public Color ShadowColor;
-		public bool EnableStroke;
+
+		/// <summary>
+		/// Gets or sets the offset of the shadow in pixels
+		/// </summary>
+		public Point ShadowOffset;
+
+		/// <summary>
+		/// Gets or sets the color of the stroke
+		/// </summary>
 		public Color StrokeColor;
 
-		public static readonly SDFTextSettings Default = new SDFTextSettings();
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SDFTextSettings"/> struct
+		/// </summary>
+		/// <param name="enableSuperSampling">Whether supersampling is enabled for the SDF effect</param>
+		/// <param name="effect">The SDF effect to apply</param>
+		/// <param name="shadowColor">The color of the shadow</param>
+		/// <param name="shadowOffset">The offset of the shadow in pixels</param>
+		/// <param name="strokeColor">The color of the stroke</param>
+		public SDFTextSettings(bool enableSuperSampling, SDFFontEffect effect, Color shadowColor, Point shadowOffset, Color strokeColor)
+		{
+			EnableSuperSampling = enableSuperSampling;
+			Effect = effect;
+			ShadowColor = shadowColor;
+			ShadowOffset = shadowOffset;
+			StrokeColor = strokeColor;
+		}
+
+		/// <summary>
+		/// The default <see cref="SDFTextSettings"/>: no supersampling and no effect
+		/// </summary>
+		public static readonly SDFTextSettings Default = new SDFTextSettings(false, SDFFontEffect.None, Color.Black, new Point(1, 1), Color.Black);
 	}
 
 	/// <summary>
@@ -24,9 +86,12 @@ namespace FontStashSharp
 	/// </summary>
 	public class SDFTextBatch : IDisposable
 	{
-		private class Renderer: IFontStashRenderer, IDisposable
+		private class Renderer : IFontStashRenderer, IDisposable
 		{
 			private readonly SpriteBatch _spriteBatch;
+			private SDFTextSettings _settings;
+			private Texture2D _lastTexture;
+			private Effect _effect;
 
 			public GraphicsDevice GraphicsDevice => _spriteBatch.GraphicsDevice;
 
@@ -43,17 +108,18 @@ namespace FontStashSharp
 
 			public void Begin(SDFTextSettings settings)
 			{
-				var effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, settings.EnableSuperSampling, settings.EnableShadow, settings.EnableStroke);
+				_settings = settings;
+				_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, settings.EnableSuperSampling, settings.Effect == SDFFontEffect.Shadow, settings.Effect == SDFFontEffect.Stroked);
 
-				if (settings.EnableShadow)
+				switch (settings.Effect)
 				{
-					effect.Parameters["cShadowOffset"].SetValue(settings.ShadowOffset);
-					effect.Parameters["cShadowColor"].SetValue(settings.ShadowColor.ToVector4());
-				}
+					case SDFFontEffect.Shadow:
+						_effect.Parameters["cShadowColor"].SetValue(settings.ShadowColor.ToVector4());
+						break;
 
-				if (settings.EnableStroke)
-				{
-					effect.Parameters["cStrokeColor"].SetValue(settings.StrokeColor.ToVector4());
+					case SDFFontEffect.Stroked:
+						_effect.Parameters["cStrokeColor"].SetValue(settings.StrokeColor.ToVector4());
+						break;
 				}
 
 				_spriteBatch.Begin(SpriteSortMode.Deferred,
@@ -61,19 +127,37 @@ namespace FontStashSharp
 					SamplerState.LinearClamp,
 					DepthStencilState.None,
 					RasterizerState.CullCounterClockwise,
-					effect);
+					_effect);
 			}
 
 			public void End()
 			{
 				_spriteBatch.End();
+
+				_lastTexture = null;
+				_effect = null;
 			}
 
 			public void Draw(Texture2D texture, Vector2 pos, Rectangle? src, Color color, float rotation, Vector2 scale, float depth)
 			{
+				var rect = src.Value;
+
+				if (_settings.Effect == SDFFontEffect.Shadow)
+				{
+					if (texture != _lastTexture)
+					{
+						var shadowOffset = new Vector2((float)_settings.ShadowOffset.X / texture.Width, (float)_settings.ShadowOffset.Y / texture.Height);
+						_effect.Parameters["cShadowOffset"].SetValue(shadowOffset);
+						_lastTexture = texture;
+					}
+
+					rect.Width += _settings.ShadowOffset.X;
+					rect.Height += _settings.ShadowOffset.Y;
+				}
+
 				_spriteBatch.Draw(texture,
 					pos,
-					src,
+					rect,
 					color,
 					rotation,
 					Vector2.Zero,
@@ -103,6 +187,12 @@ namespace FontStashSharp
 			_renderer.Dispose();
 			GC.SuppressFinalize(this);
 		}
+
+		/// <summary>
+		/// Begins a text batch using the specified signed distance field effects
+		/// </summary>
+		/// <param name="settings">The signed distance field settings to use</param>
+		public void Begin(SDFTextSettings settings) => _renderer.Begin(settings);
 
 		/// <summary>
 		/// Begins a text batch using the default signed distance field effects

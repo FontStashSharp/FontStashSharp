@@ -15,6 +15,11 @@ public partial class MainForm
 		_sliderScale.ValueChangedByUser += (s, e) => UpdateParameters();
 		_text.TextChangedByUser += (s, e) => UpdateParameters();
 
+		_splitPaneTop.SetSplitterPosition(0, 0.75f);
+
+		_propertyGridTextSettings.Object = SDFTextSettings.Default;
+		_propertyGridTextSettings.PropertyChanged += (s, a) => _textRendering.SDFTextSettings = (SDFTextSettings)_propertyGridTextSettings.Object;
+
 		UpdateParameters();
 	}
 

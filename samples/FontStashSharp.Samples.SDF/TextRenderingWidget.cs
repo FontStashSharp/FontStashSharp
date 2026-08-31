@@ -23,6 +23,7 @@ internal class TextRenderingWidget : Widget
 	public float FontSize { get; set; } = 32.0f;
 
 	public float TextScale { get; set; } = 1.0f;
+	public SDFTextSettings SDFTextSettings { get; set; } = SDFTextSettings.Default;
 
 	public TextRenderingWidget()
 	{
@@ -43,9 +44,6 @@ internal class TextRenderingWidget : Widget
 
 		// Create a new SpriteBatch, which can be used to draw textures.
 		_spriteBatch = new SpriteBatch(device);
-
-		// TODO: use this.Content to load your game content here
-		//FontSystemDefaults.FontLoader = new FreeTypeLoader();
 
 		// Simple
 		var settings = new FontSystemSettings
@@ -87,17 +85,24 @@ internal class TextRenderingWidget : Widget
 
 		var device = MyraEnvironment.GraphicsDevice;
 
-		var oldViewport = device.Viewport; 
+		var oldViewport = device.Viewport;
 		device.Viewport = new Viewport(screenPosition.X, screenPosition.Y, ActualBounds.Width, ActualBounds.Height);
 
-		_sdfTextBatch.Begin();
+		_sdfTextBatch.Begin(SDFTextSettings);
 		var font = _fontSystemSDF.GetFont(FontSize);
 		_sdfTextBatch.DrawString(font, Text, new Vector2(0, 0), Color.White, scale: new Vector2(TextScale));
 		_sdfTextBatch.End();
 
 		_spriteBatch.Begin();
 		font = _fontSystemStandard.GetFont(FontSize);
-		_spriteBatch.DrawString(font, Text, new Vector2(0, ActualBounds.Height / 2), Color.White, scale: new Vector2(TextScale));
+
+		var effect = FontSystemEffect.None;
+		if (SDFTextSettings.Effect == SDFFontEffect.Stroked)
+		{
+			effect = FontSystemEffect.Stroked;
+		}
+
+		_spriteBatch.DrawString(font, Text, new Vector2(0, ActualBounds.Height / 2), Color.White, scale: new Vector2(TextScale), effect: effect, effectAmount: 1);
 		_spriteBatch.End();
 
 		device.Viewport = oldViewport;

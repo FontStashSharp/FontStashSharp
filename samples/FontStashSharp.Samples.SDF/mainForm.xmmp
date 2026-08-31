@@ -1,7 +1,10 @@
 <Project>
   <Project.ExportOptions Namespace="FontStashSharp.Samples" Class="MainForm" OutputPath="D:\Projects\FontStashSharp\samples\FontStashSharp.Samples.SDF" FieldsVisibility="Private" />
   <VerticalStackPanel>
-    <Panel Id="_panelTextContainer" StackPanel.ProportionType="Fill" />
+    <HorizontalSplitPane Id="_splitPaneTop" StackPanel.ProportionType="Fill">
+      <Panel Id="_panelTextContainer" />
+      <PropertyGrid Id="_propertyGridTextSettings" />
+    </HorizontalSplitPane>
     <HorizontalSeparator />
     <Grid ColumnSpacing="8" RowSpacing="8">
       <Grid.DefaultRowProportion Type="Auto" />
