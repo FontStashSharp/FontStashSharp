@@ -296,6 +296,19 @@ namespace FontStashSharp
 #else
 				Texture = textureManager.CreateTexture(Width, Height);
 #endif
+
+				// Erase the texture
+				var zeroData = new byte[Width * Height * 4];
+				for (var i = 0; i < zeroData.Length; ++i)
+				{
+					zeroData[i] = 0;
+				}
+
+#if MONOGAME || FNA || KNI || XNA || STRIDE
+				Texture2DManager.SetTextureData(Texture, new Rectangle(0, 0, Width, Height), zeroData);
+#else
+				textureManager.SetTextureData(Texture, new Rectangle(0, 0, Width, Height), zeroData);
+#endif
 			}
 
 			// Erase an area where we are going to place a glyph
