@@ -1,3 +1,5 @@
+using Myra.Graphics2D;
+using Myra.Graphics2D.TextureAtlases;
 using Myra.Graphics2D.UI.ColorPicker;
 
 namespace FontStashSharp.Samples;
@@ -17,7 +19,7 @@ public partial class MainForm
 		_sliderScale.ValueChangedByUser += (s, e) => UpdateParameters();
 		_text.TextChangedByUser += (s, e) => UpdateParameters();
 
-		_splitPaneTop.SetSplitterPosition(0, 0.75f);
+		SetSplitterPosition(0, 0.75f);
 
 		_propertyGridTextSettings.Object = SDFTextSettings.Default;
 		_propertyGridTextSettings.PropertyChanged += (s, a) => _textRendering.SDFTextSettings = (SDFTextSettings)_propertyGridTextSettings.Object;
@@ -56,5 +58,15 @@ public partial class MainForm
 		_textRendering.FontSize = _textFontSize.Value.Value;
 		_textRendering.TextScale = _sliderScale.Value;
 		_textRendering.Text = _text.Text;
+	}
+
+	public override void InternalRender(RenderContext context)
+	{
+		base.InternalRender(context);
+
+		if (_imageTexture.Renderable == null && _textRendering.FontSystemSDF.Atlases.Count > 0)
+		{
+			_imageTexture.Renderable = new TextureRegion(_textRendering.FontSystemSDF.Atlases[0].Texture);
+		}
 	}
 }

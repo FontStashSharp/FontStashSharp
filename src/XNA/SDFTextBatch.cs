@@ -54,32 +54,27 @@ namespace FontStashSharp
 		/// </summary>
 		public Point ShadowOffset;
 
-		/// <summary>
+		// <summary>
 		/// Gets or sets the color of the stroke
 		/// </summary>
 		public Color StrokeColor;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SDFTextSettings"/> struct
-		/// </summary>
-		/// <param name="enableSuperSampling">Whether supersampling is enabled for the SDF effect</param>
-		/// <param name="effect">The SDF effect to apply</param>
-		/// <param name="shadowColor">The color of the shadow</param>
-		/// <param name="shadowOffset">The offset of the shadow in pixels</param>
-		/// <param name="strokeColor">The color of the stroke</param>
-		public SDFTextSettings(bool enableSuperSampling, SDFFontEffect effect, Color shadowColor, Point shadowOffset, Color strokeColor)
+		public int StrokeSize;
+
+		public SDFTextSettings(bool enableSuperSampling, SDFFontEffect effect, Color shadowColor, Point shadowOffset, Color strokeColor, int strokeSize)
 		{
 			EnableSuperSampling = enableSuperSampling;
 			Effect = effect;
 			ShadowColor = shadowColor;
 			ShadowOffset = shadowOffset;
 			StrokeColor = strokeColor;
+			StrokeSize = strokeSize;
 		}
 
 		/// <summary>
 		/// The default <see cref="SDFTextSettings"/>: no supersampling and no effect
 		/// </summary>
-		public static readonly SDFTextSettings Default = new SDFTextSettings(false, SDFFontEffect.None, Color.Black, new Point(1, 1), Color.Black);
+		public static readonly SDFTextSettings Default = new SDFTextSettings(false, SDFFontEffect.None, Color.Black, new Point(1, 1), Color.Black, 1);
 	}
 
 	/// <summary>
@@ -156,6 +151,16 @@ namespace FontStashSharp
 
 						rect.Width += _settings.ShadowOffset.X;
 						rect.Height += _settings.ShadowOffset.Y;
+					} else if (_settings.Effect == SDFFontEffect.Stroked)
+					{
+						pos.X -= _settings.StrokeSize;
+						pos.Y -= _settings.StrokeSize;
+
+						var scaleFixX = (float)(rect.Width + _settings.StrokeSize * 2) / rect.Width;
+						var scaleFixY = (float)(rect.Height + _settings.StrokeSize * 2) / rect.Height;
+						
+						scale.X *= scaleFixX;
+						scale.Y *= scaleFixY;
 					}
 
 					_spriteBatch.Draw(texture,

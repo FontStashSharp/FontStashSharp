@@ -27,6 +27,8 @@ internal class TextRenderingWidget : Widget
 	public TextStyle TextStyle { get; set; } = TextStyle.None;
 	public SDFTextSettings SDFTextSettings { get; set; } = SDFTextSettings.Default;
 
+	public FontSystem FontSystemSDF => _fontSystemSDF;
+
 	public TextRenderingWidget()
 	{
 		HorizontalAlignment = HorizontalAlignment.Stretch;
