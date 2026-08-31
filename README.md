@@ -46,6 +46,7 @@ Stroked Text:
 * [Stride](https://www.stride3d.net/)
 * [Kni](https://github.com/kniEngine/kni)
 * [FreeTypeSharp](https://github.com/ryancheung/FreeTypeSharp)
+* [SharpAstro.Fonts](https://github.com/SharpAstro/Fonts.Lib)
 * [TrippyGL](https://github.com/SilkCommunity/TrippyGL)
 * [HarfBuzzSharp](https://www.nuget.org/packages/HarfBuzzSharp/)
 * [U3D](https://u3d.io/)
