@@ -21,6 +21,16 @@
       </HorizontalStackPanel>
       <Label Text="Text" Grid.Row="2" />
       <TextBox Text="Hello, World!" Multiline="True" Height="100" Id="_text" Grid.Column="1" Grid.Row="2" />
+      <Label Text="Color" Grid.Row="3" />
+      <Label Text="Text Style" Grid.Row="4" />
+      <Button Id="_buttonChangeColor" Grid.Column="1" Grid.Row="3">
+        <Label Text="Change..." />
+      </Button>
+      <ComboView Id="_comboTextStyle" Grid.Column="1" Grid.Row="4">
+        <Label Text="None" />
+        <Label Text="Underline" />
+        <Label Text="Strikethrough" />
+      </ComboView>
     </Grid>
   </VerticalStackPanel>
 </Project>

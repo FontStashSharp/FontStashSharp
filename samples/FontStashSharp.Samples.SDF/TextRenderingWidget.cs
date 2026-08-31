@@ -23,6 +23,8 @@ internal class TextRenderingWidget : Widget
 	public float FontSize { get; set; } = 32.0f;
 
 	public float TextScale { get; set; } = 1.0f;
+	public Color Color { get; set; } = Color.White;
+	public TextStyle TextStyle { get; set; } = TextStyle.None;
 	public SDFTextSettings SDFTextSettings { get; set; } = SDFTextSettings.Default;
 
 	public TextRenderingWidget()
@@ -90,7 +92,7 @@ internal class TextRenderingWidget : Widget
 
 		_sdfTextBatch.Begin(SDFTextSettings);
 		var font = _fontSystemSDF.GetFont(FontSize);
-		_sdfTextBatch.DrawString(font, Text, new Vector2(0, 0), Color.White, scale: new Vector2(TextScale));
+		_sdfTextBatch.DrawString(font, Text, new Vector2(0, 0), Color, scale: new Vector2(TextScale), textStyle: TextStyle);
 		_sdfTextBatch.End();
 
 		_spriteBatch.Begin();
@@ -102,7 +104,7 @@ internal class TextRenderingWidget : Widget
 			effect = FontSystemEffect.Stroked;
 		}
 
-		_spriteBatch.DrawString(font, Text, new Vector2(0, ActualBounds.Height / 2), Color.White, scale: new Vector2(TextScale), effect: effect, effectAmount: 1);
+		_spriteBatch.DrawString(font, Text, new Vector2(0, ActualBounds.Height / 2), Color, scale: new Vector2(TextScale), effect: effect, effectAmount: 1, textStyle: TextStyle);
 		_spriteBatch.End();
 
 		device.Viewport = oldViewport;

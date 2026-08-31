@@ -4,6 +4,7 @@ using FontStashSharp.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.ComponentModel.Design;
 
 namespace FontStashSharp
 {
@@ -140,30 +141,45 @@ namespace FontStashSharp
 
 			public void Draw(Texture2D texture, Vector2 pos, Rectangle? src, Color color, float rotation, Vector2 scale, float depth)
 			{
-				var rect = src.Value;
-
-				if (_settings.Effect == SDFFontEffect.Shadow)
+				if (src != null)
 				{
-					if (texture != _lastTexture)
+					var rect = src.Value;
+
+					if (_settings.Effect == SDFFontEffect.Shadow)
 					{
-						var shadowOffset = new Vector2((float)_settings.ShadowOffset.X / texture.Width, (float)_settings.ShadowOffset.Y / texture.Height);
-						_effect.Parameters["cShadowOffset"].SetValue(shadowOffset);
-						_lastTexture = texture;
+						if (texture != _lastTexture)
+						{
+							var shadowOffset = new Vector2((float)_settings.ShadowOffset.X / texture.Width, (float)_settings.ShadowOffset.Y / texture.Height);
+							_effect.Parameters["cShadowOffset"].SetValue(shadowOffset);
+							_lastTexture = texture;
+						}
+
+						rect.Width += _settings.ShadowOffset.X;
+						rect.Height += _settings.ShadowOffset.Y;
 					}
 
-					rect.Width += _settings.ShadowOffset.X;
-					rect.Height += _settings.ShadowOffset.Y;
+					_spriteBatch.Draw(texture,
+						pos,
+						rect,
+						color,
+						rotation,
+						Vector2.Zero,
+						scale,
+						SpriteEffects.None,
+						depth);
 				}
-
-				_spriteBatch.Draw(texture,
-					pos,
-					rect,
-					color,
-					rotation,
-					Vector2.Zero,
-					scale,
-					SpriteEffects.None,
-					depth);
+				else
+				{
+					_spriteBatch.Draw(texture,
+						pos,
+						src,
+						color,
+						rotation,
+						Vector2.Zero,
+						scale,
+						SpriteEffects.None,
+						depth);
+				}
 			}
 		}
 
