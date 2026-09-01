@@ -1,6 +1,5 @@
 ﻿using FontStashSharp.Interfaces;
 using System;
-using static Microsoft.Xna.Framework.Graphics.SpriteFont;
 
 
 #if MONOGAME || FNA || KNI || XNA
@@ -347,7 +346,11 @@ namespace FontStashSharp
 			}
 
 			// Create the atlas texture if required
+#if MONOGAME || FNA || KNI || XNA || STRIDE
 			EnsureTexture(graphicsDevice);
+#else
+			EnsureTexture(textureManager);
+#endif
 
 			// Render glyph to the byte buffer
 			var buffer = GetRenderBuffer(glyph);
