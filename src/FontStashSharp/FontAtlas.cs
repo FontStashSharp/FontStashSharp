@@ -1,5 +1,7 @@
 ﻿using FontStashSharp.Interfaces;
 using System;
+using static Microsoft.Xna.Framework.Graphics.SpriteFont;
+
 
 #if MONOGAME || FNA || KNI || XNA
 using Microsoft.Xna.Framework;
@@ -237,6 +239,78 @@ namespace FontStashSharp
 		}
 
 #if MONOGAME || FNA || KNI || XNA || STRIDE
+		private void EraseTexture(GraphicsDevice graphicsDevice)
+#else
+		private void EraseTexture(ITexture2DManager textureManager)
+#endif
+		{
+			var zeroData = new byte[Width * Height * 4];
+			for (var i = 0; i < zeroData.Length; ++i)
+			{
+				zeroData[i] = 0;
+			}
+
+#if MONOGAME || FNA || KNI || XNA || STRIDE
+			Texture2DManager.SetTextureData(Texture, new Rectangle(0, 0, Width, Height), zeroData);
+#else
+			textureManager.SetTextureData(Texture, new Rectangle(0, 0, Width, Height), zeroData);
+#endif
+		}
+
+#if MONOGAME || FNA || KNI || XNA || STRIDE
+		private void EnsureTexture(GraphicsDevice graphicsDevice)
+#else
+		private void EnsureTexture(ITexture2DManager textureManager)
+#endif
+		{
+			if (Texture != null)
+			{
+				return;
+			}
+
+			// Create the atlas texture if required
+#if MONOGAME || FNA || KNI || XNA || STRIDE
+			Texture = Texture2DManager.CreateTexture(graphicsDevice, Width, Height);
+			EraseTexture(graphicsDevice);
+#else
+			Texture = textureManager.CreateTexture(Width, Height);
+			EraseTexture(textureManager);
+#endif
+		}
+
+		private byte[] GetRenderBuffer(DynamicFontGlyph glyph)
+		{
+			var bufferSize = glyph.Size.X * glyph.Size.Y;
+			var buffer = _byteBuffer;
+			if ((buffer == null) || (buffer.Length < bufferSize))
+			{
+				buffer = new byte[bufferSize];
+				_byteBuffer = buffer;
+			}
+			Array.Clear(buffer, 0, bufferSize);
+
+			return buffer;
+		}
+
+		private byte[] GetColorBuffer(DynamicFontGlyph glyph)
+		{
+			var colorBuffer = _colorBuffer;
+
+			int colorBufferWidth = glyph.Size.X + FontSystem.GlyphPad * 2;
+			int colorBufferHeight = glyph.Size.Y + FontSystem.GlyphPad * 2;
+
+			var colorBufferSize = colorBufferWidth * colorBufferHeight * 4;
+			if ((colorBuffer == null) || (colorBuffer.Length < colorBufferSize))
+			{
+				colorBuffer = new byte[colorBufferSize];
+				_colorBuffer = colorBuffer;
+			}
+			Array.Clear(colorBuffer, 0, colorBufferSize);
+
+			return colorBuffer;
+		}
+
+#if MONOGAME || FNA || KNI || XNA || STRIDE
 		/// <summary>
 		/// Renders a glyph and stores it in the atlas texture.
 		/// </summary>
@@ -247,8 +321,7 @@ namespace FontStashSharp
 		/// <param name="glyphRenderResult">The glyph render result format.</param>
 		/// <param name="kernelWidth">The kernel width for rendering.</param>
 		/// <param name="kernelHeight">The kernel height for rendering.</param>
-		/// <param name="mode">The rasterization mode.</param>
-		public void RenderGlyph(GraphicsDevice graphicsDevice, DynamicFontGlyph glyph, IFontSource fontSource, GlyphRenderer glyphRenderer, GlyphRenderResult glyphRenderResult, int kernelWidth, int kernelHeight, FontRasterizationMode mode)
+		public void RenderGlyph(GraphicsDevice graphicsDevice, DynamicFontGlyph glyph, IFontSource fontSource, GlyphRenderer glyphRenderer, GlyphRenderResult glyphRenderResult, int kernelWidth, int kernelHeight)
 #else
 		/// <summary>
 		/// Renders a glyph and stores it in the atlas texture.
@@ -260,91 +333,50 @@ namespace FontStashSharp
 		/// <param name="glyphRenderResult">The glyph render result format.</param>
 		/// <param name="kernelWidth">The kernel width for rendering.</param>
 		/// <param name="kernelHeight">The kernel height for rendering.</param>
-		/// <param name="mode">The rasterization mode.</param>
-		public void RenderGlyph(ITexture2DManager textureManager, DynamicFontGlyph glyph, IFontSource fontSource, GlyphRenderer glyphRenderer, GlyphRenderResult glyphRenderResult, int kernelWidth, int kernelHeight, FontRasterizationMode mode)
+		public void RenderGlyph(ITexture2DManager textureManager, DynamicFontGlyph glyph, IFontSource fontSource, GlyphRenderer glyphRenderer, GlyphRenderResult glyphRenderResult, int kernelWidth, int kernelHeight)
 #endif
 		{
+			if (glyph.FontRasterizationMode == FontRasterizationMode.SDF && glyph.Effect == FontSystemEffect.Blurry)
+			{
+				throw new NotSupportedException("Blurry effect not supported for SDF");
+			}
+
 			if (glyph.IsEmpty)
 			{
 				return;
 			}
 
-			// Render glyph to byte buffer
-			var bufferSize = glyph.Size.X * glyph.Size.Y;
-			var buffer = _byteBuffer;
-
-			if ((buffer == null) || (buffer.Length < bufferSize))
-			{
-				buffer = new byte[bufferSize];
-				_byteBuffer = buffer;
-			}
-			Array.Clear(buffer, 0, bufferSize);
-
-			var colorBuffer = _colorBuffer;
-			var colorBufferSize = (glyph.Size.X + FontSystem.GlyphPad * 2) * (glyph.Size.Y + FontSystem.GlyphPad * 2) * 4;
-			if ((colorBuffer == null) || (colorBuffer.Length < colorBufferSize))
-			{
-				colorBuffer = new byte[colorBufferSize];
-				_colorBuffer = colorBuffer;
-			}
-
 			// Create the atlas texture if required
-			if (Texture == null)
+			EnsureTexture(graphicsDevice);
+
+			// Render glyph to the byte buffer
+			var buffer = GetRenderBuffer(glyph);
+			switch (glyph.FontRasterizationMode)
 			{
-#if MONOGAME || FNA || KNI || XNA || STRIDE
-				Texture = Texture2DManager.CreateTexture(graphicsDevice, Width, Height);
-#else
-				Texture = textureManager.CreateTexture(Width, Height);
-#endif
+				case FontRasterizationMode.Standard:
+					fontSource.RasterizeGlyphBitmap(glyph.Id,
+						glyph.FontSize,
+						buffer,
+						glyph.EffectAmount + glyph.EffectAmount * glyph.Size.X,
+						glyph.Size.X - glyph.EffectAmount * 2,
+						glyph.Size.Y - glyph.EffectAmount * 2,
+						glyph.Size.X);
+					break;
 
-				if (mode == FontRasterizationMode.SDF)
-				{
-					// Erase the newly created texture
-					var zeroData = new byte[Width * Height * 4];
-					for (var i = 0; i < zeroData.Length; ++i)
-					{
-						zeroData[i] = 0;
-					}
+				case FontRasterizationMode.SDF:
+					fontSource.RasterizeGlyphSDF(glyph.Id,
+						glyph.FontSize,
+						buffer,
+						0,
+						glyph.EffectAmount,
+						128,
+						64);
 
-#if MONOGAME || FNA || KNI || XNA || STRIDE
-					Texture2DManager.SetTextureData(Texture, new Rectangle(0, 0, Width, Height), zeroData);
-#else
-					textureManager.SetTextureData(Texture, new Rectangle(0, 0, Width, Height), zeroData);
-#endif
-				}
+					break;
 			}
 
-			// Erase an area where we are going to place a glyph
-			Array.Clear(colorBuffer, 0, colorBufferSize);
-			var eraseArea = glyph.TextureRectangle;
-			eraseArea.X = Math.Max(eraseArea.X - FontSystem.GlyphPad, 0);
-			eraseArea.Y = Math.Max(eraseArea.Y - FontSystem.GlyphPad, 0);
-			eraseArea.Width += FontSystem.GlyphPad * 2;
-			if (eraseArea.Right > Width)
-			{
-				eraseArea.Width = Width - eraseArea.X;
-			}
-			eraseArea.Height += FontSystem.GlyphPad * 2;
-			if (eraseArea.Bottom > Height)
-			{
-				eraseArea.Height = Height - eraseArea.Y;
-			}
-
-#if MONOGAME || FNA || KNI || XNA || STRIDE
-			Texture2DManager.SetTextureData(Texture, eraseArea, colorBuffer);
-#else
-			textureManager.SetTextureData(Texture, eraseArea, colorBuffer);
-#endif
-
-			fontSource.RasterizeGlyphBitmap(mode,
-				glyph.Id,
-				glyph.FontSize,
-				buffer,
-				glyph.EffectAmount + glyph.EffectAmount * glyph.Size.X,
-				glyph.Size.X - glyph.EffectAmount * 2,
-				glyph.Size.Y - glyph.EffectAmount * 2,
-				glyph.Size.X);
-
+			// Render to color texture(32-bit)
+			var colorBuffer = GetColorBuffer(glyph);
 			var glyphRenderOptions = new GlyphRenderOptions
 			{
 				Effect = glyph.Effect,
@@ -352,6 +384,12 @@ namespace FontStashSharp
 				Size = glyph.Size,
 				GlyphRenderResult = glyphRenderResult
 			};
+
+			if (glyph.FontRasterizationMode == FontRasterizationMode.SDF)
+			{
+				// Erase effect type, since it is handled by the font source
+				glyphRenderOptions.Effect = FontSystemEffect.None;
+			}
 
 			glyphRenderer(buffer, colorBuffer, glyphRenderOptions);
 

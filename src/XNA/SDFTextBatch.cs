@@ -50,31 +50,50 @@ namespace FontStashSharp
 		public Color ShadowColor;
 
 		/// <summary>
-		/// Gets or sets the offset of the shadow in pixels
+		/// Gets or sets the offset of the shadow in pixels.
 		/// </summary>
 		public Point ShadowOffset;
 
-		// <summary>
+		/// <summary>
 		/// Gets or sets the color of the stroke
 		/// </summary>
 		public Color StrokeColor;
 
-		public int StrokeSize;
+		/// <summary>
+		/// Gets or sets the thickness of the stroke, expressed in normalized SDF-space units.
+		/// </summary>
+		public float StrokeThickness;
 
-		public SDFTextSettings(bool enableSuperSampling, SDFFontEffect effect, Color shadowColor, Point shadowOffset, Color strokeColor, int strokeSize)
+		/// <summary>
+		/// Gets or sets the smoothness of the stroke edges, expressed in normalized SDF-space units.
+		/// </summary>
+		public float StrokeSmoothness;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SDFTextSettings"/> struct
+		/// </summary>
+		/// <param name="enableSuperSampling">Whether supersampling is enabled</param>
+		/// <param name="effect">The SDF effect to apply</param>
+		/// <param name="shadowColor">The color of the shadow</param>
+		/// <param name="shadowOffset">The offset of the shadow in pixels</param>
+		/// <param name="strokeColor">The color of the stroke</param>
+		/// <param name="strokeThickness">The thickness of the stroke, expressed in normalized SDF-space units</param>
+		/// <param name="strokeSmoothness">The smoothness of the stroke edges, expressed in normalized SDF-space units</param>
+		public SDFTextSettings(bool enableSuperSampling, SDFFontEffect effect, Color shadowColor, Point shadowOffset, Color strokeColor, float strokeThickness, float strokeSmoothness)
 		{
 			EnableSuperSampling = enableSuperSampling;
 			Effect = effect;
 			ShadowColor = shadowColor;
 			ShadowOffset = shadowOffset;
 			StrokeColor = strokeColor;
-			StrokeSize = strokeSize;
+			StrokeThickness = strokeThickness;
+			StrokeSmoothness = strokeSmoothness;
 		}
 
 		/// <summary>
 		/// The default <see cref="SDFTextSettings"/>: no supersampling and no effect
 		/// </summary>
-		public static readonly SDFTextSettings Default = new SDFTextSettings(false, SDFFontEffect.None, Color.Black, new Point(1, 1), Color.Black, 1);
+		public static readonly SDFTextSettings Default = new SDFTextSettings(false, SDFFontEffect.None, Color.Black, new Point(1, 1), Color.Black, 0.525f, 0.05f);
 	}
 
 	/// <summary>
@@ -90,6 +109,7 @@ namespace FontStashSharp
 			private Effect _effect;
 
 			public GraphicsDevice GraphicsDevice => _spriteBatch.GraphicsDevice;
+			public SDFTextSettings Settings => _settings;
 
 			public Renderer(GraphicsDevice device)
 			{
@@ -115,6 +135,8 @@ namespace FontStashSharp
 
 					case SDFFontEffect.Stroked:
 						_effect.Parameters["cStrokeColor"].SetValue(settings.StrokeColor.ToVector4());
+						_effect.Parameters["cStrokeThickness"].SetValue(settings.StrokeThickness);
+						_effect.Parameters["cStrokeSmoothness"].SetValue(settings.StrokeSmoothness);
 						break;
 				}
 
@@ -151,16 +173,6 @@ namespace FontStashSharp
 
 						rect.Width += _settings.ShadowOffset.X;
 						rect.Height += _settings.ShadowOffset.Y;
-					} else if (_settings.Effect == SDFFontEffect.Stroked)
-					{
-						pos.X -= _settings.StrokeSize;
-						pos.Y -= _settings.StrokeSize;
-
-						var scaleFixX = (float)(rect.Width + _settings.StrokeSize * 2) / rect.Width;
-						var scaleFixY = (float)(rect.Height + _settings.StrokeSize * 2) / rect.Height;
-						
-						scale.X *= scaleFixX;
-						scale.Y *= scaleFixY;
 					}
 
 					_spriteBatch.Draw(texture,
@@ -226,25 +238,36 @@ namespace FontStashSharp
 		public void End() => _renderer.End();
 
 		/// <summary>
-		/// Draws a text
+		/// Draws a string using the specified font and settings
 		/// </summary>
-		/// <param name="font">The font to use for drawing</param>
-		/// <param name="text">The text which will be drawn</param>
-		/// <param name="position">The drawing location on screen</param>
-		/// <param name="color">A color mask</param>
-		/// <param name="rotation">A rotation of this text in radians</param>
-		/// <param name="origin">Center of the rotation</param>
-		/// <param name="scale">A scaling of this text. Null means the scaling is (1, 1)</param>
-		/// <param name="layerDepth">A depth of the layer of this string</param>
-		/// <param name="characterSpacing">Additional spacing between characters</param>
-		/// <param name="lineSpacing">Additional spacing between lines</param>
+		/// <param name="font">The font to use</param>
+		/// <param name="text">The text to draw</param>
+		/// <param name="position">The position to draw the text at</param>
+		/// <param name="color">The color of the text</param>
+		/// <param name="rotation">The rotation of the text in radians</param>
+		/// <param name="origin">The origin of the text</param>
+		/// <param name="scale">The scale of the text</param>
+		/// <param name="layerDepth">The layer depth of the text</param>
+		/// <param name="characterSpacing">The additional character spacing</param>
+		/// <param name="lineSpacing">The additional line spacing</param>
 		/// <param name="textStyle">The text style to apply</param>
 		public void DrawString(SpriteFontBase font, string text, Vector2 position, Color color,
 			float rotation = 0, Vector2 origin = default, Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None)
 		{
-			font.DrawText(_renderer, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle);
+			var fontEffect = FontSystemEffect.None;
+			var fontEffectAmount = 0;
+
+			var settings = _renderer.Settings;
+			if (settings.Effect == SDFFontEffect.Stroked)
+			{
+				// This will force the font atlas to add 1 pixel padding around the glyphs to accommodate the stroke effect
+				fontEffect = FontSystemEffect.Stroked;
+				fontEffectAmount = 1;
+			}
+
+			font.DrawText(_renderer, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, fontEffect, fontEffectAmount);
 		}
 	}
 }

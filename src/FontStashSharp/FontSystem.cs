@@ -398,7 +398,7 @@ namespace FontStashSharp
 			glyph.TextureOffset.X = gx + GlyphPad;
 			glyph.TextureOffset.Y = gy + GlyphPad;
 
-			atlas.RenderGlyph(device, glyph, FontSources[glyph.FontSourceIndex], GlyphRenderer, GlyphRenderResult, KernelWidth, KernelHeight, FontRasterizationMode);
+			atlas.RenderGlyph(device, glyph, FontSources[glyph.FontSourceIndex], GlyphRenderer, GlyphRenderResult, KernelWidth, KernelHeight);
 
 			glyph.Texture = atlas.Texture;
 		}

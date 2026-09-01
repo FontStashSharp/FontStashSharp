@@ -136,7 +136,8 @@ namespace FontStashSharp
 				Size = new Point(gw, gh),
 				XAdvance = advance,
 				Effect = effect,
-				EffectAmount = effectAmount
+				EffectAmount = effectAmount,
+				FontRasterizationMode = FontRasterizationMode
 			};
 
 			storage[codepoint] = glyph;

@@ -21,9 +21,25 @@ using Texture2D = System.Object;
 namespace FontStashSharp
 {
 	/// <summary>
-	/// Base class for sprite-based fonts, providing text measurement, rendering, and glyph management.
+	/// Specifies the mode used to rasterize glyph bitmaps
 	/// </summary>
-	public abstract partial class SpriteFontBase
+	public enum FontRasterizationMode
+	{
+		/// <summary>
+		/// Standard anti-aliased rasterization
+		/// </summary>
+		Standard,
+
+		/// <summary>
+		/// Signed distance field (SDF) rasterization
+		/// </summary>
+		SDF
+	}
+
+/// <summary>
+/// Base class for sprite-based fonts, providing text measurement, rendering, and glyph management.
+/// </summary>
+public abstract partial class SpriteFontBase
 	{
 		private static Texture2D _white;
 

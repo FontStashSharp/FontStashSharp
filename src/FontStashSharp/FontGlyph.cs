@@ -46,6 +46,11 @@ namespace FontStashSharp
 		public Point Size;
 
 		/// <summary>
+		/// The mode used to rasterize this glyph.
+		/// </summary>
+		public FontRasterizationMode FontRasterizationMode = FontRasterizationMode.Standard;
+
+		/// <summary>
 		/// Gets a value indicating whether this glyph has no visible content.
 		/// </summary>
 		public bool IsEmpty

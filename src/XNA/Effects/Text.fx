@@ -9,6 +9,8 @@
 
 #ifdef EFFECTSTROKE
 	uniform float4 cStrokeColor;
+	uniform float cStrokeThickness;
+	uniform float cStrokeSmoothness;
 #endif
 
 DECLARE_TEXTURE(SpriteTexture, 0);
@@ -17,7 +19,7 @@ struct VSOutput
 {
 	float4 position		: SV_Position;
 	float4 color		: COLOR0;
-    float2 texCoord		: TEXCOORD0;
+	float2 texCoord		: TEXCOORD0;
 };
 
 float GetAlpha(float distance, float width)
@@ -32,13 +34,8 @@ float4 PS(VSOutput input) : SV_Target0
 	float distance = SAMPLE_TEXTURE(SpriteTexture, input.texCoord).a;
 
 	#ifdef EFFECTSTROKE
-		#ifdef SUPERSAMPLING
-			float outlineFactor = smoothstep(0.5, 0.525, distance); // Border of glyph
-			oColor.rgb = lerp(cStrokeColor.rgb, input.color.rgb, outlineFactor);
-		#else
-			if (distance < 0.525)
-				oColor.rgb = cStrokeColor.rgb;
-		#endif
+		float outlineFactor = smoothstep(cStrokeThickness - cStrokeSmoothness, cStrokeThickness + cStrokeSmoothness, distance);
+		oColor.rgb = lerp(cStrokeColor.rgb, input.color.rgb, outlineFactor);
 	#endif
 
 	#ifdef EFFECTSHADOW
