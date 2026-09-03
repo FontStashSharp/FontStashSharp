@@ -1,12 +1,14 @@
 ﻿
 #if MONOGAME || FNA || KNI || XNA
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 #elif STRIDE
 using Stride.Core.Mathematics;
+using Texture2D = Stride.Graphics.Texture;
 #else
 using System.Drawing;
 using System.Numerics;
+using Texture2D = System.Object;
 #endif
 
 namespace FontStashSharp
