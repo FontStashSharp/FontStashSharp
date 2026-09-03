@@ -29,8 +29,13 @@ namespace FontStashSharp
 		private Vector2 _effectParameters;
 		private bool _effectParametersDirty = true;
 
+		/// <inheritdoc/>
 		public GraphicsDevice GraphicsDevice => _spriteBatch.GraphicsDevice;
 
+		/// <summary>
+		/// Gets or sets whether supersampling is enabled for the SDF font effect.
+		/// Supersampling improves the quality of the signing distance field at the cost of performance.
+		/// </summary>
 		public bool Supersamling { get; set; }
 
 		private RenderMode Mode
@@ -99,6 +104,9 @@ namespace FontStashSharp
 			GC.SuppressFinalize(this);
 		}
 
+		/// <summary>
+		/// Begins a batch of text drawing operations.
+		/// </summary>
 		public void Begin()
 		{
 			if (_beginCalled)
@@ -109,11 +117,14 @@ namespace FontStashSharp
 			_beginCalled = true;
 		}
 
+		/// <summary>
+		/// Ends a batch of text drawing operations and flushes any pending sprite batches.
+		/// </summary>
 		public void End()
 		{
 			if (!_beginCalled)
 			{
-				throw new Exception("Begin wasn't called");
+				throw new Exception("Begin wasn't called.");
 			}
 
 			EnsureSpriteBatchEnd();
@@ -134,11 +145,13 @@ namespace FontStashSharp
 			InvalidateEffectParameters();
 		}
 
+		/// <inheritdoc/>
 		public void ResetEffect()
 		{
 			Mode = RenderMode.None;
 		}
 
+		/// <inheritdoc/>
 		public void SetShadowEffect(Color color, Vector2 shadowOffset)
 		{
 			Mode = RenderMode.Shadow;
@@ -146,7 +159,14 @@ namespace FontStashSharp
 			EffectParameters = shadowOffset;
 		}
 
-		public void SetStrokeEffect(Color color, float thickness, float smoothness)
+		/// <summary>
+		/// Configures the renderer to draw a shadow behind the text using the specified color and a default offset of one pixel.
+		/// </summary>
+		/// <param name="color">The color of the shadow.</param>
+		public void SetShadowEffect(Color color) => SetShadowEffect(color, Vector2.One);
+
+		/// <inheritdoc/>
+		public void SetStrokeEffect(Color color, float thickness = 0.5f, float smoothness = 0.025f)
 		{
 			Mode = RenderMode.Stroked;
 			EffectColor = color;
@@ -206,6 +226,7 @@ namespace FontStashSharp
 			}
 		}
 
+		/// <inheritdoc/>
 		public void DrawString(SpriteFontBase font, string text, Vector2 position, Color color,
 			float rotation = 0, Vector2 origin = default, Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
@@ -226,6 +247,7 @@ namespace FontStashSharp
 			font.DrawText(this, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, fontEffect, fontEffectAmount);
 		}
 
+		/// <inheritdoc/>
 		public void DrawSprite(Texture2D texture, Vector2 pos, Rectangle? src, Color color, float rotation, Vector2 scale, float depth)
 		{
 			if (_mode != RenderMode.Sprite)

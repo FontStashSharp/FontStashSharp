@@ -46,6 +46,30 @@ _sdfTextBatch.End();
 
 The `scale` parameter of `DrawString` is the primary way to resize SDF text — even large scale factors keep the edges sharp. Call `Dispose()` when the batch is no longer needed.
 
+### Font Effects (Shadow & Stroke)
+
+Use `SetShadowEffect` or `SetStrokeEffect` after `Begin()` and before `DrawString` to select the effect for everything drawn until the next effect change.
+
+```c#
+_sdfTextBatch.Begin();
+
+// Plain text (or switch back from an effect)
+_sdfTextBatch.ResetEffect();
+_sdfTextBatch.DrawString(font, "No effect", new Vector2(10, 10), Color.White);
+
+// Shadow: casts a colored shadow offset by the given distance (in pixels)
+_sdfTextBatch.SetShadowEffect(Color.Black, new Vector2(2, 2));
+_sdfTextBatch.DrawString(font, "Drop shadow", new Vector2(10, 60), Color.White);
+
+// Outline (stroke): draws a colored outline around the glyphs.
+// thickness and smoothness are expressed in normalized SDF-space units
+// (typical values are around 0.5 and 0.025 respectively).
+_sdfTextBatch.SetStrokeEffect(Color.Black, 0.5f, 0.025f);
+_sdfTextBatch.DrawString(font, "Outlined", new Vector2(10, 110), Color.White);
+
+_sdfTextBatch.End();
+```
+
 ### Sample
 
 The [FontStashSharp.Samples.SDF](https://github.com/FontStashSharp/FontStashSharp/tree/main/samples/FontStashSharp.Samples.SDF) sample renders the same text side by side using SDF and a super-sampled standard `FontSystem`, and lets you resize both live to compare the quality difference. The **top** text is rendered with SDF, the **bottom** text with standard rasterization:
