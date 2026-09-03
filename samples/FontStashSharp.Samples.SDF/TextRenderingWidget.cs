@@ -1,5 +1,4 @@
-﻿using FontStashSharp.Interfaces;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra;
 using Myra.Graphics2D;
@@ -92,7 +91,21 @@ internal class TextRenderingWidget : Widget
 		var oldViewport = device.Viewport;
 		device.Viewport = new Viewport(screenPosition.X, screenPosition.Y, ActualBounds.Width, ActualBounds.Height);
 
-		_sdfTextBatch.Begin(SDFTextSettings);
+		_sdfTextBatch.Begin();
+
+		switch (SDFTextSettings.Effect)
+		{
+			case SDFFontEffect.None:
+				_sdfTextBatch.ResetEffect();
+				break;
+			case SDFFontEffect.Shadow:
+				_sdfTextBatch.SetShadowEffect(SDFTextSettings.ShadowColor, SDFTextSettings.ShadowOffset.ToVector2());
+				break;
+			case SDFFontEffect.Stroked:
+				_sdfTextBatch.SetStrokeEffect(SDFTextSettings.StrokeColor, SDFTextSettings.StrokeThickness, SDFTextSettings.StrokeSmoothness);
+				break;
+		}
+
 		var font = _fontSystemSDF.GetFont(FontSize);
 		_sdfTextBatch.DrawString(font, Text, new Vector2(0, 0), Color, scale: new Vector2(TextScale), textStyle: TextStyle);
 		_sdfTextBatch.End();
