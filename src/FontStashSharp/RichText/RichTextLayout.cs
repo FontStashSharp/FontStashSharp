@@ -505,6 +505,14 @@ namespace FontStashSharp.RichText
 			Draw(position, color, rotation, origin, scale, layerDepth, horizontalAlignment);
 		}
 
+		public void Draw(ISDFTextRenderer renderer, Vector2 position, Color color,
+			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
+			float layerDepth = 0.0f, TextHorizontalAlignment horizontalAlignment = TextHorizontalAlignment.Left)
+		{
+			_renderContext.SetRenderer(renderer);
+			Draw(position, color, rotation, origin, scale, layerDepth, horizontalAlignment);
+		}
+
 #if MONOGAME || FNA || KNI || XNA || STRIDE
 
 		/// <summary>

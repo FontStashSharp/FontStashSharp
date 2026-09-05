@@ -25,6 +25,7 @@ namespace FontStashSharp.RichText
 	{
 		private IFontStashRenderer _renderer;
 		private IFontStashRenderer2 _renderer2;
+		private ISDFTextRenderer _renderer3;
 		private Matrix _transformation;
 		private Vector2 _scale;
 		private float _rotation;
@@ -43,6 +44,7 @@ namespace FontStashSharp.RichText
 
 			_renderer = renderer;
 			_renderer2 = null;
+			_renderer3 = null;
 		}
 
 		/// <summary>
@@ -57,6 +59,18 @@ namespace FontStashSharp.RichText
 			}
 			_renderer = null;
 			_renderer2 = renderer;
+			_renderer3 = null;
+		}
+
+		public void SetRenderer(ISDFTextRenderer renderer)
+		{
+			if (renderer == null)
+			{
+				throw new ArgumentNullException(nameof(renderer));
+			}
+			_renderer = null;
+			_renderer2 = null;
+			_renderer3 = renderer;
 		}
 
 		/// <summary>
@@ -99,10 +113,15 @@ namespace FontStashSharp.RichText
 				font.DrawText(_renderer, text, pos, color, _rotation, default(Vector2), _scale, _layerDepth,
 					textStyle: textStyle, effect: effect, effectAmount: effectAmount);
 			}
-			else
+			else if (_renderer2 != null)
 			{
 				font.DrawText(_renderer2, text, pos, color, _rotation, default(Vector2), _scale, _layerDepth,
 					textStyle: textStyle, effect: effect, effectAmount: effectAmount);
+			}
+			else
+			{
+				_renderer3.DrawString(font, text, pos, color, _rotation, default(Vector2), _scale, _layerDepth,
+					textStyle: textStyle);
 			}
 		}
 
@@ -121,7 +140,7 @@ namespace FontStashSharp.RichText
 				position = position.Transform(ref _transformation);
 				_renderer.Draw(texture, position, sourceRegion, color, _rotation, _scale, _layerDepth);
 			}
-			else
+			else if (_renderer2 != null)
 			{
 				var topLeft = new VertexPositionColorTexture();
 				var topRight = new VertexPositionColorTexture();
@@ -133,7 +152,11 @@ namespace FontStashSharp.RichText
 					_layerDepth, size, sourceRegion,
 					ref topLeft, ref topRight, ref bottomLeft, ref bottomRight);
 			}
+			else
+			{
+				position = position.Transform(ref _transformation);
+				_renderer3.DrawSprite(texture, position, sourceRegion, color, _rotation, _scale, _layerDepth);
+			}
 		}
 	}
-
 }
