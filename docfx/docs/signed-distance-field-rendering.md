@@ -48,24 +48,23 @@ The `scale` parameter of `DrawString` is the primary way to resize SDF text — 
 
 ### Font Effects (Shadow & Stroke)
 
-Use `SetShadowEffect` or `SetStrokeEffect` after `Begin()` and before `DrawString` to select the effect for everything drawn until the next effect change.
+Shadow and stroke effects are applied to individual strings via the `DrawShadowString` and `DrawStrokeString` methods. Each call specifies its own effect parameters:
 
 ```c#
 _sdfTextBatch.Begin();
 
-// Plain text (or switch back from an effect)
-_sdfTextBatch.ResetEffect();
+// Plain text
 _sdfTextBatch.DrawString(font, "No effect", new Vector2(10, 10), Color.White);
 
 // Shadow: casts a colored shadow offset by the given distance (in pixels)
-_sdfTextBatch.SetShadowEffect(Color.Black, new Vector2(2, 2));
-_sdfTextBatch.DrawString(font, "Drop shadow", new Vector2(10, 60), Color.White);
+_sdfTextBatch.DrawShadowString(font, "Drop shadow", new Vector2(10, 60), Color.White,
+	Color.Black, 2, 2);
 
 // Outline (stroke): draws a colored outline around the glyphs.
 // thickness and smoothness are expressed in normalized SDF-space units
-// (typical values are around 0.5 and 0.025 respectively).
-_sdfTextBatch.SetStrokeEffect(Color.Black, 0.5f, 0.025f);
-_sdfTextBatch.DrawString(font, "Outlined", new Vector2(10, 110), Color.White);
+// (typical values are around 0.5 and 0.05 respectively).
+_sdfTextBatch.DrawStrokeString(font, "Outlined", new Vector2(10, 110), Color.White,
+	Color.Black, 0.5f, 0.05f);
 
 _sdfTextBatch.End();
 ```
