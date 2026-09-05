@@ -43,7 +43,7 @@ float4 PS(VSOutput input) : SV_Target0
 		oColor = cShadowColor;
 	#ifndef SUPERSAMPLING
 	else if (distance <= 0.5)
-		oColor.a = float4(0, 0, 0, 0);
+		oColor.a = 0.0;
 	#endif
 	else
 	#endif
