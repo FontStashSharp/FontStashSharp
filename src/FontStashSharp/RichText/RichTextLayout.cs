@@ -517,10 +517,19 @@ namespace FontStashSharp.RichText
 		/// <param name="scale">The scale factors, or null for default (1, 1)</param>
 		/// <param name="layerDepth">The layer depth for drawing</param>
 		/// <param name="horizontalAlignment">The horizontal alignment of the text</param>
+		/// <exception cref="InvalidOperationException">
+		/// Thrown when <see cref="Font"/> is not null and its <see cref="SpriteFontBase.FontRasterizationMode"/>
+		/// is not <see cref="FontRasterizationMode.SDF"/>.
+		/// </exception>
 		public void Draw(ISDFTextRenderer renderer, Vector2 position, Color color,
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, TextHorizontalAlignment horizontalAlignment = TextHorizontalAlignment.Left)
 		{
+			if (Font != null && Font.FontRasterizationMode != FontRasterizationMode.SDF)
+			{
+				throw new InvalidOperationException("The font must use FontRasterizationMode.SDF to be drawn with an ISDFTextRenderer.");
+			}
+
 			_renderContext.SetRenderer(renderer);
 			Draw(position, color, rotation, origin, scale, layerDepth, horizontalAlignment);
 		}

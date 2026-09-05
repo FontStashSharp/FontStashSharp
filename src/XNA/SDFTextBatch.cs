@@ -19,19 +19,20 @@ namespace FontStashSharp
 			Stroked
 		}
 
-		private class Renderer : IFontStashRenderer
+		private class Renderer : IFontStashRenderer, IDisposable
 		{
 			private RenderMode _mode;
-			private readonly SpriteBatch _spriteBatch;
+			private readonly SpriteBatch _spiteBatchEffect;
+			private SpriteBatch _spriteBatchSprite;
 			private Texture2D _lastTexture;
 			private Effect _effect;
-			private bool _beginCalled, _spriteBatchBeginCalled;
+			private bool _beginCalled, _spriteBatchEffectBeginCalled, _spriteBatchSpriteBeginCalled;
 			private Color _effectColor;
 			private Vector2 _effectParameters;
-			private bool _effectParametersDirty = true, _spriteModeSet = false;
+			private bool _effectParametersDirty = true;
 			private bool _supersampling;
 
-			public GraphicsDevice GraphicsDevice => _spriteBatch.GraphicsDevice;
+			public GraphicsDevice GraphicsDevice => _spiteBatchEffect.GraphicsDevice;
 
 			public bool Supersampling
 			{
@@ -99,12 +100,15 @@ namespace FontStashSharp
 
 			public Renderer(GraphicsDevice graphicsDevice)
 			{
-				_spriteBatch = new SpriteBatch(graphicsDevice);
+				_spiteBatchEffect = new SpriteBatch(graphicsDevice);
+				_spriteBatchSprite = new SpriteBatch(graphicsDevice);
 			}
 
 			public void Dispose()
 			{
-				_spriteBatch.Dispose();
+				_spiteBatchEffect.Dispose();
+				_spriteBatchSprite?.Dispose();
+
 				GC.SuppressFinalize(this);
 			}
 
@@ -126,7 +130,12 @@ namespace FontStashSharp
 					throw new Exception("Begin wasn't called.");
 				}
 
-				EnsureSpriteBatchEnd();
+				EnsureSpriteBatchEffectEnd();
+				if (_spriteBatchSpriteBeginCalled)
+				{
+					_spriteBatchSprite.End();
+					_spriteBatchSpriteBeginCalled = false;
+				}
 
 				_beginCalled = false;
 				InvalidateEffect();
@@ -165,32 +174,32 @@ namespace FontStashSharp
 				EffectParameters = new Vector2(thickness, smoothness);
 			}
 
-			private void EnsureSpriteBatchEnd()
+			private void EnsureSpriteBatchEffectEnd()
 			{
-				if (!_spriteBatchBeginCalled)
+				if (!_spriteBatchEffectBeginCalled)
 				{
 					return;
 				}
 
-				_spriteBatch.End();
-				_spriteBatchBeginCalled = false;
+				_spiteBatchEffect.End();
+				_spriteBatchEffectBeginCalled = false;
 			}
 
 			private void ApplyEffectMode()
 			{
 				if (_effect == null)
 				{
-					_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, _mode == RenderMode.Shadow, _mode == RenderMode.Stroked);
+					_effect = Resources.GetEffect(_spiteBatchEffect.GraphicsDevice, Supersampling, _mode == RenderMode.Shadow, _mode == RenderMode.Stroked);
 
-					EnsureSpriteBatchEnd();
+					EnsureSpriteBatchEffectEnd();
 
-					_spriteBatch.Begin(SpriteSortMode.Deferred,
+					_spiteBatchEffect.Begin(SpriteSortMode.Deferred,
 						BlendState.NonPremultiplied,
 						SamplerState.LinearClamp,
 						DepthStencilState.None,
 						RasterizerState.CullCounterClockwise,
 						_effect);
-					_spriteBatchBeginCalled = true;
+					_spriteBatchEffectBeginCalled = true;
 				}
 
 				if (_effectParametersDirty)
@@ -210,23 +219,6 @@ namespace FontStashSharp
 
 					_effectParametersDirty = false;
 				}
-
-				_spriteModeSet = false;
-			}
-
-			private void ApplySpriteMode()
-			{
-				if (_spriteModeSet)
-				{
-					return;
-				}
-
-				EnsureSpriteBatchEnd();
-				_spriteBatch.Begin();
-				_spriteBatchBeginCalled = true;
-
-				_spriteModeSet = true;
-				InvalidateEffect();
 			}
 
 			public void DrawString(SpriteFontBase font, string text, Vector2 position, Color color,
@@ -250,8 +242,18 @@ namespace FontStashSharp
 
 			public void DrawSprite(Texture2D texture, Vector2 pos, Rectangle? src, Color color, float rotation, Vector2 scale, float depth)
 			{
-				ApplySpriteMode();
-				_spriteBatch.Draw(texture, pos, src, color, 0, Vector2.Zero, scale, SpriteEffects.None, 0.0f);
+				if (!_spriteBatchSpriteBeginCalled)
+				{
+					if (_spriteBatchSprite == null)
+					{
+						_spriteBatchSprite = new SpriteBatch(GraphicsDevice);
+					}
+
+					_spriteBatchSprite.Begin();
+					_spriteBatchSpriteBeginCalled = true;
+				}
+
+				_spriteBatchSprite.Draw(texture, pos, src, color, 0, Vector2.Zero, scale, SpriteEffects.None, 0.0f);
 			}
 
 			void IFontStashRenderer.Draw(Texture2D texture, Vector2 pos, Rectangle? src, Color color, float rotation, Vector2 scale, float depth)
@@ -273,7 +275,7 @@ namespace FontStashSharp
 						rect.Height += (int)_effectParameters.Y;
 					}
 
-					_spriteBatch.Draw(texture,
+					_spiteBatchEffect.Draw(texture,
 						pos,
 						rect,
 						color,
@@ -285,7 +287,7 @@ namespace FontStashSharp
 				}
 				else
 				{
-					_spriteBatch.Draw(texture,
+					_spiteBatchEffect.Draw(texture,
 						pos,
 						src,
 						color,
