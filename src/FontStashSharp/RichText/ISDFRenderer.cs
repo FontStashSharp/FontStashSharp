@@ -11,7 +11,7 @@ using Texture2D = System.Object;
 using Color = FontStashSharp.FSColor;
 #endif
 
-namespace FontStashSharp
+namespace FontStashSharp.RichText
 {
 	/// <summary>
 	/// Provides methods for rendering text with signed distance field (SDF) effects such as shadows and strokes.

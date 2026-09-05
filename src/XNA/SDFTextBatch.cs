@@ -1,6 +1,7 @@
 ﻿#if MONOGAME || FNA
 
 using FontStashSharp.Interfaces;
+using FontStashSharp.RichText;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -22,7 +23,7 @@ namespace FontStashSharp
 		private class Renderer : IFontStashRenderer, IDisposable
 		{
 			private RenderMode _mode;
-			private readonly SpriteBatch _spiteBatchEffect;
+			private readonly SpriteBatch _spriteBatchEffect;
 			private SpriteBatch _spriteBatchSprite;
 			private Texture2D _lastTexture;
 			private Effect _effect;
@@ -32,7 +33,7 @@ namespace FontStashSharp
 			private bool _effectParametersDirty = true;
 			private bool _supersampling;
 
-			public GraphicsDevice GraphicsDevice => _spiteBatchEffect.GraphicsDevice;
+			public GraphicsDevice GraphicsDevice => _spriteBatchEffect.GraphicsDevice;
 
 			public bool Supersampling
 			{
@@ -100,13 +101,12 @@ namespace FontStashSharp
 
 			public Renderer(GraphicsDevice graphicsDevice)
 			{
-				_spiteBatchEffect = new SpriteBatch(graphicsDevice);
-				_spriteBatchSprite = new SpriteBatch(graphicsDevice);
+				_spriteBatchEffect = new SpriteBatch(graphicsDevice);
 			}
 
 			public void Dispose()
 			{
-				_spiteBatchEffect.Dispose();
+				_spriteBatchEffect.Dispose();
 				_spriteBatchSprite?.Dispose();
 
 				GC.SuppressFinalize(this);
@@ -181,7 +181,7 @@ namespace FontStashSharp
 					return;
 				}
 
-				_spiteBatchEffect.End();
+				_spriteBatchEffect.End();
 				_spriteBatchEffectBeginCalled = false;
 			}
 
@@ -189,11 +189,11 @@ namespace FontStashSharp
 			{
 				if (_effect == null)
 				{
-					_effect = Resources.GetEffect(_spiteBatchEffect.GraphicsDevice, Supersampling, _mode == RenderMode.Shadow, _mode == RenderMode.Stroked);
+					_effect = Resources.GetEffect(_spriteBatchEffect.GraphicsDevice, Supersampling, _mode == RenderMode.Shadow, _mode == RenderMode.Stroked);
 
 					EnsureSpriteBatchEffectEnd();
 
-					_spiteBatchEffect.Begin(SpriteSortMode.Deferred,
+					_spriteBatchEffect.Begin(SpriteSortMode.Deferred,
 						BlendState.NonPremultiplied,
 						SamplerState.LinearClamp,
 						DepthStencilState.None,
@@ -275,7 +275,7 @@ namespace FontStashSharp
 						rect.Height += (int)_effectParameters.Y;
 					}
 
-					_spiteBatchEffect.Draw(texture,
+					_spriteBatchEffect.Draw(texture,
 						pos,
 						rect,
 						color,
@@ -287,7 +287,7 @@ namespace FontStashSharp
 				}
 				else
 				{
-					_spiteBatchEffect.Draw(texture,
+					_spriteBatchEffect.Draw(texture,
 						pos,
 						src,
 						color,
