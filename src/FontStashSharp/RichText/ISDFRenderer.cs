@@ -19,43 +19,67 @@ namespace FontStashSharp.RichText
 	public interface ISDFTextRenderer
 	{
 		/// <summary>
-		/// Resets the currently applied SDF effect, so subsequent draws use plain text rendering.
+		/// Draws a string of text without any SDF effect applied.
 		/// </summary>
-		void ResetEffect();
-
-		/// <summary>
-		/// Configures the renderer to draw a shadow behind the text using the specified color and offset.
-		/// </summary>
-		/// <param name="color">The color of the shadow.</param>
-		/// <param name="shadowOffset">The offset of the shadow from the text, in pixels.</param>
-		void SetShadowEffect(Color color, Vector2 shadowOffset);
-
-		/// <summary>
-		/// Configures the renderer to draw an outlined (stroked) version of the text using the specified color, thickness and smoothness.
-		/// </summary>
-		/// <param name="color">The color of the stroke.</param>
-		/// <param name="thickness">The thickness of the stroke, expressed in normalized SDF-space units.</param>
-		/// <param name="smoothness">The smoothness of the stroke's edges, expressed in normalized SDF-space units.</param>
-		void SetStrokeEffect(Color color, float thickness, float smoothness);
-
-		/// <summary>
-		/// Draws text using the specified font with the currently applied SDF effect.
-		/// </summary>
-		/// <param name="font">The font used to render the text.</param>
+		/// <param name="font">The font to use for rendering.</param>
 		/// <param name="text">The text to draw.</param>
-		/// <param name="position">The drawing location on screen.</param>
-		/// <param name="color">The color of the text.</param>
-		/// <param name="rotation">A rotation of this text in radians.</param>
-		/// <param name="origin">The center of rotation.</param>
-		/// <param name="scale">A scaling of this text. Null means the scaling is (1, 1).</param>
-		/// <param name="layerDepth">A depth of the layer of this string.</param>
-		/// <param name="characterSpacing">A character spacing.</param>
-		/// <param name="lineSpacing">A line spacing.</param>
+		/// <param name="position">The position at which to draw the text.</param>
+		/// <param name="color">The color to apply to the text.</param>
+		/// <param name="rotation">The rotation angle in radians.</param>
+		/// <param name="origin">The origin point used for positioning and rotation.</param>
+		/// <param name="scale">The scale factors for the X and Y axes, or null to use (1, 1).</param>
+		/// <param name="layerDepth">The depth value used for layering the text.</param>
+		/// <param name="characterSpacing">The additional spacing between characters.</param>
+		/// <param name="lineSpacing">The additional spacing between lines.</param>
 		/// <param name="textStyle">The text style to apply.</param>
 		void DrawString(SpriteFontBase font, string text, Vector2 position, Color color,
-			float rotation = 0, Vector2 origin = default, Vector2? scale = null,
-			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
-			TextStyle textStyle = TextStyle.None);
+			float rotation, Vector2 origin, Vector2? scale,
+			float layerDepth, float characterSpacing, float lineSpacing,
+			TextStyle textStyle);
+
+		/// <summary>
+		/// Draws a string of text with a shadow effect.
+		/// </summary>
+		/// <param name="font">The font to use for rendering.</param>
+		/// <param name="text">The text to draw.</param>
+		/// <param name="position">The position at which to draw the text.</param>
+		/// <param name="color">The color to apply to the text.</param>
+		/// <param name="rotation">The rotation angle in radians.</param>
+		/// <param name="origin">The origin point used for positioning and rotation.</param>
+		/// <param name="scale">The scale factors for the X and Y axes, or null to use (1, 1).</param>
+		/// <param name="layerDepth">The depth value used for layering the text.</param>
+		/// <param name="characterSpacing">The additional spacing between characters.</param>
+		/// <param name="lineSpacing">The additional spacing between lines.</param>
+		/// <param name="textStyle">The text style to apply.</param>
+		/// <param name="shadowColor">The color of the shadow, or null to use the default shadow color.</param>
+		/// <param name="shadowOffsetX">The horizontal offset of the shadow.</param>
+		/// <param name="shadowOffsetY">The vertical offset of the shadow.</param>
+		void DrawShadowString(SpriteFontBase font, string text, Vector2 position, Color color,
+			float rotation, Vector2 origin, Vector2? scale,
+			float layerDepth, float characterSpacing, float lineSpacing,
+			TextStyle textStyle, Color? shadowColor, float shadowOffsetX, float shadowOffsetY);
+
+		/// <summary>
+		/// Draws a string of text with a stroke (outline) effect.
+		/// </summary>
+		/// <param name="font">The font to use for rendering.</param>
+		/// <param name="text">The text to draw.</param>
+		/// <param name="position">The position at which to draw the text.</param>
+		/// <param name="color">The color to apply to the text.</param>
+		/// <param name="rotation">The rotation angle in radians.</param>
+		/// <param name="origin">The origin point used for positioning and rotation.</param>
+		/// <param name="scale">The scale factors for the X and Y axes, or null to use (1, 1).</param>
+		/// <param name="layerDepth">The depth value used for layering the text.</param>
+		/// <param name="characterSpacing">The additional spacing between characters.</param>
+		/// <param name="lineSpacing">The additional spacing between lines.</param>
+		/// <param name="textStyle">The text style to apply.</param>
+		/// <param name="strokeColor">The color of the stroke, or null to use the default stroke color.</param>
+		/// <param name="strokeThickness">The thickness of the stroke.</param>
+		/// <param name="strokeSmoothness">The smoothness of the stroke edges.</param>
+		void DrawStrokeString(SpriteFontBase font, string text, Vector2 position, Color color,
+			float rotation, Vector2 origin, Vector2? scale,
+			float layerDepth, float characterSpacing, float lineSpacing,
+			TextStyle textStyle, Color? strokeColor, float strokeThickness, float strokeSmoothness);
 
 		/// <summary>
 		/// Draws a sprite directly, bypassing any currently applied SDF effect.

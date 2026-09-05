@@ -124,8 +124,7 @@ namespace FontStashSharp.RichText
 			}
 			else
 			{
-				_renderer3.DrawString(font, text, pos, color, _rotation, default(Vector2), _scale, _layerDepth,
-					textStyle: textStyle);
+				_renderer3.DrawString(font, text, pos, color, _rotation, default(Vector2), _scale, _layerDepth, 0, 0, textStyle);
 			}
 		}
 

@@ -17,20 +17,19 @@ namespace FontStashSharp
 		{
 			Standard,
 			Shadow,
-			Stroked
+			Stroke
 		}
 
 		private class Renderer : IFontStashRenderer, IDisposable
 		{
-			private RenderMode _mode;
+			private RenderMode? _mode;
 			private readonly SpriteBatch _spriteBatchEffect;
 			private SpriteBatch _spriteBatchSprite;
 			private Texture2D _lastTexture;
-			private Effect _effect;
 			private bool _beginCalled, _spriteBatchEffectBeginCalled, _spriteBatchSpriteBeginCalled;
-			private Color _effectColor;
-			private Vector2 _effectParameters;
-			private bool _effectParametersDirty = true;
+			private Effect _effect;
+			private Color? _effectColor;
+			private Vector2? _effectParameters;
 			private bool _supersampling;
 
 			public GraphicsDevice GraphicsDevice => _spriteBatchEffect.GraphicsDevice;
@@ -47,11 +46,11 @@ namespace FontStashSharp
 					}
 
 					_supersampling = value;
-					InvalidateEffect();
+					_mode = null;
 				}
 			}
 
-			private RenderMode Mode
+			private RenderMode? Mode
 			{
 				get => _mode;
 
@@ -63,39 +62,9 @@ namespace FontStashSharp
 					}
 
 					_mode = value;
-					InvalidateEffect();
-				}
-			}
-
-			private Color EffectColor
-			{
-				get => _effectColor;
-
-				set
-				{
-					if (value == _effectColor)
-					{
-						return;
-					}
-
-					_effectColor = value;
-					InvalidateEffectParameters();
-				}
-			}
-
-			private Vector2 EffectParameters
-			{
-				get => _effectParameters;
-
-				set
-				{
-					if (value == _effectParameters)
-					{
-						return;
-					}
-
-					_effectParameters = value;
-					InvalidateEffectParameters();
+					_effectColor = null;
+					_effectParameters = null;
+					_lastTexture = null;
 				}
 			}
 
@@ -120,7 +89,6 @@ namespace FontStashSharp
 				}
 
 				_beginCalled = true;
-				ResetEffect();
 			}
 
 			public void End()
@@ -138,40 +106,7 @@ namespace FontStashSharp
 				}
 
 				_beginCalled = false;
-				InvalidateEffect();
-				_lastTexture = null;
-			}
-
-			private void InvalidateEffectParameters()
-			{
-				_effectParametersDirty = true;
-			}
-
-			private void InvalidateEffect()
-			{
-				_effect = null;
-				InvalidateEffectParameters();
-			}
-
-			public void ResetEffect()
-			{
-				Mode = RenderMode.Standard;
-			}
-
-			public void SetShadowEffect(Color color, Vector2 shadowOffset)
-			{
-				Mode = RenderMode.Shadow;
-				EffectColor = color;
-				EffectParameters = shadowOffset;
-			}
-
-			public void SetShadowEffect(Color color) => SetShadowEffect(color, Vector2.One);
-
-			public void SetStrokeEffect(Color color, float thickness = 0.5f, float smoothness = 0.025f)
-			{
-				Mode = RenderMode.Stroked;
-				EffectColor = color;
-				EffectParameters = new Vector2(thickness, smoothness);
+				Mode = null;
 			}
 
 			private void EnsureSpriteBatchEffectEnd()
@@ -185,57 +120,90 @@ namespace FontStashSharp
 				_spriteBatchEffectBeginCalled = false;
 			}
 
-			private void ApplyEffectMode()
+			private void RestartSpriteBatchEffect(Effect effect)
 			{
-				if (_effect == null)
-				{
-					_effect = Resources.GetEffect(_spriteBatchEffect.GraphicsDevice, Supersampling, _mode == RenderMode.Shadow, _mode == RenderMode.Stroked);
+				EnsureSpriteBatchEffectEnd();
 
-					EnsureSpriteBatchEffectEnd();
-
-					_spriteBatchEffect.Begin(SpriteSortMode.Deferred,
-						BlendState.NonPremultiplied,
-						SamplerState.LinearClamp,
-						DepthStencilState.None,
-						RasterizerState.CullCounterClockwise,
-						_effect);
-					_spriteBatchEffectBeginCalled = true;
-				}
-
-				if (_effectParametersDirty)
-				{
-					switch (Mode)
-					{
-						case RenderMode.Shadow:
-							_effect.Parameters["cShadowColor"].SetValue(_effectColor.ToVector4());
-							break;
-
-						case RenderMode.Stroked:
-							_effect.Parameters["cStrokeColor"].SetValue(_effectColor.ToVector4());
-							_effect.Parameters["cStrokeThickness"].SetValue(_effectParameters.X);
-							_effect.Parameters["cStrokeSmoothness"].SetValue(_effectParameters.Y);
-							break;
-					}
-
-					_effectParametersDirty = false;
-				}
+				_spriteBatchEffect.Begin(SpriteSortMode.Deferred,
+					BlendState.NonPremultiplied,
+					SamplerState.LinearClamp,
+					DepthStencilState.None,
+					RasterizerState.CullCounterClockwise,
+					effect);
+				_spriteBatchEffectBeginCalled = true;
+				_effect = effect;
 			}
 
 			public void DrawString(SpriteFontBase font, string text, Vector2 position, Color color,
 				float rotation, Vector2 origin, Vector2? scale, float layerDepth,
 				float characterSpacing, float lineSpacing, TextStyle textStyle)
 			{
-				ApplyEffectMode();
-
-				var fontEffect = FontSystemEffect.None;
-				var fontEffectAmount = 0;
-
-				if (Mode == RenderMode.Stroked)
+				if (Mode != RenderMode.Standard)
 				{
-					// This will force the font atlas to add 1 pixel padding around the glyphs to accommodate the stroke effect
-					fontEffect = FontSystemEffect.Stroked;
-					fontEffectAmount = 1;
+					var effect = Resources.GetEffect(_spriteBatchEffect.GraphicsDevice, Supersampling, false, false);
+					RestartSpriteBatchEffect(effect);
+					Mode = RenderMode.Standard;
 				}
+
+				font.DrawText(this, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle);
+			}
+
+			public void DrawShadowString(SpriteFontBase font, string text, Vector2 position, Color color,
+				float rotation, Vector2 origin, Vector2? scale,
+				float layerDepth, float characterSpacing, float lineSpacing,
+				TextStyle textStyle, Color shadowColor, float shadowOffsetX, float shadowOffsetY)
+			{
+				if (Mode != RenderMode.Shadow)
+				{
+					var effect = Resources.GetEffect(_spriteBatchEffect.GraphicsDevice, Supersampling, true, false);
+					RestartSpriteBatchEffect(effect);
+					Mode = RenderMode.Shadow;
+				}
+
+				if (_effectColor != shadowColor)
+				{
+					_effect.Parameters["cShadowColor"].SetValue(shadowColor.ToVector4());
+					_effectColor = shadowColor;
+				}
+
+				var newParameters = new Vector2(shadowOffsetX, shadowOffsetY);
+				if (_effectParameters != new Vector2(shadowOffsetX, shadowOffsetY))
+				{
+					_lastTexture = null;
+					_effectParameters = newParameters;
+				}
+
+				font.DrawText(this, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle);
+			}
+
+			public void DrawStrokeString(SpriteFontBase font, string text, Vector2 position, Color color,
+				float rotation, Vector2 origin, Vector2? scale,
+				float layerDepth, float characterSpacing, float lineSpacing,
+				TextStyle textStyle, Color strokeColor, float strokeThickness, float strokeSmoothness)
+			{
+				if (Mode != RenderMode.Stroke)
+				{
+					var effect = Resources.GetEffect(_spriteBatchEffect.GraphicsDevice, Supersampling, false, true);
+					RestartSpriteBatchEffect(effect);
+					Mode = RenderMode.Stroke;
+				}
+
+				if (_effectColor != strokeColor)
+				{
+					_effect.Parameters["cStrokeColor"].SetValue(strokeColor.ToVector4());
+				}
+
+				var newParameters = new Vector2(strokeThickness, strokeSmoothness);
+				if (_effectParameters != newParameters)
+				{
+					_effect.Parameters["cStrokeThickness"].SetValue(strokeThickness);
+					_effect.Parameters["cStrokeSmoothness"].SetValue(strokeSmoothness);
+					_effectParameters = newParameters;
+				}
+
+				// This will force the font atlas to add 1 pixel padding around the glyphs to accommodate the stroke effect
+				var fontEffect = FontSystemEffect.Stroked;
+				var fontEffectAmount = 1;
 
 				font.DrawText(this, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, fontEffect, fontEffectAmount);
 			}
@@ -264,15 +232,16 @@ namespace FontStashSharp
 
 					if (Mode == RenderMode.Shadow)
 					{
+						var ep = _effectParameters.Value;
 						if (texture != _lastTexture)
 						{
-							var shadowOffset = new Vector2((float)_effectParameters.X / texture.Width, (float)_effectParameters.Y / texture.Height);
+							var shadowOffset = new Vector2(ep.X / texture.Width, ep.Y / texture.Height);
 							_effect.Parameters["cShadowOffset"].SetValue(shadowOffset);
 							_lastTexture = texture;
 						}
 
-						rect.Width += (int)_effectParameters.X;
-						rect.Height += (int)_effectParameters.Y;
+						rect.Width += (int)ep.X;
+						rect.Height += (int)ep.Y;
 					}
 
 					_spriteBatchEffect.Draw(texture,
@@ -341,25 +310,25 @@ namespace FontStashSharp
 		public void End() => _renderer.End();
 
 		/// <inheritdoc/>
-		public void ResetEffect() => _renderer.ResetEffect();
-
-		/// <inheritdoc/>
-		public void SetShadowEffect(Color color, Vector2 shadowOffset) => _renderer.SetShadowEffect(color, shadowOffset);
-
-		/// <summary>
-		/// Configures the renderer to draw a shadow behind the text using the specified color and a default offset of one pixel.
-		/// </summary>
-		/// <param name="color">The color of the shadow.</param>
-		public void SetShadowEffect(Color color) => SetShadowEffect(color, Vector2.One);
-
-		/// <inheritdoc/>
-		public void SetStrokeEffect(Color color, float thickness = 0.5f, float smoothness = 0.025f) => _renderer.SetStrokeEffect(color, thickness, smoothness);
-
-		/// <inheritdoc/>
 		public void DrawString(SpriteFontBase font, string text, Vector2 position, Color color,
 			float rotation = 0, Vector2 origin = default, Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
-			TextStyle textStyle = TextStyle.None) => _renderer.DrawString(font, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle);
+			TextStyle textStyle = TextStyle.None) =>
+			_renderer.DrawString(font, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle);
+
+		/// <inheritdoc/>
+		public void DrawShadowString(SpriteFontBase font, string text, Vector2 position, Color color,
+			float rotation = 0, Vector2 origin = default, Vector2? scale = null,
+			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
+			TextStyle textStyle = TextStyle.None, Color? shadowColor = null, float shadowOffsetX = 1, float shadowOffsetY = 1) =>
+			_renderer.DrawShadowString(font, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, shadowColor ?? Color.Black, shadowOffsetX, shadowOffsetY);
+
+		/// <inheritdoc/>
+		public void DrawStrokeString(SpriteFontBase font, string text, Vector2 position, Color color,
+			float rotation = 0, Vector2 origin = default, Vector2? scale = null,
+			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
+			TextStyle textStyle = TextStyle.None, Color? strokeColor = null, float strokeThickness = 0.5f, float strokeSmoothness = 0.05f) =>
+			_renderer.DrawStrokeString(font, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, strokeColor ?? Color.Black, strokeThickness, strokeSmoothness);
 
 		/// <inheritdoc/>
 		public void DrawSprite(Texture2D texture, Vector2 pos, Rectangle? src, Color color, float rotation, Vector2 scale, float depth) =>

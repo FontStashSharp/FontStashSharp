@@ -93,21 +93,21 @@ internal class TextRenderingWidget : Widget
 
 		_sdfTextBatch.Begin();
 
+		var font = _fontSystemSDF.GetFont(FontSize);
+
 		switch (SDFTextSettings.Effect)
 		{
 			case SDFFontEffect.None:
-				_sdfTextBatch.ResetEffect();
+				_sdfTextBatch.DrawString(font, Text, new Vector2(0, 0), Color, scale: new Vector2(TextScale), textStyle: TextStyle);
 				break;
 			case SDFFontEffect.Shadow:
-				_sdfTextBatch.SetShadowEffect(SDFTextSettings.ShadowColor, SDFTextSettings.ShadowOffset.ToVector2());
+				_sdfTextBatch.DrawShadowString(font, Text, new Vector2(0, 0), Color, scale: new Vector2(TextScale), textStyle: TextStyle, shadowColor: SDFTextSettings.ShadowColor, shadowOffsetX: SDFTextSettings.ShadowOffset.X, shadowOffsetY: SDFTextSettings.ShadowOffset.Y);
 				break;
 			case SDFFontEffect.Stroked:
-				_sdfTextBatch.SetStrokeEffect(SDFTextSettings.StrokeColor, SDFTextSettings.StrokeThickness, SDFTextSettings.StrokeSmoothness);
+				_sdfTextBatch.DrawStrokeString(font, Text, new Vector2(0, 0), Color, scale: new Vector2(TextScale), textStyle: TextStyle, strokeColor: SDFTextSettings.StrokeColor, strokeThickness: SDFTextSettings.StrokeThickness, strokeSmoothness: SDFTextSettings.StrokeSmoothness);
 				break;
 		}
 
-		var font = _fontSystemSDF.GetFont(FontSize);
-		_sdfTextBatch.DrawString(font, Text, new Vector2(0, 0), Color, scale: new Vector2(TextScale), textStyle: TextStyle);
 		_sdfTextBatch.End();
 
 		_spriteBatch.Begin();
