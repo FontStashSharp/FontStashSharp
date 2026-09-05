@@ -162,7 +162,7 @@ namespace FontStashSharp
 				defines["EFFECTSTROKE"] = "1";
 			}
 
-			_cache[key] = LoadEffect(graphicsDevice, "Text", defines);
+			_cache[key] = LoadEffect(graphicsDevice, "SDF", defines);
 
 			return _cache[key];
 		}
