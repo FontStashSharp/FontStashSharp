@@ -91,6 +91,7 @@ internal class TextRenderingWidget : Widget
 		var oldViewport = device.Viewport;
 		device.Viewport = new Viewport(screenPosition.X, screenPosition.Y, ActualBounds.Width, ActualBounds.Height);
 
+		_sdfTextBatch.Supersampling = SDFTextSettings.EnableSuperSampling;
 		_sdfTextBatch.Begin();
 
 		var font = _fontSystemSDF.GetFont(FontSize);
