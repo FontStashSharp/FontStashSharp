@@ -26,6 +26,6 @@ namespace FontStashSharp.RichText
 		/// <param name="context">The rendering context to use for drawing.</param>
 		/// <param name="position">The position to draw the element at.</param>
 		/// <param name="color">The color to apply to the rendered element.</param>
-		void Draw(FSRenderContext context, Vector2 position, Color color);
+		void Draw(IFSRenderContext context, Vector2 position, Color color);
 	}
 }

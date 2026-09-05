@@ -37,7 +37,7 @@ namespace FontStashSharp.RichText
 		/// <param name="context">The rendering context.</param>
 		/// <param name="position">The position to draw at.</param>
 		/// <param name="color">The color to apply (ignored for spaces).</param>
-		public override void Draw(FSRenderContext context, Vector2 position, Color color)
+		public override void Draw(IFSRenderContext context, Vector2 position, Color color)
 		{
 		}
 	}

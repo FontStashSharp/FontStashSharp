@@ -14,6 +14,27 @@ using Color = FontStashSharp.FSColor;
 namespace FontStashSharp.RichText
 {
 	/// <summary>
+	/// Specifies the signed distance field (SDF) effect to apply to a text chunk.
+	/// </summary>
+	public enum SDFTextEffect
+	{
+		/// <summary>
+		/// No SDF effect is applied.
+		/// </summary>
+		None,
+
+		/// <summary>
+		/// A shadow effect is applied.
+		/// </summary>
+		Shadow,
+
+		/// <summary>
+		/// A stroke (outline) effect is applied.
+		/// </summary>
+		Stroke
+	}
+
+	/// <summary>
 	/// Represents a chunk of text in rich text layout with associated font and styling.
 	/// </summary>
 	public class TextChunk : BaseChunk
@@ -29,10 +50,12 @@ namespace FontStashSharp.RichText
 		/// Gets the number of characters in this text chunk.
 		/// </summary>
 		public int Count { get; }
+
 		/// <summary>
 		/// Gets or sets the text content of this chunk.
 		/// </summary>
 		public string Text { get; internal set; }
+
 		/// <summary>
 		/// Gets the size of this text chunk in pixels.
 		/// </summary>
@@ -42,18 +65,36 @@ namespace FontStashSharp.RichText
 		/// Gets the sprite font used to render this text chunk.
 		/// </summary>
 		public SpriteFontBase Font { get; }
+
 		/// <summary>
 		/// Gets or sets the text style (underline, strikethrough) for this chunk.
 		/// </summary>
 		public TextStyle Style { get; set; }
+
 		/// <summary>
 		/// Gets or sets the visual effect (blur, stroke) to apply to this chunk.
 		/// </summary>
 		public FontSystemEffect Effect { get; set; }
+
 		/// <summary>
 		/// Gets or sets the strength of the applied effect.
 		/// </summary>
 		public int EffectAmount { get; set; }
+
+		/// <summary>
+		/// Gets or sets the signed distance field (SDF) effect to apply to this chunk.
+		/// </summary>
+		public SDFTextEffect SDFEffect { get; set; }
+
+		/// <summary>
+		/// Gets or sets the color used by the SDF effect (shadow or stroke color).
+		/// </summary>
+		public Color SDFEffectColor { get; set; }
+
+		/// <summary>
+		/// Gets or sets the parameters for the SDF effect (offset for shadows, thickness and smoothness for strokes).
+		/// </summary>
+		public Vector2 SDFEffectParameters { get; set; }
 
 		/// <summary>
 		/// Initializes a new instance of the TextChunk class.
@@ -166,9 +207,27 @@ namespace FontStashSharp.RichText
 		/// <param name="context">The rendering context to use</param>
 		/// <param name="position">The position to draw at</param>
 		/// <param name="color">The color to render the text in</param>
-		public override void Draw(FSRenderContext context, Vector2 position, Color color)
+		public override void Draw(IFSRenderContext context, Vector2 position, Color color)
 		{
-			context.DrawText(Text, Font, position, color, Style, Effect, EffectAmount);
+			if (Font.FontRasterizationMode == FontRasterizationMode.Standard)
+			{
+				context.DrawText(Text, Font, position, color, Style, Effect, EffectAmount);
+			}
+			else
+			{
+				switch (SDFEffect)
+				{
+					case SDFTextEffect.None:
+						context.DrawSDFText(Text, Font, position, color, Style);
+						break;
+					case SDFTextEffect.Shadow:
+						context.DrawSDFShadowText(Text, Font, position, color, Style, SDFEffectColor, SDFEffectParameters);
+						break;
+					case SDFTextEffect.Stroke:
+						context.DrawSDFStrokeText(Text, Font, position, color, Style, SDFEffectColor, SDFEffectParameters.X, SDFEffectParameters.Y);
+						break;
+				}
+			}
 		}
 	}
 }

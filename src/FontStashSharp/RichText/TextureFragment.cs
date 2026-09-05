@@ -80,7 +80,7 @@ namespace FontStashSharp.RichText
 		/// <param name="context">The rendering context.</param>
 		/// <param name="position">The position to draw at.</param>
 		/// <param name="color">The color to apply (this parameter is ignored; white is always used).</param>
-		public void Draw(FSRenderContext context, Vector2 position, Color color)
+		public void Draw(IFSRenderContext context, Vector2 position, Color color)
 		{
 			context.DrawImage(Texture, Region, position, Scale, Color.White);
 		}

@@ -18,10 +18,7 @@ using Color = FontStashSharp.FSColor;
 
 namespace FontStashSharp.RichText
 {
-	/// <summary>
-	/// Provides a rendering context for managing text and image rendering operations.
-	/// </summary>
-	public class FSRenderContext
+	internal class FSRenderContext : IFSRenderContext
 	{
 		private IFontStashRenderer _renderer;
 		private IFontStashRenderer2 _renderer2;
@@ -31,10 +28,6 @@ namespace FontStashSharp.RichText
 		private float _rotation;
 		private float _layerDepth;
 
-		/// <summary>
-		/// Sets the renderer used for drawing text and images.
-		/// </summary>
-		/// <param name="renderer">The font stash renderer to use. Cannot be null.</param>
 		public void SetRenderer(IFontStashRenderer renderer)
 		{
 			if (renderer == null)
@@ -47,10 +40,6 @@ namespace FontStashSharp.RichText
 			_renderer3 = null;
 		}
 
-		/// <summary>
-		/// Sets the renderer used for drawing text and images.
-		/// </summary>
-		/// <param name="renderer">The font stash renderer to use. Cannot be null.</param>
 		public void SetRenderer(IFontStashRenderer2 renderer)
 		{
 			if (renderer == null)
@@ -62,10 +51,6 @@ namespace FontStashSharp.RichText
 			_renderer3 = null;
 		}
 
-		/// <summary>
-		/// Sets the renderer used for drawing text and images.
-		/// </summary>
-		/// <param name="renderer">The SDF text renderer to use. Cannot be null.</param>
 		public void SetRenderer(ISDFTextRenderer renderer)
 		{
 			if (renderer == null)
@@ -77,15 +62,7 @@ namespace FontStashSharp.RichText
 			_renderer3 = renderer;
 		}
 
-		/// <summary>
-		/// Prepares the rendering context with transformation parameters.
-		/// </summary>
-		/// <param name="position">The drawing position</param>
-		/// <param name="rotation">The rotation in radians</param>
-		/// <param name="origin">The center of rotation</param>
-		/// <param name="scale">The scale factors</param>
-		/// <param name="layerDepth">The layer depth for drawing</param>
-		public void Prepare(Vector2 position, float rotation, Vector2 origin, Vector2 scale, float layerDepth)
+		internal void Prepare(Vector2 position, float rotation, Vector2 origin, Vector2 scale, float layerDepth)
 		{
 			_scale = scale;
 			_rotation = rotation;
@@ -93,19 +70,14 @@ namespace FontStashSharp.RichText
 			Utility.BuildTransform(position, _rotation, origin, _scale, out _transformation);
 		}
 
-		/// <summary>
-		/// Draws text using the current rendering context.
-		/// </summary>
-		/// <param name="text">The text to draw</param>
-		/// <param name="font">The font to use for rendering</param>
-		/// <param name="pos">The position to draw at</param>
-		/// <param name="color">The color to render the text in</param>
-		/// <param name="textStyle">The text style to apply</param>
-		/// <param name="effect">The font system effect to apply</param>
-		/// <param name="effectAmount">The amount of the effect to apply</param>
 		public void DrawText(string text, SpriteFontBase font, Vector2 pos, Color color,
 			TextStyle textStyle, FontSystemEffect effect, int effectAmount)
 		{
+			if (_renderer == null && _renderer2 == null)
+			{
+				throw new Exception("Can't draw ordinary text through SDF renderer.");
+			}
+
 			if (string.IsNullOrEmpty(text))
 			{
 				return;
@@ -121,10 +93,6 @@ namespace FontStashSharp.RichText
 			{
 				font.DrawText(_renderer2, text, pos, color, _rotation, default(Vector2), _scale, _layerDepth,
 					textStyle: textStyle, effect: effect, effectAmount: effectAmount);
-			}
-			else
-			{
-				_renderer3.DrawString(font, text, pos, color, _rotation, default(Vector2), _scale, _layerDepth, 0, 0, textStyle);
 			}
 		}
 
@@ -160,6 +128,53 @@ namespace FontStashSharp.RichText
 				position = position.Transform(ref _transformation);
 				_renderer3.DrawSprite(texture, position, sourceRegion, color, _rotation, _scale, _layerDepth);
 			}
+		}
+
+		private void EnsureSDFRenderer()
+		{
+			if (_renderer3 == null)
+			{
+				throw new Exception("SDF Renderer is null.");
+			}
+		}
+
+		public void DrawSDFText(string text, SpriteFontBase font, Vector2 pos, Color color, TextStyle textStyle)
+		{
+			EnsureSDFRenderer();
+
+			if (string.IsNullOrEmpty(text))
+			{
+				return;
+			}
+
+			pos = pos.Transform(ref _transformation);
+			_renderer3.DrawString(font, text, pos, color, _rotation, default(Vector2), _scale, _layerDepth, 0, 0, textStyle);
+		}
+
+		public void DrawSDFShadowText(string text, SpriteFontBase font, Vector2 pos, Color color, TextStyle textStyle, Color shadowColor, Vector2 shadowOffset)
+		{
+			EnsureSDFRenderer();
+
+			if (string.IsNullOrEmpty(text))
+			{
+				return;
+			}
+
+			pos = pos.Transform(ref _transformation); 
+			_renderer3.DrawShadowString(font, text, pos, color, _rotation, default(Vector2), _scale, _layerDepth, 0, 0, textStyle, shadowColor, shadowOffset.X, shadowOffset.Y);
+		}
+
+		public void DrawSDFStrokeText(string text, SpriteFontBase font, Vector2 pos, Color color, TextStyle textStyle, Color strokeColor, float strokeThickness, float strokeSmoothness)
+		{
+			EnsureSDFRenderer();
+
+			if (string.IsNullOrEmpty(text))
+			{
+				return;
+			}
+
+			pos = pos.Transform(ref _transformation); 
+			_renderer3.DrawStrokeString(font, text, pos, color, _rotation, default(Vector2), _scale, _layerDepth, 0, 0, textStyle, strokeColor, strokeThickness, strokeSmoothness);
 		}
 	}
 }
