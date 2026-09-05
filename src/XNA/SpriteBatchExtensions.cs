@@ -17,9 +17,9 @@ namespace FontStashSharp
 	public static class SpriteBatchExtensions
 	{
 		/// <summary>
-		/// Draws a text
+		/// Draws a text using the specified font.
 		/// </summary>
-		/// <param name="batch">A SpriteBatch</param>
+		/// <param name="batch">The sprite batch</param>
 		/// <param name="font">The font to use for drawing</param>
 		/// <param name="text">The text which will be drawn</param>
 		/// <param name="position">The drawing location on screen</param>
@@ -33,6 +33,7 @@ namespace FontStashSharp
 		/// <param name="textStyle">The text style to apply</param>
 		/// <param name="effect">The font system effect to apply</param>
 		/// <param name="effectAmount">The amount of the effect to apply</param>
+		/// <returns>The width of the drawn text</returns>
 		public static float DrawString(this SpriteBatch batch, SpriteFontBase font, string text, Vector2 position, Color color,
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
@@ -42,9 +43,9 @@ namespace FontStashSharp
 		}
 
 		/// <summary>
-		/// Draws a text
+		/// Draws a text using the specified font, with per-glyph colors.
 		/// </summary>
-		/// <param name="batch">A SpriteBatch</param>
+		/// <param name="batch">The sprite batch</param>
 		/// <param name="font">The font to use for drawing</param>
 		/// <param name="text">The text which will be drawn</param>
 		/// <param name="position">The drawing location on screen</param>
@@ -58,6 +59,7 @@ namespace FontStashSharp
 		/// <param name="textStyle">The text style to apply</param>
 		/// <param name="effect">The font system effect to apply</param>
 		/// <param name="effectAmount">The amount of the effect to apply</param>
+		/// <returns>The width of the drawn text</returns>
 		public static float DrawString(this SpriteBatch batch, SpriteFontBase font, string text, Vector2 position, Color[] colors,
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
@@ -67,9 +69,9 @@ namespace FontStashSharp
 		}
 
 		/// <summary>
-		/// Draws a text
+		/// Draws a text using the specified font.
 		/// </summary>
-		/// <param name="batch">A SpriteBatch</param>
+		/// <param name="batch">The sprite batch</param>
 		/// <param name="font">The font to use for drawing</param>
 		/// <param name="text">The text which will be drawn</param>
 		/// <param name="position">The drawing location on screen</param>
@@ -83,6 +85,7 @@ namespace FontStashSharp
 		/// <param name="textStyle">The text style to apply</param>
 		/// <param name="effect">The font system effect to apply</param>
 		/// <param name="effectAmount">The amount of the effect to apply</param>
+		/// <returns>The width of the drawn text</returns>
 		public static float DrawString(this SpriteBatch batch, SpriteFontBase font, StringSegment text, Vector2 position, Color color,
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
@@ -92,9 +95,9 @@ namespace FontStashSharp
 		}
 
 		/// <summary>
-		/// Draws a text
+		/// Draws a text using the specified font, with per-glyph colors.
 		/// </summary>
-		/// <param name="batch">A SpriteBatch</param>
+		/// <param name="batch">The sprite batch</param>
 		/// <param name="font">The font to use for drawing</param>
 		/// <param name="text">The text which will be drawn</param>
 		/// <param name="position">The drawing location on screen</param>
@@ -108,6 +111,7 @@ namespace FontStashSharp
 		/// <param name="textStyle">The text style to apply</param>
 		/// <param name="effect">The font system effect to apply</param>
 		/// <param name="effectAmount">The amount of the effect to apply</param>
+		/// <returns>The width of the drawn text</returns>
 		public static float DrawString(this SpriteBatch batch, SpriteFontBase font, StringSegment text, Vector2 position, Color[] colors,
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
@@ -117,9 +121,9 @@ namespace FontStashSharp
 		}
 
 		/// <summary>
-		/// Draws a text
+		/// Draws a text using the specified font.
 		/// </summary>
-		/// <param name="batch">A SpriteBatch</param>
+		/// <param name="batch">The sprite batch</param>
 		/// <param name="font">The font to use for drawing</param>
 		/// <param name="text">The text which will be drawn</param>
 		/// <param name="position">The drawing location on screen</param>
@@ -133,6 +137,7 @@ namespace FontStashSharp
 		/// <param name="textStyle">The text style to apply</param>
 		/// <param name="effect">The font system effect to apply</param>
 		/// <param name="effectAmount">The amount of the effect to apply</param>
+		/// <returns>The width of the drawn text</returns>
 		public static float DrawString(this SpriteBatch batch, SpriteFontBase font, StringBuilder text, Vector2 position, Color color,
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
@@ -142,9 +147,9 @@ namespace FontStashSharp
 		}
 
 		/// <summary>
-		/// Draws a text
+		/// Draws a text using the specified font, with per-glyph colors.
 		/// </summary>
-		/// <param name="batch">A SpriteBatch</param>
+		/// <param name="batch">The sprite batch</param>
 		/// <param name="font">The font to use for drawing</param>
 		/// <param name="text">The text which will be drawn</param>
 		/// <param name="position">The drawing location on screen</param>
@@ -158,6 +163,7 @@ namespace FontStashSharp
 		/// <param name="textStyle">The text style to apply</param>
 		/// <param name="effect">The font system effect to apply</param>
 		/// <param name="effectAmount">The amount of the effect to apply</param>
+		/// <returns>The width of the drawn text</returns>
 		public static float DrawString(this SpriteBatch batch, SpriteFontBase font, StringBuilder text, Vector2 position, Color[] colors,
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FontStashSharp.Interfaces;
 
 #if MONOGAME || FNA || KNI || XNA
@@ -505,6 +506,17 @@ namespace FontStashSharp.RichText
 			Draw(position, color, rotation, origin, scale, layerDepth, horizontalAlignment);
 		}
 
+		/// <summary>
+		/// Draws the text layout using the specified SDF text renderer.
+		/// </summary>
+		/// <param name="renderer">The SDF text renderer to use</param>
+		/// <param name="position">The position to draw at</param>
+		/// <param name="color">The color to render the text in</param>
+		/// <param name="rotation">The rotation in radians</param>
+		/// <param name="origin">The center of rotation</param>
+		/// <param name="scale">The scale factors, or null for default (1, 1)</param>
+		/// <param name="layerDepth">The layer depth for drawing</param>
+		/// <param name="horizontalAlignment">The horizontal alignment of the text</param>
 		public void Draw(ISDFTextRenderer renderer, Vector2 position, Color color,
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, TextHorizontalAlignment horizontalAlignment = TextHorizontalAlignment.Left)

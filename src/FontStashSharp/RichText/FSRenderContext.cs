@@ -32,9 +32,9 @@ namespace FontStashSharp.RichText
 		private float _layerDepth;
 
 		/// <summary>
-		/// Sets the renderer to use for drawing operations.
+		/// Sets the renderer used for drawing text and images.
 		/// </summary>
-		/// <param name="renderer">The font stash renderer</param>
+		/// <param name="renderer">The font stash renderer to use. Cannot be null.</param>
 		public void SetRenderer(IFontStashRenderer renderer)
 		{
 			if (renderer == null)
@@ -48,9 +48,9 @@ namespace FontStashSharp.RichText
 		}
 
 		/// <summary>
-		/// Sets the renderer to use for drawing operations.
+		/// Sets the renderer used for drawing text and images.
 		/// </summary>
-		/// <param name="renderer">The font stash renderer</param>
+		/// <param name="renderer">The font stash renderer to use. Cannot be null.</param>
 		public void SetRenderer(IFontStashRenderer2 renderer)
 		{
 			if (renderer == null)
@@ -62,6 +62,10 @@ namespace FontStashSharp.RichText
 			_renderer3 = null;
 		}
 
+		/// <summary>
+		/// Sets the renderer used for drawing text and images.
+		/// </summary>
+		/// <param name="renderer">The SDF text renderer to use. Cannot be null.</param>
 		public void SetRenderer(ISDFTextRenderer renderer)
 		{
 			if (renderer == null)
