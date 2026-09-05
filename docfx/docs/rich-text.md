@@ -27,9 +27,9 @@ Name|Description|Examples
 //|Symbol '/'|
 /c[_color_]|Changes the current color|/c[red] or /c[#ff123456]
 /cd|Changes the current color back to default(one that is passed to the RichTextLayout.Draw method)|
-/eb[_effectAmount]|Turns on the blurry text effect. If the amount parameter is omitted, the effect amount is set to 1 by default.|/eb or /eb2 or /eb[2]
-/es[_effectAmount]|Turns on the stroked text effect. If the amount parameter is omitted, the effect amount is set to 1 by default.|/es or /es2 or /es[2]
-/ed|Turns off the text effect|
+/eb[_effectAmount] *|Turns on the blurry text effect. If the amount parameter is omitted, the effect amount is set to 1 by default.|/eb or /eb2 or /eb[2]
+/es[_effectAmount] *|Turns on the stroked text effect. If the amount parameter is omitted, the effect amount is set to 1 by default.|/es or /es2 or /es[2]
+/ed *|Turns off the text effect|
 /f[_fontString_]|Changes the current font|/f[arialbd.ttf,32]
 /fd|Changes the current font to default(RichTextLayout.Font)|
 /i[_imageString_]|Inserts an image|/i[image.png]
@@ -40,6 +40,15 @@ Name|Description|Examples
 /td|Sets text style to default|
 /v[_offset_]|Sets the vertical offset in pixels|/v-10 or /v[-10]
 /vd|Sets the vertical offset to zero|
+/ds **|Turns on the SDF shadow effect. The shadow color and offset are taken from RichTextDefaults.SDFShadowColor and RichTextDefaults.SDFShadowOffset.|
+/dt **|Turns on the SDF stroke effect. The stroke color, thickness, and smoothness are taken from RichTextDefaults.SDFStrokeColor, RichTextDefaults.SDFStrokeThickness, and RichTextDefaults.SDFStrokeSmoothness.|
+/dd **|Turns off the SDF effect, switching back to plain text.|
+
+\* -- Available only with standard rasterization (`FontRasterizationMode.Standard`). These commands are ignored when the text is rendered with SDF.
+
+\*\* -- Available only with SDF rasterization (`FontRasterizationMode.SDF`). These commands are ignored when the text is rendered with standard rasterization.
+
+The commands without a marker are available in both rendering modes.
 
 ### Commands '/c' and '/cd'
 Command '/c[_color_]' changes the current color. The '_color_' can be either a color name or its hex code (in RGB or RGBA format). In that case, it should be preceded by the '#' symbol. 
@@ -148,6 +157,45 @@ A small /c[red]tree: /v8/i[mangrove1.png]
 It would render this:
 
 ![alt text](~/images/rich-text-6.png)
+
+### SDF Support
+Rich text supports Signed Distance Field (SDF) rendering. First make sure the font is rasterized with SDF as described in [Signed Distance Field (SDF) Text Rendering](signed-distance-field-rendering.md):
+
+```c#
+FontSystemDefaults.FontRasterizationMode = FontRasterizationMode.SDF;
+```
+
+Instead of the regular blur and stroke text effects, which are only available with standard rasterization, SDF text can be drawn with shadow and stroke effects that are computed from the same signed distance data. They are turned on with the commands '/ds' and '/dt', and turned off with '/dd'.
+
+Because SDF effects are not part of the text string itself, their parameters are read from the following static properties of RichTextDefaults:
+
+* RichTextDefaults.SDFShadowColor - the color of the shadow
+* RichTextDefaults.SDFShadowOffset - the offset of the shadow in pixels
+* RichTextDefaults.SDFStrokeColor - the color of the stroke
+* RichTextDefaults.SDFStrokeThickness - the thickness of the stroke
+* RichTextDefaults.SDFStrokeSmoothness - the smoothness of the stroke edges
+
+For example:
+```c#
+RichTextDefaults.SDFShadowColor = Color.Black;
+RichTextDefaults.SDFShadowOffset = new Vector2(2, 2);
+
+RichTextLayout rtl = new RichTextLayout
+{
+  Font = fontSystem.GetFont(32),
+  Text = "Plain text. /dtStroked text. /dd/dsDrop shadow.",
+};
+```
+
+Text rendered this way should be drawn with an SDF-capable renderer instead of SpriteBatch. The SDFTextBatch class implements the required ISDFTextRenderer interface:
+
+```c#
+_sdfTextBatch.Begin();
+rtl.Draw(_sdfTextBatch, position, Color.White);
+_sdfTextBatch.End();
+```
+
+Rendering a layout with an ISDFTextRenderer when its font does not use FontRasterizationMode.SDF throws InvalidOperationException. Likewise, rendering a standard layout (with SpriteBatch or IFontStashRenderer) through an SDF-capable renderer throws an exception.
 
 ### Word Wrapping
 If you set RichTextLayout.Width to some value, then the text would be word-wrapped accordingly.

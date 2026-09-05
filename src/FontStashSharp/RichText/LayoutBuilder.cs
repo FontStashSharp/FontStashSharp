@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Stride.Core.Mathematics;
 #else
 using System.Drawing;
+using System.Numerics;
 using Color = FontStashSharp.FSColor;
 #endif
 

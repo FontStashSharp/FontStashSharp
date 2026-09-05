@@ -1,5 +1,13 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
+
+#if MONOGAME || FNA || KNI || XNA
+using Microsoft.Xna.Framework;
+#elif STRIDE
+using Stride.Core.Mathematics;
+#else
+using System.Numerics;
+using Color = FontStashSharp.FSColor;
+#endif
 
 namespace FontStashSharp.RichText
 {
