@@ -18,7 +18,7 @@ namespace FontStashSharp.RichText
 	{
 		private readonly RichTextSettings _richTextSettings;
 		public const int NewLineWidth = 0;
-		public const string Commands = "cefistv";
+		public const string Commands = "cefistvd";
 
 		private string _text;
 		private SpriteFontBase _font;
@@ -37,6 +37,7 @@ namespace FontStashSharp.RichText
 		private SpriteFontBase _currentFont;
 		private int _currentVerticalOffset;
 		private TextStyle _currentTextStyle;
+		private SDFTextEffect _currentSDFEffect;
 		private FontSystemEffect _currentEffect;
 		private int _currentEffectAmount = 0;
 
@@ -122,6 +123,7 @@ namespace FontStashSharp.RichText
 					case 'c':
 					case 'f':
 					case 'v':
+					case 'd':
 						break;
 					default:
 						return false;
@@ -130,6 +132,18 @@ namespace FontStashSharp.RichText
 			else if (command == 's' || command == 'v')
 			{
 				return HasIntegerParam(i + 1);
+			}
+			else if (command == 'd')
+			{
+				switch (_text[i + 1])
+				{
+					case 's':
+					case 't':
+					case 'd':
+						break;
+					default:
+						return false;
+				}
 			}
 			else
 			{
@@ -278,6 +292,9 @@ namespace FontStashSharp.RichText
 					case 'v':
 						_currentVerticalOffset = 0;
 						break;
+					case 'd':
+						_currentSDFEffect = SDFTextEffect.None;
+						break;
 				}
 
 				i += 2;
@@ -297,6 +314,23 @@ namespace FontStashSharp.RichText
 				++i;
 				var p = ProcessIntegerParam(ref i);
 				_currentVerticalOffset = p.Value;
+			}
+			else if (command == 'd')
+			{
+				switch (_text[i + 1])
+				{
+					case 's':
+						_currentSDFEffect = SDFTextEffect.Shadow;
+						break;
+					case 't':
+						_currentSDFEffect = SDFTextEffect.Stroke;
+						break;
+					case 'd':
+						_currentSDFEffect = SDFTextEffect.None;
+						break;
+				}
+
+				i += 2;
 			}
 			else
 			{
@@ -472,6 +506,7 @@ namespace FontStashSharp.RichText
 			_currentTextStyle = TextStyle.None;
 			_currentEffect = FontSystemEffect.None;
 			_currentEffectAmount = 0;
+			_currentSDFEffect = SDFTextEffect.None;
 		}
 
 		private void StartLine(int startIndex, int? rowWidth)
@@ -595,7 +630,20 @@ namespace FontStashSharp.RichText
 								Style = _currentTextStyle,
 								Effect = _currentEffect,
 								EffectAmount = _currentEffectAmount,
+								SDFEffect = _currentSDFEffect
 							};
+
+							if (_currentSDFEffect == SDFTextEffect.Shadow)
+							{
+								textChunk.SDFEffectColor = RichTextDefaults.SDFShadowColor;
+								textChunk.SDFEffectParameters = RichTextDefaults.SDFShadowOffset;
+							}
+							else if (_currentSDFEffect == SDFTextEffect.Stroke)
+							{
+								textChunk.SDFEffectColor = RichTextDefaults.SDFStrokeColor;
+								textChunk.SDFEffectParameters = new Vector2(RichTextDefaults.SDFStrokeThickness, RichTextDefaults.SDFStrokeSmoothness);
+							}
+
 							chunk = textChunk;
 							break;
 						case ChunkInfoType.Space:

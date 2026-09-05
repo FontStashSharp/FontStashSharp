@@ -46,7 +46,7 @@ namespace FontStashSharp
 					}
 
 					_supersampling = value;
-					_mode = null;
+					Mode = null;
 				}
 			}
 
@@ -149,9 +149,9 @@ namespace FontStashSharp
 			}
 
 			public void DrawShadowString(SpriteFontBase font, string text, Vector2 position, Color color,
-				float rotation, Vector2 origin, Vector2? scale,
-				float layerDepth, float characterSpacing, float lineSpacing,
-				TextStyle textStyle, Color shadowColor, float shadowOffsetX, float shadowOffsetY)
+				float rotation, Vector2 origin, Vector2? scale, float layerDepth, 
+				float characterSpacing, float lineSpacing, TextStyle textStyle, 
+				Color shadowColor, float shadowOffsetX, float shadowOffsetY)
 			{
 				if (Mode != RenderMode.Shadow)
 				{
@@ -177,9 +177,9 @@ namespace FontStashSharp
 			}
 
 			public void DrawStrokeString(SpriteFontBase font, string text, Vector2 position, Color color,
-				float rotation, Vector2 origin, Vector2? scale,
-				float layerDepth, float characterSpacing, float lineSpacing,
-				TextStyle textStyle, Color strokeColor, float strokeThickness, float strokeSmoothness)
+				float rotation, Vector2 origin, Vector2? scale, float layerDepth, 
+				float characterSpacing, float lineSpacing, TextStyle textStyle, 
+				Color strokeColor, float strokeThickness, float strokeSmoothness)
 			{
 				if (Mode != RenderMode.Stroke)
 				{
@@ -191,6 +191,7 @@ namespace FontStashSharp
 				if (_effectColor != strokeColor)
 				{
 					_effect.Parameters["cStrokeColor"].SetValue(strokeColor.ToVector4());
+					_effectColor = strokeColor;
 				}
 
 				var newParameters = new Vector2(strokeThickness, strokeSmoothness);
