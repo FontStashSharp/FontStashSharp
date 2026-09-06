@@ -79,6 +79,15 @@ Demonstrates the RichText formatting system for styled text. Features include:
 - Embedded images with `/i[image.png]`
 - Complex mixed formatting demonstrations
 
+### RichText.SDF
+**Location:** `FontStashSharp.Samples.RichText.SDF`
+
+SDF variant of the RichText sample for signed distance field rendering. Features include:
+- All the RichText features: colors, font switching, vertical offsets, and embedded images
+- Shadow `/ds` and stroke `/dt` SDF effects, controlled through the text commands
+- Customizable SDF effect defaults via `RichTextDefaults.SDFShadowColor`, `RichTextDefaults.SDFShadowOffset`, `RichTextDefaults.SDFStrokeColor`, `RichTextDefaults.SDFStrokeThickness`, and `RichTextDefaults.SDFStrokeSmoothness`
+- Rendering rich text with `SDFTextBatch`
+
 ### RotatingText
 **Location:** `FontStashSharp.Samples.RotatingText`
 
@@ -205,6 +214,7 @@ Android-specific implementation of the DynamicSpriteFont sample. Features includ
 | MeasureString | ✓ | | | | | | ✓ | | | | |
 | HarfBuzz | ✓ | | ✓ | | | | ✓ | ✓ | ✓ | | |
 | RichText | ✓ | | | ✓ | | | ✓ | ✓ | ✓ | | |
+| RichText.SDF | ✓ | | | ✓ | | | ✓ | ✓ | | | |
 | RotatingText | ✓ | | | | ✓ | ✓ | ✓ | ✓ | ✓ | | |
 | MonoGameBackend | ✓ | | | | | | ✓ | | | | |
 | MonoGameBackendRotating | ✓ | | | | | ✓ | ✓ | | | | |

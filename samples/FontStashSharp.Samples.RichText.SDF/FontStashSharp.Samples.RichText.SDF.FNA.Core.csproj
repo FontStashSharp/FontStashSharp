@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>$(AppTargetFramework)</TargetFramework>
+    <OutputPath>bin\FNA.Core\$(Configuration)</OutputPath>
+    <DefineConstants>$(DefineConstants);FNA</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\FontStashSharp.Samples.DynamicSpriteFont\KeyboardUtils.cs" Link="KeyboardUtils.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\XNA\FontStashSharp.FNA.Core.csproj" />
+  </ItemGroup>  
+
+  <ItemGroup>
+    <None Include="..\Fonts\DroidSans.ttf" Link="Assets\DroidSans.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Assets\**\*.*" LinkBase="Assets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>  
+  </ItemGroup>
+</Project>

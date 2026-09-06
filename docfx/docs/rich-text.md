@@ -225,3 +225,6 @@ If AutoEllipsisMethod is set to Word, then following:
 
 ### Sample
 https://github.com/FontStashSharp/FontStashSharp/tree/main/samples/FontStashSharp.Samples.RichText
+
+There's also an SDF version of this sample, which demonstrates rendering rich text with SDF shadow and stroke effects:
+https://github.com/FontStashSharp/FontStashSharp/tree/main/samples/FontStashSharp.Samples.RichText.SDF
