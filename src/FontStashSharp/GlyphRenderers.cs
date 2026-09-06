@@ -2,8 +2,6 @@
 
 #if MONOGAME || FNA || KNI || XNA
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using static Microsoft.Xna.Framework.Graphics.SpriteFont;
 
 #elif STRIDE
 using Stride.Core.Mathematics;
@@ -38,6 +36,11 @@ namespace FontStashSharp
 		/// Determines how to produce final image(RGBA) from the rasterizer 8-bit source value
 		/// </summary>
 		public GlyphRenderResult GlyphRenderResult;
+
+		/// <summary>
+		/// The mode used to rasterize the glyph.
+		/// </summary>
+		public FontRasterizationMode RasterizationMode;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether to use premultiplied alpha blending.
@@ -174,7 +177,7 @@ namespace FontStashSharp
 		public static GlyphRenderer Default = (input, output, options) =>
 		{
 			var bufferSize = options.Size.X * options.Size.Y;
-			if (options.Effect == FontSystemEffect.Stroked && options.EffectAmount > 0)
+			if (options.RasterizationMode == FontRasterizationMode.Standard && options.Effect == FontSystemEffect.Stroked && options.EffectAmount > 0)
 			{
 				var width = options.Size.X;
 				var top = width * options.EffectAmount;
@@ -259,7 +262,7 @@ namespace FontStashSharp
 			}
 			else
 			{
-				if (options.Effect == FontSystemEffect.Blurry && options.EffectAmount > 0)
+				if (options.RasterizationMode == FontRasterizationMode.Standard && options.Effect == FontSystemEffect.Blurry && options.EffectAmount > 0)
 				{
 					Blur(input, options.Size.X, options.Size.Y, options.Size.X, options.EffectAmount);
 				}

@@ -371,7 +371,7 @@ namespace FontStashSharp
 						glyph.FontSize,
 						buffer,
 						0,
-						glyph.EffectAmount,
+						glyph.SDFPadding,
 						128,
 						64);
 
@@ -385,14 +385,9 @@ namespace FontStashSharp
 				Effect = glyph.Effect,
 				EffectAmount = glyph.EffectAmount,
 				Size = glyph.Size,
-				GlyphRenderResult = glyphRenderResult
+				GlyphRenderResult = glyphRenderResult,
+				RasterizationMode = glyph.FontRasterizationMode
 			};
-
-			if (glyph.FontRasterizationMode == FontRasterizationMode.SDF)
-			{
-				// Erase effect type, since it is handled by the font source
-				glyphRenderOptions.Effect = FontSystemEffect.None;
-			}
 
 			glyphRenderer(buffer, colorBuffer, glyphRenderOptions);
 

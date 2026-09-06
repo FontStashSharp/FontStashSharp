@@ -62,6 +62,11 @@ namespace FontStashSharp
 		}
 
 		/// <summary>
+		/// Gets or sets the amount of padding around the glyph used to accommodate SDF effects.
+		/// </summary>
+		public int SDFPadding { get; set; }
+
+		/// <summary>
 		/// Gets the rectangular region within the texture containing this glyph.
 		/// </summary>
 		public Rectangle TextureRectangle => new Rectangle(TextureOffset.X, TextureOffset.Y, Size.X, Size.Y);

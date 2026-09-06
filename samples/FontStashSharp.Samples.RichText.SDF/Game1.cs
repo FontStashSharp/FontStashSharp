@@ -20,9 +20,7 @@ namespace FontStashSharp.Samples
 			"E=mc/v[-8]2/n/vdMass–energy equivalence.",
 			"A small tree: /i[mangrove1.png]",
 			"A small /c[red]tree: /v[8]/i[mangrove1.png]/vd/cd/tuand some text",
-			"/dsThis /dtis the /ddfirst line. This is the second line. This is the third line.",
-			"/dsThis /dtis the /ddfirst line. This /dtis the /ddsecond line. This is the third line.",
-			"/dsThis /dtis the /ddfirst line. This /dtis the /ddsecond line. This is the third line.",
+			"/dsThis /dtis the /ddfirst line./nThis /dtis the /ddsecond line./nThis is the third line.",
 		};
 
 		private readonly GraphicsDeviceManager _graphics;
@@ -83,7 +81,7 @@ namespace FontStashSharp.Samples
 			};
 
 			// Configure SDF shadow and stroke defaults
-			RichTextDefaults.SDFShadowColor = Color.DarkGray;
+			RichTextDefaults.SDFShadowColor = Color.Red;
 			RichTextDefaults.SDFShadowOffset = new Vector2(1, 1);
 			RichTextDefaults.SDFStrokeColor = Color.Black;
 			RichTextDefaults.SDFStrokeThickness = 0.5f;
@@ -198,7 +196,7 @@ namespace FontStashSharp.Samples
 			// Draw the rich text with the SDF text batch
 			_sdfBatch.Begin();
 			_sdfBatch.DrawString(_richText.Font, "Press 'Space' to switch between strings.", Vector2.Zero, Color.White);
-			_sdfBatch.DrawShadowString(_richText.Font, $"Press 'LeftShift' to toggle supersampling ({(_sdfBatch.Supersampling ? "on" : "off")}).", new Vector2(0, 32), Color.White);
+			_sdfBatch.DrawShadowString(_richText.Font, $"Press 'LeftShift' to toggle supersampling ({(_sdfBatch.Supersampling ? "on" : "off")}).", new Vector2(0, 40), Color.White);
 			_richText.Draw(_sdfBatch, position, Color.White, scale: scale);
 			_sdfBatch.End();
 
