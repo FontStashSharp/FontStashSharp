@@ -192,8 +192,20 @@ namespace FontStashSharp
 			int advance, x0, y0, x1, y1;
 			font.GetGlyphMetrics(glyphId, fontSize, out advance, out x0, out y0, out x1, out y1);
 
-			var gw = x1 - x0 + effectAmount * 2;
-			var gh = y1 - y0 + effectAmount * 2;
+			var gw = x1 - x0;
+			var gh = y1 - y0;
+
+			var sdfPadding = 1;
+			if (FontRasterizationMode == FontRasterizationMode.Standard)
+			{
+				gw += effectAmount * 2;
+				gh += effectAmount * 2;
+			}
+			else
+			{
+				gw += sdfPadding * 2;
+				gh += sdfPadding * 2;
+			}
 
 			glyph = new DynamicFontGlyph
 			{
@@ -206,7 +218,8 @@ namespace FontStashSharp
 				XAdvance = advance,
 				Effect = effect,
 				EffectAmount = effectAmount,
-				FontRasterizationMode = FontRasterizationMode
+				FontRasterizationMode = FontRasterizationMode,
+				SDFPadding = sdfPadding
 			};
 
 			storage.GlyphsByIds[key] = glyph;
