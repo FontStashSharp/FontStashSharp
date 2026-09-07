@@ -19,8 +19,8 @@ namespace FontStashSharp.Samples
 		private readonly GraphicsDeviceManager _graphics;
 		private SpriteFont _oldFont;
 		private StaticSpriteFont _fssStaticFont;
-		private DynamicSpriteFont _fssFont;
-		private DynamicSpriteFont _fssShapedFont;
+		private SpriteFontBase _fssFont;
+		private	SpriteFontBase _fssShapedFont;
 		private readonly Counter _oldCounter = new Counter();
 		private readonly Counter _fssStaticCounter = new Counter();
 		private readonly Counter _fssFontCounter = new Counter();
