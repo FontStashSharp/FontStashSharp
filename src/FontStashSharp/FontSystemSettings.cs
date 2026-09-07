@@ -62,7 +62,7 @@ namespace FontStashSharp
 	public class FontSystemSettings
 	{
 		private int _textureWidth = 1024, _textureHeight = 1024;
-		private float _fontResolutionFactor = 1.0f;
+		private float? _fontResolutionFactor = null;
 		private int _kernelWidth = 0, _kernelHeight = 0;
 		private int _shapedTextCacheSize = 100;
 
@@ -137,17 +137,16 @@ namespace FontStashSharp
 		public GlyphRenderer GlyphRenderer { get; set; } = GlyphRenderers.Default;
 
 		/// <summary>
-		/// Gets or sets the font resolution factor for scaling glyphs.
-		/// A value greater than 1.0 renders glyphs at higher resolution for better quality.
+		/// Gets or sets the font resolution factor used for rendering glyphs at a higher resolution.
 		/// </summary>
-		public float FontResolutionFactor
+		public float? FontResolutionFactor
 		{
 			get => _fontResolutionFactor;
 			set
 			{
-				if (value < 0)
+				if (value.HasValue && value < 1)
 				{
-					throw new ArgumentOutOfRangeException(nameof(value), value, "This cannot be smaller than 0");
+					throw new ArgumentOutOfRangeException(nameof(value), value, "This cannot be smaller than 1");
 				}
 
 				_fontResolutionFactor = value;

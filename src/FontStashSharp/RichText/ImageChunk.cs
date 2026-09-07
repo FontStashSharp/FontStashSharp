@@ -19,9 +19,7 @@ namespace FontStashSharp.RichText
 	{
 		private readonly IRenderable _renderable;
 
-		/// <summary>
-		/// Gets the size of the image chunk.
-		/// </summary>
+		/// <inheritdoc/>
 		public override Point Size => _renderable.Size;
 
 		/// <summary>
@@ -39,12 +37,7 @@ namespace FontStashSharp.RichText
 			_renderable = renderable;
 		}
 
-		/// <summary>
-		/// Draws the image chunk at the specified position.
-		/// </summary>
-		/// <param name="context">The rendering context.</param>
-		/// <param name="position">The position to draw at.</param>
-		/// <param name="color">The color to apply.</param>
+		/// <inheritdoc/>
 		public override void Draw(IFSRenderContext context, Vector2 position, Color color)
 		{
 			_renderable.Draw(context, position, color);

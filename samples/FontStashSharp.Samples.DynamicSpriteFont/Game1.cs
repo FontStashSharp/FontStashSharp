@@ -47,7 +47,7 @@ namespace FontStashSharp.Samples
 		private SpriteBatch _spriteBatch;
 		private FontSystem _fontSystem;
 		private FontSystemEffect _currentEffect = FontSystemEffect.None;
-		private DynamicSpriteFont _font;
+		private SpriteFontBase _font;
 
 		private Texture2D _white;
 		private bool _drawBackground = false;
@@ -122,6 +122,10 @@ namespace FontStashSharp.Samples
 
 			// TODO: use this.Content to load your game content here
 			//FontSystemDefaults.FontLoader = new FreeTypeLoader();
+
+/*			FontSystemDefaults.FontResolutionFactor = 4.0f;
+			FontSystemDefaults.KernelWidth = 4;
+			FontSystemDefaults.KernelHeight = 4;*/
 
 			// Simple
 			_fontSystem = new FontSystem();

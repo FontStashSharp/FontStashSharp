@@ -143,8 +143,7 @@ namespace FontStashSharp
 		}
 
 		internal override void InternalGetGlyphs(TextSource source, Vector2 position, Vector2 origin, Vector2 scale,
-			float characterSpacing, float lineSpacing, FontSystemEffect effect, int effectAmount,
-			List<Glyph> result)
+			float characterSpacing, float lineSpacing, FontSystemEffect effect, int effectAmount, List<Glyph> result)
 		{
 			if (source.IsNull)
 			{

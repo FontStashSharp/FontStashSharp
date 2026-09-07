@@ -56,9 +56,7 @@ namespace FontStashSharp.RichText
 		/// </summary>
 		public string Text { get; internal set; }
 
-		/// <summary>
-		/// Gets the size of this text chunk in pixels.
-		/// </summary>
+		/// <inheritdoc/>
 		public override Point Size => _size;
 
 		/// <summary>
@@ -201,12 +199,7 @@ namespace FontStashSharp.RichText
 			return i;
 		}
 
-		/// <summary>
-		/// Draws the text chunk using the specified rendering context.
-		/// </summary>
-		/// <param name="context">The rendering context to use</param>
-		/// <param name="position">The position to draw at</param>
-		/// <param name="color">The color to render the text in</param>
+		/// <inheritdoc/>
 		public override void Draw(IFSRenderContext context, Vector2 position, Color color)
 		{
 			if (Font.FontRasterizationMode == FontRasterizationMode.Standard)
