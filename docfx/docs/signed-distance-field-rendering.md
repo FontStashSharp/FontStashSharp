@@ -46,6 +46,27 @@ _sdfTextBatch.End();
 
 The `scale` parameter of `DrawString` is the primary way to resize SDF text — even large scale factors keep the edges sharp. Call `Dispose()` when the batch is no longer needed.
 
+### FixedSDFFontSize
+
+`FixedSDFFontSize` is for saving texture space. Instead of rasterizing a separate SDF glyph bitmap for every requested size, it rasterizes glyphs once at a fixed size and reuses that same distance field for all sizes (via a `ScaledSpriteFont` scaled to `fontSize / FixedSDFFontSize`). This avoids storing many duplicate glyph bitmaps in the atlas.
+
+```c#
+var settings = new FontSystemSettings
+{
+	FontRasterizationMode = FontRasterizationMode.SDF,
+	FixedSDFFontSize = 64
+};
+var fontSystem = new FontSystem(settings);
+```
+
+It can also be set globally for all font systems:
+
+```c#
+FontSystemDefaults.FixedSDFFontSize = 64;
+```
+
+When `FixedSDFFontSize` is left unset (`null`, the default), the font is rasterized directly at the requested size instead.
+
 ### Font Effects (Shadow & Stroke)
 
 Shadow and stroke effects are applied to individual strings via the `DrawShadowString` and `DrawStrokeString` methods. Each call specifies its own effect parameters:
