@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using FontStashSharp.Interfaces;
+using System.Collections.Generic;
 
 #if MONOGAME || FNA || KNI || XNA
 using Microsoft.Xna.Framework;
