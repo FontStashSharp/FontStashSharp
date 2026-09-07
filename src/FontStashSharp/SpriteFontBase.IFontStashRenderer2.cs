@@ -53,14 +53,14 @@ namespace FontStashSharp
 			var start = Vector2.Zero;
 			if (textStyle == TextStyle.Strikethrough)
 			{
-				start.Y = pos.Y - ascent + lineHeight / 2 - (FontSystemDefaults.TextStyleLineHeight / 2) * RenderFontSizeMultiplicator;
+				start.Y = pos.Y - ascent + lineHeight / 2 - (FontSystemDefaults.TextStyleLineHeight / 2);
 			}
 			else
 			{
-				start.Y = pos.Y + RenderFontSizeMultiplicator;
+				start.Y = pos.Y;
 			}
 
-			var size = new Vector2(pos.X, FontSystemDefaults.TextStyleLineHeight * RenderFontSizeMultiplicator);
+			var size = new Vector2(pos.X, FontSystemDefaults.TextStyleLineHeight);
 			renderer.DrawQuad(white, color, start, ref transformation,
 				layerDepth, size, new Rectangle(0, 0, 1, 1),
 				ref topLeft, ref topRight, ref bottomLeft, ref bottomRight);

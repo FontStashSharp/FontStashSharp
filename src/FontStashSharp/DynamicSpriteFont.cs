@@ -55,7 +55,7 @@ namespace FontStashSharp
 			}
 
 			FontSystem = system;
-			RenderFontSizeMultiplicator = FontSystem.FontResolutionFactor;
+			Scale = new Vector2(1.0f / FontSystem.FontResolutionFactor, 1.0f / FontSystem.FontResolutionFactor);
 
 			_shapedTextCache = new ShapedTextCache(system.ShapedTextCacheSize);
 		}
@@ -117,11 +117,10 @@ namespace FontStashSharp
 				return null;
 			}
 
-			var fontSize = FontSize * FontSystem.FontResolutionFactor;
 			var font = FontSystem.FontSources[fontSourceIndex];
 
 			int advance, x0, y0, x1, y1;
-			font.GetGlyphMetrics(g.Value, fontSize, out advance, out x0, out y0, out x1, out y1);
+			font.GetGlyphMetrics(g.Value, FontSize, out advance, out x0, out y0, out x1, out y1);
 
 			var gw = x1 - x0;
 			var gh = y1 - y0;
@@ -141,7 +140,8 @@ namespace FontStashSharp
 			{
 				Codepoint = codepoint,
 				Id = g.Value,
-				FontSize = fontSize,
+				FontSize = FontSize,
+				Scale = Scale,
 				FontSourceIndex = fontSourceIndex,
 				RenderOffset = new Point(x0, y0),
 				Size = new Point(gw, gh),
@@ -225,7 +225,7 @@ namespace FontStashSharp
 				for (var i = 0; i < IndexedMetrics.Length; ++i)
 				{
 					int ascent, descent, lineHeight;
-					FontSystem.FontSources[i].GetMetricsForSize(FontSize * RenderFontSizeMultiplicator, out ascent, out descent, out lineHeight);
+					FontSystem.FontSources[i].GetMetricsForSize(FontSize, out ascent, out descent, out lineHeight);
 
 					IndexedMetrics[i] = new FontMetrics(ascent, descent, lineHeight);
 				}

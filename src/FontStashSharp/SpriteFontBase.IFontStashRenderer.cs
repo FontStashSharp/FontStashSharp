@@ -48,17 +48,17 @@ namespace FontStashSharp
 			var start = Vector2.Zero;
 			if (textStyle == TextStyle.Strikethrough)
 			{
-				start.Y = pos.Y - ascent + lineHeight / 2 - (FontSystemDefaults.TextStyleLineHeight / 2) * RenderFontSizeMultiplicator;
+				start.Y = pos.Y - ascent + lineHeight / 2 - (FontSystemDefaults.TextStyleLineHeight / 2);
 			}
 			else
 			{
-				start.Y = pos.Y + RenderFontSizeMultiplicator;
+				start.Y = pos.Y;
 			}
 
 			start = start.Transform(ref transformation);
 
 			scale.X *= pos.X;
-			scale.Y *= (FontSystemDefaults.TextStyleLineHeight * RenderFontSizeMultiplicator);
+			scale.Y *= FontSystemDefaults.TextStyleLineHeight;
 
 			renderer.Draw(white, start, null, color, rotation, scale, layerDepth);
 		}

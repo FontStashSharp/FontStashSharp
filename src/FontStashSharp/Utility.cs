@@ -201,8 +201,8 @@ namespace FontStashSharp
 			{
 				transformation.M11 = scale.X;
 				transformation.M22 = scale.Y;
-				offsetX = position.X - (origin.X * transformation.M11);
-				offsetY = position.Y - (origin.Y * transformation.M22);
+				offsetX = position.X - origin.X;
+				offsetY = position.Y - origin.Y;
 			}
 			else
 			{
@@ -212,8 +212,8 @@ namespace FontStashSharp
 				transformation.M12 = scale.X * sin;
 				transformation.M21 = scale.Y * -sin;
 				transformation.M22 = scale.Y * cos;
-				offsetX = position.X - (origin.X * transformation.M11) - (origin.Y * transformation.M21);
-				offsetY = position.Y - (origin.X * transformation.M12) - (origin.Y * transformation.M22);
+				offsetX = position.X - (origin.X * cos) + (origin.Y * sin);
+				offsetY = position.Y - (origin.X * sin) - (origin.Y * cos);
 			}
 
 #if MONOGAME || FNA || KNI || XNA || STRIDE

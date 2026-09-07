@@ -186,11 +186,10 @@ namespace FontStashSharp
 				return glyph;
 			}
 
-			var fontSize = FontSize * FontSystem.FontResolutionFactor;
 			var font = FontSystem.FontSources[fontSourceIndex];
 
 			int advance, x0, y0, x1, y1;
-			font.GetGlyphMetrics(glyphId, fontSize, out advance, out x0, out y0, out x1, out y1);
+			font.GetGlyphMetrics(glyphId, FontSize, out advance, out x0, out y0, out x1, out y1);
 
 			var gw = x1 - x0;
 			var gh = y1 - y0;
@@ -211,7 +210,8 @@ namespace FontStashSharp
 			{
 				Codepoint = 0, // Not applicable for shaped glyphs
 				Id = glyphId,
-				FontSize = fontSize,
+				FontSize = FontSize,
+				Scale = Scale,
 				FontSourceIndex = fontSourceIndex,
 				RenderOffset = new Point(x0, y0),
 				Size = new Point(gw, gh),
@@ -321,7 +321,7 @@ namespace FontStashSharp
 			if (FontSystem.FontSources.Count > 0)
 			{
 				int descent, lh;
-				FontSystem.FontSources[0].GetMetricsForSize(FontSize * FontSystem.FontResolutionFactor, out ascent, out descent, out lh);
+				FontSystem.FontSources[0].GetMetricsForSize(FontSize, out ascent, out descent, out lh);
 				lineHeight = lh;
 			}
 
@@ -352,7 +352,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var shapedText = GetShapedText(line, FontSize * FontSystem.FontResolutionFactor);
+				var shapedText = GetShapedText(line, FontSize);
 
 				float lineStartX = pos.X;
 				for (int i = 0; i < shapedText.Glyphs.Length; i++)
@@ -450,7 +450,7 @@ namespace FontStashSharp
 			if (FontSystem.FontSources.Count > 0)
 			{
 				int descent, lh;
-				FontSystem.FontSources[0].GetMetricsForSize(FontSize * FontSystem.FontResolutionFactor, out ascent, out descent, out lh);
+				FontSystem.FontSources[0].GetMetricsForSize(FontSize, out ascent, out descent, out lh);
 				lineHeight = lh;
 			}
 
@@ -485,7 +485,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var shapedText = GetShapedText(line, FontSize * FontSystem.FontResolutionFactor);
+				var shapedText = GetShapedText(line, FontSize);
 
 				float lineStartX = pos.X;
 				for (int i = 0; i < shapedText.Glyphs.Length; i++)
@@ -555,7 +555,7 @@ namespace FontStashSharp
 			if (FontSystem.FontSources.Count > 0)
 			{
 				int descent, lh;
-				FontSystem.FontSources[0].GetMetricsForSize(FontSize * FontSystem.FontResolutionFactor, out ascent, out descent, out lh);
+				FontSystem.FontSources[0].GetMetricsForSize(FontSize, out ascent, out descent, out lh);
 				lineHeight = lh;
 			}
 
@@ -579,7 +579,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var shapedText = GetShapedText(line, FontSize * FontSystem.FontResolutionFactor);
+				var shapedText = GetShapedText(line, FontSize);
 
 				float lineStartX = x;
 				for (int i = 0; i < shapedText.Glyphs.Length; i++)
@@ -638,7 +638,7 @@ namespace FontStashSharp
 			if (FontSystem.FontSources.Count > 0)
 			{
 				int descent, lh;
-				FontSystem.FontSources[0].GetMetricsForSize(FontSize * FontSystem.FontResolutionFactor, out ascent, out descent, out lh);
+				FontSystem.FontSources[0].GetMetricsForSize(FontSize, out ascent, out descent, out lh);
 				lineHeight = lh;
 			}
 
@@ -657,7 +657,7 @@ namespace FontStashSharp
 					continue;
 				}
 
-				var shapedText = GetShapedText(line, FontSize * FontSystem.FontResolutionFactor);
+				var shapedText = GetShapedText(line, FontSize);
 
 				float lineStartX = pos.X;
 				for (int i = 0; i < shapedText.Glyphs.Length; i++)

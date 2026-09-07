@@ -246,6 +246,8 @@ namespace FontStashSharp
 		/// <returns>A <see cref="DynamicSpriteFont"/> for the specified size.</returns>
 		public DynamicSpriteFont GetFont(float fontSize)
 		{
+			fontSize *= FontResolutionFactor;
+
 			var intSize = fontSize.FloatAsInt();
 			DynamicSpriteFont result;
 			if (_fonts.TryGetValue(intSize, out result))

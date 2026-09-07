@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using System;
-using FontStashSharp.Interfaces;
-using System.Linq;
 
 #if MONOGAME || FNA || KNI || XNA
 using Microsoft.Xna.Framework;
@@ -36,12 +33,13 @@ namespace FontStashSharp
 		SDF
 	}
 
-/// <summary>
-/// Base class for sprite-based fonts, providing text measurement, rendering, and glyph management.
-/// </summary>
-public abstract partial class SpriteFontBase
+	/// <summary>
+	/// Base class for sprite-based fonts, providing text measurement, rendering, and glyph management.
+	/// </summary>
+	public abstract partial class SpriteFontBase
 	{
 		private static Texture2D _white;
+		private float _originalFontSize, _originalLineHeight;
 
 		/// <summary>
 		/// User-specified name of the font, which can be used for debugging or informational purposes.
@@ -49,19 +47,29 @@ public abstract partial class SpriteFontBase
 		public string Name { get; set; }
 
 		/// <summary>
-		/// Gets the font size in points.
+		/// Gets the font size in points the font was originally created with.
 		/// </summary>
-		public float FontSize { get; private set; }
+		public float OriginalFontSize => _originalFontSize;
 
 		/// <summary>
-		/// Gets the line height in pixels.
+		/// Gets the line height the font was originally created with.
 		/// </summary>
-		public int LineHeight { get; private set; }
+		public float OriginalLineHeight => _originalLineHeight;
 
 		/// <summary>
-		/// Gets or sets the render font size multiplicator for scaling glyphs.
+		/// Gets the effective font size, taking scaling into account.
 		/// </summary>
-		protected float RenderFontSizeMultiplicator { get; set; } = 1f;
+		public float FontSize => _originalFontSize * Scale.Y;
+
+		/// <summary>
+		/// Gets the effective line height, taking scaling into account.
+		/// </summary>
+		public int LineHeight => (int)(_originalLineHeight * Scale.Y);
+
+		/// <summary>
+		/// Gets the scale applied to this font.
+		/// </summary>
+		public Vector2 Scale { get; internal set; } = Vector2.One;
 
 		/// <summary>
 		/// Gets the font rasterization mode used to render this font.
@@ -75,8 +83,8 @@ public abstract partial class SpriteFontBase
 		/// <param name="lineHeight">The line height in pixels.</param>
 		protected SpriteFontBase(float fontSize, int lineHeight)
 		{
-			FontSize = fontSize;
-			LineHeight = lineHeight;
+			_originalFontSize = fontSize;
+			_originalLineHeight = lineHeight;
 		}
 
 #if MONOGAME || FNA || KNI || XNA || STRIDE
@@ -113,7 +121,8 @@ public abstract partial class SpriteFontBase
 		/// <param name="transformation">The resulting transformation matrix</param>
 		protected void Prepare(Vector2 position, float rotation, Vector2 origin, ref Vector2 scale, out Matrix transformation)
 		{
-			scale /= RenderFontSizeMultiplicator;
+			origin *= scale;
+			scale *= Scale;
 
 			Utility.BuildTransform(position, rotation, origin, scale, out transformation);
 		}
@@ -202,7 +211,7 @@ public abstract partial class SpriteFontBase
 			var bounds = InternalTextBounds(new TextSource(text), position, characterSpacing, lineSpacing, effect, effectAmount);
 
 			var realScale = scale ?? Utility.DefaultScale;
-			bounds.ApplyScale(realScale / RenderFontSizeMultiplicator);
+			bounds.ApplyScale(realScale * Scale);
 			return bounds;
 		}
 
@@ -224,7 +233,7 @@ public abstract partial class SpriteFontBase
 			var bounds = InternalTextBounds(new TextSource(text), position, characterSpacing, lineSpacing, effect, effectAmount);
 
 			var realScale = scale ?? Utility.DefaultScale;
-			bounds.ApplyScale(realScale / RenderFontSizeMultiplicator);
+			bounds.ApplyScale(realScale * Scale);
 			return bounds;
 		}
 
