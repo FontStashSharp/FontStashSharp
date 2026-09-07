@@ -137,7 +137,7 @@ namespace FontStashSharp
 		public GlyphRenderer GlyphRenderer { get; set; } = GlyphRenderers.Default;
 
 		/// <summary>
-		/// Gets or sets the font resolution factor used for rendering glyphs at a higher resolution.
+		/// Gets or sets the resolution factor used to scale font glyphs.
 		/// </summary>
 		public float? FontResolutionFactor
 		{
@@ -154,7 +154,7 @@ namespace FontStashSharp
 		}
 
 		/// <summary>
-		/// Gets or sets the kernel width for glyph effects (blur or stroke).
+		/// Gets or sets the width of the kernel used when applying glyph effects.
 		/// </summary>
 		public int KernelWidth
 		{
@@ -172,7 +172,7 @@ namespace FontStashSharp
 		}
 
 		/// <summary>
-		/// Gets or sets the kernel height for glyph effects (blur or stroke).
+		/// Gets or sets the height of the kernel used when applying glyph effects.
 		/// </summary>
 		public int KernelHeight
 		{
@@ -253,6 +253,11 @@ namespace FontStashSharp
 		public FontRasterizationMode FontRasterizationMode { get; set; }
 
 		/// <summary>
+		/// Gets or sets the fixed font size used for SDF (Signed Distance Field) rendering.
+		/// </summary>
+		public float? FixedSDFFontSize { get; set; }
+
+		/// <summary>
 		/// Initializes a new instance of the FontSystemSettings class with default values.
 		/// </summary>
 		public FontSystemSettings()
@@ -269,6 +274,7 @@ namespace FontStashSharp
 			FontLoader = FontSystemDefaults.FontLoader;
 			ShapedTextCacheSize = FontSystemDefaults.ShapedTextCacheSize;
 			FontRasterizationMode = FontSystemDefaults.FontRasterizationMode;
+			FixedSDFFontSize = FontSystemDefaults.FixedSDFFontSize;
 		}
 
 		/// <summary>

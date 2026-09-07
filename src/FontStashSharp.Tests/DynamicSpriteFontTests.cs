@@ -15,7 +15,9 @@ namespace FontStashSharp.Tests
 		{
 			var fontSystem = TestsEnvironment.DefaultFontSystem;
 
-			var font = fontSystem.GetFont(32);
+			var baseFont = fontSystem.GetFont(32);
+			Assert.IsType<DynamicSpriteFont>(baseFont);
+			var font = (DynamicSpriteFont)baseFont;
 
 			// Such symbol doesnt exist in ttf
 			var codePoint = 12345678;
@@ -59,7 +61,9 @@ namespace FontStashSharp.Tests
 
 			for (var size = 64; size < 128; ++size)
 			{
-				var font = fontSystem.GetFont(size);
+				var baseFont = fontSystem.GetFont(size);
+				Assert.IsType<DynamicSpriteFont>(baseFont);
+				var font = (DynamicSpriteFont)baseFont;
 				for (var codePoint = (int)'a'; codePoint < 'z'; ++codePoint)
 				{
 					var glyph = (DynamicFontGlyph)font.GetGlyph(TestsEnvironment.GraphicsDevice, codePoint, FontSystemEffect.None, 0);

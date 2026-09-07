@@ -79,7 +79,7 @@ namespace FontStashSharp
 		}
 
 		/// <summary>
-		/// Gets or sets the global font resolution factor used for rendering glyphs at a higher resolution.
+		/// Gets or sets the default resolution factor used to scale font glyphs.
 		/// </summary>
 		public static float? FontResolutionFactor
 		{
@@ -96,7 +96,7 @@ namespace FontStashSharp
 		}
 
 		/// <summary>
-		/// Gets or sets the default kernel width for glyph effects.
+		/// Gets or sets the default width of the kernel used when applying glyph effects.
 		/// </summary>
 		public static int KernelWidth
 		{
@@ -114,7 +114,7 @@ namespace FontStashSharp
 		}
 
 		/// <summary>
-		/// Gets or sets the default kernel height for glyph effects.
+		/// Gets or sets the default height of the kernel used when applying glyph effects.
 		/// </summary>
 		public static int KernelHeight
 		{
@@ -190,5 +190,10 @@ namespace FontStashSharp
 		/// Gets or sets the mode used to rasterize glyph bitmaps.
 		/// </summary>
 		public static FontRasterizationMode FontRasterizationMode { get; set; }
+
+		/// <summary>
+		/// Gets or sets the default fixed font size used for SDF (Signed Distance Field) rendering.
+		/// </summary>
+		public static float? FixedSDFFontSize { get; set; }
 	}
 }

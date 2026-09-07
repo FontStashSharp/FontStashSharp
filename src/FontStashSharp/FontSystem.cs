@@ -75,17 +75,17 @@ namespace FontStashSharp
 		public GlyphRenderer GlyphRenderer => _settings.GlyphRenderer;
 
 		/// <summary>
-		/// Gets the font resolution factor used for rendering glyphs at a higher resolution.
+		/// Gets the resolution factor used to scale font glyphs.
 		/// </summary>
 		public float? FontResolutionFactor => _settings.FontResolutionFactor;
 
 		/// <summary>
-		/// Gets the kernel width for glyph rendering.
+		/// Gets the width of the kernel used when applying glyph effects.
 		/// </summary>
 		public int KernelWidth => _settings.KernelWidth;
 
 		/// <summary>
-		/// Gets the kernel height for glyph rendering.
+		/// Gets the height of the kernel used when applying glyph effects.
 		/// </summary>
 		public int KernelHeight => _settings.KernelHeight;
 
@@ -123,6 +123,11 @@ namespace FontStashSharp
 		/// Gets the mode used to rasterize glyph bitmaps.
 		/// </summary>
 		public FontRasterizationMode FontRasterizationMode => _settings.FontRasterizationMode;
+
+		/// <summary>
+		/// Gets the fixed font size used for SDF (Signed Distance Field) rendering.
+		/// </summary>
+		public float? FixedSDFFontSize => _settings.FixedSDFFontSize;
 
 		/// <summary>
 		/// Gets the list of font sources loaded in this system.
@@ -277,21 +282,17 @@ namespace FontStashSharp
 			return info;
 		}
 
-		/// <summary>
-		/// Returns a font for the specified size, applying the font resolution factor when enabled.
-		/// </summary>
-		/// <param name="fontSize">The font size in points.</param>
-		/// <returns>A <see cref="SpriteFontBase"/> for drawing text at the given size.</returns>
-		public SpriteFontBase GetFont(float fontSize)
+		private SpriteFontBase GetStandardFont(float fontSize)
 		{
 			if (FontResolutionFactor == null)
 			{
 				return GetRealFont(fontSize).RealFont;
 			}
 
+			ScaledSpriteFont scaledFont;
+
 			var realFont = GetRealFont(fontSize * FontResolutionFactor.Value);
 			var intSize = fontSize.FloatAsInt();
-			ScaledSpriteFont scaledFont;
 			if (!realFont.ScaledFonts.TryGetValue(intSize, out scaledFont))
 			{
 				scaledFont = new ScaledSpriteFont(realFont.RealFont, 1.0f / FontResolutionFactor.Value);
@@ -299,6 +300,41 @@ namespace FontStashSharp
 			}
 
 			return scaledFont;
+		}
+
+		private SpriteFontBase GetSDFFont(float fontSize)
+		{
+			if (FixedSDFFontSize == null)
+			{
+				return GetRealFont(fontSize).RealFont;
+			}
+
+			ScaledSpriteFont scaledFont;
+
+			var realFont = GetRealFont(FixedSDFFontSize.Value);
+			var intSize = fontSize.FloatAsInt();
+			if (!realFont.ScaledFonts.TryGetValue(intSize, out scaledFont))
+			{
+				scaledFont = new ScaledSpriteFont(realFont.RealFont, fontSize / FixedSDFFontSize.Value);
+				realFont.ScaledFonts[intSize] = scaledFont;
+			}
+
+			return scaledFont;
+		}
+
+		/// <summary>
+		/// Gets a font to use for rendering text at the specified size.
+		/// </summary>
+		/// <param name="fontSize">The size (in pixels) of the font to retrieve.</param>
+		/// <returns>The font to use for the given size.</returns>
+		public SpriteFontBase GetFont(float fontSize)
+		{
+			if (FontRasterizationMode == FontRasterizationMode.SDF)
+			{
+				return GetSDFFont(fontSize);
+			}
+
+			return GetStandardFont(fontSize);
 		}
 
 		/// <summary>
