@@ -92,6 +92,10 @@ When `FixedSDFFontSize` is left unset (`null`, the default), the font is rasteri
 
 ### Sample
 
-The [FontStashSharp.Samples.SDF](https://github.com/FontStashSharp/FontStashSharp/tree/main/samples/FontStashSharp.Samples.SDF) sample renders the same text side by side using SDF and a super-sampled standard `FontSystem`, and lets you resize both live to compare the quality difference. The **top** text is rendered with SDF, the **bottom** text with standard rasterization:
+The [FontStashSharp.Samples.SDF](https://github.com/FontStashSharp/FontStashSharp/tree/main/samples/FontStashSharp.Samples.SDF) sample renders the same text with 3 methods so they can be compared at any scale (the scale is controlled with the mouse wheel):
+
+- **top** — ordinary rendering
+- **middle** — [supersampling](supersampling.md) (with `FontResolutionFactor` set to 4)
+- **bottom** — SDF
 
 ![alt text](~/images/sdf.png)
