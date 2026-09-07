@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,7 +15,7 @@ namespace FontStashSharp
 
 		GraphicsDeviceManager _graphics;
 		SpriteBatch _spriteBatch;
-		private DynamicSpriteFont _font;
+		private SpriteFontBase _font;
 		private FontSystem _currentFontSystem;
 		private FontSystemEffect _currentEffect;
 		private Renderer _renderer;
