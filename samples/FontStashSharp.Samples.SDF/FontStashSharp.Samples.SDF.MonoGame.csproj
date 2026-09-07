@@ -8,8 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\FontStashSharp.Samples.DynamicSpriteFont\KeyboardUtils.cs" Link="KeyboardUtils.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="$(AppMonoGameVersion)" />
-    <PackageReference Include="Myra" Version="1.6.5" />
   </ItemGroup>
 
   <ItemGroup>

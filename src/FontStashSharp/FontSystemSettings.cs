@@ -299,7 +299,8 @@ namespace FontStashSharp
 				FontLoader = FontLoader,
 				TextShaper = TextShaper,
 				ShapedTextCacheSize = ShapedTextCacheSize,
-				FontRasterizationMode = FontRasterizationMode
+				FontRasterizationMode = FontRasterizationMode,
+				FixedSDFFontSize = FixedSDFFontSize
 			};
 		}
 	}
