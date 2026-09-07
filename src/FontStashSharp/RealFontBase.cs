@@ -20,7 +20,7 @@ namespace FontStashSharp
 	/// <summary>
 	/// Represents the base class for fonts that render glyphs from a real (rasterized) font at a fixed point size.
 	/// </summary>
-	public abstract partial class RealFontBase: SpriteFontBase
+	public abstract partial class RealFontBase : SpriteFontBase
 	{
 		/// <summary>
 		/// Gets the font size in points.
@@ -32,7 +32,7 @@ namespace FontStashSharp
 		/// </summary>
 		/// <param name="fontSize">The font size in points.</param>
 		/// <param name="lineHeight">The line height in pixels.</param>
-		protected RealFontBase(float fontSize, int lineHeight): base(lineHeight)
+		protected RealFontBase(float fontSize, int lineHeight) : base(lineHeight)
 		{
 			FontSize = fontSize;
 		}
@@ -142,7 +142,7 @@ namespace FontStashSharp
 			return new Bounds(minx, miny, maxx, maxy);
 		}
 
-		internal override void InternalGetGlyphs(TextSource source, Vector2 position, Vector2 origin, Vector2? sourceScale,
+		internal override void InternalGetGlyphs(TextSource source, Vector2 position, Vector2 origin, Vector2 scale,
 			float characterSpacing, float lineSpacing, FontSystemEffect effect, int effectAmount,
 			List<Glyph> result)
 		{
@@ -152,7 +152,6 @@ namespace FontStashSharp
 			}
 
 			Matrix transformation;
-			var scale = sourceScale ?? Utility.DefaultScale;
 			Prepare(position, 0, origin, ref scale, out transformation);
 
 			int ascent, lineHeight;

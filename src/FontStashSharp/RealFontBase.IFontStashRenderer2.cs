@@ -67,7 +67,7 @@ namespace FontStashSharp
 		}
 
 		internal override float InternalDrawText2(IFontStashRenderer2 renderer, TextColorSource source,
-			Vector2 position, float rotation, Vector2 origin, Vector2? sourceScale,
+			Vector2 position, float rotation, Vector2 origin, Vector2 scale,
 			float layerDepth, float characterSpacing, float lineSpacing,
 			TextStyle textStyle, FontSystemEffect effect, int effectAmount)
 		{
@@ -91,7 +91,6 @@ namespace FontStashSharp
 			if (source.IsNull) return 0.0f;
 
 			Matrix transformation;
-			var scale = sourceScale ?? Utility.DefaultScale;
 			Prepare(position, rotation, origin, ref scale, out transformation);
 
 			int ascent, lineHeight;

@@ -231,24 +231,24 @@ namespace FontStashSharp
 			return glyph;
 		}
 
-		internal override float InternalDrawText(IFontStashRenderer renderer, TextColorSource source, Vector2 position, float rotation, Vector2 origin, Vector2? sourceScale, float layerDepth, float characterSpacing, float lineSpacing, TextStyle textStyle, FontSystemEffect effect, int effectAmount)
+		internal override float InternalDrawText(IFontStashRenderer renderer, TextColorSource source, Vector2 position, float rotation, Vector2 origin, Vector2 scale, float layerDepth, float characterSpacing, float lineSpacing, TextStyle textStyle, FontSystemEffect effect, int effectAmount)
 		{
 			if (FontSystem.UseTextShaping)
 			{
-				return DrawShapedText(renderer, source, position, rotation, origin, sourceScale, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
+				return DrawShapedText(renderer, source, position, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 			}
 
-			return base.InternalDrawText(renderer, source, position, rotation, origin, sourceScale, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
+			return base.InternalDrawText(renderer, source, position, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 		}
 
-		internal override float InternalDrawText2(IFontStashRenderer2 renderer, TextColorSource source, Vector2 position, float rotation, Vector2 origin, Vector2? sourceScale, float layerDepth, float characterSpacing, float lineSpacing, TextStyle textStyle, FontSystemEffect effect, int effectAmount)
+		internal override float InternalDrawText2(IFontStashRenderer2 renderer, TextColorSource source, Vector2 position, float rotation, Vector2 origin, Vector2 scale, float layerDepth, float characterSpacing, float lineSpacing, TextStyle textStyle, FontSystemEffect effect, int effectAmount)
 		{
 			if (FontSystem.UseTextShaping)
 			{
-				return DrawShapedText2(renderer, source, position, rotation, origin, sourceScale, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
+				return DrawShapedText2(renderer, source, position, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 			}
 
-			return base.InternalDrawText2(renderer, source, position, rotation, origin, sourceScale, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
+			return base.InternalDrawText2(renderer, source, position, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 		}
 
 		internal override Bounds InternalTextBounds(TextSource source, Vector2 position,
@@ -271,19 +271,19 @@ namespace FontStashSharp
 			return result;
 		}
 
-		internal override void InternalGetGlyphs(TextSource source, Vector2 position, Vector2 origin, Vector2? sourceScale, float characterSpacing, float lineSpacing, FontSystemEffect effect, int effectAmount, List<Glyph> result)
+		internal override void InternalGetGlyphs(TextSource source, Vector2 position, Vector2 origin, Vector2 scale, float characterSpacing, float lineSpacing, FontSystemEffect effect, int effectAmount, List<Glyph> result)
 		{
 			if (FontSystem.UseTextShaping)
 			{
-				InternalShapedGetGlyphs(source, position, origin, sourceScale, characterSpacing, lineSpacing, effect, effectAmount, result);
+				InternalShapedGetGlyphs(source, position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount, result);
 				return;
 			}
 
-			base.InternalGetGlyphs(source, position, origin, sourceScale, characterSpacing, lineSpacing, effect, effectAmount, result);
+			base.InternalGetGlyphs(source, position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount, result);
 		}
 
 		private float DrawShapedText(IFontStashRenderer renderer, TextColorSource source, Vector2 position,
-			float rotation, Vector2 origin, Vector2? sourceScale,
+			float rotation, Vector2 origin, Vector2 scale,
 			float layerDepth, float characterSpacing, float lineSpacing,
 			TextStyle textStyle, FontSystemEffect effect, int effectAmount)
 		{
@@ -311,7 +311,6 @@ namespace FontStashSharp
 			}
 
 			Matrix transformation;
-			var scale = sourceScale ?? Utility.DefaultScale;
 			Prepare(position, rotation, origin, ref scale, out transformation);
 
 			var lines = text.Split('\n');
@@ -412,7 +411,7 @@ namespace FontStashSharp
 		}
 
 		private float DrawShapedText2(IFontStashRenderer2 renderer, TextColorSource source, Vector2 position,
-			float rotation, Vector2 origin, Vector2? sourceScale,
+			float rotation, Vector2 origin, Vector2 scale,
 			float layerDepth, float characterSpacing, float lineSpacing,
 			TextStyle textStyle, FontSystemEffect effect, int effectAmount)
 		{
@@ -440,7 +439,6 @@ namespace FontStashSharp
 			}
 
 			Matrix transformation;
-			var scale = sourceScale ?? Utility.DefaultScale;
 			Prepare(position, rotation, origin, ref scale, out transformation);
 
 			var lines = text.Split('\n');
@@ -619,7 +617,7 @@ namespace FontStashSharp
 			return new Bounds(minx, miny, maxx, maxy);
 		}
 
-		private void InternalShapedGetGlyphs(TextSource source, Vector2 position, Vector2 origin, Vector2? sourceScale, float characterSpacing, float lineSpacing, FontSystemEffect effect, int effectAmount, List<Glyph> result)
+		private void InternalShapedGetGlyphs(TextSource source, Vector2 position, Vector2 origin, Vector2 scale, float characterSpacing, float lineSpacing, FontSystemEffect effect, int effectAmount, List<Glyph> result)
 		{
 			var text = source.StringText.String ?? source.StringBuilderText?.ToString();
 			if (string.IsNullOrEmpty(text))
@@ -628,7 +626,6 @@ namespace FontStashSharp
 			}
 
 			Matrix transformation;
-			var scale = sourceScale ?? Utility.DefaultScale;
 			Prepare(position, 0, origin, ref scale, out transformation);
 
 			var lines = text.Split('\n');

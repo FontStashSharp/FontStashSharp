@@ -81,7 +81,7 @@ namespace FontStashSharp
 		#region IFontStashRenderer Draw Methods
 
 		internal abstract float InternalDrawText(IFontStashRenderer renderer, TextColorSource source, Vector2 position,
-			float rotation, Vector2 origin, Vector2? sourceScale,
+			float rotation, Vector2 origin, Vector2 sourceScale,
 			float layerDepth, float characterSpacing, float lineSpacing,
 			TextStyle textStyle, FontSystemEffect effect, int effectAmount);
 
@@ -106,7 +106,7 @@ namespace FontStashSharp
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-				InternalDrawText(renderer, new TextColorSource(text, color), position, rotation, origin, scale,
+				InternalDrawText(renderer, new TextColorSource(text, color), position, rotation, origin, GetRealScale(scale),
 					layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 
 		/// <summary>
@@ -130,8 +130,8 @@ namespace FontStashSharp
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-				InternalDrawText(renderer, new TextColorSource(text, colors), position, rotation, origin, scale, layerDepth,
-					characterSpacing, lineSpacing, textStyle, effect, effectAmount);
+				InternalDrawText(renderer, new TextColorSource(text, colors), position, rotation, origin, GetRealScale(scale),
+					layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 
 		/// <summary>
 		/// Draws a text segment using the specified renderer with a uniform color.
@@ -154,8 +154,8 @@ namespace FontStashSharp
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-				InternalDrawText(renderer, new TextColorSource(text, color), position, rotation, origin, scale, layerDepth,
-					characterSpacing, lineSpacing, textStyle, effect, effectAmount);
+				InternalDrawText(renderer, new TextColorSource(text, color), position, rotation, origin, GetRealScale(scale),
+					layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 
 		/// <summary>
 		/// Draws a text segment using the specified renderer with per-character colors.
@@ -178,8 +178,8 @@ namespace FontStashSharp
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-				InternalDrawText(renderer, new TextColorSource(text, colors), position, rotation, origin, scale, layerDepth,
-					characterSpacing, lineSpacing, textStyle, effect, effectAmount);
+				InternalDrawText(renderer, new TextColorSource(text, colors), position, rotation, origin, GetRealScale(scale),
+					layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 
 		/// <summary>
 		/// Draws a <see cref="StringBuilder"/> text using the specified renderer with a uniform color.
@@ -202,8 +202,8 @@ namespace FontStashSharp
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-				InternalDrawText(renderer, new TextColorSource(text, color), position, rotation, origin, scale, layerDepth,
-					characterSpacing, lineSpacing, textStyle, effect, effectAmount);
+				InternalDrawText(renderer, new TextColorSource(text, color), position, rotation, origin, GetRealScale(scale),
+					layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 
 		/// <summary>
 		/// Draws a <see cref="StringBuilder"/> text using the specified renderer with per-character colors.
@@ -226,15 +226,15 @@ namespace FontStashSharp
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-				InternalDrawText(renderer, new TextColorSource(text, colors), position, rotation, origin, scale, layerDepth,
-					characterSpacing, lineSpacing, textStyle, effect, effectAmount);
+				InternalDrawText(renderer, new TextColorSource(text, colors), position, rotation, origin, GetRealScale(scale),
+					layerDepth, characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 
 		#endregion
 
 		#region IFontStashRenderer2 Draw Methods
 
 		internal abstract float InternalDrawText2(IFontStashRenderer2 renderer, TextColorSource source,
-			Vector2 position, float rotation, Vector2 origin, Vector2? sourceScale,
+			Vector2 position, float rotation, Vector2 origin, Vector2 sourceScale,
 			float layerDepth, float characterSpacing, float lineSpacing,
 			TextStyle textStyle, FontSystemEffect effect, int effectAmount);
 
@@ -259,7 +259,7 @@ namespace FontStashSharp
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-				InternalDrawText2(renderer, new TextColorSource(text, color), position, rotation, origin, scale, layerDepth,
+				InternalDrawText2(renderer, new TextColorSource(text, color), position, rotation, origin, GetRealScale(scale), layerDepth,
 					characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 
 		/// <summary>
@@ -283,7 +283,7 @@ namespace FontStashSharp
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-				InternalDrawText2(renderer, new TextColorSource(text, colors), position, rotation, origin, scale, layerDepth,
+				InternalDrawText2(renderer, new TextColorSource(text, colors), position, rotation, origin, GetRealScale(scale), layerDepth,
 					characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 
 		/// <summary>
@@ -307,7 +307,7 @@ namespace FontStashSharp
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-				InternalDrawText2(renderer, new TextColorSource(text, color), position, rotation, origin, scale, layerDepth,
+				InternalDrawText2(renderer, new TextColorSource(text, color), position, rotation, origin, GetRealScale(scale), layerDepth,
 					characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 
 		/// <summary>
@@ -331,7 +331,7 @@ namespace FontStashSharp
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-				InternalDrawText2(renderer, new TextColorSource(text, colors), position, rotation, origin, scale, layerDepth,
+				InternalDrawText2(renderer, new TextColorSource(text, colors), position, rotation, origin, GetRealScale(scale), layerDepth,
 					characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 
 		/// <summary>
@@ -355,7 +355,7 @@ namespace FontStashSharp
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-				InternalDrawText2(renderer, new TextColorSource(text, color), position, rotation, origin, scale, layerDepth,
+				InternalDrawText2(renderer, new TextColorSource(text, color), position, rotation, origin, GetRealScale(scale), layerDepth,
 					characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 
 		/// <summary>
@@ -379,7 +379,7 @@ namespace FontStashSharp
 			float rotation = 0, Vector2 origin = default(Vector2), Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			TextStyle textStyle = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-				InternalDrawText2(renderer, new TextColorSource(text, colors), position, rotation, origin, scale, layerDepth,
+				InternalDrawText2(renderer, new TextColorSource(text, colors), position, rotation, origin, GetRealScale(scale), layerDepth,
 					characterSpacing, lineSpacing, textStyle, effect, effectAmount);
 
 		#endregion
@@ -448,7 +448,7 @@ namespace FontStashSharp
 			float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
 		{
-			var bounds = TextBounds(text, Utility.Vector2Zero, scale, characterSpacing, lineSpacing, effect, effectAmount);
+			var bounds = TextBounds(text, Utility.Vector2Zero, GetRealScale(scale), characterSpacing, lineSpacing, effect, effectAmount);
 			return new Vector2(bounds.X2, bounds.Y2);
 		}
 
@@ -466,11 +466,11 @@ namespace FontStashSharp
 			float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0)
 		{
-			var bounds = TextBounds(text, Utility.Vector2Zero, scale, characterSpacing, lineSpacing, effect, effectAmount);
+			var bounds = TextBounds(text, Utility.Vector2Zero, GetRealScale(scale), characterSpacing, lineSpacing, effect, effectAmount);
 			return new Vector2(bounds.X2, bounds.Y2);
 		}
 
-		internal abstract void InternalGetGlyphs(TextSource source, Vector2 position, Vector2 origin, Vector2? sourceScale,
+		internal abstract void InternalGetGlyphs(TextSource source, Vector2 position, Vector2 origin, Vector2 sourceScale,
 			float characterSpacing, float lineSpacing, FontSystemEffect effect, int effectAmount,
 			List<Glyph> result);
 
@@ -493,7 +493,7 @@ namespace FontStashSharp
 		{
 			List<Glyph> result = new List<Glyph>();
 
-			InternalGetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount, result);
+			InternalGetGlyphs(new TextSource(text), position, origin, GetRealScale(scale), characterSpacing, lineSpacing, effect, effectAmount, result);
 
 			return result;
 		}
@@ -517,7 +517,7 @@ namespace FontStashSharp
 		{
 			List<Glyph> result = new List<Glyph>();
 
-			InternalGetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount, result);
+			InternalGetGlyphs(new TextSource(text), position, origin, GetRealScale(scale), characterSpacing, lineSpacing, effect, effectAmount, result);
 
 			return result;
 		}
@@ -538,7 +538,7 @@ namespace FontStashSharp
 			Vector2 origin = default(Vector2), Vector2? scale = null,
 			float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-			InternalGetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount, result);
+			InternalGetGlyphs(new TextSource(text), position, origin, GetRealScale(scale), characterSpacing, lineSpacing, effect, effectAmount, result);
 
 		/// <summary>
 		/// Fills the provided list with glyphs that would be used to draw the specified <see cref="StringBuilder"/> text.
@@ -556,9 +556,11 @@ namespace FontStashSharp
 			Vector2 origin = default(Vector2), Vector2? scale = null,
 			float characterSpacing = 0.0f, float lineSpacing = 0.0f,
 			FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0) =>
-			InternalGetGlyphs(new TextSource(text), position, origin, scale, characterSpacing, lineSpacing, effect, effectAmount, result);
+			InternalGetGlyphs(new TextSource(text), position, origin, GetRealScale(scale), characterSpacing, lineSpacing, effect, effectAmount, result);
 
 		#endregion
+
+		private static Vector2 GetRealScale(Vector2? scale) => scale ?? Utility.DefaultScale;
 
 #if MONOGAME || FNA || KNI || XNA || STRIDE
 		/// <summary>
@@ -591,6 +593,5 @@ namespace FontStashSharp
 
 			return _white;
 		}
-
 	}
 }
