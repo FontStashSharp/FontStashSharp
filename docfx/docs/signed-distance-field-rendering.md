@@ -96,6 +96,6 @@ The [FontStashSharp.Samples.SDF](https://github.com/FontStashSharp/FontStashShar
 
 - **top** — ordinary rendering
 - **middle** — [supersampling](supersampling.md) (with `FontResolutionFactor` set to 4)
-- **bottom** — SDF
+- **bottom** — SDF (with `FixedSDFFontSize` set to 64)
 
 ![alt text](~/images/sdf.png)
