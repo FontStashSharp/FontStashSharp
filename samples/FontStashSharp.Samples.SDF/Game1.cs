@@ -36,8 +36,7 @@ public class Game1 : Game
 		_graphics = new GraphicsDeviceManager(this)
 		{
 			PreferredBackBufferWidth = 1400,
-			PreferredBackBufferHeight = 900,
-			GraphicsProfile = GraphicsProfile.HiDef
+			PreferredBackBufferHeight = 1024
 		};
 
 		Window.AllowUserResizing = true;
