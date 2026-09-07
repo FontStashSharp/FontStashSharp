@@ -64,7 +64,7 @@ namespace FontStashSharp
 	/// <summary>
 	/// A sprite font with static, pre-rendered glyphs loaded from bitmap font files.
 	/// </summary>
-	public partial class StaticSpriteFont : SpriteFontBase
+	public partial class StaticSpriteFont : RealFontBase
 	{
 		private readonly Int32Map<int> _kernings = new Int32Map<int>();
 

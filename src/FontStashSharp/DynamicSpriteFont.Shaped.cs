@@ -211,7 +211,6 @@ namespace FontStashSharp
 				Codepoint = 0, // Not applicable for shaped glyphs
 				Id = glyphId,
 				FontSize = FontSize,
-				Scale = Scale,
 				FontSourceIndex = fontSourceIndex,
 				RenderOffset = new Point(x0, y0),
 				Size = new Point(gw, gh),

@@ -18,7 +18,7 @@ namespace FontStashSharp
 	/// A sprite font that dynamically renders and caches glyphs on-demand into texture atlases.
 	/// Supports multiple font sources, glyph effects, and text shaping.
 	/// </summary>
-	public partial class DynamicSpriteFont : SpriteFontBase
+	public partial class DynamicSpriteFont : RealFontBase
 	{
 		private class GlyphStorage
 		{
@@ -55,7 +55,6 @@ namespace FontStashSharp
 			}
 
 			FontSystem = system;
-			Scale = new Vector2(1.0f / FontSystem.FontResolutionFactor, 1.0f / FontSystem.FontResolutionFactor);
 
 			_shapedTextCache = new ShapedTextCache(system.ShapedTextCacheSize);
 		}
@@ -130,7 +129,8 @@ namespace FontStashSharp
 			{
 				gw += effectAmount * 2;
 				gh += effectAmount * 2;
-			} else
+			}
+			else
 			{
 				gw += sdfPadding * 2;
 				gh += sdfPadding * 2;
@@ -141,7 +141,6 @@ namespace FontStashSharp
 				Codepoint = codepoint,
 				Id = g.Value,
 				FontSize = FontSize,
-				Scale = Scale,
 				FontSourceIndex = fontSourceIndex,
 				RenderOffset = new Point(x0, y0),
 				Size = new Point(gw, gh),

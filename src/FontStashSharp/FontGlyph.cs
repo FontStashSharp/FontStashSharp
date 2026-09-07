@@ -93,11 +93,6 @@ namespace FontStashSharp
 		public float FontSize;
 
 		/// <summary>
-		/// The scale at which this glyph was rendered.
-		/// </summary>
-		public Vector2 Scale;
-
-		/// <summary>
 		/// The index of the font source used to render this glyph.
 		/// </summary>
 		public int FontSourceIndex;
