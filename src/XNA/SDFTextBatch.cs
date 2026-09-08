@@ -307,7 +307,7 @@ namespace FontStashSharp
 			set => _renderer.Supersampling = value;
 		}
 
-/// <summary>
+		/// <summary>
 		/// Gets or sets the rasterizer state used when drawing SDF text.
 		/// </summary>
 		public RasterizerState RasterizerState
