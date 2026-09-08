@@ -57,6 +57,11 @@ namespace FontStashSharp
 		public int LineHeight { get; }
 
 		/// <summary>
+		/// Gets the font system this font belongs to, if any.
+		/// </summary>
+		public abstract FontSystem FontSystem { get; }
+
+		/// <summary>
 		/// Gets the font rasterization mode used to render this font.
 		/// </summary>
 		public abstract FontRasterizationMode FontRasterizationMode { get; }

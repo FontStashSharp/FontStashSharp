@@ -30,6 +30,10 @@ namespace FontStashSharp
 		/// Gets the scale factor applied to the base font.
 		/// </summary>
 		public float Scale { get; }
+
+		/// <inheritdoc/>
+		public override FontSystem FontSystem => _baseFont.FontSystem;
+
 		private float InverseScale { get; }
 
 		/// <summary>

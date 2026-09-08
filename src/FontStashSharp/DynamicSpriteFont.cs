@@ -32,11 +32,10 @@ namespace FontStashSharp
 		private GlyphStorage _lastStorage;
 		private readonly Int32Map<int> Kernings = new Int32Map<int>();
 		private FontMetrics[] IndexedMetrics;
+		private readonly FontSystem _fontSystem;
 
-		/// <summary>
-		/// Gets the font system that manages this dynamic sprite font.
-		/// </summary>
-		public FontSystem FontSystem { get; private set; }
+		/// <inheritdoc/>
+		public override FontSystem FontSystem => _fontSystem;
 
 		/// <inheritdoc/>
 		public override FontRasterizationMode FontRasterizationMode => FontSystem.FontRasterizationMode;
@@ -54,7 +53,7 @@ namespace FontStashSharp
 				throw new ArgumentNullException(nameof(system));
 			}
 
-			FontSystem = system;
+			_fontSystem = system;
 
 			_shapedTextCache = new ShapedTextCache(system.ShapedTextCacheSize);
 		}

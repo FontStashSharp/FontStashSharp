@@ -84,6 +84,9 @@ namespace FontStashSharp
 		public bool UseKernings { get; set; } = true;
 
 		/// <inheritdoc/>
+		public override FontSystem FontSystem => null;
+
+		/// <inheritdoc/>
 		public override FontRasterizationMode FontRasterizationMode => FontRasterizationMode.Standard;
 
 		/// <summary>
