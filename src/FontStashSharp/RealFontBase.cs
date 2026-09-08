@@ -22,19 +22,24 @@ namespace FontStashSharp
 	/// </summary>
 	public abstract partial class RealFontBase : SpriteFontBase
 	{
-		/// <summary>
-		/// Gets the font size in points.
-		/// </summary>
-		public float FontSize { get; }
+		private float _fontSize;
+		private int _lineHeight;
+
+		/// <inheritdoc/>
+		public override float FontSize => _fontSize;
+
+		/// <inheritdoc/>
+		public override int LineHeight => _lineHeight;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SpriteFontBase"/> class.
 		/// </summary>
 		/// <param name="fontSize">The font size in points.</param>
 		/// <param name="lineHeight">The line height in pixels.</param>
-		protected RealFontBase(float fontSize, int lineHeight) : base(lineHeight)
+		protected RealFontBase(float fontSize, int lineHeight)
 		{
-			FontSize = fontSize;
+			_fontSize = fontSize;
+			_lineHeight = lineHeight;
 		}
 
 #if MONOGAME || FNA || KNI || XNA || STRIDE

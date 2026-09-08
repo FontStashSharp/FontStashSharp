@@ -52,9 +52,14 @@ namespace FontStashSharp
 		public object Tag { get; set; }
 
 		/// <summary>
+		/// Gets the font size in points of this font.
+		/// </summary>
+		public abstract float FontSize { get; }
+
+		/// <summary>
 		/// Gets the line height in pixels of this font.
 		/// </summary>
-		public int LineHeight { get; }
+		public abstract int LineHeight { get; }
 
 		/// <summary>
 		/// Gets the font system this font belongs to, if any.
@@ -65,15 +70,6 @@ namespace FontStashSharp
 		/// Gets the font rasterization mode used to render this font.
 		/// </summary>
 		public abstract FontRasterizationMode FontRasterizationMode { get; }
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SpriteFontBase"/> class.
-		/// </summary>
-		/// <param name="lineHeight">The line height in pixels.</param>
-		public SpriteFontBase(int lineHeight)
-		{
-			LineHeight = lineHeight;
-		}
 
 		internal abstract float GetKerning(FontGlyph glyph, FontGlyph prevGlyph);
 

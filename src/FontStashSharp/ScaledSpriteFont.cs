@@ -17,6 +17,8 @@ namespace FontStashSharp
 	public class ScaledSpriteFont : SpriteFontBase
 	{
 		private readonly SpriteFontBase _baseFont;
+		private readonly float _fontSize;
+		private readonly int _lineHeight;
 
 		/// <inheritdoc/>
 		public override FontRasterizationMode FontRasterizationMode => _baseFont.FontRasterizationMode;
@@ -34,6 +36,12 @@ namespace FontStashSharp
 		/// <inheritdoc/>
 		public override FontSystem FontSystem => _baseFont.FontSystem;
 
+		/// <inheritdoc/>
+		public override float FontSize => _fontSize;
+
+		/// <inheritdoc/>
+		public override int LineHeight => _lineHeight;
+
 		private float InverseScale { get; }
 
 		/// <summary>
@@ -41,11 +49,40 @@ namespace FontStashSharp
 		/// </summary>
 		/// <param name="baseFont">The base font to scale.</param>
 		/// <param name="scale">The scale factor to apply.</param>
-		public ScaledSpriteFont(SpriteFontBase baseFont, float scale) : base((int)(baseFont.LineHeight * scale))
+		/// <param name="fontSize">The font size in points of the scaled font.</param>
+		/// <param name="lineHeight">The line height in pixels of the scaled font.</param>
+		public ScaledSpriteFont(SpriteFontBase baseFont, float scale, float fontSize, int lineHeight)
 		{
 			_baseFont = baseFont;
 			Scale = scale;
 			InverseScale = 1f / scale;
+			_fontSize = fontSize;
+			_lineHeight = lineHeight;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ScaledSpriteFont"/> class.
+		/// </summary>
+		/// <param name="baseFont">The base font to scale.</param>
+		/// <param name="scale">The scale factor to apply.</param>
+		/// <param name="fontSize">The font size in points of the scaled font.</param>
+		/// <remarks>
+		/// The line height is derived from the <paramref name="baseFont"/> by scaling its line height with the <paramref name="scale"/> factor.
+		/// </remarks>
+		public ScaledSpriteFont(SpriteFontBase baseFont, float scale, float fontSize) : this(baseFont, scale, fontSize, (int)(baseFont.LineHeight * scale))
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ScaledSpriteFont"/> class.
+		/// </summary>
+		/// <param name="baseFont">The base font to scale.</param>
+		/// <param name="scale">The scale factor to apply.</param>
+		/// <remarks>
+		/// This is the simplest way to create a scaled font. The font size is derived from the <paramref name="baseFont"/> by scaling its font size with the <paramref name="scale"/> factor, and, as with the constructor above, the line height is derived from the base font's line height scaled by the same factor.
+		/// </remarks>
+		public ScaledSpriteFont(SpriteFontBase baseFont, float scale) : this(baseFont, scale, baseFont.FontSize * scale)
+		{
 		}
 
 		internal override float GetKerning(FontGlyph glyph, FontGlyph prevGlyph) => _baseFont.GetKerning(glyph, prevGlyph) * Scale;

@@ -295,7 +295,7 @@ namespace FontStashSharp
 			var intSize = fontSize.FloatAsInt();
 			if (!realFont.ScaledFonts.TryGetValue(intSize, out scaledFont))
 			{
-				scaledFont = new ScaledSpriteFont(realFont.RealFont, 1.0f / FontResolutionFactor.Value);
+				scaledFont = new ScaledSpriteFont(realFont.RealFont, 1.0f / FontResolutionFactor.Value, fontSize);
 				realFont.ScaledFonts[intSize] = scaledFont;
 			}
 
@@ -315,7 +315,7 @@ namespace FontStashSharp
 			var intSize = fontSize.FloatAsInt();
 			if (!realFont.ScaledFonts.TryGetValue(intSize, out scaledFont))
 			{
-				scaledFont = new ScaledSpriteFont(realFont.RealFont, fontSize / FixedSDFFontSize.Value);
+				scaledFont = new ScaledSpriteFont(realFont.RealFont, fontSize / FixedSDFFontSize.Value, fontSize);
 				realFont.ScaledFonts[intSize] = scaledFont;
 			}
 
