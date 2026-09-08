@@ -50,6 +50,8 @@ namespace FontStashSharp
 				}
 			}
 
+			public RasterizerState RasterizerState { get; set; } = RasterizerState.CullCounterClockwise;
+
 			private RenderMode? Mode
 			{
 				get => _mode;
@@ -166,7 +168,7 @@ namespace FontStashSharp
 						BlendState.NonPremultiplied,
 						SamplerState.LinearClamp,
 						DepthStencilState.None,
-						RasterizerState.CullCounterClockwise,
+						RasterizerState,
 						_effect);
 				}
 				else
@@ -175,7 +177,7 @@ namespace FontStashSharp
 						BlendState.AlphaBlend,
 						SamplerState.LinearClamp,
 						DepthStencilState.None,
-						RasterizerState.CullCounterClockwise);
+						RasterizerState);
 				}
 
 				_spriteBatchBeginCalled = true;
@@ -303,6 +305,15 @@ namespace FontStashSharp
 		{
 			get => _renderer.Supersampling;
 			set => _renderer.Supersampling = value;
+		}
+
+/// <summary>
+		/// Gets or sets the rasterizer state used when drawing SDF text.
+		/// </summary>
+		public RasterizerState RasterizerState
+		{
+			get => _renderer.RasterizerState;
+			set => _renderer.RasterizerState = value;
 		}
 
 		/// <summary>
