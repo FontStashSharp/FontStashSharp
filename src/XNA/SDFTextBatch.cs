@@ -25,7 +25,7 @@ namespace FontStashSharp
 		{
 			private RenderMode? _mode;
 			private readonly SpriteBatch _spriteBatch;
-			private bool _beginCalled, _spriteBatchBeginCalled, _spriteBatchRestartRequired;
+			private bool _beginCalled;
 			private Color? _effectColor;
 			private Vector2? _effectParameters;
 			private bool _supersampling;
@@ -46,64 +46,11 @@ namespace FontStashSharp
 					}
 
 					_supersampling = value;
-					Mode = null;
+					SetState(null, null, null);
 				}
 			}
 
 			public RasterizerState RasterizerState { get; set; } = RasterizerState.CullCounterClockwise;
-
-			private RenderMode? Mode
-			{
-				get => _mode;
-
-				set
-				{
-					if (value == _mode)
-					{
-						return;
-					}
-
-					_mode = value;
-					EffectColor = null;
-					EffectParameters = null;
-					_lastTexture = null;
-					InvalidateSpriteBatch();
-				}
-			}
-
-			private Color? EffectColor
-			{
-				get => _effectColor;
-
-				set
-				{
-					if (value == _effectColor)
-					{
-						return;
-					}
-
-					_effectColor = value;
-					InvalidateSpriteBatch();
-				}
-			}
-
-			private Vector2? EffectParameters
-			{
-				get => _effectParameters;
-
-				set
-				{
-					if (value == _effectParameters)
-					{
-						return;
-					}
-
-					_effectParameters = value;
-					_lastTexture = null;
-
-					InvalidateSpriteBatch();
-				}
-			}
 
 			public Renderer(GraphicsDevice graphicsDevice)
 			{
@@ -117,71 +64,76 @@ namespace FontStashSharp
 				GC.SuppressFinalize(this);
 			}
 
-			private void InvalidateSpriteBatch()
+			private void SetState(RenderMode? newMode, Color? newColor, Vector2? newParameters)
 			{
-				_spriteBatchRestartRequired = true;
-			}
-
-			private void UpdateSpriteBatch()
-			{
-				if (!_spriteBatchRestartRequired)
+				if (newMode == RenderMode.Shadow || newMode == RenderMode.Stroke)
 				{
+					// Some validation
+					if (newColor == null || newParameters == null)
+					{
+						throw new ArgumentNullException("newColor/newParameters can'be null for Shadow/Stroke modes.");
+					}
+				}
+
+				if (newMode == _mode && newColor == _effectColor && newParameters == _effectParameters)
+				{
+					// Nothing changed
 					return;
 				}
 
-				if (_spriteBatchBeginCalled)
+				// End current SpriteBatch
+				if (_mode != null)
 				{
 					_spriteBatch.End();
-					_spriteBatchBeginCalled = false;
-					_effect = null;
 				}
 
-				if (_mode == null)
+				// Set the new state
+				_mode = newMode;
+				_effectColor = newColor;
+				_effectParameters = newParameters;
+
+				if (_mode != null)
 				{
-					_spriteBatchRestartRequired = false;
-					return;
+					// Apply the new state
+					switch (_mode)
+					{
+						case RenderMode.Standard:
+							_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, false, false);
+							break;
+						case RenderMode.Shadow:
+							_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, true, false);
+							_effect.Parameters["cShadowColor"].SetValue(_effectColor.Value.ToVector4());
+							break;
+						case RenderMode.Stroke:
+							_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, false, true);
+							_effect.Parameters["cStrokeColor"].SetValue(_effectColor.Value.ToVector4());
+
+							var v2 = _effectParameters.Value;
+							_effect.Parameters["cStrokeThickness"].SetValue(v2.X);
+							_effect.Parameters["cStrokeSmoothness"].SetValue(v2.Y);
+							break;
+					}
+
+					if (_mode != RenderMode.Sprite)
+					{
+						_spriteBatch.Begin(SpriteSortMode.Deferred,
+							BlendState.NonPremultiplied,
+							SamplerState.LinearClamp,
+							DepthStencilState.None,
+							RasterizerState,
+							_effect);
+					}
+					else
+					{
+						_spriteBatch.Begin(SpriteSortMode.Deferred,
+							BlendState.AlphaBlend,
+							SamplerState.LinearClamp,
+							DepthStencilState.None,
+							RasterizerState);
+					}
 				}
 
-				var v = _mode.Value;
-				switch (v)
-				{
-					case RenderMode.Standard:
-						_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, false, false);
-						break;
-					case RenderMode.Shadow:
-						_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, true, false);
-						_effect.Parameters["cShadowColor"].SetValue(EffectColor.Value.ToVector4());
-						break;
-					case RenderMode.Stroke:
-						_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, false, true);
-						_effect.Parameters["cStrokeColor"].SetValue(EffectColor.Value.ToVector4());
-
-						var v2 = EffectParameters.Value;
-						_effect.Parameters["cStrokeThickness"].SetValue(v2.X);
-						_effect.Parameters["cStrokeSmoothness"].SetValue(v2.Y);
-						break;
-				}
-
-				if (_mode != RenderMode.Sprite)
-				{
-					_spriteBatch.Begin(SpriteSortMode.Deferred,
-						BlendState.NonPremultiplied,
-						SamplerState.LinearClamp,
-						DepthStencilState.None,
-						RasterizerState,
-						_effect);
-				}
-				else
-				{
-					_spriteBatch.Begin(SpriteSortMode.Deferred,
-						BlendState.AlphaBlend,
-						SamplerState.LinearClamp,
-						DepthStencilState.None,
-						RasterizerState);
-				}
-
-				_spriteBatchBeginCalled = true;
-				_spriteBatchRestartRequired = false;
+				_lastTexture = null;
 			}
 
 			public void Begin()
@@ -202,17 +154,14 @@ namespace FontStashSharp
 				}
 
 				_beginCalled = false;
-				Mode = null;
-				UpdateSpriteBatch();
+				SetState(null, null, null);
 			}
 
 			public void DrawString(SpriteFontBase font, string text, Vector2 position, Color color,
 				float rotation, Vector2 origin, Vector2? scale, float layerDepth,
 				float characterSpacing, float lineSpacing, TextStyle textStyle)
 			{
-				Mode = RenderMode.Standard;
-
-				UpdateSpriteBatch();
+				SetState(RenderMode.Standard, null, null);
 				font.DrawText(this, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle);
 			}
 
@@ -221,11 +170,7 @@ namespace FontStashSharp
 				float characterSpacing, float lineSpacing, TextStyle textStyle,
 				Color shadowColor, float shadowOffsetX, float shadowOffsetY)
 			{
-				Mode = RenderMode.Shadow;
-				EffectColor = shadowColor;
-				EffectParameters = new Vector2(shadowOffsetX, shadowOffsetY);
-
-				UpdateSpriteBatch();
+				SetState(RenderMode.Shadow, shadowColor, new Vector2(shadowOffsetX, shadowOffsetY));
 				font.DrawText(this, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle);
 			}
 
@@ -234,19 +179,13 @@ namespace FontStashSharp
 				float characterSpacing, float lineSpacing, TextStyle textStyle,
 				Color strokeColor, float strokeThickness, float strokeSmoothness)
 			{
-				Mode = RenderMode.Stroke;
-				EffectColor = strokeColor;
-				EffectParameters = new Vector2(strokeThickness, strokeSmoothness);
-
-				UpdateSpriteBatch();
+				SetState(RenderMode.Stroke, strokeColor, new Vector2(strokeThickness, strokeSmoothness));
 				font.DrawText(this, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle);
 			}
 
 			public void DrawSprite(Texture2D texture, Vector2 pos, Rectangle? src, Color color, float rotation, Vector2 scale, float depth)
 			{
-				Mode = RenderMode.Sprite;
-
-				UpdateSpriteBatch();
+				SetState(RenderMode.Sprite, null, null);
 				_spriteBatch.Draw(texture, pos, src, color, 0, Vector2.Zero, scale, SpriteEffects.None, 0.0f);
 			}
 
@@ -256,7 +195,7 @@ namespace FontStashSharp
 				{
 					var rect = src.Value;
 
-					if (Mode == RenderMode.Shadow)
+					if (_mode == RenderMode.Shadow)
 					{
 						var ep = _effectParameters.Value;
 						if (texture != _lastTexture)
