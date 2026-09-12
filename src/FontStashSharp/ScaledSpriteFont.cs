@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 #elif STRIDE
 using Stride.Core.Mathematics;
 #else
+using System.Drawing;
 using System.Numerics;
 #endif
 
@@ -41,6 +42,9 @@ namespace FontStashSharp
 
 		/// <inheritdoc/>
 		public override int LineHeight => _lineHeight;
+
+		/// <inheritdoc/>
+		public override Point TextureSize => _baseFont.TextureSize;
 
 		private float InverseScale { get; }
 

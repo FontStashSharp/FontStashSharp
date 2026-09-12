@@ -71,6 +71,11 @@ namespace FontStashSharp
 		/// </summary>
 		public abstract FontRasterizationMode FontRasterizationMode { get; }
 
+		/// <summary>
+		/// Gets the size of the texture that contains the font glyphs, in pixels.
+		/// </summary>
+		public abstract Point TextureSize { get; }
+
 		internal abstract float GetKerning(FontGlyph glyph, FontGlyph prevGlyph);
 
 		/// <summary>

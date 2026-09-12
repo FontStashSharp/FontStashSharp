@@ -1,5 +1,4 @@
 ﻿using Cyotek.Drawing.BitmapFont;
-using FontStashSharp.Interfaces;
 using StbImageSharp;
 using System;
 using System.Collections.Generic;
@@ -15,6 +14,7 @@ using Stride.Graphics;
 using Texture2D = Stride.Graphics.Texture;
 #else
 using System.Drawing;
+using FontStashSharp.Interfaces;
 using Texture2D = System.Object;
 using Color = FontStashSharp.FSColor;
 #endif
@@ -66,6 +66,7 @@ namespace FontStashSharp
 	/// </summary>
 	public partial class StaticSpriteFont : RealFontBase
 	{
+		private readonly Point _textureSize;
 		private readonly Int32Map<int> _kernings = new Int32Map<int>();
 
 		/// <summary>
@@ -89,13 +90,18 @@ namespace FontStashSharp
 		/// <inheritdoc/>
 		public override FontRasterizationMode FontRasterizationMode => FontRasterizationMode.Standard;
 
+		/// <inheritdoc/>
+		public override Point TextureSize => _textureSize;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="StaticSpriteFont"/> class.
 		/// </summary>
 		/// <param name="fontSize">The font size in pixels.</param>
 		/// <param name="lineHeight">The line height in pixels.</param>
-		public StaticSpriteFont(int fontSize, int lineHeight) : base(fontSize, lineHeight)
+		/// <param name="textureSize">The size of the texture that contains the font glyphs.</param>
+		public StaticSpriteFont(int fontSize, int lineHeight, Point textureSize) : base(fontSize, lineHeight)
 		{
+			_textureSize = textureSize;
 		}
 
 		private FontGlyph InternalGetGlyph(int codepoint)
@@ -197,7 +203,7 @@ namespace FontStashSharp
 
 		private static StaticSpriteFont FromBMFont(BitmapFont bmFont, Func<string, TextureWithOffset> textureGetter)
 		{
-			var result = new StaticSpriteFont(bmFont.LineHeight, bmFont.LineHeight);
+			var result = new StaticSpriteFont(bmFont.LineHeight, bmFont.LineHeight, new Point(bmFont.TextureSize.Width, bmFont.TextureSize.Height));
 
 			var characters = bmFont.Characters.Values.OrderBy(c => c.Char);
 

@@ -40,6 +40,9 @@ namespace FontStashSharp
 		/// <inheritdoc/>
 		public override FontRasterizationMode FontRasterizationMode => FontSystem.FontRasterizationMode;
 
+		/// <inheritdoc/>
+		public override Point TextureSize => new Point(_fontSystem.TextureWidth, _fontSystem.TextureHeight);
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DynamicSpriteFont"/> class.
 		/// </summary>
