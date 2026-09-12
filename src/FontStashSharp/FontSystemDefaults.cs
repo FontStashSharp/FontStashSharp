@@ -194,6 +194,11 @@ namespace FontStashSharp
 		/// <summary>
 		/// Gets or sets the default fixed font size used for SDF (Signed Distance Field) rendering.
 		/// </summary>
-		public static float? FixedSDFFontSize { get; set; }
+		public static float? FixedSDFFontSize { get; set; } = 64.0f;
+
+		/// <summary>
+		/// Gets or sets a value indicating whether supersampling is applied when rendering SDF (Signed Distance Field) glyphs.
+		/// </summary>
+		public static bool SDFSupersampling { get; set; } = true;
 	}
 }

@@ -88,7 +88,21 @@ It can also be set globally for all font systems:
 FontSystemDefaults.FixedSDFFontSize = 64;
 ```
 
-When `FixedSDFFontSize` is left unset (`null`, the default), the font is rasterized directly at the requested size instead.
+When `FixedSDFFontSize` is left unset (`null`), the font is rasterized directly at the requested size instead.
+
+The default value is `64`.
+
+### SDFSupersampling
+
+`SDFSupersampling` controls whether supersampling is applied when rendering SDF glyphs via `SDFTextBatch`. When enabled (the default), the SDF shader applies supersampled edges for smoother outlines.
+
+```c#
+FontSystemDefaults.SDFSupersampling = true;
+```
+
+The default value is `true`.
+
+Disabling it may improve rendering performance, but can lead to rendering artefacts, such as "holes" appearing in the glyphs.
 
 ### Sample
 

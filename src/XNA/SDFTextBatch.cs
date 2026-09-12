@@ -55,6 +55,7 @@ namespace FontStashSharp
 			public Renderer(GraphicsDevice graphicsDevice)
 			{
 				_spriteBatch = new SpriteBatch(graphicsDevice);
+				_supersampling = FontSystemDefaults.SDFSupersampling;
 			}
 
 			public void Dispose()
