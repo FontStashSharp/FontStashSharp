@@ -28,34 +28,16 @@ namespace FontStashSharp
 			private bool _beginCalled;
 			private Color? _effectColor;
 			private Vector2? _effectParameters;
-			private bool _supersampling;
 			private Effect _effect;
 			private Vector2 _shadowOffset;
 
 			public GraphicsDevice GraphicsDevice => _spriteBatch.GraphicsDevice;
-
-			public bool Supersampling
-			{
-				get => _supersampling;
-
-				set
-				{
-					if (value == _supersampling)
-					{
-						return;
-					}
-
-					_supersampling = value;
-					SetState(null, null, null);
-				}
-			}
 
 			public RasterizerState RasterizerState { get; set; } = RasterizerState.CullCounterClockwise;
 
 			public Renderer(GraphicsDevice graphicsDevice)
 			{
 				_spriteBatch = new SpriteBatch(graphicsDevice);
-				_supersampling = FontSystemDefaults.SDFSupersampling;
 			}
 
 			public void Dispose()
@@ -99,11 +81,11 @@ namespace FontStashSharp
 					switch (_mode)
 					{
 						case RenderMode.Standard:
-							_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, false, false);
+							_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, FontSystemDefaults.SDFSupersampling, false, false);
 							break;
 						case RenderMode.Shadow:
 							{
-								_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, true, false);
+								_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, FontSystemDefaults.SDFSupersampling, true, false);
 								_effect.Parameters["cShadowColor"].SetValue(_effectColor.Value.ToVector4());
 
 								var v2 = _effectParameters.Value;
@@ -112,7 +94,7 @@ namespace FontStashSharp
 							break;
 						case RenderMode.Stroke:
 							{
-								_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, false, true);
+								_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, FontSystemDefaults.SDFSupersampling, false, true);
 								_effect.Parameters["cStrokeColor"].SetValue(_effectColor.Value.ToVector4());
 
 								var v2 = _effectParameters.Value;
@@ -236,16 +218,6 @@ namespace FontStashSharp
 		}
 
 		private readonly Renderer _renderer;
-
-		/// <summary>
-		/// Gets or sets whether supersampling is enabled for the SDF font effect.
-		/// Supersampling improves the quality of the signing distance field at the cost of performance.
-		/// </summary>
-		public bool Supersampling
-		{
-			get => _renderer.Supersampling;
-			set => _renderer.Supersampling = value;
-		}
 
 		/// <summary>
 		/// Gets or sets the rasterizer state used when drawing SDF text.
