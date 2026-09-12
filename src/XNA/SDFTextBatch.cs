@@ -29,8 +29,8 @@ namespace FontStashSharp
 			private Color? _effectColor;
 			private Vector2? _effectParameters;
 			private bool _supersampling;
-			private Texture2D _lastTexture;
 			private Effect _effect;
+			private Vector2 _shadowOffset;
 
 			public GraphicsDevice GraphicsDevice => _spriteBatch.GraphicsDevice;
 
@@ -101,16 +101,23 @@ namespace FontStashSharp
 							_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, false, false);
 							break;
 						case RenderMode.Shadow:
-							_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, true, false);
-							_effect.Parameters["cShadowColor"].SetValue(_effectColor.Value.ToVector4());
+							{
+								_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, true, false);
+								_effect.Parameters["cShadowColor"].SetValue(_effectColor.Value.ToVector4());
+
+								var v2 = _effectParameters.Value;
+								_effect.Parameters["cShadowOffset"].SetValue(v2);
+							}
 							break;
 						case RenderMode.Stroke:
-							_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, false, true);
-							_effect.Parameters["cStrokeColor"].SetValue(_effectColor.Value.ToVector4());
+							{
+								_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, false, true);
+								_effect.Parameters["cStrokeColor"].SetValue(_effectColor.Value.ToVector4());
 
-							var v2 = _effectParameters.Value;
-							_effect.Parameters["cStrokeThickness"].SetValue(v2.X);
-							_effect.Parameters["cStrokeSmoothness"].SetValue(v2.Y);
+								var v2 = _effectParameters.Value;
+								_effect.Parameters["cStrokeThickness"].SetValue(v2.X);
+								_effect.Parameters["cStrokeSmoothness"].SetValue(v2.Y);
+							}
 							break;
 					}
 
@@ -132,8 +139,6 @@ namespace FontStashSharp
 							RasterizerState);
 					}
 				}
-
-				_lastTexture = null;
 			}
 
 			public void Begin()
@@ -170,7 +175,9 @@ namespace FontStashSharp
 				float characterSpacing, float lineSpacing, TextStyle textStyle,
 				Color shadowColor, float shadowOffsetX, float shadowOffsetY)
 			{
-				SetState(RenderMode.Shadow, shadowColor, new Vector2(shadowOffsetX, shadowOffsetY));
+				_shadowOffset = new Vector2(shadowOffsetX, shadowOffsetY);
+				var normalizedShadowOffset = new Vector2(shadowOffsetX / font.TextureSize.X, shadowOffsetY / font.TextureSize.Y);
+				SetState(RenderMode.Shadow, shadowColor, normalizedShadowOffset);
 				font.DrawText(this, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle);
 			}
 
@@ -197,16 +204,9 @@ namespace FontStashSharp
 
 					if (_mode == RenderMode.Shadow)
 					{
-						var ep = _effectParameters.Value;
-						if (texture != _lastTexture)
-						{
-							var shadowOffset = new Vector2(ep.X / texture.Width, ep.Y / texture.Height);
-							_effect.Parameters["cShadowOffset"].SetValue(shadowOffset);
-							_lastTexture = texture;
-						}
 
-						rect.Width += (int)ep.X;
-						rect.Height += (int)ep.Y;
+						rect.Width += (int)_shadowOffset.X;
+						rect.Height += (int)_shadowOffset.Y;
 					}
 
 					_spriteBatch.Draw(texture,
