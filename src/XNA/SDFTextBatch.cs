@@ -28,10 +28,27 @@ namespace FontStashSharp
 			private bool _beginCalled;
 			private Color? _effectColor;
 			private Vector2? _effectParameters;
+			private bool _supersampling = true;
 			private Effect _effect;
 			private Vector2 _shadowOffset;
 
 			public GraphicsDevice GraphicsDevice => _spriteBatch.GraphicsDevice;
+
+			public bool Supersampling
+			{
+				get => _supersampling;
+
+				set
+				{
+					if (value == _supersampling)
+					{
+						return;
+					}
+
+					_supersampling = value;
+					SetState(null, null, null);
+				}
+			}
 
 			public RasterizerState RasterizerState { get; set; } = RasterizerState.CullCounterClockwise;
 
@@ -81,11 +98,11 @@ namespace FontStashSharp
 					switch (_mode)
 					{
 						case RenderMode.Standard:
-							_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, FontSystemDefaults.SDFSupersampling, false, false);
+							_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, false, false);
 							break;
 						case RenderMode.Shadow:
 							{
-								_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, FontSystemDefaults.SDFSupersampling, true, false);
+								_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, true, false);
 								_effect.Parameters["cShadowColor"].SetValue(_effectColor.Value.ToVector4());
 
 								var v2 = _effectParameters.Value;
@@ -94,7 +111,7 @@ namespace FontStashSharp
 							break;
 						case RenderMode.Stroke:
 							{
-								_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, FontSystemDefaults.SDFSupersampling, false, true);
+								_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, false, true);
 								_effect.Parameters["cStrokeColor"].SetValue(_effectColor.Value.ToVector4());
 
 								var v2 = _effectParameters.Value;
@@ -218,6 +235,18 @@ namespace FontStashSharp
 		}
 
 		private readonly Renderer _renderer;
+
+		/// <summary>
+		/// Gets or sets whether supersampling is enabled for the SDF font effect.
+		/// When enabled, the SDF shader applies supersampled edges for smoother outlines.
+		/// The default value is <c>true</c>.
+		/// Disabling it may improve rendering performance, but can lead to rendering artefacts, such as "holes" appearing in the glyphs.
+		/// </summary>
+		public bool Supersampling
+		{
+			get => _renderer.Supersampling;
+			set => _renderer.Supersampling = value;
+		}
 
 		/// <summary>
 		/// Gets or sets the rasterizer state used when drawing SDF text.

@@ -92,12 +92,12 @@ When `FixedSDFFontSize` is left unset (`null`), the font is rasterized directly 
 
 The default value is `64`.
 
-### SDFSupersampling
+### SDF Supersampling (SDFTextBatch)
 
-`SDFSupersampling` controls whether supersampling is applied when rendering SDF glyphs via `SDFTextBatch`. When enabled (the default), the SDF shader applies supersampled edges for smoother outlines.
+`SDFTextBatch.Supersampling` controls whether supersampling is applied when rendering SDF glyphs. When enabled (the default), the SDF shader applies supersampled edges for smoother outlines.
 
 ```c#
-FontSystemDefaults.SDFSupersampling = true;
+_sdfTextBatch.Supersampling = true;
 ```
 
 The default value is `true`.
