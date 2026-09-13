@@ -1,4 +1,5 @@
 <Root>
 	<MultiCompile>SUPERSAMPLING;_</MultiCompile>
 	<MultiCompile>EFFECTSHADOW;EFFECTSTROKE;_</MultiCompile>
+	<MultiCompile>EFFECTGLOW;_</MultiCompile>
 </Root>

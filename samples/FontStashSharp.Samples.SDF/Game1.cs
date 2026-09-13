@@ -1,7 +1,7 @@
-﻿using System.IO;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.IO;
 
 namespace FontStashSharp.Samples;
 
@@ -121,6 +121,17 @@ public class Game1 : Game
 			}
 		}
 
+		if (KeyboardUtils.IsPressed(Keys.G))
+		{
+			if (_sdfBatch.GlowEnabled)
+			{
+				_sdfBatch.DisableGlow();
+			} else
+			{
+				_sdfBatch.EnableGlow(Color.Orange);
+			}
+		}
+
 		KeyboardUtils.End();
 
 		base.Update(gameTime);
@@ -141,15 +152,18 @@ public class Game1 : Game
 		_spriteBatch.DrawString(_fontOrdinary, $"Scale: {Scale.X:0.00}", new Vector2(0, 0), Color.White);
 		_spriteBatch.DrawString(_fontOrdinary, $"Use mouse wheel to control scale", new Vector2(0, 32), Color.White);
 
-		var supersamplingText = _sdfBatch.Supersampling ? "on" : "off";
-		_spriteBatch.DrawString(_fontOrdinary, $"Press 'S' to switch SDF supersampling ({supersamplingText})", new Vector2(0, 64), Color.White);
+		var stateText = _sdfBatch.Supersampling ? "on" : "off";
+		_spriteBatch.DrawString(_fontOrdinary, $"Press 'S' to switch SDF supersampling ({stateText})", new Vector2(0, 64), Color.White);
 		_spriteBatch.DrawString(_fontOrdinary, $"Press 'Tab' to switch effect({_effectIndex})", new Vector2(0, 96), Color.White);
 		_spriteBatch.DrawString(_fontOrdinary, $"Press 'Space' to switch text({_textIndex})", new Vector2(0, 128), Color.White);
+
+		stateText =  _sdfBatch.GlowEnabled ? "on" : "off"; 
+		_spriteBatch.DrawString(_fontOrdinary, $"Press 'G' to switch the glow effect({stateText})", new Vector2(0, 160), Color.White);
 
 		var text = Texts[_textIndex];
 		var sz = _fontOrdinary.MeasureString(text, Scale);
 
-		var top = 160;
+		var top = 200;
 
 		_spriteBatch.DrawString(_fontOrdinary, text, new Vector2(0, top), Color.White, scale: Scale, effect: (FontSystemEffect)_effectIndex, effectAmount: 1);
 		_spriteBatch.DrawString(_fontSupersampling, text, new Vector2(0, (screenHeight - top - sz.Y) / 2 + top), Color.White, scale: Scale, effect: (FontSystemEffect)_effectIndex, effectAmount: 1);
@@ -157,7 +171,7 @@ public class Game1 : Game
 
 		_sdfBatch.Begin();
 
-		switch(_effectIndex)
+		switch (_effectIndex)
 		{
 			case 0:
 				_sdfBatch.DrawString(_fontSdf, text, new Vector2(0, screenHeight - sz.Y), Color.White, scale: Scale);

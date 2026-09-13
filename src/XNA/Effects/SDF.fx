@@ -1,5 +1,4 @@
-// This shader was borrowed from https://u3d.io/
-
+// This shader was borrowed from https://u3d.io
 #include "Macros.fxh"
 
 #ifdef EFFECTSHADOW
@@ -11,6 +10,12 @@
 	uniform float4 cStrokeColor;
 	uniform float cStrokeThickness;
 	uniform float cStrokeSmoothness;
+#endif
+
+#ifdef EFFECTGLOW
+	uniform float4 cGlowColor;
+	uniform float cGlowRange;
+	uniform float cGlowSmoothness;
 #endif
 
 DECLARE_TEXTURE(SpriteTexture, 0);
@@ -65,13 +70,17 @@ float4 PS(VSOutput input) : SV_Target0
 				   + GetAlpha(distance4, width)
 				   + GetAlpha(distance5, width);
 		
-			// For calculating of average correct would be dividing by 5.
-			// But when text is blurred, its brightness is lost. Therefore divide by 4.
 			alpha = alpha * 0.25;
 		#endif
 
 		oColor.a = alpha;
 	}
+
+	#ifdef EFFECTGLOW
+		float glowFactor = smoothstep(0.5 - cGlowRange - cGlowSmoothness, 0.5 + cGlowSmoothness, distance);
+		oColor.rgb = lerp(cGlowColor.rgb, oColor.rgb, saturate(oColor.a));
+		oColor.a = max(oColor.a, glowFactor * cGlowColor.a);
+	#endif
 
 	return oColor;
 }

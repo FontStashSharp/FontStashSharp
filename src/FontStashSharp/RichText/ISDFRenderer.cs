@@ -92,5 +92,18 @@ namespace FontStashSharp.RichText
 		/// <param name="scale">The scale factors for X and Y axes.</param>
 		/// <param name="depth">The depth value for layering.</param>
 		void DrawSprite(Texture2D texture, Vector2 pos, Rectangle? src, Color color, float rotation, Vector2 scale, float depth);
+
+		/// <summary>
+		/// Enables a glow effect to be drawn around the SDF text using the specified color and parameters.
+		/// </summary>
+		/// <param name="glowColor">The color of the glow effect</param>
+		/// <param name="glowRange">The range (size) of the glow around the glyphs</param>
+		/// <param name="glowSmoothness">The smoothness of the glow edges</param>
+		void EnableGlow(Color glowColor, float glowRange, float glowSmoothness);
+
+		/// <summary>
+		/// Disables the glow effect.
+		/// </summary>
+		void DisableGlow();
 	}
 }

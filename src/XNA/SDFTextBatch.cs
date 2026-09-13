@@ -28,6 +28,9 @@ namespace FontStashSharp
 			private bool _beginCalled;
 			private Color? _effectColor;
 			private Vector2? _effectParameters;
+			private bool _glowEnabled;
+			private Color _glowColor;
+			private Vector2 _glowParameters;
 			private bool _supersampling = true;
 			private Effect _effect;
 			private Vector2 _shadowOffset;
@@ -49,6 +52,8 @@ namespace FontStashSharp
 					SetState(null, null, null);
 				}
 			}
+
+			public bool GlowEnabled => _glowEnabled;
 
 			public RasterizerState RasterizerState { get; set; } = RasterizerState.CullCounterClockwise;
 
@@ -98,11 +103,11 @@ namespace FontStashSharp
 					switch (_mode)
 					{
 						case RenderMode.Standard:
-							_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, false, false);
+							_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, false, false, _glowEnabled);
 							break;
 						case RenderMode.Shadow:
 							{
-								_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, true, false);
+								_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, true, false, _glowEnabled);
 								_effect.Parameters["cShadowColor"].SetValue(_effectColor.Value.ToVector4());
 
 								var v2 = _effectParameters.Value;
@@ -111,7 +116,7 @@ namespace FontStashSharp
 							break;
 						case RenderMode.Stroke:
 							{
-								_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, false, true);
+								_effect = Resources.GetEffect(_spriteBatch.GraphicsDevice, Supersampling, false, true, _glowEnabled);
 								_effect.Parameters["cStrokeColor"].SetValue(_effectColor.Value.ToVector4());
 
 								var v2 = _effectParameters.Value;
@@ -119,6 +124,13 @@ namespace FontStashSharp
 								_effect.Parameters["cStrokeSmoothness"].SetValue(v2.Y);
 							}
 							break;
+					}
+
+					if (_glowEnabled)
+					{
+						_effect.Parameters["cGlowColor"].SetValue(_glowColor.ToVector4());
+						_effect.Parameters["cGlowRange"].SetValue(_glowParameters.X);
+						_effect.Parameters["cGlowSmoothness"].SetValue(_glowParameters.Y);
 					}
 
 					if (_mode != RenderMode.Sprite)
@@ -159,6 +171,36 @@ namespace FontStashSharp
 				}
 
 				_beginCalled = false;
+				SetState(null, null, null);
+			}
+
+			public void EnableGlow(Color glowColor, float glowRange, float glowSmoothness)
+			{
+				if (_glowEnabled && _glowColor == glowColor && _glowParameters == new Vector2(glowRange, glowSmoothness))
+				{
+					// No changes
+					return;
+				}
+
+				// Set new params
+				_glowEnabled = true;
+				_glowColor = glowColor;
+				_glowParameters = new Vector2(glowRange, glowSmoothness);
+
+				// Reset current state
+				SetState(null, null, null);
+			}
+
+			public void DisableGlow()
+			{
+				if (!_glowEnabled)
+				{
+					return;
+				}
+
+				_glowEnabled = false;
+
+				// Reset current state
 				SetState(null, null, null);
 			}
 
@@ -249,6 +291,11 @@ namespace FontStashSharp
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether glow is enabled for the SDF font effect.
+		/// </summary>
+		public bool GlowEnabled => _renderer.GlowEnabled;
+
+		/// <summary>
 		/// Gets or sets the rasterizer state used when drawing SDF text.
 		/// </summary>
 		public RasterizerState RasterizerState
@@ -286,6 +333,12 @@ namespace FontStashSharp
 		public void End() => _renderer.End();
 
 		/// <inheritdoc/>
+		public void EnableGlow(Color glowColor, float glowRange = 0.4f, float glowSmoothness = 0.05f) => _renderer.EnableGlow(glowColor, glowRange, glowSmoothness);
+
+		/// <inheritdoc/>
+		public void DisableGlow() => _renderer.DisableGlow();
+
+		/// <inheritdoc/>
 		public void DrawString(SpriteFontBase font, string text, Vector2 position, Color color,
 			float rotation = 0, Vector2 origin = default, Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
@@ -303,7 +356,7 @@ namespace FontStashSharp
 		public void DrawStrokeString(SpriteFontBase font, string text, Vector2 position, Color color,
 			float rotation = 0, Vector2 origin = default, Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
-			TextStyle textStyle = TextStyle.None, Color? strokeColor = null, float strokeThickness = 0.5f, float strokeSmoothness = 0.05f) =>
+			TextStyle textStyle = TextStyle.None, Color? strokeColor = null, float strokeThickness = 0.6f, float strokeSmoothness = 0.1f) =>
 			_renderer.DrawStrokeString(font, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, strokeColor ?? Color.Black, strokeThickness, strokeSmoothness);
 
 		/// <inheritdoc/>
