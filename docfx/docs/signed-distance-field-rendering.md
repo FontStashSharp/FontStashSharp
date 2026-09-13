@@ -69,7 +69,7 @@ _sdfTextBatch.DrawStrokeString(font, "Outlined", new Vector2(10, 110), Color.Whi
 _sdfTextBatch.End();
 ```
 
-### Glow (SDFTextBatch)
+### Glow Effect
 
 Unlike shadow and stroke, which are applied to individual strings, glow is enabled on the whole `SDFTextBatch` with `EnableGlow` and disabled with `DisableGlow`. While enabled it is applied to all text drawn by the batch, and it can be combined with the shadow and stroke effects:
 
