@@ -69,6 +69,33 @@ _sdfTextBatch.DrawStrokeString(font, "Outlined", new Vector2(10, 110), Color.Whi
 _sdfTextBatch.End();
 ```
 
+### Glow (SDFTextBatch)
+
+Unlike shadow and stroke, which are applied to individual strings, glow is enabled on the whole `SDFTextBatch` with `EnableGlow` and disabled with `DisableGlow`. While enabled it is applied to all text drawn by the batch, and it can be combined with the shadow and stroke effects:
+
+```c#
+_sdfTextBatch.EnableGlow(Color.DeepSkyBlue);
+
+_sdfTextBatch.Begin();
+
+// Plain text with glow
+_sdfTextBatch.DrawString(font, "Glow", new Vector2(10, 10), Color.White);
+
+// Glow combined with a shadow
+_sdfTextBatch.DrawShadowString(font, "Glow + shadow", new Vector2(10, 60), Color.White,
+	Color.Black, 2, 2);
+
+_sdfTextBatch.End();
+
+_sdfTextBatch.DisableGlow();
+```
+
+`EnableGlow` also takes two optional parameters: `glowRange` (default `0.4f`) controls how far the glow extends around the glyphs, and `glowSmoothness` (default `0.05f`) controls how soft its edges are; both are expressed in normalized SDF-space units. Example:
+
+```c#
+_sdfTextBatch.EnableGlow(Color.DeepSkyBlue, 0.5f, 0.1f);
+```
+
 ### FixedSDFFontSize
 
 `FixedSDFFontSize` is for saving texture space. Instead of rasterizing a separate SDF glyph bitmap for every requested size, it rasterizes glyphs once at a fixed size and reuses that same distance field for all sizes (via a `ScaledSpriteFont` scaled to `fontSize / FixedSDFFontSize`). This avoids storing many duplicate glyph bitmaps in the atlas.
