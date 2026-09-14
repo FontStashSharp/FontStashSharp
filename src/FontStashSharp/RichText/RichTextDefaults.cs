@@ -49,5 +49,20 @@ namespace FontStashSharp.RichText
 		/// Gets or sets the default smoothness used for SDF stroke effects.
 		/// </summary>
 		public static float SDFStrokeSmoothness { get; set; } = 0.05f;
+
+		/// <summary>
+		/// Gets or sets the default color used for SDF glow effects.
+		/// </summary>
+		public static Color SDFGlowColor { get; set; } = Color.Orange;
+
+		/// <summary>
+		/// Gets or sets the default range used for SDF glow effects.
+		/// </summary>
+		public static float SDFGlowRange { get; set; } = 0.4f;
+
+		/// <summary>
+		/// Gets or sets the default smoothness used for SDF glow effects.
+		/// </summary>
+		public static float SDFGlowSmoothness { get; set; } = 0.05f;
 	}
 }

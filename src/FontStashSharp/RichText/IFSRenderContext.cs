@@ -66,6 +66,19 @@ namespace FontStashSharp.RichText
 		void DrawSDFStrokeText(string text, SpriteFontBase font, Vector2 pos, Color color, TextStyle textStyle, Color strokeColor, float strokeThickness, float strokeSmoothness);
 
 		/// <summary>
+		/// Enables a glow effect to be drawn around the SDF text using the specified color and parameters.
+		/// </summary>
+		/// <param name="glowColor">The color of the glow effect.</param>
+		/// <param name="glowRange">The range (size) of the glow around the glyphs.</param>
+		/// <param name="glowSmoothness">The smoothness of the glow edges.</param>
+		void EnableGlow(Color glowColor, float glowRange, float glowSmoothness);
+
+		/// <summary>
+		/// Disables the glow effect.
+		/// </summary>
+		void DisableGlow();
+
+		/// <summary>
 		/// Draws an image using the specified source region, position, scale, and color.
 		/// </summary>
 		/// <param name="texture">The texture to draw.</param>

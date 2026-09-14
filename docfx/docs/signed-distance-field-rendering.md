@@ -96,6 +96,8 @@ _sdfTextBatch.DisableGlow();
 _sdfTextBatch.EnableGlow(Color.DeepSkyBlue, 0.5f, 0.1f);
 ```
 
+In rich text, glow can also be turned on per string with the `/dg` command; the glow color, range, and smoothness are read from `RichTextDefaults.SDFGlowColor`, `RichTextDefaults.SDFGlowRange`, and `RichTextDefaults.SDFGlowSmoothness`. An optional color parameter (e.g. `/dg[red]`) overrides the glow color. See [Rich Text](rich-text.md) for details.
+
 ### FixedSDFFontSize
 
 `FixedSDFFontSize` is for saving texture space. Instead of rasterizing a separate SDF glyph bitmap for every requested size, it rasterizes glyphs once at a fixed size and reuses that same distance field for all sizes (via a `ScaledSpriteFont` scaled to `fontSize / FixedSDFFontSize`). This avoids storing many duplicate glyph bitmaps in the atlas.

@@ -40,8 +40,9 @@ Name|Description|Examples
 /td|Sets text style to default|
 /v[_offset_]|Sets the vertical offset in pixels|/v-10 or /v[-10]
 /vd|Sets the vertical offset to zero|
-/ds **|Turns on the SDF shadow effect. The shadow color and offset are taken from RichTextDefaults.SDFShadowColor and RichTextDefaults.SDFShadowOffset.|
-/dt **|Turns on the SDF stroke effect. The stroke color, thickness, and smoothness are taken from RichTextDefaults.SDFStrokeColor, RichTextDefaults.SDFStrokeThickness, and RichTextDefaults.SDFStrokeSmoothness.|
+/ds[_color_] **|Turns on the SDF shadow effect. The shadow color and offset are taken from RichTextDefaults.SDFShadowColor and RichTextDefaults.SDFShadowOffset. If a color is specified, it is used instead of RichTextDefaults.SDFShadowColor.|/ds[red] or /ds[#ff0000]
+/dt[_color_] **|Turns on the SDF stroke effect. The stroke color, thickness, and smoothness are taken from RichTextDefaults.SDFStrokeColor, RichTextDefaults.SDFStrokeThickness, and RichTextDefaults.SDFStrokeSmoothness. If a color is specified, it is used instead of RichTextDefaults.SDFStrokeColor.|/dt[blue]
+/dg[_color_] **|Turns on the SDF glow effect. The glow color, range, and smoothness are taken from RichTextDefaults.SDFGlowColor, RichTextDefaults.SDFGlowRange, and RichTextDefaults.SDFGlowSmoothness. If a color is specified, it is used instead of RichTextDefaults.SDFGlowColor. The glow is independent of the shadow and stroke effects, so it can be enabled in parallel with them.|/dg[#00ff00]
 /dd **|Turns off the SDF effect, switching back to plain text.|
 
 \* -- Available only with standard rasterization (`FontRasterizationMode.Standard`). These commands are ignored when the text is rendered with SDF.
@@ -165,25 +166,38 @@ Rich text supports Signed Distance Field (SDF) rendering. First make sure the fo
 FontSystemDefaults.FontRasterizationMode = FontRasterizationMode.SDF;
 ```
 
-Instead of the regular blur and stroke text effects, which are only available with standard rasterization, SDF text can be drawn with shadow and stroke effects that are computed from the same signed distance data. They are turned on with the commands '/ds' and '/dt', and turned off with '/dd'.
+Instead of the regular blur and stroke text effects, which are only available with standard rasterization, SDF text can be drawn with shadow, stroke, and glow effects that are computed from the same signed distance data. They are turned on with the commands '/ds', '/dt', and '/dg', and all are turned off with '/dd'. The glow effect is independent of shadow and stroke, so it can be enabled in parallel with either of them, for example '/dg/ds' or '/dt/dg'.
 
-Because SDF effects are not part of the text string itself, their parameters are read from the following static properties of RichTextDefaults:
+Each of the '/ds', '/dt', and '/dg' commands accepts an optional color parameter in the same format as '/c' (a color name or a '#'-prefixed hex code). If the color is specified, it is used for the effect instead of the corresponding RichTextDefaults color, and it persists until it is changed or '/dd' resets the SDF effects. For example:
+
+```
+/ds[red]Red drop shadow /dt[#00ff00]Green stroke /dg[blue]Blue glow
+```
+
+Because SDF effects are not part of the text string itself, their parameters (besides the optional color) are read from the following static properties of RichTextDefaults:
 
 * RichTextDefaults.SDFShadowColor - the color of the shadow
 * RichTextDefaults.SDFShadowOffset - the offset of the shadow in pixels
 * RichTextDefaults.SDFStrokeColor - the color of the stroke
 * RichTextDefaults.SDFStrokeThickness - the thickness of the stroke
 * RichTextDefaults.SDFStrokeSmoothness - the smoothness of the stroke edges
+* RichTextDefaults.SDFGlowColor - the color of the glow
+* RichTextDefaults.SDFGlowRange - the range of the glow around the glyphs
+* RichTextDefaults.SDFGlowSmoothness - the smoothness of the glow edges
 
 For example:
 ```c#
 RichTextDefaults.SDFShadowColor = Color.Black;
 RichTextDefaults.SDFShadowOffset = new Vector2(2, 2);
 
+RichTextDefaults.SDFGlowColor = Color.Orange;
+RichTextDefaults.SDFGlowRange = 0.4f;
+RichTextDefaults.SDFGlowSmoothness = 0.05f;
+
 RichTextLayout rtl = new RichTextLayout
 {
   Font = fontSystem.GetFont(32),
-  Text = "Plain text. /dtStroked text. /dd/dsDrop shadow.",
+  Text = "Plain text. /dtStroked text. /dd/dsDrop shadow. /dd/dgGlowing text. /dd/ds/dgShadow and glow.",
 };
 ```
 

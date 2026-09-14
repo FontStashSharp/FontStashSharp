@@ -95,6 +95,22 @@ namespace FontStashSharp.RichText
 		public Vector2 SDFEffectParameters { get; set; }
 
 		/// <summary>
+		/// Gets or sets whether a glow effect is applied to this chunk.
+		/// The glow can be combined with the shadow or stroke effect.
+		/// </summary>
+		public bool GlowEnabled { get; set; }
+
+		/// <summary>
+		/// Gets or sets the color of the glow effect.
+		/// </summary>
+		public Color GlowColor { get; set; }
+
+		/// <summary>
+		/// Gets or sets the parameters of the glow effect (range and smoothness).
+		/// </summary>
+		public Vector2 GlowParameters { get; set; }
+
+		/// <summary>
 		/// Initializes a new instance of the TextChunk class.
 		/// </summary>
 		/// <param name="font">The sprite font to use for rendering.</param>
@@ -208,6 +224,15 @@ namespace FontStashSharp.RichText
 			}
 			else
 			{
+				if (GlowEnabled)
+				{
+					context.EnableGlow(GlowColor, GlowParameters.X, GlowParameters.Y);
+				}
+				else
+				{
+					context.DisableGlow();
+				}
+
 				switch (SDFEffect)
 				{
 					case SDFTextEffect.None:
