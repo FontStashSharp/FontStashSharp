@@ -39,7 +39,7 @@ float4 PS(VSOutput input) : SV_Target0
 	float distance = SAMPLE_TEXTURE(SpriteTexture, input.texCoord).a;
 
 	#ifdef EFFECTSTROKE
-		float outlineFactor = smoothstep(cStrokeThickness - cStrokeSmoothness, cStrokeThickness + cStrokeSmoothness, distance);
+		float outlineFactor = smoothstep(cStrokeThickness, cStrokeThickness + cStrokeSmoothness, distance);
 		oColor.rgb = lerp(cStrokeColor.rgb, input.color.rgb, outlineFactor);
 	#endif
 
@@ -77,7 +77,7 @@ float4 PS(VSOutput input) : SV_Target0
 	}
 
 	#ifdef EFFECTGLOW
-		float glowFactor = smoothstep(0.5 - cGlowRange - cGlowSmoothness, 0.5 + cGlowSmoothness, distance);
+		float glowFactor = smoothstep(0.5 - cGlowRange, 0.5 + cGlowSmoothness, distance);
 		oColor.rgb = lerp(cGlowColor.rgb, oColor.rgb, saturate(oColor.a));
 		oColor.a = max(oColor.a, glowFactor * cGlowColor.a);
 	#endif
