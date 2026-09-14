@@ -194,7 +194,6 @@ namespace FontStashSharp
 			var gw = x1 - x0;
 			var gh = y1 - y0;
 
-			var sdfPadding = 1;
 			if (FontRasterizationMode == FontRasterizationMode.Standard)
 			{
 				gw += effectAmount * 2;
@@ -202,8 +201,8 @@ namespace FontStashSharp
 			}
 			else
 			{
-				gw += sdfPadding * 2;
-				gh += sdfPadding * 2;
+				gw += SDFPadding * 2;
+				gh += SDFPadding * 2;
 			}
 
 			glyph = new DynamicFontGlyph
@@ -218,7 +217,7 @@ namespace FontStashSharp
 				Effect = effect,
 				EffectAmount = effectAmount,
 				FontRasterizationMode = FontRasterizationMode,
-				SDFPadding = sdfPadding
+				SDFPadding = SDFPadding
 			};
 
 			storage.GlyphsByIds[key] = glyph;

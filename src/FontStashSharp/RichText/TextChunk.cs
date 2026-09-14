@@ -242,7 +242,7 @@ namespace FontStashSharp.RichText
 						context.DrawSDFShadowText(Text, Font, position, color, Style, SDFEffectColor, SDFEffectParameters);
 						break;
 					case SDFTextEffect.Stroke:
-						context.DrawSDFStrokeText(Text, Font, position, color, Style, SDFEffectColor, SDFEffectParameters.X, SDFEffectParameters.Y);
+						context.DrawSDFStrokeText(Text, Font, position, color, Style, SDFEffectColor, SDFEffectParameters.X);
 						break;
 				}
 			}

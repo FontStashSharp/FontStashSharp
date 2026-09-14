@@ -53,7 +53,7 @@ namespace FontStashSharp.RichText
 		void DrawSDFShadowText(string text, SpriteFontBase font, Vector2 pos, Color color, TextStyle textStyle, Color shadowColor, Vector2 shadowOffset);
 
 		/// <summary>
-		/// Draws a string of text using signed distance field rendering with a stroke effect.
+		/// Draws a string of text using signed distance field rendering with a stroke (outline) effect.
 		/// </summary>
 		/// <param name="text">The text to draw.</param>
 		/// <param name="font">The font to use for rendering.</param>
@@ -62,8 +62,7 @@ namespace FontStashSharp.RichText
 		/// <param name="textStyle">The text style to apply.</param>
 		/// <param name="strokeColor">The color of the stroke.</param>
 		/// <param name="strokeThickness">The thickness of the stroke.</param>
-		/// <param name="strokeSmoothness">The smoothness of the stroke edges.</param>
-		void DrawSDFStrokeText(string text, SpriteFontBase font, Vector2 pos, Color color, TextStyle textStyle, Color strokeColor, float strokeThickness, float strokeSmoothness);
+		void DrawSDFStrokeText(string text, SpriteFontBase font, Vector2 pos, Color color, TextStyle textStyle, Color strokeColor, float strokeThickness);
 
 		/// <summary>
 		/// Enables a glow effect to be drawn around the SDF text using the specified color and parameters.

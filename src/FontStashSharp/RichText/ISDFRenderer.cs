@@ -75,11 +75,10 @@ namespace FontStashSharp.RichText
 		/// <param name="textStyle">The text style to apply.</param>
 		/// <param name="strokeColor">The color of the stroke, or null to use the default stroke color.</param>
 		/// <param name="strokeThickness">The thickness of the stroke.</param>
-		/// <param name="strokeSmoothness">The smoothness of the stroke edges.</param>
 		void DrawStrokeString(SpriteFontBase font, string text, Vector2 position, Color color,
 			float rotation, Vector2 origin, Vector2? scale,
 			float layerDepth, float characterSpacing, float lineSpacing,
-			TextStyle textStyle, Color? strokeColor, float strokeThickness, float strokeSmoothness);
+			TextStyle textStyle, Color? strokeColor, float strokeThickness);
 
 		/// <summary>
 		/// Draws a sprite directly, bypassing any currently applied SDF effect.

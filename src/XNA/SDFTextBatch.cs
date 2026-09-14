@@ -121,7 +121,6 @@ namespace FontStashSharp
 
 								var v2 = _effectParameters.Value;
 								_effect.Parameters["cStrokeThickness"].SetValue(v2.X);
-								_effect.Parameters["cStrokeSmoothness"].SetValue(v2.Y);
 							}
 							break;
 					}
@@ -226,9 +225,9 @@ namespace FontStashSharp
 			public void DrawStrokeString(SpriteFontBase font, string text, Vector2 position, Color color,
 				float rotation, Vector2 origin, Vector2? scale, float layerDepth,
 				float characterSpacing, float lineSpacing, TextStyle textStyle,
-				Color strokeColor, float strokeThickness, float strokeSmoothness)
+				Color strokeColor, float strokeThickness)
 			{
-				SetState(RenderMode.Stroke, strokeColor, new Vector2(strokeThickness, strokeSmoothness));
+				SetState(RenderMode.Stroke, strokeColor, new Vector2(strokeThickness, 0));
 				font.DrawText(this, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle);
 			}
 
@@ -333,7 +332,7 @@ namespace FontStashSharp
 		public void End() => _renderer.End();
 
 		/// <inheritdoc/>
-		public void EnableGlow(Color glowColor, float glowRange = 0.4f, float glowSmoothness = 0.05f) => _renderer.EnableGlow(glowColor, glowRange, glowSmoothness);
+		public void EnableGlow(Color glowColor, float glowRange = 0.5f, float glowSmoothness = 0.05f) => _renderer.EnableGlow(glowColor, glowRange, glowSmoothness);
 
 		/// <inheritdoc/>
 		public void DisableGlow() => _renderer.DisableGlow();
@@ -356,8 +355,8 @@ namespace FontStashSharp
 		public void DrawStrokeString(SpriteFontBase font, string text, Vector2 position, Color color,
 			float rotation = 0, Vector2 origin = default, Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
-			TextStyle textStyle = TextStyle.None, Color? strokeColor = null, float strokeThickness = 0.65f, float strokeSmoothness = 0.05f) =>
-			_renderer.DrawStrokeString(font, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, strokeColor ?? Color.Black, strokeThickness, strokeSmoothness);
+			TextStyle textStyle = TextStyle.None, Color? strokeColor = null, float strokeThickness = 0.2f) =>
+			_renderer.DrawStrokeString(font, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, strokeColor ?? Color.Black, strokeThickness);
 
 		/// <inheritdoc/>
 		public void DrawSprite(Texture2D texture, Vector2 pos, Rectangle? src, Color color, float rotation, Vector2 scale, float depth) =>

@@ -1,4 +1,5 @@
 // This shader was borrowed from https://u3d.io
+// Stroke code was borrowed from https://github.com/suikki/sdf_text_sample
 #include "Macros.fxh"
 
 #ifdef EFFECTSHADOW
@@ -38,9 +39,24 @@ float4 PS(VSOutput input) : SV_Target0
 	oColor.rgb = input.color.rgb;
 	float distance = SAMPLE_TEXTURE(SpriteTexture, input.texCoord).a;
 
-	#ifdef EFFECTSTROKE
-		float outlineFactor = smoothstep(cStrokeThickness - cStrokeSmoothness, cStrokeThickness + cStrokeSmoothness, distance);
-		oColor.rgb = lerp(cStrokeColor.rgb, input.color.rgb, outlineFactor);
+	float width = fwidth(distance);
+	float alpha = GetAlpha(distance, width);
+
+	#ifdef SUPERSAMPLING
+		float2 deltaUV = 0.354 * fwidth(input.texCoord);
+		float4 square = float4(input.texCoord - deltaUV, input.texCoord + deltaUV);
+
+		float distance2 = SAMPLE_TEXTURE(SpriteTexture, square.xy).a;
+		float distance3 = SAMPLE_TEXTURE(SpriteTexture, square.zw).a;
+		float distance4 = SAMPLE_TEXTURE(SpriteTexture, square.xw).a;
+		float distance5 = SAMPLE_TEXTURE(SpriteTexture, square.zy).a;
+
+		alpha += GetAlpha(distance2, width)
+			   + GetAlpha(distance3, width)
+			   + GetAlpha(distance4, width)
+			   + GetAlpha(distance5, width);
+	
+		alpha = alpha * 0.25;
 	#endif
 
 	#ifdef EFFECTSHADOW
@@ -53,28 +69,15 @@ float4 PS(VSOutput input) : SV_Target0
 	else
 	#endif
 	{
-		float width = fwidth(distance);
-		float alpha = GetAlpha(distance, width);
-
-		#ifdef SUPERSAMPLING
-			float2 deltaUV = 0.354 * fwidth(input.texCoord); // (1.0 / sqrt(2.0)) / 2.0 = 0.354
-			float4 square = float4(input.texCoord - deltaUV, input.texCoord + deltaUV);
-
-			float distance2 = SAMPLE_TEXTURE(SpriteTexture, square.xy).a;
-			float distance3 = SAMPLE_TEXTURE(SpriteTexture, square.zw).a;
-			float distance4 = SAMPLE_TEXTURE(SpriteTexture, square.xw).a;
-			float distance5 = SAMPLE_TEXTURE(SpriteTexture, square.zy).a;
-
-			alpha += GetAlpha(distance2, width)
-				   + GetAlpha(distance3, width)
-				   + GetAlpha(distance4, width)
-				   + GetAlpha(distance5, width);
-		
-			alpha = alpha * 0.25;
-		#endif
-
 		oColor.a = alpha;
 	}
+
+	#ifdef EFFECTSTROKE
+		float outlineEdge = 0.5 - cStrokeThickness;
+		float outlineOuterAlpha = smoothstep(outlineEdge - width, outlineEdge + width, distance);
+		oColor.rgb = lerp(cStrokeColor.rgb, oColor.rgb, alpha);
+		oColor.a = max(oColor.a, cStrokeColor.a * outlineOuterAlpha);
+	#endif
 
 	#ifdef EFFECTGLOW
 		float glowFactor = smoothstep(0.5 - cGlowRange - cGlowSmoothness, 0.5 + cGlowSmoothness, distance);

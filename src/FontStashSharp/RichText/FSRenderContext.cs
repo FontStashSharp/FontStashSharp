@@ -164,7 +164,7 @@ namespace FontStashSharp.RichText
 			_renderer3.DrawShadowString(font, text, pos, color, _rotation, default(Vector2), _scale, _layerDepth, 0, 0, textStyle, shadowColor, shadowOffset.X, shadowOffset.Y);
 		}
 
-		public void DrawSDFStrokeText(string text, SpriteFontBase font, Vector2 pos, Color color, TextStyle textStyle, Color strokeColor, float strokeThickness, float strokeSmoothness)
+		public void DrawSDFStrokeText(string text, SpriteFontBase font, Vector2 pos, Color color, TextStyle textStyle, Color strokeColor, float strokeThickness)
 		{
 			EnsureSDFRenderer();
 
@@ -174,7 +174,7 @@ namespace FontStashSharp.RichText
 			}
 
 			pos = pos.Transform(ref _transformation); 
-			_renderer3.DrawStrokeString(font, text, pos, color, _rotation, default(Vector2), _scale, _layerDepth, 0, 0, textStyle, strokeColor, strokeThickness, strokeSmoothness);
+			_renderer3.DrawStrokeString(font, text, pos, color, _rotation, default(Vector2), _scale, _layerDepth, 0, 0, textStyle, strokeColor, strokeThickness);
 		}
 
 		public void EnableGlow(Color glowColor, float glowRange, float glowSmoothness)

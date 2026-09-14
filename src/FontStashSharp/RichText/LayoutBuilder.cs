@@ -700,7 +700,7 @@ namespace FontStashSharp.RichText
 							else if (_currentSDFEffect == SDFTextEffect.Stroke)
 							{
 								textChunk.SDFEffectColor = _currentSDFStrokeColor ?? RichTextDefaults.SDFStrokeColor;
-								textChunk.SDFEffectParameters = new Vector2(RichTextDefaults.SDFStrokeThickness, RichTextDefaults.SDFStrokeSmoothness);
+								textChunk.SDFEffectParameters = new Vector2(RichTextDefaults.SDFStrokeThickness, 0);
 							}
 
 							if (_currentSDFGlowEnabled)
