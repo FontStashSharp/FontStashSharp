@@ -40,9 +40,9 @@ Name|Description|Examples
 /td|Sets text style to default|
 /v[_offset_]|Sets the vertical offset in pixels|/v-10 or /v[-10]
 /vd|Sets the vertical offset to zero|
-/ds[_color_] **|Turns on the SDF shadow effect. The shadow color and offset are taken from RichTextDefaults.SDFShadowColor and RichTextDefaults.SDFShadowOffset. If a color is specified, it is used instead of RichTextDefaults.SDFShadowColor.|/ds[red] or /ds[#ff0000]
-/dt[_color_] **|Turns on the SDF stroke effect. The stroke color, thickness, and smoothness are taken from RichTextDefaults.SDFStrokeColor, RichTextDefaults.SDFStrokeThickness, and RichTextDefaults.SDFStrokeSmoothness. If a color is specified, it is used instead of RichTextDefaults.SDFStrokeColor.|/dt[blue]
-/dg[_color_] **|Turns on the SDF glow effect. The glow color, range, and smoothness are taken from RichTextDefaults.SDFGlowColor, RichTextDefaults.SDFGlowRange, and RichTextDefaults.SDFGlowSmoothness. If a color is specified, it is used instead of RichTextDefaults.SDFGlowColor. The glow is independent of the shadow and stroke effects, so it can be enabled in parallel with them.|/dg[#00ff00]
+/ds[_color_] **|Turns on the SDF shadow effect. The shadow offset is taken from RichTextDefaults.SDFShadowOffset. If a color is not specified, it is taken from RichTextDefaults.SDFShadowColor.|/ds or /ds[blue] or /ds[#000000]
+/dt[_color_] **|Turns on the SDF stroke effect. The thickness and smoothness are taken from RichTextDefaults.SDFStrokeThickness and RichTextDefaults.SDFStrokeSmoothness. If a color is not specified, it is taken from RichTextDefaults.SDFStrokeColor.|/dt or /dt[white] or /dt[#ffffff]
+/dg[_color_] **|Turns on the SDF glow effect. The range and smoothness are taken from RichTextDefaults.SDFGlowRange and RichTextDefaults.SDFGlowSmoothness. If a color is not specified, it is taken from RichTextDefaults.SDFGlowColor. The glow can be enabled in parallel with the shadow and stroke effects.|/dg or /dg[orange] or /dg[#ffa500]
 /dd **|Turns off the SDF effect, switching back to plain text.|
 
 \* -- Available only with standard rasterization (`FontRasterizationMode.Standard`). These commands are ignored when the text is rendered with SDF.
