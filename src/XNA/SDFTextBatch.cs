@@ -349,14 +349,14 @@ namespace FontStashSharp
 		public void DrawShadowString(SpriteFontBase font, string text, Vector2 position, Color color,
 			float rotation = 0, Vector2 origin = default, Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
-			TextStyle textStyle = TextStyle.None, Color? shadowColor = null, float shadowOffsetX = 1, float shadowOffsetY = 1) =>
+			TextStyle textStyle = TextStyle.None, Color? shadowColor = null, float shadowOffsetX = 2, float shadowOffsetY = 2) =>
 			_renderer.DrawShadowString(font, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, shadowColor ?? Color.Black, shadowOffsetX, shadowOffsetY);
 
 		/// <inheritdoc/>
 		public void DrawStrokeString(SpriteFontBase font, string text, Vector2 position, Color color,
 			float rotation = 0, Vector2 origin = default, Vector2? scale = null,
 			float layerDepth = 0.0f, float characterSpacing = 0.0f, float lineSpacing = 0.0f,
-			TextStyle textStyle = TextStyle.None, Color? strokeColor = null, float strokeThickness = 0.6f, float strokeSmoothness = 0.1f) =>
+			TextStyle textStyle = TextStyle.None, Color? strokeColor = null, float strokeThickness = 0.65f, float strokeSmoothness = 0.05f) =>
 			_renderer.DrawStrokeString(font, text, position, color, rotation, origin, scale, layerDepth, characterSpacing, lineSpacing, textStyle, strokeColor ?? Color.Black, strokeThickness, strokeSmoothness);
 
 		/// <inheritdoc/>

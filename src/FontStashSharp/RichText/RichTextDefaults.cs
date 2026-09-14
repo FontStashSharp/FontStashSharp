@@ -33,7 +33,7 @@ namespace FontStashSharp.RichText
 		/// <summary>
 		/// Gets or sets the default offset used for SDF shadow effects.
 		/// </summary>
-		public static Vector2 SDFShadowOffset { get; set; } = new Vector2(1, 1);
+		public static Vector2 SDFShadowOffset { get; set; } = new Vector2(2, 2);
 
 		/// <summary>
 		/// Gets or sets the default color used for SDF stroke effects.
@@ -43,11 +43,11 @@ namespace FontStashSharp.RichText
 		/// <summary>
 		/// Gets or sets the default thickness used for SDF stroke effects.
 		/// </summary>
-		public static float SDFStrokeThickness { get; set; } = 0.6f;
+		public static float SDFStrokeThickness { get; set; } = 0.65f;
 
 		/// <summary>
 		/// Gets or sets the default smoothness used for SDF stroke effects.
 		/// </summary>
-		public static float SDFStrokeSmoothness { get; set; } = 0.1f;
+		public static float SDFStrokeSmoothness { get; set; } = 0.05f;
 	}
 }

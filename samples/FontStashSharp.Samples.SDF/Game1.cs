@@ -11,7 +11,7 @@ namespace FontStashSharp.Samples;
 public class Game1 : Game
 {
 	private const int FontSize = 32;
-	private readonly string[] Texts = new string[] 
+	private readonly string[] Texts = new string[]
 	{
 		"The quick brown fox jumps over the lazy dog",
 		"点おやをづ例声念ヒレル試石べ位掲質"
@@ -126,7 +126,8 @@ public class Game1 : Game
 			if (_sdfBatch.GlowEnabled)
 			{
 				_sdfBatch.DisableGlow();
-			} else
+			}
+			else
 			{
 				_sdfBatch.EnableGlow(Color.Orange);
 			}
@@ -157,7 +158,7 @@ public class Game1 : Game
 		_spriteBatch.DrawString(_fontOrdinary, $"Press 'Tab' to switch effect({_effectIndex})", new Vector2(0, 96), Color.White);
 		_spriteBatch.DrawString(_fontOrdinary, $"Press 'Space' to switch text({_textIndex})", new Vector2(0, 128), Color.White);
 
-		stateText =  _sdfBatch.GlowEnabled ? "on" : "off"; 
+		stateText = _sdfBatch.GlowEnabled ? "on" : "off";
 		_spriteBatch.DrawString(_fontOrdinary, $"Press 'G' to switch the glow effect({stateText})", new Vector2(0, 160), Color.White);
 
 		var text = Texts[_textIndex];
@@ -177,10 +178,10 @@ public class Game1 : Game
 				_sdfBatch.DrawString(_fontSdf, text, new Vector2(0, screenHeight - sz.Y), Color.White, scale: Scale);
 				break;
 			case 1:
-				_sdfBatch.DrawShadowString(_fontSdf, text, new Vector2(0, screenHeight - sz.Y), Color.White, scale: Scale, shadowOffsetX: 2, shadowOffsetY: 2);
+				_sdfBatch.DrawShadowString(_fontSdf, text, new Vector2(0, screenHeight - sz.Y), Color.White, scale: Scale);
 				break;
 			case 2:
-				_sdfBatch.DrawStrokeString(_fontSdf, text, new Vector2(0, screenHeight - sz.Y), Color.White, scale: Scale, strokeThickness: 0.6f, strokeSmoothness: 0.1f);
+				_sdfBatch.DrawStrokeString(_fontSdf, text, new Vector2(0, screenHeight - sz.Y), Color.White, scale: Scale);
 				break;
 		}
 		_sdfBatch.End();
