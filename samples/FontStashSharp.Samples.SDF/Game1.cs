@@ -121,18 +121,6 @@ public class Game1 : Game
 			}
 		}
 
-		if (KeyboardUtils.IsPressed(Keys.G))
-		{
-			if (_sdfBatch.GlowEnabled)
-			{
-				_sdfBatch.DisableGlow();
-			}
-			else
-			{
-				_sdfBatch.EnableGlow(Color.Orange);
-			}
-		}
-
 		KeyboardUtils.End();
 
 		base.Update(gameTime);
@@ -158,13 +146,10 @@ public class Game1 : Game
 		_spriteBatch.DrawString(_fontOrdinary, $"Press 'Tab' to switch effect({_effectIndex})", new Vector2(0, 96), Color.White);
 		_spriteBatch.DrawString(_fontOrdinary, $"Press 'Space' to switch text({_textIndex})", new Vector2(0, 128), Color.White);
 
-		stateText = _sdfBatch.GlowEnabled ? "on" : "off";
-		_spriteBatch.DrawString(_fontOrdinary, $"Press 'G' to switch the glow effect({stateText})", new Vector2(0, 160), Color.White);
-
 		var text = Texts[_textIndex];
 		var sz = _fontOrdinary.MeasureString(text, Scale);
 
-		var top = 200;
+		var top = 160;
 
 		_spriteBatch.DrawString(_fontOrdinary, text, new Vector2(0, top), Color.White, scale: Scale, effect: (FontSystemEffect)_effectIndex, effectAmount: 1);
 		_spriteBatch.DrawString(_fontSupersampling, text, new Vector2(0, (screenHeight - top - sz.Y) / 2 + top), Color.White, scale: Scale, effect: (FontSystemEffect)_effectIndex, effectAmount: 1);

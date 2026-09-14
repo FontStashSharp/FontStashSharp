@@ -25,7 +25,7 @@ namespace FontStashSharp
 
 	internal static class Resources
 	{
-		private static readonly Effect[] _cache = new Effect[16];
+		private static readonly Effect[] _cache = new Effect[8];
 
 #if FNA
 		private const string EffectsResourcePath = "FontStashSharp.Effects.FNA.bin";
@@ -122,7 +122,7 @@ namespace FontStashSharp
 			return new Effect(graphicsDevice, bytes);
 		}
 
-		public static Effect GetEffect(GraphicsDevice graphicsDevice, bool superSampling, bool shadow, bool stroke, bool glow)
+		public static Effect GetEffect(GraphicsDevice graphicsDevice, bool superSampling, bool shadow, bool stroke)
 		{
 			var key = 0;
 			if (superSampling)
@@ -138,11 +138,6 @@ namespace FontStashSharp
 			if (stroke)
 			{
 				key |= 4;
-			}
-
-			if (glow)
-			{
-				key |= 8;
 			}
 
 			if (_cache[key] != null)
@@ -165,11 +160,6 @@ namespace FontStashSharp
 			if (stroke)
 			{
 				defines["EFFECTSTROKE"] = "1";
-			}
-
-			if (glow)
-			{
-				defines["EFFECTGLOW"] = "1";
 			}
 
 			_cache[key] = LoadEffect(graphicsDevice, "SDF", defines);

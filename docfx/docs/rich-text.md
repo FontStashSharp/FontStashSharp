@@ -42,7 +42,6 @@ Name|Description|Examples
 /vd|Sets the vertical offset to zero|
 /ds[_color_] **|Turns on the SDF shadow effect. The shadow offset is taken from RichTextDefaults.SDFShadowOffset. If a color is not specified, it is taken from RichTextDefaults.SDFShadowColor.|/ds or /ds[blue] or /ds[#000000]
 /dt[_color_] **|Turns on the SDF stroke effect. The thickness and smoothness are taken from RichTextDefaults.SDFStrokeThickness and RichTextDefaults.SDFStrokeSmoothness. If a color is not specified, it is taken from RichTextDefaults.SDFStrokeColor.|/dt or /dt[white] or /dt[#ffffff]
-/dg[_color_] **|Turns on the SDF glow effect. The range and smoothness are taken from RichTextDefaults.SDFGlowRange and RichTextDefaults.SDFGlowSmoothness. If a color is not specified, it is taken from RichTextDefaults.SDFGlowColor. The glow can be enabled in parallel with the shadow and stroke effects.|/dg or /dg[orange] or /dg[#ffa500]
 /dd **|Turns off the SDF effect, switching back to plain text.|
 
 \* -- Available only with standard rasterization (`FontRasterizationMode.Standard`). These commands are ignored when the text is rendered with SDF.
@@ -166,12 +165,12 @@ Rich text supports Signed Distance Field (SDF) rendering. First make sure the fo
 FontSystemDefaults.FontRasterizationMode = FontRasterizationMode.SDF;
 ```
 
-Instead of the regular blur and stroke text effects, which are only available with standard rasterization, SDF text can be drawn with shadow, stroke, and glow effects that are computed from the same signed distance data. They are turned on with the commands '/ds', '/dt', and '/dg', and all are turned off with '/dd'. The glow effect is independent of shadow and stroke, so it can be enabled in parallel with either of them, for example '/dg/ds' or '/dt/dg'.
+Instead of the regular blur and stroke text effects, which are only available with standard rasterization, SDF text can be drawn with shadow and stroke effects that are computed from the same signed distance data. They are turned on with the commands '/ds' and '/dt', and turned off with '/dd'.
 
-Each of the '/ds', '/dt', and '/dg' commands accepts an optional color parameter in the same format as '/c' (a color name or a '#'-prefixed hex code). If the color is specified, it is used for the effect instead of the corresponding RichTextDefaults color, and it persists until it is changed or '/dd' resets the SDF effects. For example:
+Each of the '/ds' and '/dt' commands accepts an optional color parameter in the same format as '/c' (a color name or a '#'-prefixed hex code). If the color is specified, it is used for the effect instead of the corresponding RichTextDefaults color, and it persists until it is changed or '/dd' resets the SDF effects. For example:
 
 ```
-/ds[red]Red drop shadow /dt[#00ff00]Green stroke /dg[blue]Blue glow
+/ds[red]Red drop shadow /dt[#00ff00]Green stroke
 ```
 
 Because SDF effects are not part of the text string itself, their parameters (besides the optional color) are read from the following static properties of RichTextDefaults:
@@ -181,23 +180,16 @@ Because SDF effects are not part of the text string itself, their parameters (be
 * RichTextDefaults.SDFStrokeColor - the color of the stroke
 * RichTextDefaults.SDFStrokeThickness - the thickness of the stroke
 * RichTextDefaults.SDFStrokeSmoothness - the smoothness of the stroke edges
-* RichTextDefaults.SDFGlowColor - the color of the glow
-* RichTextDefaults.SDFGlowRange - the range of the glow around the glyphs
-* RichTextDefaults.SDFGlowSmoothness - the smoothness of the glow edges
 
 For example:
 ```c#
 RichTextDefaults.SDFShadowColor = Color.Black;
 RichTextDefaults.SDFShadowOffset = new Vector2(2, 2);
 
-RichTextDefaults.SDFGlowColor = Color.Orange;
-RichTextDefaults.SDFGlowRange = 0.4f;
-RichTextDefaults.SDFGlowSmoothness = 0.05f;
-
 RichTextLayout rtl = new RichTextLayout
 {
   Font = fontSystem.GetFont(32),
-  Text = "Plain text. /dtStroked text. /dd/dsDrop shadow. /dd/dgGlowing text. /dd/ds/dgShadow and glow.",
+  Text = "Plain text. /dtStroked text. /dd/dsDrop shadow.",
 };
 ```
 

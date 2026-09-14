@@ -176,17 +176,5 @@ namespace FontStashSharp.RichText
 			pos = pos.Transform(ref _transformation); 
 			_renderer3.DrawStrokeString(font, text, pos, color, _rotation, default(Vector2), _scale, _layerDepth, 0, 0, textStyle, strokeColor, strokeThickness);
 		}
-
-		public void EnableGlow(Color glowColor, float glowRange, float glowSmoothness)
-		{
-			EnsureSDFRenderer();
-			_renderer3.EnableGlow(glowColor, glowRange, glowSmoothness);
-		}
-
-		public void DisableGlow()
-		{
-			EnsureSDFRenderer();
-			_renderer3.DisableGlow();
-		}
 	}
 }

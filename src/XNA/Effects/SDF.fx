@@ -13,12 +13,6 @@
 	uniform float cStrokeSmoothness;
 #endif
 
-#ifdef EFFECTGLOW
-	uniform float4 cGlowColor;
-	uniform float cGlowRange;
-	uniform float cGlowSmoothness;
-#endif
-
 DECLARE_TEXTURE(SpriteTexture, 0);
 
 struct VSOutput
@@ -77,12 +71,6 @@ float4 PS(VSOutput input) : SV_Target0
 		float outlineOuterAlpha = smoothstep(outlineEdge - width, outlineEdge + width, distance);
 		oColor.rgb = lerp(cStrokeColor.rgb, oColor.rgb, alpha);
 		oColor.a = max(oColor.a, cStrokeColor.a * outlineOuterAlpha);
-	#endif
-
-	#ifdef EFFECTGLOW
-		float glowFactor = smoothstep(0.5 - cGlowRange - cGlowSmoothness, 0.5 + cGlowSmoothness, distance);
-		oColor.rgb = lerp(cGlowColor.rgb, oColor.rgb, saturate(oColor.a));
-		oColor.a = max(oColor.a, glowFactor * cGlowColor.a);
 	#endif
 
 	return oColor;

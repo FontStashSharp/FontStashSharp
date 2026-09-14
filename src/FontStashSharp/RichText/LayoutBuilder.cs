@@ -39,10 +39,8 @@ namespace FontStashSharp.RichText
 		private int _currentVerticalOffset;
 		private TextStyle _currentTextStyle;
 		private SDFTextEffect _currentSDFEffect;
-		private bool _currentSDFGlowEnabled;
 		private Color? _currentSDFShadowColor;
 		private Color? _currentSDFStrokeColor;
-		private Color? _currentSDFGlowColor;
 		private FontSystemEffect _currentEffect;
 		private int _currentEffectAmount = 0;
 
@@ -144,7 +142,6 @@ namespace FontStashSharp.RichText
 				{
 					case 's':
 					case 't':
-					case 'g':
 					case 'd':
 						break;
 					default:
@@ -320,10 +317,8 @@ namespace FontStashSharp.RichText
 						break;
 					case 'd':
 						_currentSDFEffect = SDFTextEffect.None;
-						_currentSDFGlowEnabled = false;
 						_currentSDFShadowColor = null;
 						_currentSDFStrokeColor = null;
-						_currentSDFGlowColor = null;
 						break;
 				}
 
@@ -356,12 +351,8 @@ namespace FontStashSharp.RichText
 					case 't':
 						_currentSDFEffect = SDFTextEffect.Stroke;
 						break;
-					case 'g':
-						_currentSDFGlowEnabled = true;
-						break;
 					case 'd':
 						_currentSDFEffect = SDFTextEffect.None;
-						_currentSDFGlowEnabled = false;
 						break;
 				}
 
@@ -379,9 +370,6 @@ namespace FontStashSharp.RichText
 								break;
 							case 't':
 								_currentSDFStrokeColor = color;
-								break;
-							case 'g':
-								_currentSDFGlowColor = color;
 								break;
 						}
 					}
@@ -562,10 +550,8 @@ namespace FontStashSharp.RichText
 			_currentEffect = FontSystemEffect.None;
 			_currentEffectAmount = 0;
 			_currentSDFEffect = SDFTextEffect.None;
-			_currentSDFGlowEnabled = false;
 			_currentSDFShadowColor = null;
 			_currentSDFStrokeColor = null;
-			_currentSDFGlowColor = null;
 		}
 
 		private void StartLine(int startIndex, int? rowWidth)
@@ -701,13 +687,6 @@ namespace FontStashSharp.RichText
 							{
 								textChunk.SDFEffectColor = _currentSDFStrokeColor ?? RichTextDefaults.SDFStrokeColor;
 								textChunk.SDFEffectParameters = new Vector2(RichTextDefaults.SDFStrokeThickness, 0);
-							}
-
-							if (_currentSDFGlowEnabled)
-							{
-								textChunk.GlowEnabled = true;
-								textChunk.GlowColor = _currentSDFGlowColor ?? RichTextDefaults.SDFGlowColor;
-								textChunk.GlowParameters = new Vector2(RichTextDefaults.SDFGlowRange, RichTextDefaults.SDFGlowSmoothness);
 							}
 
 							chunk = textChunk;
