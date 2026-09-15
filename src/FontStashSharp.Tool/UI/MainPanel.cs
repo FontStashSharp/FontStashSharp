@@ -2,6 +2,7 @@ using AssetManagementBase.Utility;
 using FontStashSharp.RichText;
 using FontStashSharp.Samples;
 using Myra.Events;
+using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
 using Myra.Graphics2D.UI.File;
 using System;
@@ -114,6 +115,7 @@ public partial class MainPanel
 		fontSystem.AddFont(data);
 
 		_widget.Font = fontSystem.GetFont(_spinButtonFontSize.Value.Value);
+		_widget.Background = new SolidBrush(settings.BackgroundColor);
 	}
 
 	private void Update()

@@ -15,19 +15,16 @@ internal class TextRenderingWidget : Widget
 	private SpriteBatch _spriteBatch;
 	private readonly RichTextLayout _rtf = new RichTextLayout();
 
-
 	public SpriteFontBase Font { get => _rtf.Font; set => _rtf.Font = value; }
 
 	public string Text { get => _rtf.Text; set => _rtf.Text = value; }
 
 	public float TextScale { get; set; } = 1.0f;
 
-
 	public TextRenderingWidget()
 	{
 		HorizontalAlignment = HorizontalAlignment.Stretch;
 		VerticalAlignment = VerticalAlignment.Stretch;
-		Background = new SolidBrush(Color.CornflowerBlue);
 
 		var device = MyraEnvironment.GraphicsDevice;
 		_sdfTextBatch = new SDFTextBatch(device);

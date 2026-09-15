@@ -39,7 +39,7 @@
           <Label Text="3" Id="_labelScale" />
         </HorizontalStackPanel>
         <Label Text="Text" Grid.Row="2" />
-        <TextBox Text="Hello, World!" Multiline="True" VerticalAlignment="Stretch" Id="_text" Grid.Column="1" Grid.Row="2" />
+        <TextBox Text="Plain text./n/dsShadow text./dd/n/dtStroked text." Multiline="True" VerticalAlignment="Stretch" Id="_text" Grid.Column="1" Grid.Row="2" />
       </Grid>
     </HorizontalSplitPane>
   </VerticalSplitPane>

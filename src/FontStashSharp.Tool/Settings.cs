@@ -10,6 +10,9 @@ namespace FontStashSharp.Tool
 		[Category("General")]
 		public Color TextColor { get; set; } = Color.White;
 
+		[Category("General")]
+		public Color BackgroundColor { get; set; } = Color.CornflowerBlue;
+
 		[Category("Supersampling")]
 		public float? FontResolutionFactor { get; set; }
 
