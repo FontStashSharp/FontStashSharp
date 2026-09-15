@@ -10,7 +10,7 @@
   
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="$(AppMonoGameVersion)" />
-    <PackageReference Include="Myra" Version="1.5.11" />
+    <PackageReference Include="Myra" Version="1.6.6" />
   </ItemGroup>
   
   <ItemGroup>

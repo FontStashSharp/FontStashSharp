@@ -1,139 +1,51 @@
-using AssetManagementBase;
-using Microsoft.Xna.Framework;
-using Myra;
+using AssetManagementBase.Utility;
+using FontStashSharp.RichText;
+using FontStashSharp.Samples;
 using Myra.Events;
-using Myra.Graphics2D;
-using Myra.Graphics2D.TextureAtlases;
 using Myra.Graphics2D.UI;
 using Myra.Graphics2D.UI.File;
 using System;
+using System.Globalization;
 using System.IO;
 
 namespace FontStashSharp.Tool.UI;
 
 public partial class MainPanel
 {
-	private FontSystem _fontSystem;
-
-	private FontSystem FontSystem
-	{
-		get => _fontSystem;
-		set
-		{
-			if (value == _fontSystem)
-			{
-				return;
-			}
-
-			_fontSystem = value;
-			_imageTexture.Renderable = null;
-		}
-	}
+	private readonly TextRenderingWidget _widget;
 
 	public MainPanel()
 	{
 		BuildUI();
 
-		Update();
+		_widget = new TextRenderingWidget();
+		_panelTextContainer.Widgets.Add(_widget);
 
-		_checkBoxSmoothText.PressedChanged += (s, a) =>
-		{
-			MyraEnvironment.SmoothText = _checkBoxSmoothText.IsChecked;
-		};
-
-		_textBoxText.TextChanged += (s, a) => Update();
+		_text.TextChanged += (s, a) => Update();
 		_sliderScale.ValueChanged += (s, a) => Update();
-		_spinButtonFontSize.ValueChanged += (s, a) => Update();
-		_checkBoxShowTexture.PressedChanged += (s, a) => Update();
+		_spinButtonFontSize.ValueChanged += (s, a) => Reload();
 
-		_spinButtonResolutionFactor.ValueChanged += _spinButtonResolutionFactor_ValueChanged;
-		_spinButtonKernelWidth.ValueChanged += _spinButtonResolutionFactor_ValueChanged;
-		_spinButtonKernelHeight.ValueChanged += _spinButtonResolutionFactor_ValueChanged;
-
-		_buttonReset.Click += _buttonReset_Click;
+		_buttonResetFont.Click += _buttonResetFont_Click;
 		_buttonBrowseFont.Click += _buttonBrowseFont_Click;
 
-		_comboRasterizer.SelectedIndex = 0;
-		_comboRasterizer.SelectedIndexChanged += (s, a) =>
-		{
-			FontSystem = null;
-			Update();
-		};
+		_propertyGridTextSettings.PropertyChanged += (s, a) => Reload();
+		_propertyGridTextSettings.Object = Settings.Instance;
 
-		_comboRenderer.SelectedIndex = 0;
-		_comboRenderer.SelectedIndexChanged += (s, a) =>
-		{
-			FontSystem = null;
-			Update();
-		};
+		SetSplitterPosition(0, 0.75f);
+		_panelTop.SetSplitterPosition(0, 0.75F);
+
+		_buttonResetFont.DoClick();
 	}
 
-	private void _spinButtonResolutionFactor_ValueChanged(object sender, ValueChangedEventArgs<float?> e)
+	private void _buttonResetFont_Click(object sender, MyraEventArgs e)
 	{
-		FontSystem = null;
-		Update();
-	}
-
-	private void _buttonReset_Click(object sender, EventArgs e)
-	{
+		_textFontFile.Text = "(default)";
 		_sliderScale.Value = 1.0f;
 		_spinButtonFontSize.Value = 32;
-		_spinButtonResolutionFactor.Value = 1.0f;
-		_spinButtonKernelWidth.Value = 0;
-		_spinButtonKernelHeight.Value = 0;
-		FontSystem = null;
-		_textBoxFont.Text = "(default)";
-		Update();
+		Reload();
 	}
 
-	private FontSystem LoadFontSystem(byte[] data)
-	{
-		var settings = new FontSystemSettings
-		{
-			FontResolutionFactor = _spinButtonResolutionFactor.Value.Value,
-			KernelWidth = (int)_spinButtonKernelWidth.Value.Value,
-			KernelHeight = (int)_spinButtonKernelHeight.Value.Value
-		};
-
-		switch (_comboRasterizer.SelectedIndex)
-		{
-			case 1:
-				settings.StbTrueTypeUseOldRasterizer = true;
-				break;
-		}
-
-		switch (_comboRenderer.SelectedIndex)
-		{
-			case 1:
-				settings.GlyphRenderer = (input, output, options) =>
-				{
-					var size = options.Size.X * options.Size.Y;
-
-					for (var i = 0; i < size; i++)
-					{
-						var c = input[i];
-						var ci = i * 4;
-
-						if (c == 0)
-						{
-							output[ci] = output[ci + 1] = output[ci + 2] = output[ci + 3] = 0;
-						}
-						else
-						{
-							output[ci] = output[ci + 1] = output[ci + 2] = output[ci + 3] = 255;
-						}
-					}
-				};
-				break;
-		}
-
-		var result = new FontSystem(settings);
-		result.AddFont(data);
-
-		return result;
-	}
-
-	private void _buttonBrowseFont_Click(object sender, EventArgs e)
+	private void _buttonBrowseFont_Click(object sender, MyraEventArgs e)
 	{
 		var dialog = new FileDialog(FileDialogMode.OpenFile)
 		{
@@ -149,11 +61,12 @@ public partial class MainPanel
 
 			try
 			{
-				var fontSystem = LoadFontSystem(File.ReadAllBytes(dialog.FilePath));
-				_textBoxFont.Text = dialog.FilePath;
+				var testFontSystem = new FontSystem();
+				testFontSystem.AddFont(File.ReadAllBytes(dialog.FilePath));
 
-				FontSystem = fontSystem;
-				Update();
+				_textFontFile.Text = dialog.FilePath;
+
+				Reload();
 			}
 			catch (Exception ex)
 			{
@@ -166,53 +79,47 @@ public partial class MainPanel
 		dialog.ShowModal(Desktop);
 	}
 
-	private void Update()
+	private void Reload()
 	{
-		if (FontSystem == null)
+		byte[] data;
+
+		if (string.IsNullOrEmpty(_textFontFile.Text) || _textFontFile.Text == "(default)")
 		{
-			var assembly = typeof(MainPanel).Assembly;
-			var assetManager = AssetManager.CreateResourceAssetManager(assembly, "Resources");
-
-			byte[] data;
-
-			if (string.IsNullOrEmpty(_textBoxFont.Text) || _textBoxFont.Text == "(default)")
-			{
-				using (var stream = assetManager.Open("Inter-Regular.ttf"))
-				using (var ms = new MemoryStream())
-				{
-					stream.CopyTo(ms);
-					data = ms.ToArray();
-				}
-			}
-			else
-			{
-				data = File.ReadAllBytes(_textBoxFont.Text);
-			}
-
-			FontSystem = LoadFontSystem(data);
+			data = typeof(MainPanel).Assembly.ReadResourceAsBytes("FontStashSharp.Tool.Resources.Inter-Regular.ttf");
+		}
+		else
+		{
+			data = File.ReadAllBytes(_textFontFile.Text);
 		}
 
-		_labelText.Text = _textBoxText.Text;
-		_labelText.Font = FontSystem.GetFont((int)_spinButtonFontSize.Value.Value);
+		var fontSystemSettings = new FontSystemSettings();
 
-		var scale = _sliderScale.Value;
-		_labelText.Scale = new Vector2(scale, scale);
-		_labelScaleValue.Text = scale.ToString("0.00");
+		var settings = Settings.Instance;
+		if (!settings.UseSDF)
+		{
+			fontSystemSettings.FontRasterizationMode = FontRasterizationMode.Standard;
+			fontSystemSettings.FontResolutionFactor = settings.FontResolutionFactor;
+			fontSystemSettings.KernelWidth = settings.KernelWidth;
+			fontSystemSettings.KernelHeight = settings.KernelHeight;
+		}
+		else
+		{
+			fontSystemSettings.FontRasterizationMode = FontRasterizationMode.SDF;
+		}
 
-		_imageTexture.Visible = _checkBoxShowTexture.IsChecked;
+		RichTextDefaults.SDFShadowColor = settings.ShadowColor;
+		RichTextDefaults.SDFShadowOffset = settings.ShadowOffset;
+
+		var fontSystem = new FontSystem(fontSystemSettings);
+		fontSystem.AddFont(data);
+
+		_widget.Font = fontSystem.GetFont(_spinButtonFontSize.Value.Value);
 	}
 
-	public override void InternalRender(RenderContext context)
+	private void Update()
 	{
-		base.InternalRender(context);
-
-		if (_imageTexture.Renderable == null && _imageTexture.Visible && FontSystem.Atlases.Count > 0)
-		{
-			var texture = FontSystem.Atlases[0].Texture;
-			if (texture != null)
-			{
-				_imageTexture.Renderable = new TextureRegion(texture);
-			}
-		}
+		_labelScale.Text = _sliderScale.Value.ToString("0.##", CultureInfo.InvariantCulture);
+		_widget.TextScale = _sliderScale.Value;
+		_widget.Text = _text.Text;
 	}
 }

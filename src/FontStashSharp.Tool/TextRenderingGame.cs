@@ -28,18 +28,18 @@ public class TextRenderingGame : Game
 
 		MyraEnvironment.Game = this;
 
-		_desktop = new Desktop();
-#if MONOGAME
-		// Inform Myra that external text input is available
-		// So it stops translating Keys to chars
-		_desktop.HasExternalTextInput = true;
+		_desktop = new Desktop
+		{
+			// Inform Myra that external text input is available
+			// So it stops translating Keys to chars
+			HasExternalTextInput = true
+		};
 
 		// Provide that text input
 		Window.TextInput += (s, a) =>
-		{
-			_desktop.OnChar(a.Character);
-		};
-#endif
+			{
+				_desktop.OnChar(a.Character);
+			};
 
 		_mainPanel = new MainPanel();
 

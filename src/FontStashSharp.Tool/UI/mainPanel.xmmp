@@ -1,64 +1,46 @@
 <Project>
-  <Project.ExportOptions Namespace="FontStashSharp.Tool.UI" Class="MainPanel" OutputPath="D:\Projects\FontStashSharp\src\FontStashSharp.Tool\UI" />
-  <Panel>
-    <VerticalStackPanel>
-      <Panel Background="#404040FF" ClipToBounds="True" StackPanel.ProportionType="Part">
-        <Label TransformOrigin="0, 0" Id="_labelText" />
-      </Panel>
-      <HorizontalSeparator />
-      <VerticalStackPanel Spacing="8" Padding="0, 8">
-        <HorizontalStackPanel Spacing="8">
-          <Label Text="Font:" />
-          <TextBox Text="(default)" Readonly="True" Id="_textBoxFont" StackPanel.ProportionType="Fill" />
+  <Project.ExportOptions Namespace="FontStashSharp.Tool.UI" Class="MainPanel" OutputPath="D:\Projects\FontStashSharp\src\FontStashSharp.Tool\UI" FieldsVisibility="Private" />
+  <VerticalSplitPane Id="_panelRoot">
+    <HorizontalSplitPane Id="_panelTop">
+      <Panel Id="_panelTextContainer" />
+      <VerticalStackPanel Id="_panelRight">
+        <ScrollViewer>
+          <PropertyGrid Id="_propertyGridTextSettings" />
+        </ScrollViewer>
+      </VerticalStackPanel>
+    </HorizontalSplitPane>
+    <HorizontalSplitPane>
+      <Grid ColumnSpacing="8" RowSpacing="8">
+        <Grid.DefaultRowProportion Type="Auto" />
+        <Grid.ColumnsProportions>
+          <Proportion Type="Auto" />
+          <Proportion Type="Fill" />
+        </Grid.ColumnsProportions>
+        <Grid.RowsProportions>
+          <Proportion Type="Auto" />
+          <Proportion Type="Auto" />
+          <Proportion Type="Fill" />
+        </Grid.RowsProportions>
+        <Label Text="Font" />
+        <HorizontalStackPanel Spacing="8" Grid.Column="1">
+          <TextBox Readonly="True" Width="300" Id="_textFontFile" />
           <Button Id="_buttonBrowseFont">
             <Label Text="Browse..." />
           </Button>
-          <Button Id="_buttonReset">
+          <Button Id="_buttonResetFont">
             <Label Text="Reset" />
           </Button>
+          <Label Text="Size" />
+          <SpinButton Maximum="128" Minimum="4" Value="32" Integer="True" Width="50" Id="_spinButtonFontSize" />
         </HorizontalStackPanel>
-        <HorizontalStackPanel Spacing="8">
-          <Label Text="Font Size:" />
-          <SpinButton Value="32" Width="40" Id="_spinButtonFontSize" />
-          <Label Text="Scale:" />
-          <Label Text="0.1" />
-          <VerticalStackPanel>
-            <HorizontalSlider Minimum="0.1" Maximum="10" Value="1" Width="200" Id="_sliderScale" />
-            <Label Text="5.4" HorizontalAlignment="Center" Id="_labelScaleValue" />
-          </VerticalStackPanel>
-          <Label Text="10" />
-          <ComboView Id="_comboRasterizer">
-            <Label Text="StbTrueType" />
-            <Label Text="StbTrueType(Old Rasterizer)" />
-          </ComboView>
-          <ComboView Id="_comboRenderer">
-            <Label Text="Default" />
-            <Label Text="NoSmoothing" />
-          </ComboView>
-          <CheckButton Id="_checkBoxSmoothText">
-            <Label Text="Smooth Text" />
-          </CheckButton>
-          <CheckButton Id="_checkBoxShowTexture">
-            <Label Text="Show Texture" />
-          </CheckButton>
+        <Label Text="Scale" VerticalAlignment="Center" Grid.Row="1" />
+        <HorizontalStackPanel Spacing="8" Grid.Column="1" Grid.Row="1">
+          <HorizontalSlider Minimum="1" Maximum="8" Value="3" Width="200" Id="_sliderScale" />
+          <Label Text="3" Id="_labelScale" />
         </HorizontalStackPanel>
-        <HorizontalStackPanel Spacing="8">
-          <Label Text="Resolution Factor:" />
-          <SpinButton Minimum="1" Value="1" Width="40" Id="_spinButtonResolutionFactor" />
-          <Label Text="Kernel Width:" />
-          <SpinButton Minimum="0" Width="40" Id="_spinButtonKernelWidth" />
-          <Label Text="Kernel Height:" />
-          <SpinButton Minimum="0" Width="40" Id="_spinButtonKernelHeight" />
-        </HorizontalStackPanel>
-      </VerticalStackPanel>
-      <HorizontalSeparator />
-      <HorizontalStackPanel StackPanel.ProportionType="Part">
-        <HorizontalStackPanel.DefaultProportion Type="Part" />
-        <ScrollViewer>
-          <TextBox Text="/tuThe quick brown/n/ts/c[blue]fox jumps over/n/td/c[green]the lazy dog" Multiline="True" Wrap="True" VerticalAlignment="Stretch" Id="_textBoxText" />
-        </ScrollViewer>
-        <Image Id="_imageTexture" />
-      </HorizontalStackPanel>
-    </VerticalStackPanel>
-  </Panel>
+        <Label Text="Text" Grid.Row="2" />
+        <TextBox Text="Hello, World!" Multiline="True" VerticalAlignment="Stretch" Id="_text" Grid.Column="1" Grid.Row="2" />
+      </Grid>
+    </HorizontalSplitPane>
+  </VerticalSplitPane>
 </Project>
