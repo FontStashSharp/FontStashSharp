@@ -23,6 +23,10 @@ namespace FontStashSharp.Samples
 			"/dsThis /dtis the /ddfirst line./nThis /dtis the /ddsecond line./nThis is the third line.",
 		};
 
+		private const float MinScale = 0.1f;
+		private const float MaxScale = 10f;
+		private const float ScaleStep = 0.25f;
+
 		private readonly GraphicsDeviceManager _graphics;
 
 		public static Game1 Instance { get; private set; }
@@ -32,8 +36,11 @@ namespace FontStashSharp.Samples
 		private Texture2D _white;
 		private RichTextLayout _richText;
 		private int _stringIndex = 0;
+		private int _lastScrollWheelValue;
 		private readonly Dictionary<string, FontSystem> _fontCache = new Dictionary<string, FontSystem>();
 		private readonly Dictionary<string, Texture2D> _textureCache = new Dictionary<string, Texture2D>();
+
+		public Vector2 Scale { get; set; } = new Vector2(2, 2);
 
 		public Game1()
 		{
@@ -80,13 +87,6 @@ namespace FontStashSharp.Samples
 				return new TextureFragment(texture);
 			};
 
-			// Configure SDF shadow and stroke defaults
-			RichTextDefaults.SDFShadowColor = Color.Red;
-			RichTextDefaults.SDFShadowOffset = new Vector2(1, 1);
-			RichTextDefaults.SDFStrokeColor = Color.Black;
-			RichTextDefaults.SDFStrokeThickness = 0.5f;
-			RichTextDefaults.SDFStrokeSmoothness = 0.05f;
-
 			// Enable SDF rasterization for all FontSystems
 			FontSystemDefaults.FontRasterizationMode = FontRasterizationMode.SDF;
 			var fontSystem = new FontSystem();
@@ -107,6 +107,16 @@ namespace FontStashSharp.Samples
 
 		protected override void Update(GameTime gameTime)
 		{
+			var mouse = Mouse.GetState();
+			var scrollDelta = mouse.ScrollWheelValue - _lastScrollWheelValue;
+			_lastScrollWheelValue = mouse.ScrollWheelValue;
+
+			if (scrollDelta != 0)
+			{
+				var newScale = MathHelper.Clamp(Scale.X + Math.Sign(scrollDelta) * ScaleStep, MinScale, MaxScale);
+				Scale = new Vector2(newScale, newScale);
+			}
+
 			base.Update(gameTime);
 
 			KeyboardUtils.Begin();
@@ -139,8 +149,6 @@ namespace FontStashSharp.Samples
 			GraphicsDevice.Clear(Color.CornflowerBlue);
 			TimeSpan total = gameTime.TotalGameTime;
 
-			var scale = new Vector2(2, 2);
-
 			var viewportSize = new Point(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
 			_richText.Width = null;
@@ -170,8 +178,8 @@ namespace FontStashSharp.Samples
 				}
 			}
 
-			var position = new Vector2(0, viewportSize.Y / 2 - _richText.Size.Y / 2);
 			var size = _richText.Size;
+			var position = new Vector2(0, viewportSize.Y / 2 - size.Y * Scale.Y / 2);
 
 			if (_richText.Width != null)
 			{
@@ -185,8 +193,8 @@ namespace FontStashSharp.Samples
 
 			var rect = new Rectangle((int)position.X,
 				(int)position.Y,
-				(int)(size.X * scale.X),
-				(int)(size.Y * scale.Y));
+				(int)(size.X * Scale.X),
+				(int)(size.Y * Scale.Y));
 
 			// Draw the bounding rectangle with an ordinary SpriteBatch
 			_spriteBatch.Begin();
@@ -195,9 +203,11 @@ namespace FontStashSharp.Samples
 
 			// Draw the rich text with the SDF text batch
 			_sdfBatch.Begin();
-			_sdfBatch.DrawString(_richText.Font, "Press 'Space' to switch between strings.", Vector2.Zero, Color.White);
-			_sdfBatch.DrawShadowString(_richText.Font, $"Press 'LeftShift' to toggle supersampling ({(_sdfBatch.Supersampling ? "on" : "off")}).", new Vector2(0, 40), Color.White);
-			_richText.Draw(_sdfBatch, position, Color.White, scale: scale);
+			_sdfBatch.DrawString(_richText.Font, $"Scale: {Scale.X:0.00}", Vector2.Zero, Color.White);
+			_sdfBatch.DrawString(_richText.Font, "Use mouse wheel to control scale", new Vector2(0, 32), Color.White);
+			_sdfBatch.DrawString(_richText.Font, "Press 'Space' to switch between strings.", new Vector2(0, 64), Color.White);
+			_sdfBatch.DrawString(_richText.Font, $"Press 'LeftShift' to toggle supersampling ({(_sdfBatch.Supersampling ? "on" : "off")}).", new Vector2(0, 96), Color.White);
+			_richText.Draw(_sdfBatch, position, Color.White, scale: Scale);
 			_sdfBatch.End();
 
 			base.Draw(gameTime);
