@@ -55,3 +55,7 @@ jobs:
     - name: Publish FontStashSharp.XNA to NuGet
       run: nuget.exe push src\XNA\bin\XNA\Release\FontStashSharp.XNA.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
       continue-on-error: true
+    - name: Publish fss-tool to NuGet
+      run: nuget.exe push src\FontStashSharp.Tool\bin\MonoGame\Release\fss-tool.*.nupkg ${{secrets.NUGET_APIKEY}} -Source https://api.nuget.org/v3/index.json
+      continue-on-error: true
+      

@@ -2,10 +2,17 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>$(AppTargetFramework)</TargetFramework>
+    <PackAsTool>true</PackAsTool>
+    <RootNamespace>FontStashSharp.Tool</RootNamespace>
+    <AssemblyName>FontStashSharp.Tool</AssemblyName>
+    <PackageId>fss-tool</PackageId>
+    <ToolCommandName>fss-tool</ToolCommandName>
     <OutputPath>bin\MonoGame\$(Configuration)</OutputPath>
     <DefineConstants>$(DefineConstants);MONOGAME</DefineConstants>
-    <AssemblyName>FontStashSharp.Tool</AssemblyName>
-    <RootNamespace>FontStashSharp.Tool</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   
   <ItemGroup>
