@@ -10,6 +10,7 @@ FontStashSharp is a text rendering library. It has the following features:
 * Two techniques for dealing with the text scaling issues: Supersampling and SDF
 * Integrated rich text engine
 * Optional HarfBuzz text shaping support
+* fss-tool: desktop GUI tool for previewing FontStashSharp text rendering
 
 ## Documentation
 https://fontstashsharp.github.io/FontStashSharp
