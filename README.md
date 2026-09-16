@@ -7,9 +7,9 @@ FontStashSharp is a text rendering library. It has the following features:
 * Many supported frameworks: MonoGame, FNA, Stride, Kni, Xna and generic C# engines
 * Runtime font loading from ttfs and AngelCode BMFonts
 * Text effects: blurry text, stroked text, underline and strikethrough
+* Two techniques for dealing with the text scaling issues: Supersampling and SDF
 * Integrated rich text engine
 * Optional HarfBuzz text shaping support
-* Optional SDF
 
 ## Documentation
 https://fontstashsharp.github.io/FontStashSharp
@@ -36,6 +36,9 @@ Blurry Text:
 
 Stroked Text:
 ![](/screenshots/stroked.png)
+
+fss-tool:
+<img width="1202" height="832" alt="image" src="https://github.com/user-attachments/assets/9e49d4ce-c574-4c21-9e4b-519f938c0582" />
 
 ## Credits
 * [fontstash](https://github.com/memononen/fontstash)
