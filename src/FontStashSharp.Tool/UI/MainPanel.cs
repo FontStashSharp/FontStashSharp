@@ -2,7 +2,9 @@ using AssetManagementBase.Utility;
 using FontStashSharp.RichText;
 using FontStashSharp.Samples;
 using Myra.Events;
+using Myra.Graphics2D;
 using Myra.Graphics2D.Brushes;
+using Myra.Graphics2D.TextureAtlases;
 using Myra.Graphics2D.UI;
 using Myra.Graphics2D.UI.File;
 using System;
@@ -14,6 +16,9 @@ namespace FontStashSharp.Tool.UI;
 public partial class MainPanel
 {
 	private readonly TextRenderingWidget _widget;
+	private readonly Image _imageTexture;
+	private readonly HorizontalSeparator _separatorImageTexture = new HorizontalSeparator();
+	private bool _imageTextureDirty = true;
 
 	public MainPanel()
 	{
@@ -36,6 +41,30 @@ public partial class MainPanel
 		_panelTop.SetSplitterPosition(0, 0.75F);
 
 		_buttonResetFont.DoClick();
+
+		_checkShowTexture.IsCheckedChanged += _checkShowTexture_IsCheckedChanged;
+
+		_sliderScale.Value = 5.0f;
+
+		_imageTexture = new Image();
+		StackPanel.SetProportionType(_imageTexture, ProportionType.Part);
+		StackPanel.SetProportionValue(_imageTexture, 1.0f);
+	}
+
+	private void _checkShowTexture_IsCheckedChanged(object sender, MyraEventArgs e)
+	{
+		if (_checkShowTexture.IsChecked && !_panelRight.Widgets.Contains(_imageTexture))
+		{
+			_panelRight.Widgets.Add(_separatorImageTexture);
+			_panelRight.Widgets.Add(_imageTexture);
+		}
+		else if (!_checkShowTexture.IsChecked && _panelRight.Widgets.Contains(_imageTexture))
+		{
+			_panelRight.Widgets.Remove(_separatorImageTexture);
+			_panelRight.Widgets.Remove(_imageTexture);
+		}
+
+		InvalidateImageTexture();
 	}
 
 	private void _buttonResetFont_Click(object sender, MyraEventArgs e)
@@ -106,16 +135,47 @@ public partial class MainPanel
 		else
 		{
 			fontSystemSettings.FontRasterizationMode = FontRasterizationMode.SDF;
+			fontSystemSettings.FixedSDFFontSize = settings.FixedFontSize;
 		}
 
 		RichTextDefaults.SDFShadowColor = settings.ShadowColor;
 		RichTextDefaults.SDFShadowOffset = settings.ShadowOffset;
+		RichTextDefaults.SDFStrokeColor = settings.StrokeColor;
+		RichTextDefaults.SDFStrokeThickness = settings.StrokeThickness;
 
 		var fontSystem = new FontSystem(fontSystemSettings);
 		fontSystem.AddFont(data);
 
 		_widget.Font = fontSystem.GetFont(_spinButtonFontSize.Value.Value);
 		_widget.Background = new SolidBrush(settings.BackgroundColor);
+		InvalidateImageTexture();
+	}
+
+	private void InvalidateImageTexture()
+	{
+		_imageTextureDirty = true;
+	}
+
+	private void UpdateImageTexture()
+	{
+		if (!_imageTextureDirty || _imageTexture == null)
+		{
+			return;
+		}
+
+		if (_checkShowTexture.IsChecked)
+		{
+			if (_widget.Font != null && _widget.Font.FontSystem.Atlases.Count > 0)
+			{
+				_imageTexture.Renderable = new TextureRegion(_widget.Font.FontSystem.Atlases[0].Texture);
+				_imageTextureDirty = false;
+			}
+		}
+		else
+		{
+			_imageTexture.Renderable = null;
+			_imageTextureDirty = false;
+		}
 	}
 
 	private void Update()
@@ -123,5 +183,12 @@ public partial class MainPanel
 		_labelScale.Text = _sliderScale.Value.ToString("0.##", CultureInfo.InvariantCulture);
 		_widget.TextScale = _sliderScale.Value;
 		_widget.Text = _text.Text;
+	}
+
+	public override void InternalRender(RenderContext context)
+	{
+		base.InternalRender(context);
+
+		UpdateImageTexture();
 	}
 }

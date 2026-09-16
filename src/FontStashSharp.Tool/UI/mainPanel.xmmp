@@ -4,7 +4,7 @@
     <HorizontalSplitPane Id="_panelTop">
       <Panel Id="_panelTextContainer" />
       <VerticalStackPanel Id="_panelRight">
-        <ScrollViewer>
+        <ScrollViewer StackPanel.ProportionType="Part">
           <PropertyGrid Id="_propertyGridTextSettings" />
         </ScrollViewer>
       </VerticalStackPanel>
@@ -20,6 +20,7 @@
           <Proportion Type="Auto" />
           <Proportion Type="Auto" />
           <Proportion Type="Fill" />
+          <Proportion Type="Auto" />
         </Grid.RowsProportions>
         <Label Text="Font" />
         <HorizontalStackPanel Spacing="8" Grid.Column="1">
@@ -40,6 +41,9 @@
         </HorizontalStackPanel>
         <Label Text="Text" Grid.Row="2" />
         <TextBox Text="Plain text./n/dsShadow text./dd/n/dtStroked text." Multiline="True" VerticalAlignment="Stretch" Id="_text" Grid.Column="1" Grid.Row="2" />
+        <CheckButton CheckContentSpacing="8" Id="_checkShowTexture" Grid.Row="3" Grid.ColumnSpan="2">
+          <Label Text="Show Texture" />
+        </CheckButton>
       </Grid>
     </HorizontalSplitPane>
   </VerticalSplitPane>

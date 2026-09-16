@@ -23,7 +23,10 @@ namespace FontStashSharp.Tool
 		public int KernelHeight { get; set; }
 
 		[Category("SDF")]
-		public bool UseSDF { get; set; }
+		public bool UseSDF { get; set; } = true;
+
+		[Category("SDF")]
+		public float? FixedFontSize { get; set; } = 64.0f;
 
 		[Category("SDF")]
 		public bool SDFSupersampling { get; set; } = true;
@@ -34,6 +37,11 @@ namespace FontStashSharp.Tool
 		[Category("SDF")]
 		public Vector2 ShadowOffset { get; set; } = new Vector2(2, 2);
 
+		[Category("SDF")]
+		public Color StrokeColor { get; set; } = Color.Black;
+
+		[Category("SDF")]
+		public float StrokeThickness { get; set; } = 0.2f;
 
 		private Settings()
 		{
