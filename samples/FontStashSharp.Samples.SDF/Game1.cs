@@ -160,13 +160,13 @@ public class Game1 : Game
 		switch (_effectIndex)
 		{
 			case 0:
-				_sdfBatch.DrawString(_fontSdf, text, new Vector2(0, screenHeight - sz.Y), Color.White, scale: Scale);
+				_sdfBatch.DrawString(_fontSdf, text, new Vector2(0, screenHeight - sz.Y - 10), Color.White, scale: Scale);
 				break;
 			case 1:
-				_sdfBatch.DrawShadowString(_fontSdf, text, new Vector2(0, screenHeight - sz.Y), Color.White, scale: Scale);
+				_sdfBatch.DrawShadowString(_fontSdf, text, new Vector2(0, screenHeight - sz.Y - 10), Color.White, scale: Scale);
 				break;
 			case 2:
-				_sdfBatch.DrawStrokeString(_fontSdf, text, new Vector2(0, screenHeight - sz.Y), Color.White, scale: Scale);
+				_sdfBatch.DrawStrokeString(_fontSdf, text, new Vector2(0, screenHeight - sz.Y - 10), Color.White, scale: Scale);
 				break;
 		}
 		_sdfBatch.End();
