@@ -169,6 +169,7 @@ public class Game1 : Game
 				_sdfBatch.DrawStrokeString(_fontSdf, text, new Vector2(0, screenHeight - sz.Y - 10), Color.White, scale: Scale);
 				break;
 		}
+
 		_sdfBatch.End();
 	}
 }

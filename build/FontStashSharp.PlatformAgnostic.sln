@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.Silk
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.Silk.NET.RichText", "..\samples\FontStashSharp.Samples.Silk.NET.RichText\FontStashSharp.Samples.Silk.NET.RichText.csproj", "{F915F824-D222-4CE4-AE3B-C131B28BB16A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontStashSharp.Samples.Silk.NET.SDF", "..\samples\FontStashSharp.Samples.Silk.NET.SDF\FontStashSharp.Samples.Silk.NET.SDF.csproj", "{1A2B3C4D-5E6F-4A7B-8C9D-0E1F2A3B4C5D}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FontStashSharp.PlatformAgnostic", "..\src\FontStashSharp\FontStashSharp.PlatformAgnostic.csproj", "{9C165C0E-D931-6A63-28AF-151059391DAD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FontStashSharp.Samples.Silk.NET.HarfBuzz", "..\samples\FontStashSharp.Samples.Silk.NET.HarfBuzz\FontStashSharp.Samples.Silk.NET.HarfBuzz.csproj", "{E92D06CC-0ABE-05F1-53EF-16E8AFD7D917}"
@@ -59,6 +61,10 @@ Global
 		{E92D06CC-0ABE-05F1-53EF-16E8AFD7D917}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E92D06CC-0ABE-05F1-53EF-16E8AFD7D917}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E92D06CC-0ABE-05F1-53EF-16E8AFD7D917}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A2B3C4D-5E6F-4A7B-8C9D-0E1F2A3B4C5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A2B3C4D-5E6F-4A7B-8C9D-0E1F2A3B4C5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A2B3C4D-5E6F-4A7B-8C9D-0E1F2A3B4C5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A2B3C4D-5E6F-4A7B-8C9D-0E1F2A3B4C5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,6 +77,7 @@ Global
 		{F5F8DD50-22A8-4366-855D-C7866CD89C62} = {B239F30F-0011-45CD-8862-62A0BC2ED694}
 		{F915F824-D222-4CE4-AE3B-C131B28BB16A} = {B239F30F-0011-45CD-8862-62A0BC2ED694}
 		{E92D06CC-0ABE-05F1-53EF-16E8AFD7D917} = {B239F30F-0011-45CD-8862-62A0BC2ED694}
+		{1A2B3C4D-5E6F-4A7B-8C9D-0E1F2A3B4C5D} = {B239F30F-0011-45CD-8862-62A0BC2ED694}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {35ACDF4E-2CE2-46B1-A19F-35DC131069A1}
