@@ -3,9 +3,22 @@ using System.ComponentModel;
 
 namespace FontStashSharp.Tool
 {
+	internal enum RasterizerType
+	{
+		StbTrueTypeSharp,
+		StbTrueTypeSharpV1,
+		StbTrueTypeNext,
+		StbTrueTypeNextV1,
+		FreeType,
+		SharpAstro,
+	}
+
 	internal class Settings
 	{
 		public static Settings Instance { get; } = new Settings();
+
+		[Category("General")]
+		public RasterizerType Rasterizer { get; set; }
 
 		[Category("General")]
 		public Color TextColor { get; set; } = Color.White;

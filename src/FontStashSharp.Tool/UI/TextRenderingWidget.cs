@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Myra;
 using Myra.Graphics2D;
 using Myra.Graphics2D.UI;
+using System;
 
 namespace FontStashSharp.Samples;
 
@@ -49,32 +50,63 @@ internal class TextRenderingWidget : Widget
 		var oldViewport = device.Viewport;
 		device.Viewport = new Viewport(screenPosition.X, screenPosition.Y, ActualBounds.Width, ActualBounds.Height);
 
-		var sz = _rtf.Measure(null).ToVector2();
-
-		sz.X *= TextScale;
-		sz.Y *= TextScale;
-
-		screenPosition.Y += (int)((ActualBounds.Height - sz.Y) / 2);
-
-		if (Font.FontRasterizationMode == FontRasterizationMode.Standard)
+		try
 		{
-			_spriteBatch.Begin();
-			_rtf.Draw(_spriteBatch, screenPosition.ToVector2(), Settings.Instance.TextColor, scale: new Vector2(TextScale));
-			_spriteBatch.End();
+			var sz = _rtf.Measure(null).ToVector2();
+
+			sz.X *= TextScale;
+			sz.Y *= TextScale;
+
+			screenPosition.Y += (int)((ActualBounds.Height - sz.Y) / 2);
+
+			if (Font.FontRasterizationMode == FontRasterizationMode.Standard)
+			{
+				_spriteBatch.Begin();
+
+				try
+				{
+					_rtf.Draw(_spriteBatch, screenPosition.ToVector2(), Settings.Instance.TextColor, scale: new Vector2(TextScale));
+				}
+				finally
+				{
+					_spriteBatch.End();
+				}
+			}
+			else
+			{
+				_sdfTextBatch.Supersampling = Settings.Instance.SDFSupersampling;
+
+				_sdfTextBatch.Begin();
+
+				try
+				{
+					_rtf.Draw(_sdfTextBatch, screenPosition.ToVector2(), Settings.Instance.TextColor, scale: new Vector2(TextScale));
+				}
+				finally
+				{
+					_sdfTextBatch.End();
+				}
+			}
+
+			// Restart the Myra render context
+			context.Begin();
 		}
-		else
+		catch (Exception ex)
 		{
-			_sdfTextBatch.Supersampling = Settings.Instance.SDFSupersampling;
+			// Restart the Myra render context
+			context.Begin();
 
-			_sdfTextBatch.Begin();
-			_rtf.Draw(_sdfTextBatch, screenPosition.ToVector2(), Settings.Instance.TextColor, scale: new Vector2(TextScale));
+			// Draw error
+			context.DrawLine(0, 0, ActualBounds.Width, ActualBounds.Height, Color.Red, 2);
+			context.DrawLine(ActualBounds.Width, 0, 0, ActualBounds.Height, Color.Red, 2);
 
-			_sdfTextBatch.End();
+			var sz = DefaultAssets.DebugFont.MeasureString(ex.Message);
+
+			context.DrawString(DefaultAssets.DebugFont, ex.Message, new Vector2(0, (ActualBounds.Height - sz.Y) / 2), Color.White);
 		}
-
-		device.Viewport = oldViewport;
-
-		// Restart the Myra render context
-		context.Begin();
+		finally
+		{
+			device.Viewport = oldViewport;
+		}
 	}
 }

@@ -361,8 +361,6 @@ namespace FontStashSharp
 						glyph.FontSize,
 						buffer,
 						glyph.EffectAmount + glyph.EffectAmount * glyph.Size.X,
-						glyph.Size.X - glyph.EffectAmount * 2,
-						glyph.Size.Y - glyph.EffectAmount * 2,
 						glyph.Size.X);
 					break;
 

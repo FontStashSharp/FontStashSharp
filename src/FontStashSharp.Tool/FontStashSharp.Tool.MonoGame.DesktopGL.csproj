@@ -16,6 +16,9 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <PackageReference Include="FontStashSharp.Rasterizers.FreeType" Version="$(FontStashSharpBaseVersion)" />
+    <PackageReference Include="FontStashSharp.Rasterizers.SharpAstro" Version="$(FontStashSharpBaseVersion)" />
+    <PackageReference Include="FontStashSharp.Rasterizers.StbTrueTypeNext" Version="$(FontStashSharpBaseVersion)" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="$(AppMonoGameVersion)" />
     <PackageReference Include="Myra" Version="1.6.8" />
   </ItemGroup>

@@ -1,4 +1,8 @@
 using AssetManagementBase.Utility;
+using FontStashSharp.Rasterizers.FreeType;
+using FontStashSharp.Rasterizers.SharpAstro;
+using FontStashSharp.Rasterizers.StbTrueTypeNext;
+using FontStashSharp.Rasterizers.StbTrueTypeSharp;
 using FontStashSharp.RichText;
 using FontStashSharp.Samples;
 using Myra.Events;
@@ -122,9 +126,27 @@ public partial class MainPanel
 			data = File.ReadAllBytes(_textFontFile.Text);
 		}
 
+		var settings = Settings.Instance;
 		var fontSystemSettings = new FontSystemSettings();
 
-		var settings = Settings.Instance;
+		switch (settings.Rasterizer)
+		{
+			case RasterizerType.StbTrueTypeSharpV1:
+			case RasterizerType.StbTrueTypeSharp:
+				fontSystemSettings.FontLoader = new StbTrueTypeSharpLoader(new StbTrueTypeSharpSettings());
+				break;
+			case RasterizerType.StbTrueTypeNext:
+			case RasterizerType.StbTrueTypeNextV1:
+				fontSystemSettings.FontLoader = new StbTrueTypeNextLoader(new StbTrueTypeNextSettings());
+				break;
+			case RasterizerType.FreeType:
+				fontSystemSettings.FontLoader = new FreeTypeLoader();
+				break;
+			case RasterizerType.SharpAstro:
+				fontSystemSettings.FontLoader = new SharpAstroLoader();
+				break;
+		}
+
 		if (!settings.UseSDF)
 		{
 			fontSystemSettings.FontRasterizationMode = FontRasterizationMode.Standard;
@@ -136,6 +158,11 @@ public partial class MainPanel
 		{
 			fontSystemSettings.FontRasterizationMode = FontRasterizationMode.SDF;
 			fontSystemSettings.FixedSDFFontSize = settings.FixedFontSize;
+		}
+
+		if (settings.Rasterizer == RasterizerType.StbTrueTypeSharpV1 || settings.Rasterizer == RasterizerType.StbTrueTypeNextV1)
+		{
+			fontSystemSettings.StbTrueTypeUseOldRasterizer = true;
 		}
 
 		RichTextDefaults.SDFShadowColor = settings.ShadowColor;
