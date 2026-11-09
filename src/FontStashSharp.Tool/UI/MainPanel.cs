@@ -133,11 +133,27 @@ public partial class MainPanel
 		{
 			case RasterizerType.StbTrueTypeSharpV1:
 			case RasterizerType.StbTrueTypeSharp:
-				fontSystemSettings.FontLoader = new StbTrueTypeSharpLoader(new StbTrueTypeSharpSettings());
+				{
+					var s = new StbTrueTypeSharpSettings()
+					{
+						KernelWidth = settings.KernelWidth,
+						KernelHeight = settings.KernelHeight,
+						UseOldRasterizer = settings.Rasterizer == RasterizerType.StbTrueTypeSharpV1
+					};
+					fontSystemSettings.FontLoader = new StbTrueTypeSharpLoader(s);
+				}
 				break;
 			case RasterizerType.StbTrueTypeNext:
 			case RasterizerType.StbTrueTypeNextV1:
-				fontSystemSettings.FontLoader = new StbTrueTypeNextLoader(new StbTrueTypeNextSettings());
+				{
+					var s = new StbTrueTypeNextSettings()
+					{
+						KernelWidth = settings.KernelWidth,
+						KernelHeight = settings.KernelHeight,
+						UseOldRasterizer = settings.Rasterizer == RasterizerType.StbTrueTypeSharpV1
+					};
+					fontSystemSettings.FontLoader = new StbTrueTypeNextLoader(s);
+				}
 				break;
 			case RasterizerType.FreeType:
 				fontSystemSettings.FontLoader = new FreeTypeLoader();
