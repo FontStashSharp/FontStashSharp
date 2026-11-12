@@ -5,7 +5,7 @@ When a font is drawn at a different size than the resolution at which its glyphs
 ## Enabling supersampling in FSS
 
 - **`FontResolutionFactor`** — the scale at which glyphs are rasterized relative to the requested size. Any non-null value (e.g. `2.0f`) enables supersampling.
-- **`KernelWidth`** / **`KernelHeight`** — passed to `stbtt__h_prefilter`/`stbtt__v_prefilter`; a small blur pre-filter that helps reduce aliasing. The best results are typically obtained with all three set to 2. These only apply to the default (StbTrueTypeSharp) rasterizer.
+- **`KernelWidth`** / **`KernelHeight`** — passed to `stbtt__h_prefilter`/`stbtt__v_prefilter`; a small blur pre-filter that helps reduce aliasing. The best results are typically obtained with all three set to 2. These only apply to the [StbTrueTypeSharp and StbTrueTypeNext rasterizers](custom-font-rasterizer.md).
 
 ## Setting it for a specific FontSystem or all systems
 
