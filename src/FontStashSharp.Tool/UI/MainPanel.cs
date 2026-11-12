@@ -150,7 +150,7 @@ public partial class MainPanel
 					{
 						KernelWidth = settings.KernelWidth,
 						KernelHeight = settings.KernelHeight,
-						UseOldRasterizer = settings.Rasterizer == RasterizerType.StbTrueTypeSharpV1
+						UseOldRasterizer = settings.Rasterizer == RasterizerType.StbTrueTypeNextV1
 					};
 					fontSystemSettings.FontLoader = new StbTrueTypeNextLoader(s);
 				}
