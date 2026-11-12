@@ -16,16 +16,17 @@ Additional rasterizers are available in separate assemblies:
 1. Add reference to [FontStashSharp.Rasterizers.StbTrueTypeNext](https://www.nuget.org/packages/FontStashSharp.Rasterizers.StbTrueTypeNext/)
 2. Add following code before the creation of FontSystems:
 ```c#
-FontSystemDefaults.FontLoader = new StbTrueTypeNextLoader();
+FontSystemDefaults.FontLoader = new StbTrueTypeNextLoader(new StbTrueTypeNextSettings());
 ```
 
-The loader behavior can be tuned through `StbTrueTypeNextSettings`:
+Or
 ```c#
 FontSystemDefaults.FontLoader = new StbTrueTypeNextLoader(new StbTrueTypeNextSettings
 {
 	KernelWidth = 2,
 	KernelHeight = 2,
-	UseOldRasterizer = false
+	UseOldRasterizer = false,
+	UseEmToPixelsScale = false
 });
 ```
 
